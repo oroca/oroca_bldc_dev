@@ -1,0 +1,2869 @@
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 3
+   4              		.eabi_attribute 28, 1
+   5              		.fpu fpv4-sp-d16
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 2
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.thumb
+  16              		.file	"encoder.c"
+  17              		.text
+  18              	.Ltext0:
+  19              		.cfi_sections	.debug_frame
+  20              		.section	.text.encoder_init,"ax",%progbits
+  21              		.align	2
+  22              		.p2align 4,,15
+  23              		.global	encoder_init
+  24              		.thumb
+  25              		.thumb_func
+  26              		.type	encoder_init, %function
+  27              	encoder_init:
+  28              	.LFB118:
+  29              		.file 1 "encoder.c"
+  30              		.loc 1 32 0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 16
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34 0000 30B5     		push	{r4, r5, lr}
+  35              		.cfi_def_cfa_offset 12
+  36              		.cfi_offset 4, -12
+  37              		.cfi_offset 5, -8
+  38              		.cfi_offset 14, -4
+  39              		.loc 1 36 0
+  40 0002 244D     		ldr	r5, .L2
+  41              		.loc 1 52 0
+  42 0004 244C     		ldr	r4, .L2+4
+  43              		.loc 1 32 0
+  44 0006 85B0     		sub	sp, sp, #20
+  45              		.cfi_def_cfa_offset 32
+  46              		.loc 1 36 0
+  47 0008 2846     		mov	r0, r5
+  48 000a 4021     		movs	r1, #64
+  49 000c 4FF48D72 		mov	r2, #282
+  50 0010 FFF7FEFF 		bl	_pal_lld_setgroupmode
+  51              	.LVL0:
+  52              		.loc 1 41 0
+  53 0014 4FF48D72 		mov	r2, #282
+  54 0018 2846     		mov	r0, r5
+  55 001a 8021     		movs	r1, #128
+  56 001c FFF7FEFF 		bl	_pal_lld_setgroupmode
+  57              	.LVL1:
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 2
+
+
+  58              		.loc 1 47 0
+  59 0020 0420     		movs	r0, #4
+  60 0022 0121     		movs	r1, #1
+  61 0024 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+  62              	.LVL2:
+  63              		.loc 1 50 0
+  64 0028 4FF48040 		mov	r0, #16384
+  65 002c 0121     		movs	r1, #1
+  66 002e FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  67              	.LVL3:
+  68              		.loc 1 52 0
+  69 0032 0022     		movs	r2, #0
+  70 0034 1346     		mov	r3, r2
+  71 0036 2046     		mov	r0, r4
+  72 0038 0321     		movs	r1, #3
+  73 003a FFF7FEFF 		bl	TIM_EncoderInterfaceConfig
+  74              	.LVL4:
+  75              		.loc 1 55 0
+  76 003e 2046     		mov	r0, r4
+  77 0040 43F63F01 		movw	r1, #14399
+  78 0044 FFF7FEFF 		bl	TIM_SetAutoreload
+  79              	.LVL5:
+  80              		.loc 1 57 0
+  81 0048 2046     		mov	r0, r4
+  82 004a 0121     		movs	r1, #1
+  83 004c FFF7FEFF 		bl	TIM_Cmd
+  84              	.LVL6:
+  85              		.loc 1 62 0
+  86 0050 0B21     		movs	r1, #11
+  87 0052 0220     		movs	r0, #2
+  88 0054 FFF7FEFF 		bl	SYSCFG_EXTILineConfig
+  89              	.LVL7:
+  90              		.loc 1 67 0
+  91 0058 0823     		movs	r3, #8
+  92              		.loc 1 66 0
+  93 005a 0024     		movs	r4, #0
+  94              		.loc 1 65 0
+  95 005c 4FF40062 		mov	r2, #2048
+  96              		.loc 1 69 0
+  97 0060 0DEB0300 		add	r0, sp, r3
+  98              		.loc 1 68 0
+  99 0064 0125     		movs	r5, #1
+ 100              		.loc 1 65 0
+ 101 0066 0292     		str	r2, [sp, #8]
+ 102              		.loc 1 67 0
+ 103 0068 8DF80D30 		strb	r3, [sp, #13]
+ 104              		.loc 1 66 0
+ 105 006c 8DF80C40 		strb	r4, [sp, #12]
+ 106              		.loc 1 68 0
+ 107 0070 8DF80E50 		strb	r5, [sp, #14]
+ 108              		.loc 1 69 0
+ 109 0074 FFF7FEFF 		bl	EXTI_Init
+ 110              	.LVL8:
+ 111              		.loc 1 72 0
+ 112 0078 2823     		movs	r3, #40
+ 113              		.loc 1 76 0
+ 114 007a 01A8     		add	r0, sp, #4
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 3
+
+
+ 115              		.loc 1 75 0
+ 116 007c 8DF80750 		strb	r5, [sp, #7]
+ 117              		.loc 1 73 0
+ 118 0080 8DF80540 		strb	r4, [sp, #5]
+ 119              		.loc 1 74 0
+ 120 0084 8DF80640 		strb	r4, [sp, #6]
+ 121              		.loc 1 72 0
+ 122 0088 8DF80430 		strb	r3, [sp, #4]
+ 123              		.loc 1 76 0
+ 124 008c FFF7FEFF 		bl	NVIC_Init
+ 125              	.LVL9:
+ 126              		.loc 1 77 0
+ 127 0090 05B0     		add	sp, sp, #20
+ 128              		@ sp needed
+ 129 0092 30BD     		pop	{r4, r5, pc}
+ 130              	.L3:
+ 131              		.align	2
+ 132              	.L2:
+ 133 0094 00040240 		.word	1073873920
+ 134 0098 00080040 		.word	1073743872
+ 135              		.cfi_endproc
+ 136              	.LFE118:
+ 137              		.size	encoder_init, .-encoder_init
+ 138 009c AFF30080 		.section	.text.encoder_read_deg,"ax",%progbits
+ 139              		.align	2
+ 140              		.p2align 4,,15
+ 141              		.global	encoder_read_deg
+ 142              		.thumb
+ 143              		.thumb_func
+ 144              		.type	encoder_read_deg, %function
+ 145              	encoder_read_deg:
+ 146              	.LFB119:
+ 147              		.loc 1 79 0
+ 148              		.cfi_startproc
+ 149              		@ args = 0, pretend = 0, frame = 0
+ 150              		@ frame_needed = 0, uses_anonymous_args = 0
+ 151              		@ link register save eliminated.
+ 152              		.loc 1 80 0
+ 153 0000 064B     		ldr	r3, .L5
+ 154 0002 9FED077A 		flds	s14, .L5+4
+ 155 0006 93ED090A 		flds	s0, [r3, #36]	@ int
+ 156 000a DFED067A 		flds	s15, .L5+8
+ 157 000e B8EE400A 		fuitos	s0, s0
+ 158 0012 20EE070A 		fmuls	s0, s0, s14
+ 159              		.loc 1 81 0
+ 160 0016 80EE270A 		fdivs	s0, s0, s15
+ 161 001a 7047     		bx	lr
+ 162              	.L6:
+ 163              		.align	2
+ 164              	.L5:
+ 165 001c 00080040 		.word	1073743872
+ 166 0020 0000B443 		.word	1135869952
+ 167 0024 00006146 		.word	1180762112
+ 168              		.cfi_endproc
+ 169              	.LFE119:
+ 170              		.size	encoder_read_deg, .-encoder_read_deg
+ 171 0028 AFF30080 		.text
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 4
+
+
+ 171      AFF30080 
+ 172              	.Letext0:
+ 173              		.file 2 "c:\\crosstools\\gcc-arm-embedded\\4.8_2014q2\\arm-none-eabi\\include\\machine\\_default_t
+ 174              		.file 3 "c:\\crosstools\\gcc-arm-embedded\\4.8_2014q2\\arm-none-eabi\\include\\stdint.h"
+ 175              		.file 4 "ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/stm32f4xx.h"
+ 176              		.file 5 "ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_exti.h"
+ 177              		.file 6 "ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/misc.h"
+ 178              		.file 7 "ChibiOS_2.6.6/os/hal/platforms/STM32/GPIOv2/pal_lld.h"
+ 179              		.file 8 "ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_rcc.h"
+ 180              		.file 9 "ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_tim.h"
+ 181              		.file 10 "ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_syscfg.h"
+ 182              		.file 11 "ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cm4.h"
+ 183              		.section	.debug_info,"",%progbits
+ 184              	.Ldebug_info0:
+ 185 0000 2F090000 		.4byte	0x92f
+ 186 0004 0400     		.2byte	0x4
+ 187 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 188 000a 04       		.byte	0x4
+ 189 000b 01       		.uleb128 0x1
+ 190 000c 2B020000 		.4byte	.LASF182
+ 191 0010 01       		.byte	0x1
+ 192 0011 A4010000 		.4byte	.LASF183
+ 193 0015 AE010000 		.4byte	.LASF184
+ 194 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 195 001d 00000000 		.4byte	0
+ 196 0021 00000000 		.4byte	.Ldebug_line0
+ 197 0025 02       		.uleb128 0x2
+ 198 0026 04       		.byte	0x4
+ 199 0027 05       		.byte	0x5
+ 200 0028 696E7400 		.ascii	"int\000"
+ 201 002c 03       		.uleb128 0x3
+ 202 002d 04       		.byte	0x4
+ 203 002e 07       		.byte	0x7
+ 204 002f 2C040000 		.4byte	.LASF0
+ 205 0033 03       		.uleb128 0x3
+ 206 0034 01       		.byte	0x1
+ 207 0035 06       		.byte	0x6
+ 208 0036 42010000 		.4byte	.LASF1
+ 209 003a 04       		.uleb128 0x4
+ 210 003b 72000000 		.4byte	.LASF4
+ 211 003f 02       		.byte	0x2
+ 212 0040 1C       		.byte	0x1c
+ 213 0041 45000000 		.4byte	0x45
+ 214 0045 03       		.uleb128 0x3
+ 215 0046 01       		.byte	0x1
+ 216 0047 08       		.byte	0x8
+ 217 0048 75070000 		.4byte	.LASF2
+ 218 004c 03       		.uleb128 0x3
+ 219 004d 02       		.byte	0x2
+ 220 004e 05       		.byte	0x5
+ 221 004f 00000000 		.4byte	.LASF3
+ 222 0053 04       		.uleb128 0x4
+ 223 0054 B7080000 		.4byte	.LASF5
+ 224 0058 02       		.byte	0x2
+ 225 0059 26       		.byte	0x26
+ 226 005a 5E000000 		.4byte	0x5e
+ 227 005e 03       		.uleb128 0x3
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 5
+
+
+ 228 005f 02       		.byte	0x2
+ 229 0060 07       		.byte	0x7
+ 230 0061 D8040000 		.4byte	.LASF6
+ 231 0065 04       		.uleb128 0x4
+ 232 0066 F3080000 		.4byte	.LASF7
+ 233 006a 02       		.byte	0x2
+ 234 006b 37       		.byte	0x37
+ 235 006c 70000000 		.4byte	0x70
+ 236 0070 03       		.uleb128 0x3
+ 237 0071 04       		.byte	0x4
+ 238 0072 05       		.byte	0x5
+ 239 0073 DE010000 		.4byte	.LASF8
+ 240 0077 04       		.uleb128 0x4
+ 241 0078 DF030000 		.4byte	.LASF9
+ 242 007c 02       		.byte	0x2
+ 243 007d 38       		.byte	0x38
+ 244 007e 82000000 		.4byte	0x82
+ 245 0082 03       		.uleb128 0x3
+ 246 0083 04       		.byte	0x4
+ 247 0084 07       		.byte	0x7
+ 248 0085 8A040000 		.4byte	.LASF10
+ 249 0089 03       		.uleb128 0x3
+ 250 008a 08       		.byte	0x8
+ 251 008b 05       		.byte	0x5
+ 252 008c 54030000 		.4byte	.LASF11
+ 253 0090 03       		.uleb128 0x3
+ 254 0091 08       		.byte	0x8
+ 255 0092 07       		.byte	0x7
+ 256 0093 61010000 		.4byte	.LASF12
+ 257 0097 04       		.uleb128 0x4
+ 258 0098 0A0A0000 		.4byte	.LASF13
+ 259 009c 03       		.byte	0x3
+ 260 009d 2A       		.byte	0x2a
+ 261 009e 3A000000 		.4byte	0x3a
+ 262 00a2 04       		.uleb128 0x4
+ 263 00a3 70030000 		.4byte	.LASF14
+ 264 00a7 03       		.byte	0x3
+ 265 00a8 36       		.byte	0x36
+ 266 00a9 53000000 		.4byte	0x53
+ 267 00ad 04       		.uleb128 0x4
+ 268 00ae 6D070000 		.4byte	.LASF15
+ 269 00b2 03       		.byte	0x3
+ 270 00b3 41       		.byte	0x41
+ 271 00b4 65000000 		.4byte	0x65
+ 272 00b8 04       		.uleb128 0x4
+ 273 00b9 41080000 		.4byte	.LASF16
+ 274 00bd 03       		.byte	0x3
+ 275 00be 42       		.byte	0x42
+ 276 00bf 77000000 		.4byte	0x77
+ 277 00c3 03       		.uleb128 0x3
+ 278 00c4 01       		.byte	0x1
+ 279 00c5 02       		.byte	0x2
+ 280 00c6 67070000 		.4byte	.LASF17
+ 281 00ca 05       		.uleb128 0x5
+ 282 00cb B8000000 		.4byte	0xb8
+ 283 00cf 03       		.uleb128 0x3
+ 284 00d0 04       		.byte	0x4
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 6
+
+
+ 285 00d1 07       		.byte	0x7
+ 286 00d2 1B0A0000 		.4byte	.LASF18
+ 287 00d6 03       		.uleb128 0x3
+ 288 00d7 01       		.byte	0x1
+ 289 00d8 08       		.byte	0x8
+ 290 00d9 A0080000 		.4byte	.LASF19
+ 291 00dd 03       		.uleb128 0x3
+ 292 00de 04       		.byte	0x4
+ 293 00df 04       		.byte	0x4
+ 294 00e0 C2060000 		.4byte	.LASF20
+ 295 00e4 06       		.uleb128 0x6
+ 296 00e5 C2050000 		.4byte	.LASF185
+ 297 00e9 01       		.byte	0x1
+ 298 00ea 04       		.byte	0x4
+ 299 00eb AA       		.byte	0xaa
+ 300 00ec 1F030000 		.4byte	0x31f
+ 301 00f0 07       		.uleb128 0x7
+ 302 00f1 DF080000 		.4byte	.LASF21
+ 303 00f5 72       		.sleb128 -14
+ 304 00f6 07       		.uleb128 0x7
+ 305 00f7 67040000 		.4byte	.LASF22
+ 306 00fb 74       		.sleb128 -12
+ 307 00fc 07       		.uleb128 0x7
+ 308 00fd EA030000 		.4byte	.LASF23
+ 309 0101 75       		.sleb128 -11
+ 310 0102 07       		.uleb128 0x7
+ 311 0103 71080000 		.4byte	.LASF24
+ 312 0107 76       		.sleb128 -10
+ 313 0108 07       		.uleb128 0x7
+ 314 0109 FF050000 		.4byte	.LASF25
+ 315 010d 7B       		.sleb128 -5
+ 316 010e 07       		.uleb128 0x7
+ 317 010f 3D0A0000 		.4byte	.LASF26
+ 318 0113 7C       		.sleb128 -4
+ 319 0114 07       		.uleb128 0x7
+ 320 0115 B8030000 		.4byte	.LASF27
+ 321 0119 7E       		.sleb128 -2
+ 322 011a 07       		.uleb128 0x7
+ 323 011b 80050000 		.4byte	.LASF28
+ 324 011f 7F       		.sleb128 -1
+ 325 0120 07       		.uleb128 0x7
+ 326 0121 11090000 		.4byte	.LASF29
+ 327 0125 00       		.sleb128 0
+ 328 0126 07       		.uleb128 0x7
+ 329 0127 31000000 		.4byte	.LASF30
+ 330 012b 01       		.sleb128 1
+ 331 012c 07       		.uleb128 0x7
+ 332 012d 5B090000 		.4byte	.LASF31
+ 333 0131 02       		.sleb128 2
+ 334 0132 07       		.uleb128 0x7
+ 335 0133 CF070000 		.4byte	.LASF32
+ 336 0137 03       		.sleb128 3
+ 337 0138 07       		.uleb128 0x7
+ 338 0139 26080000 		.4byte	.LASF33
+ 339 013d 04       		.sleb128 4
+ 340 013e 07       		.uleb128 0x7
+ 341 013f 120A0000 		.4byte	.LASF34
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 7
+
+
+ 342 0143 05       		.sleb128 5
+ 343 0144 07       		.uleb128 0x7
+ 344 0145 DC090000 		.4byte	.LASF35
+ 345 0149 06       		.sleb128 6
+ 346 014a 07       		.uleb128 0x7
+ 347 014b C10A0000 		.4byte	.LASF36
+ 348 014f 07       		.sleb128 7
+ 349 0150 07       		.uleb128 0x7
+ 350 0151 0E010000 		.4byte	.LASF37
+ 351 0155 08       		.sleb128 8
+ 352 0156 07       		.uleb128 0x7
+ 353 0157 42060000 		.4byte	.LASF38
+ 354 015b 09       		.sleb128 9
+ 355 015c 07       		.uleb128 0x7
+ 356 015d B6070000 		.4byte	.LASF39
+ 357 0161 0A       		.sleb128 10
+ 358 0162 07       		.uleb128 0x7
+ 359 0163 CC0A0000 		.4byte	.LASF40
+ 360 0167 0B       		.sleb128 11
+ 361 0168 07       		.uleb128 0x7
+ 362 0169 3E050000 		.4byte	.LASF41
+ 363 016d 0C       		.sleb128 12
+ 364 016e 07       		.uleb128 0x7
+ 365 016f 57060000 		.4byte	.LASF42
+ 366 0173 0D       		.sleb128 13
+ 367 0174 07       		.uleb128 0x7
+ 368 0175 43040000 		.4byte	.LASF43
+ 369 0179 0E       		.sleb128 14
+ 370 017a 07       		.uleb128 0x7
+ 371 017b D1000000 		.4byte	.LASF44
+ 372 017f 0F       		.sleb128 15
+ 373 0180 07       		.uleb128 0x7
+ 374 0181 0C020000 		.4byte	.LASF45
+ 375 0185 10       		.sleb128 16
+ 376 0186 07       		.uleb128 0x7
+ 377 0187 55040000 		.4byte	.LASF46
+ 378 018b 11       		.sleb128 17
+ 379 018c 07       		.uleb128 0x7
+ 380 018d 5C0A0000 		.4byte	.LASF47
+ 381 0191 12       		.sleb128 18
+ 382 0192 07       		.uleb128 0x7
+ 383 0193 FD040000 		.4byte	.LASF48
+ 384 0197 13       		.sleb128 19
+ 385 0198 07       		.uleb128 0x7
+ 386 0199 23000000 		.4byte	.LASF49
+ 387 019d 14       		.sleb128 20
+ 388 019e 07       		.uleb128 0x7
+ 389 019f 34010000 		.4byte	.LASF50
+ 390 01a3 15       		.sleb128 21
+ 391 01a4 07       		.uleb128 0x7
+ 392 01a5 8A0A0000 		.4byte	.LASF51
+ 393 01a9 16       		.sleb128 22
+ 394 01aa 07       		.uleb128 0x7
+ 395 01ab 1E020000 		.4byte	.LASF52
+ 396 01af 17       		.sleb128 23
+ 397 01b0 07       		.uleb128 0x7
+ 398 01b1 83070000 		.4byte	.LASF53
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 8
+
+
+ 399 01b5 18       		.sleb128 24
+ 400 01b6 07       		.uleb128 0x7
+ 401 01b7 A3070000 		.4byte	.LASF54
+ 402 01bb 19       		.sleb128 25
+ 403 01bc 07       		.uleb128 0x7
+ 404 01bd F6070000 		.4byte	.LASF55
+ 405 01c1 1A       		.sleb128 26
+ 406 01c2 07       		.uleb128 0x7
+ 407 01c3 8D050000 		.4byte	.LASF56
+ 408 01c7 1B       		.sleb128 27
+ 409 01c8 07       		.uleb128 0x7
+ 410 01c9 CD090000 		.4byte	.LASF57
+ 411 01cd 1C       		.sleb128 28
+ 412 01ce 07       		.uleb128 0x7
+ 413 01cf B70A0000 		.4byte	.LASF58
+ 414 01d3 1D       		.sleb128 29
+ 415 01d4 07       		.uleb128 0x7
+ 416 01d5 04010000 		.4byte	.LASF59
+ 417 01d9 1E       		.sleb128 30
+ 418 01da 07       		.uleb128 0x7
+ 419 01db 81080000 		.4byte	.LASF60
+ 420 01df 1F       		.sleb128 31
+ 421 01e0 07       		.uleb128 0x7
+ 422 01e1 4F0A0000 		.4byte	.LASF61
+ 423 01e5 20       		.sleb128 32
+ 424 01e6 07       		.uleb128 0x7
+ 425 01e7 EE010000 		.4byte	.LASF62
+ 426 01eb 21       		.sleb128 33
+ 427 01ec 07       		.uleb128 0x7
+ 428 01ed F7000000 		.4byte	.LASF63
+ 429 01f1 22       		.sleb128 34
+ 430 01f2 07       		.uleb128 0x7
+ 431 01f3 34050000 		.4byte	.LASF64
+ 432 01f7 23       		.sleb128 35
+ 433 01f8 07       		.uleb128 0x7
+ 434 01f9 4D060000 		.4byte	.LASF65
+ 435 01fd 24       		.sleb128 36
+ 436 01fe 07       		.uleb128 0x7
+ 437 01ff E7090000 		.4byte	.LASF66
+ 438 0203 25       		.sleb128 37
+ 439 0204 07       		.uleb128 0x7
+ 440 0205 65080000 		.4byte	.LASF67
+ 441 0209 26       		.sleb128 38
+ 442 020a 07       		.uleb128 0x7
+ 443 020b 50050000 		.4byte	.LASF68
+ 444 020f 27       		.sleb128 39
+ 445 0210 07       		.uleb128 0x7
+ 446 0211 25050000 		.4byte	.LASF69
+ 447 0215 28       		.sleb128 40
+ 448 0216 07       		.uleb128 0x7
+ 449 0217 E8000000 		.4byte	.LASF70
+ 450 021b 29       		.sleb128 41
+ 451 021c 07       		.uleb128 0x7
+ 452 021d A7030000 		.4byte	.LASF71
+ 453 0221 2A       		.sleb128 42
+ 454 0222 07       		.uleb128 0x7
+ 455 0223 6C050000 		.4byte	.LASF72
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 9
+
+
+ 456 0227 2B       		.sleb128 43
+ 457 0228 07       		.uleb128 0x7
+ 458 0229 C4030000 		.4byte	.LASF73
+ 459 022d 2C       		.sleb128 44
+ 460 022e 07       		.uleb128 0x7
+ 461 022f 0E080000 		.4byte	.LASF74
+ 462 0233 2D       		.sleb128 45
+ 463 0234 07       		.uleb128 0x7
+ 464 0235 F2050000 		.4byte	.LASF75
+ 465 0239 2E       		.sleb128 46
+ 466 023a 07       		.uleb128 0x7
+ 467 023b 8E080000 		.4byte	.LASF76
+ 468 023f 2F       		.sleb128 47
+ 469 0240 07       		.uleb128 0x7
+ 470 0241 5D070000 		.4byte	.LASF77
+ 471 0245 30       		.sleb128 48
+ 472 0246 07       		.uleb128 0x7
+ 473 0247 1E010000 		.4byte	.LASF78
+ 474 024b 31       		.sleb128 49
+ 475 024c 07       		.uleb128 0x7
+ 476 024d 38060000 		.4byte	.LASF79
+ 477 0251 32       		.sleb128 50
+ 478 0252 07       		.uleb128 0x7
+ 479 0253 37070000 		.4byte	.LASF80
+ 480 0257 33       		.sleb128 51
+ 481 0258 07       		.uleb128 0x7
+ 482 0259 9C030000 		.4byte	.LASF81
+ 483 025d 34       		.sleb128 52
+ 484 025e 07       		.uleb128 0x7
+ 485 025f EB070000 		.4byte	.LASF82
+ 486 0263 35       		.sleb128 53
+ 487 0264 07       		.uleb128 0x7
+ 488 0265 8E030000 		.4byte	.LASF83
+ 489 0269 36       		.sleb128 54
+ 490 026a 07       		.uleb128 0x7
+ 491 026b C2080000 		.4byte	.LASF84
+ 492 026f 37       		.sleb128 55
+ 493 0270 07       		.uleb128 0x7
+ 494 0271 8B090000 		.4byte	.LASF85
+ 495 0275 38       		.sleb128 56
+ 496 0276 07       		.uleb128 0x7
+ 497 0277 650A0000 		.4byte	.LASF86
+ 498 027b 39       		.sleb128 57
+ 499 027c 07       		.uleb128 0x7
+ 500 027d EB040000 		.4byte	.LASF87
+ 501 0281 3A       		.sleb128 58
+ 502 0282 07       		.uleb128 0x7
+ 503 0283 0B060000 		.4byte	.LASF88
+ 504 0287 3B       		.sleb128 59
+ 505 0288 07       		.uleb128 0x7
+ 506 0289 4B070000 		.4byte	.LASF89
+ 507 028d 3C       		.sleb128 60
+ 508 028e 07       		.uleb128 0x7
+ 509 028f E9050000 		.4byte	.LASF90
+ 510 0293 3D       		.sleb128 61
+ 511 0294 07       		.uleb128 0x7
+ 512 0295 62030000 		.4byte	.LASF91
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 10
+
+
+ 513 0299 3E       		.sleb128 62
+ 514 029a 07       		.uleb128 0x7
+ 515 029b 69060000 		.4byte	.LASF92
+ 516 029f 3F       		.sleb128 63
+ 517 02a0 07       		.uleb128 0x7
+ 518 02a1 DD070000 		.4byte	.LASF93
+ 519 02a5 C000     		.sleb128 64
+ 520 02a7 07       		.uleb128 0x7
+ 521 02a8 4E010000 		.4byte	.LASF94
+ 522 02ac C100     		.sleb128 65
+ 523 02ae 07       		.uleb128 0x7
+ 524 02af 980A0000 		.4byte	.LASF95
+ 525 02b3 C200     		.sleb128 66
+ 526 02b5 07       		.uleb128 0x7
+ 527 02b6 76060000 		.4byte	.LASF96
+ 528 02ba C300     		.sleb128 67
+ 529 02bc 07       		.uleb128 0x7
+ 530 02bd 7C000000 		.4byte	.LASF97
+ 531 02c1 C400     		.sleb128 68
+ 532 02c3 07       		.uleb128 0x7
+ 533 02c4 3F000000 		.4byte	.LASF98
+ 534 02c8 C500     		.sleb128 69
+ 535 02ca 07       		.uleb128 0x7
+ 536 02cb F8030000 		.4byte	.LASF99
+ 537 02cf C600     		.sleb128 70
+ 538 02d1 07       		.uleb128 0x7
+ 539 02d2 22060000 		.4byte	.LASF100
+ 540 02d6 C700     		.sleb128 71
+ 541 02d8 07       		.uleb128 0x7
+ 542 02d9 7D040000 		.4byte	.LASF101
+ 543 02dd C800     		.sleb128 72
+ 544 02df 07       		.uleb128 0x7
+ 545 02e0 51000000 		.4byte	.LASF102
+ 546 02e4 C900     		.sleb128 73
+ 547 02e6 07       		.uleb128 0x7
+ 548 02e7 AE040000 		.4byte	.LASF103
+ 549 02eb CA00     		.sleb128 74
+ 550 02ed 07       		.uleb128 0x7
+ 551 02ee CC080000 		.4byte	.LASF104
+ 552 02f2 CB00     		.sleb128 75
+ 553 02f4 07       		.uleb128 0x7
+ 554 02f5 A60A0000 		.4byte	.LASF105
+ 555 02f9 CC00     		.sleb128 76
+ 556 02fb 07       		.uleb128 0x7
+ 557 02fc B1060000 		.4byte	.LASF106
+ 558 0300 CD00     		.sleb128 77
+ 559 0302 07       		.uleb128 0x7
+ 560 0303 22040000 		.4byte	.LASF107
+ 561 0307 CE00     		.sleb128 78
+ 562 0309 07       		.uleb128 0x7
+ 563 030a A5080000 		.4byte	.LASF108
+ 564 030e CF00     		.sleb128 79
+ 565 0310 07       		.uleb128 0x7
+ 566 0311 C1070000 		.4byte	.LASF109
+ 567 0315 D000     		.sleb128 80
+ 568 0317 07       		.uleb128 0x7
+ 569 0318 340A0000 		.4byte	.LASF110
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 11
+
+
+ 570 031c D100     		.sleb128 81
+ 571 031e 00       		.byte	0
+ 572 031f 05       		.uleb128 0x5
+ 573 0320 A2000000 		.4byte	0xa2
+ 574 0324 05       		.uleb128 0x5
+ 575 0325 AD000000 		.4byte	0xad
+ 576 0329 08       		.uleb128 0x8
+ 577 032a 01       		.byte	0x1
+ 578 032b 04       		.byte	0x4
+ 579 032c F901     		.2byte	0x1f9
+ 580 032e 3F030000 		.4byte	0x33f
+ 581 0332 07       		.uleb128 0x7
+ 582 0333 C3000000 		.4byte	.LASF111
+ 583 0337 00       		.sleb128 0
+ 584 0338 07       		.uleb128 0x7
+ 585 0339 E7010000 		.4byte	.LASF112
+ 586 033d 01       		.sleb128 1
+ 587 033e 00       		.byte	0
+ 588 033f 09       		.uleb128 0x9
+ 589 0340 2C090000 		.4byte	.LASF113
+ 590 0344 04       		.byte	0x4
+ 591 0345 F901     		.2byte	0x1f9
+ 592 0347 29030000 		.4byte	0x329
+ 593 034b 0A       		.uleb128 0xa
+ 594 034c 54       		.byte	0x54
+ 595 034d 04       		.byte	0x4
+ 596 034e FD04     		.2byte	0x4fd
+ 597 0350 27050000 		.4byte	0x527
+ 598 0354 0B       		.uleb128 0xb
+ 599 0355 43523100 		.ascii	"CR1\000"
+ 600 0359 04       		.byte	0x4
+ 601 035a FF04     		.2byte	0x4ff
+ 602 035c 1F030000 		.4byte	0x31f
+ 603 0360 00       		.byte	0
+ 604 0361 0C       		.uleb128 0xc
+ 605 0362 EA060000 		.4byte	.LASF114
+ 606 0366 04       		.byte	0x4
+ 607 0367 0005     		.2byte	0x500
+ 608 0369 A2000000 		.4byte	0xa2
+ 609 036d 02       		.byte	0x2
+ 610 036e 0B       		.uleb128 0xb
+ 611 036f 43523200 		.ascii	"CR2\000"
+ 612 0373 04       		.byte	0x4
+ 613 0374 0105     		.2byte	0x501
+ 614 0376 1F030000 		.4byte	0x31f
+ 615 037a 04       		.byte	0x4
+ 616 037b 0C       		.uleb128 0xc
+ 617 037c F4060000 		.4byte	.LASF115
+ 618 0380 04       		.byte	0x4
+ 619 0381 0205     		.2byte	0x502
+ 620 0383 A2000000 		.4byte	0xa2
+ 621 0387 06       		.byte	0x6
+ 622 0388 0C       		.uleb128 0xc
+ 623 0389 1D060000 		.4byte	.LASF116
+ 624 038d 04       		.byte	0x4
+ 625 038e 0305     		.2byte	0x503
+ 626 0390 1F030000 		.4byte	0x31f
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 12
+
+
+ 627 0394 08       		.byte	0x8
+ 628 0395 0C       		.uleb128 0xc
+ 629 0396 FE060000 		.4byte	.LASF117
+ 630 039a 04       		.byte	0x4
+ 631 039b 0405     		.2byte	0x504
+ 632 039d A2000000 		.4byte	0xa2
+ 633 03a1 0A       		.byte	0xa
+ 634 03a2 0C       		.uleb128 0xc
+ 635 03a3 3A000000 		.4byte	.LASF118
+ 636 03a7 04       		.byte	0x4
+ 637 03a8 0505     		.2byte	0x505
+ 638 03aa 1F030000 		.4byte	0x31f
+ 639 03ae 0C       		.byte	0xc
+ 640 03af 0C       		.uleb128 0xc
+ 641 03b0 08070000 		.4byte	.LASF119
+ 642 03b4 04       		.byte	0x4
+ 643 03b5 0605     		.2byte	0x506
+ 644 03b7 A2000000 		.4byte	0xa2
+ 645 03bb 0E       		.byte	0xe
+ 646 03bc 0B       		.uleb128 0xb
+ 647 03bd 535200   		.ascii	"SR\000"
+ 648 03c0 04       		.byte	0x4
+ 649 03c1 0705     		.2byte	0x507
+ 650 03c3 1F030000 		.4byte	0x31f
+ 651 03c7 10       		.byte	0x10
+ 652 03c8 0C       		.uleb128 0xc
+ 653 03c9 81090000 		.4byte	.LASF120
+ 654 03cd 04       		.byte	0x4
+ 655 03ce 0805     		.2byte	0x508
+ 656 03d0 A2000000 		.4byte	0xa2
+ 657 03d4 12       		.byte	0x12
+ 658 03d5 0B       		.uleb128 0xb
+ 659 03d6 45475200 		.ascii	"EGR\000"
+ 660 03da 04       		.byte	0x4
+ 661 03db 0905     		.2byte	0x509
+ 662 03dd 1F030000 		.4byte	0x31f
+ 663 03e1 14       		.byte	0x14
+ 664 03e2 0C       		.uleb128 0xc
+ 665 03e3 12070000 		.4byte	.LASF121
+ 666 03e7 04       		.byte	0x4
+ 667 03e8 0A05     		.2byte	0x50a
+ 668 03ea A2000000 		.4byte	0xa2
+ 669 03ee 16       		.byte	0x16
+ 670 03ef 0C       		.uleb128 0xc
+ 671 03f0 28010000 		.4byte	.LASF122
+ 672 03f4 04       		.byte	0x4
+ 673 03f5 0B05     		.2byte	0x50b
+ 674 03f7 1F030000 		.4byte	0x31f
+ 675 03fb 18       		.byte	0x18
+ 676 03fc 0C       		.uleb128 0xc
+ 677 03fd 37080000 		.4byte	.LASF123
+ 678 0401 04       		.byte	0x4
+ 679 0402 0C05     		.2byte	0x50c
+ 680 0404 A2000000 		.4byte	0xa2
+ 681 0408 1A       		.byte	0x1a
+ 682 0409 0C       		.uleb128 0xc
+ 683 040a 2E010000 		.4byte	.LASF124
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 13
+
+
+ 684 040e 04       		.byte	0x4
+ 685 040f 0D05     		.2byte	0x50d
+ 686 0411 1F030000 		.4byte	0x31f
+ 687 0415 1C       		.byte	0x1c
+ 688 0416 0C       		.uleb128 0xc
+ 689 0417 2D070000 		.4byte	.LASF125
+ 690 041b 04       		.byte	0x4
+ 691 041c 0E05     		.2byte	0x50e
+ 692 041e A2000000 		.4byte	0xa2
+ 693 0422 1E       		.byte	0x1e
+ 694 0423 0C       		.uleb128 0xc
+ 695 0424 4F030000 		.4byte	.LASF126
+ 696 0428 04       		.byte	0x4
+ 697 0429 0F05     		.2byte	0x50f
+ 698 042b 1F030000 		.4byte	0x31f
+ 699 042f 20       		.byte	0x20
+ 700 0430 0C       		.uleb128 0xc
+ 701 0431 AA090000 		.4byte	.LASF127
+ 702 0435 04       		.byte	0x4
+ 703 0436 1005     		.2byte	0x510
+ 704 0438 A2000000 		.4byte	0xa2
+ 705 043c 22       		.byte	0x22
+ 706 043d 0B       		.uleb128 0xb
+ 707 043e 434E5400 		.ascii	"CNT\000"
+ 708 0442 04       		.byte	0x4
+ 709 0443 1105     		.2byte	0x511
+ 710 0445 CA000000 		.4byte	0xca
+ 711 0449 24       		.byte	0x24
+ 712 044a 0B       		.uleb128 0xb
+ 713 044b 50534300 		.ascii	"PSC\000"
+ 714 044f 04       		.byte	0x4
+ 715 0450 1205     		.2byte	0x512
+ 716 0452 1F030000 		.4byte	0x31f
+ 717 0456 28       		.byte	0x28
+ 718 0457 0C       		.uleb128 0xc
+ 719 0458 41070000 		.4byte	.LASF128
+ 720 045c 04       		.byte	0x4
+ 721 045d 1305     		.2byte	0x513
+ 722 045f A2000000 		.4byte	0xa2
+ 723 0463 2A       		.byte	0x2a
+ 724 0464 0B       		.uleb128 0xb
+ 725 0465 41525200 		.ascii	"ARR\000"
+ 726 0469 04       		.byte	0x4
+ 727 046a 1405     		.2byte	0x514
+ 728 046c CA000000 		.4byte	0xca
+ 729 0470 2C       		.byte	0x2c
+ 730 0471 0B       		.uleb128 0xb
+ 731 0472 52435200 		.ascii	"RCR\000"
+ 732 0476 04       		.byte	0x4
+ 733 0477 1505     		.2byte	0x515
+ 734 0479 1F030000 		.4byte	0x31f
+ 735 047d 30       		.byte	0x30
+ 736 047e 0C       		.uleb128 0xc
+ 737 047f 78010000 		.4byte	.LASF129
+ 738 0483 04       		.byte	0x4
+ 739 0484 1605     		.2byte	0x516
+ 740 0486 A2000000 		.4byte	0xa2
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 14
+
+
+ 741 048a 32       		.byte	0x32
+ 742 048b 0C       		.uleb128 0xc
+ 743 048c C8090000 		.4byte	.LASF130
+ 744 0490 04       		.byte	0x4
+ 745 0491 1705     		.2byte	0x517
+ 746 0493 CA000000 		.4byte	0xca
+ 747 0497 34       		.byte	0x34
+ 748 0498 0C       		.uleb128 0xc
+ 749 0499 1D040000 		.4byte	.LASF131
+ 750 049d 04       		.byte	0x4
+ 751 049e 1805     		.2byte	0x518
+ 752 04a0 CA000000 		.4byte	0xca
+ 753 04a4 38       		.byte	0x38
+ 754 04a5 0C       		.uleb128 0xc
+ 755 04a6 D7090000 		.4byte	.LASF132
+ 756 04aa 04       		.byte	0x4
+ 757 04ab 1905     		.2byte	0x519
+ 758 04ad CA000000 		.4byte	0xca
+ 759 04b1 3C       		.byte	0x3c
+ 760 04b2 0C       		.uleb128 0xc
+ 761 04b3 E3000000 		.4byte	.LASF133
+ 762 04b7 04       		.byte	0x4
+ 763 04b8 1A05     		.2byte	0x51a
+ 764 04ba CA000000 		.4byte	0xca
+ 765 04be 40       		.byte	0x40
+ 766 04bf 0C       		.uleb128 0xc
+ 767 04c0 19010000 		.4byte	.LASF134
+ 768 04c4 04       		.byte	0x4
+ 769 04c5 1B05     		.2byte	0x51b
+ 770 04c7 1F030000 		.4byte	0x31f
+ 771 04cb 44       		.byte	0x44
+ 772 04cc 0C       		.uleb128 0xc
+ 773 04cd 83010000 		.4byte	.LASF135
+ 774 04d1 04       		.byte	0x4
+ 775 04d2 1C05     		.2byte	0x51c
+ 776 04d4 A2000000 		.4byte	0xa2
+ 777 04d8 46       		.byte	0x46
+ 778 04d9 0B       		.uleb128 0xb
+ 779 04da 44435200 		.ascii	"DCR\000"
+ 780 04de 04       		.byte	0x4
+ 781 04df 1D05     		.2byte	0x51d
+ 782 04e1 1F030000 		.4byte	0x31f
+ 783 04e5 48       		.byte	0x48
+ 784 04e6 0C       		.uleb128 0xc
+ 785 04e7 8E010000 		.4byte	.LASF136
+ 786 04eb 04       		.byte	0x4
+ 787 04ec 1E05     		.2byte	0x51e
+ 788 04ee A2000000 		.4byte	0xa2
+ 789 04f2 4A       		.byte	0x4a
+ 790 04f3 0C       		.uleb128 0xc
+ 791 04f4 9F060000 		.4byte	.LASF137
+ 792 04f8 04       		.byte	0x4
+ 793 04f9 1F05     		.2byte	0x51f
+ 794 04fb 1F030000 		.4byte	0x31f
+ 795 04ff 4C       		.byte	0x4c
+ 796 0500 0C       		.uleb128 0xc
+ 797 0501 99010000 		.4byte	.LASF138
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 15
+
+
+ 798 0505 04       		.byte	0x4
+ 799 0506 2005     		.2byte	0x520
+ 800 0508 A2000000 		.4byte	0xa2
+ 801 050c 4E       		.byte	0x4e
+ 802 050d 0B       		.uleb128 0xb
+ 803 050e 4F5200   		.ascii	"OR\000"
+ 804 0511 04       		.byte	0x4
+ 805 0512 2105     		.2byte	0x521
+ 806 0514 1F030000 		.4byte	0x31f
+ 807 0518 50       		.byte	0x50
+ 808 0519 0C       		.uleb128 0xc
+ 809 051a 82060000 		.4byte	.LASF139
+ 810 051e 04       		.byte	0x4
+ 811 051f 2205     		.2byte	0x522
+ 812 0521 A2000000 		.4byte	0xa2
+ 813 0525 52       		.byte	0x52
+ 814 0526 00       		.byte	0
+ 815 0527 09       		.uleb128 0x9
+ 816 0528 B7000000 		.4byte	.LASF140
+ 817 052c 04       		.byte	0x4
+ 818 052d 2305     		.2byte	0x523
+ 819 052f 4B030000 		.4byte	0x34b
+ 820 0533 0D       		.uleb128 0xd
+ 821 0534 01       		.byte	0x1
+ 822 0535 05       		.byte	0x5
+ 823 0536 37       		.byte	0x37
+ 824 0537 48050000 		.4byte	0x548
+ 825 053b 07       		.uleb128 0x7
+ 826 053c B4090000 		.4byte	.LASF141
+ 827 0540 00       		.sleb128 0
+ 828 0541 07       		.uleb128 0x7
+ 829 0542 240A0000 		.4byte	.LASF142
+ 830 0546 04       		.sleb128 4
+ 831 0547 00       		.byte	0
+ 832 0548 04       		.uleb128 0x4
+ 833 0549 FB010000 		.4byte	.LASF143
+ 834 054d 05       		.byte	0x5
+ 835 054e 3A       		.byte	0x3a
+ 836 054f 33050000 		.4byte	0x533
+ 837 0553 0D       		.uleb128 0xd
+ 838 0554 01       		.byte	0x1
+ 839 0555 05       		.byte	0x5
+ 840 0556 43       		.byte	0x43
+ 841 0557 6E050000 		.4byte	0x56e
+ 842 055b 07       		.uleb128 0x7
+ 843 055c 47090000 		.4byte	.LASF144
+ 844 0560 08       		.sleb128 8
+ 845 0561 07       		.uleb128 0x7
+ 846 0562 79030000 		.4byte	.LASF145
+ 847 0566 0C       		.sleb128 12
+ 848 0567 07       		.uleb128 0x7
+ 849 0568 8E000000 		.4byte	.LASF146
+ 850 056c 10       		.sleb128 16
+ 851 056d 00       		.byte	0
+ 852 056e 04       		.uleb128 0x4
+ 853 056f FD080000 		.4byte	.LASF147
+ 854 0573 05       		.byte	0x5
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 16
+
+
+ 855 0574 47       		.byte	0x47
+ 856 0575 53050000 		.4byte	0x553
+ 857 0579 0E       		.uleb128 0xe
+ 858 057a 08       		.byte	0x8
+ 859 057b 05       		.byte	0x5
+ 860 057c 50       		.byte	0x50
+ 861 057d B2050000 		.4byte	0x5b2
+ 862 0581 0F       		.uleb128 0xf
+ 863 0582 2E060000 		.4byte	.LASF148
+ 864 0586 05       		.byte	0x5
+ 865 0587 52       		.byte	0x52
+ 866 0588 B8000000 		.4byte	0xb8
+ 867 058c 00       		.byte	0
+ 868 058d 0F       		.uleb128 0xf
+ 869 058e E0060000 		.4byte	.LASF149
+ 870 0592 05       		.byte	0x5
+ 871 0593 55       		.byte	0x55
+ 872 0594 48050000 		.4byte	0x548
+ 873 0598 04       		.byte	0x4
+ 874 0599 0F       		.uleb128 0xf
+ 875 059a A4060000 		.4byte	.LASF150
+ 876 059e 05       		.byte	0x5
+ 877 059f 58       		.byte	0x58
+ 878 05a0 6E050000 		.4byte	0x56e
+ 879 05a4 05       		.byte	0x5
+ 880 05a5 0F       		.uleb128 0xf
+ 881 05a6 5E000000 		.4byte	.LASF151
+ 882 05aa 05       		.byte	0x5
+ 883 05ab 5B       		.byte	0x5b
+ 884 05ac 3F030000 		.4byte	0x33f
+ 885 05b0 06       		.byte	0x6
+ 886 05b1 00       		.byte	0
+ 887 05b2 04       		.uleb128 0x4
+ 888 05b3 1B090000 		.4byte	.LASF152
+ 889 05b7 05       		.byte	0x5
+ 890 05b8 5D       		.byte	0x5d
+ 891 05b9 79050000 		.4byte	0x579
+ 892 05bd 0E       		.uleb128 0xe
+ 893 05be 04       		.byte	0x4
+ 894 05bf 06       		.byte	0x6
+ 895 05c0 36       		.byte	0x36
+ 896 05c1 F6050000 		.4byte	0x5f6
+ 897 05c5 0F       		.uleb128 0xf
+ 898 05c6 5C050000 		.4byte	.LASF153
+ 899 05ca 06       		.byte	0x6
+ 900 05cb 38       		.byte	0x38
+ 901 05cc 97000000 		.4byte	0x97
+ 902 05d0 00       		.byte	0
+ 903 05d1 0F       		.uleb128 0xf
+ 904 05d2 C7050000 		.4byte	.LASF154
+ 905 05d6 06       		.byte	0x6
+ 906 05d7 3D       		.byte	0x3d
+ 907 05d8 97000000 		.4byte	0x97
+ 908 05dc 01       		.byte	0x1
+ 909 05dd 0F       		.uleb128 0xf
+ 910 05de 4A080000 		.4byte	.LASF155
+ 911 05e2 06       		.byte	0x6
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 17
+
+
+ 912 05e3 42       		.byte	0x42
+ 913 05e4 97000000 		.4byte	0x97
+ 914 05e8 02       		.byte	0x2
+ 915 05e9 0F       		.uleb128 0xf
+ 916 05ea 10000000 		.4byte	.LASF156
+ 917 05ee 06       		.byte	0x6
+ 918 05ef 47       		.byte	0x47
+ 919 05f0 3F030000 		.4byte	0x33f
+ 920 05f4 03       		.byte	0x3
+ 921 05f5 00       		.byte	0
+ 922 05f6 04       		.uleb128 0x4
+ 923 05f7 9A050000 		.4byte	.LASF157
+ 924 05fb 06       		.byte	0x6
+ 925 05fc 4A       		.byte	0x4a
+ 926 05fd BD050000 		.4byte	0x5bd
+ 927 0601 0E       		.uleb128 0xe
+ 928 0602 04       		.byte	0x4
+ 929 0603 07       		.byte	0x7
+ 930 0604 96       		.byte	0x96
+ 931 0605 22060000 		.4byte	0x622
+ 932 0609 10       		.uleb128 0x10
+ 933 060a 73657400 		.ascii	"set\000"
+ 934 060e 07       		.byte	0x7
+ 935 060f 97       		.byte	0x97
+ 936 0610 A2000000 		.4byte	0xa2
+ 937 0614 00       		.byte	0
+ 938 0615 0F       		.uleb128 0xf
+ 939 0616 31080000 		.4byte	.LASF158
+ 940 061a 07       		.byte	0x7
+ 941 061b 98       		.byte	0x98
+ 942 061c A2000000 		.4byte	0xa2
+ 943 0620 02       		.byte	0x2
+ 944 0621 00       		.byte	0
+ 945 0622 11       		.uleb128 0x11
+ 946 0623 04       		.byte	0x4
+ 947 0624 07       		.byte	0x7
+ 948 0625 94       		.byte	0x94
+ 949 0626 3D060000 		.4byte	0x63d
+ 950 062a 12       		.uleb128 0x12
+ 951 062b 5700     		.ascii	"W\000"
+ 952 062d 07       		.byte	0x7
+ 953 062e 95       		.byte	0x95
+ 954 062f B8000000 		.4byte	0xb8
+ 955 0633 12       		.uleb128 0x12
+ 956 0634 4800     		.ascii	"H\000"
+ 957 0636 07       		.byte	0x7
+ 958 0637 99       		.byte	0x99
+ 959 0638 01060000 		.4byte	0x601
+ 960 063c 00       		.byte	0
+ 961 063d 0E       		.uleb128 0xe
+ 962 063e 28       		.byte	0x28
+ 963 063f 07       		.byte	0x7
+ 964 0640 8C       		.byte	0x8c
+ 965 0641 BE060000 		.4byte	0x6be
+ 966 0645 0F       		.uleb128 0xf
+ 967 0646 CB000000 		.4byte	.LASF159
+ 968 064a 07       		.byte	0x7
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 18
+
+
+ 969 064b 8E       		.byte	0x8e
+ 970 064c CA000000 		.4byte	0xca
+ 971 0650 00       		.byte	0
+ 972 0651 0F       		.uleb128 0xf
+ 973 0652 6B000000 		.4byte	.LASF160
+ 974 0656 07       		.byte	0x7
+ 975 0657 8F       		.byte	0x8f
+ 976 0658 CA000000 		.4byte	0xca
+ 977 065c 04       		.byte	0x4
+ 978 065d 0F       		.uleb128 0xf
+ 979 065e D7030000 		.4byte	.LASF161
+ 980 0662 07       		.byte	0x7
+ 981 0663 90       		.byte	0x90
+ 982 0664 CA000000 		.4byte	0xca
+ 983 0668 08       		.byte	0x8
+ 984 0669 0F       		.uleb128 0xf
+ 985 066a 0A000000 		.4byte	.LASF162
+ 986 066e 07       		.byte	0x7
+ 987 066f 91       		.byte	0x91
+ 988 0670 CA000000 		.4byte	0xca
+ 989 0674 0C       		.byte	0xc
+ 990 0675 10       		.uleb128 0x10
+ 991 0676 49445200 		.ascii	"IDR\000"
+ 992 067a 07       		.byte	0x7
+ 993 067b 92       		.byte	0x92
+ 994 067c CA000000 		.4byte	0xca
+ 995 0680 10       		.byte	0x10
+ 996 0681 10       		.uleb128 0x10
+ 997 0682 4F445200 		.ascii	"ODR\000"
+ 998 0686 07       		.byte	0x7
+ 999 0687 93       		.byte	0x93
+ 1000 0688 CA000000 		.4byte	0xca
+ 1001 068c 14       		.byte	0x14
+ 1002 068d 0F       		.uleb128 0xf
+ 1003 068e 5C010000 		.4byte	.LASF163
+ 1004 0692 07       		.byte	0x7
+ 1005 0693 9A       		.byte	0x9a
+ 1006 0694 BE060000 		.4byte	0x6be
+ 1007 0698 18       		.byte	0x18
+ 1008 0699 0F       		.uleb128 0xf
+ 1009 069a A9040000 		.4byte	.LASF164
+ 1010 069e 07       		.byte	0x7
+ 1011 069f 9B       		.byte	0x9b
+ 1012 06a0 CA000000 		.4byte	0xca
+ 1013 06a4 1C       		.byte	0x1c
+ 1014 06a5 0F       		.uleb128 0xf
+ 1015 06a6 DB060000 		.4byte	.LASF165
+ 1016 06aa 07       		.byte	0x7
+ 1017 06ab 9C       		.byte	0x9c
+ 1018 06ac CA000000 		.4byte	0xca
+ 1019 06b0 20       		.byte	0x20
+ 1020 06b1 0F       		.uleb128 0xf
+ 1021 06b2 BD060000 		.4byte	.LASF166
+ 1022 06b6 07       		.byte	0x7
+ 1023 06b7 9D       		.byte	0x9d
+ 1024 06b8 CA000000 		.4byte	0xca
+ 1025 06bc 24       		.byte	0x24
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 19
+
+
+ 1026 06bd 00       		.byte	0
+ 1027 06be 05       		.uleb128 0x5
+ 1028 06bf 22060000 		.4byte	0x622
+ 1029 06c3 04       		.uleb128 0x4
+ 1030 06c4 9C040000 		.4byte	.LASF167
+ 1031 06c8 07       		.byte	0x7
+ 1032 06c9 9E       		.byte	0x9e
+ 1033 06ca 3D060000 		.4byte	0x63d
+ 1034 06ce 04       		.uleb128 0x4
+ 1035 06cf AA000000 		.4byte	.LASF168
+ 1036 06d3 07       		.byte	0x7
+ 1037 06d4 F0       		.byte	0xf0
+ 1038 06d5 B8000000 		.4byte	0xb8
+ 1039 06d9 04       		.uleb128 0x4
+ 1040 06da 770A0000 		.4byte	.LASF169
+ 1041 06de 07       		.byte	0x7
+ 1042 06df F5       		.byte	0xf5
+ 1043 06e0 B8000000 		.4byte	0xb8
+ 1044 06e4 04       		.uleb128 0x4
+ 1045 06e5 3C090000 		.4byte	.LASF170
+ 1046 06e9 07       		.byte	0x7
+ 1047 06ea FD       		.byte	0xfd
+ 1048 06eb EF060000 		.4byte	0x6ef
+ 1049 06ef 13       		.uleb128 0x13
+ 1050 06f0 04       		.byte	0x4
+ 1051 06f1 C3060000 		.4byte	0x6c3
+ 1052 06f5 14       		.uleb128 0x14
+ 1053 06f6 9D090000 		.4byte	.LASF186
+ 1054 06fa 01       		.byte	0x1
+ 1055 06fb 20       		.byte	0x20
+ 1056 06fc 00000000 		.4byte	.LFB118
+ 1057 0700 9C000000 		.4byte	.LFE118-.LFB118
+ 1058 0704 01       		.uleb128 0x1
+ 1059 0705 9C       		.byte	0x9c
+ 1060 0706 2E080000 		.4byte	0x82e
+ 1061 070a 15       		.uleb128 0x15
+ 1062 070b C8060000 		.4byte	.LASF171
+ 1063 070f 01       		.byte	0x1
+ 1064 0710 21       		.byte	0x21
+ 1065 0711 B2050000 		.4byte	0x5b2
+ 1066 0715 02       		.uleb128 0x2
+ 1067 0716 91       		.byte	0x91
+ 1068 0717 68       		.sleb128 -24
+ 1069 0718 15       		.uleb128 0x15
+ 1070 0719 0A040000 		.4byte	.LASF172
+ 1071 071d 01       		.byte	0x1
+ 1072 071e 22       		.byte	0x22
+ 1073 071f F6050000 		.4byte	0x5f6
+ 1074 0723 02       		.uleb128 0x2
+ 1075 0724 91       		.byte	0x91
+ 1076 0725 64       		.sleb128 -28
+ 1077 0726 16       		.uleb128 0x16
+ 1078 0727 14000000 		.4byte	.LVL0
+ 1079 072b 4F080000 		.4byte	0x84f
+ 1080 072f 47070000 		.4byte	0x747
+ 1081 0733 17       		.uleb128 0x17
+ 1082 0734 01       		.uleb128 0x1
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 20
+
+
+ 1083 0735 52       		.byte	0x52
+ 1084 0736 03       		.uleb128 0x3
+ 1085 0737 0A       		.byte	0xa
+ 1086 0738 1A01     		.2byte	0x11a
+ 1087 073a 17       		.uleb128 0x17
+ 1088 073b 01       		.uleb128 0x1
+ 1089 073c 51       		.byte	0x51
+ 1090 073d 02       		.uleb128 0x2
+ 1091 073e 08       		.byte	0x8
+ 1092 073f 40       		.byte	0x40
+ 1093 0740 17       		.uleb128 0x17
+ 1094 0741 01       		.uleb128 0x1
+ 1095 0742 50       		.byte	0x50
+ 1096 0743 02       		.uleb128 0x2
+ 1097 0744 75       		.byte	0x75
+ 1098 0745 00       		.sleb128 0
+ 1099 0746 00       		.byte	0
+ 1100 0747 16       		.uleb128 0x16
+ 1101 0748 20000000 		.4byte	.LVL1
+ 1102 074c 4F080000 		.4byte	0x84f
+ 1103 0750 68070000 		.4byte	0x768
+ 1104 0754 17       		.uleb128 0x17
+ 1105 0755 01       		.uleb128 0x1
+ 1106 0756 52       		.byte	0x52
+ 1107 0757 03       		.uleb128 0x3
+ 1108 0758 0A       		.byte	0xa
+ 1109 0759 1A01     		.2byte	0x11a
+ 1110 075b 17       		.uleb128 0x17
+ 1111 075c 01       		.uleb128 0x1
+ 1112 075d 51       		.byte	0x51
+ 1113 075e 02       		.uleb128 0x2
+ 1114 075f 08       		.byte	0x8
+ 1115 0760 80       		.byte	0x80
+ 1116 0761 17       		.uleb128 0x17
+ 1117 0762 01       		.uleb128 0x1
+ 1118 0763 50       		.byte	0x50
+ 1119 0764 02       		.uleb128 0x2
+ 1120 0765 75       		.byte	0x75
+ 1121 0766 00       		.sleb128 0
+ 1122 0767 00       		.byte	0
+ 1123 0768 16       		.uleb128 0x16
+ 1124 0769 28000000 		.4byte	.LVL2
+ 1125 076d 6B080000 		.4byte	0x86b
+ 1126 0771 80070000 		.4byte	0x780
+ 1127 0775 17       		.uleb128 0x17
+ 1128 0776 01       		.uleb128 0x1
+ 1129 0777 51       		.byte	0x51
+ 1130 0778 01       		.uleb128 0x1
+ 1131 0779 31       		.byte	0x31
+ 1132 077a 17       		.uleb128 0x17
+ 1133 077b 01       		.uleb128 0x1
+ 1134 077c 50       		.byte	0x50
+ 1135 077d 01       		.uleb128 0x1
+ 1136 077e 34       		.byte	0x34
+ 1137 077f 00       		.byte	0
+ 1138 0780 16       		.uleb128 0x16
+ 1139 0781 32000000 		.4byte	.LVL3
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 21
+
+
+ 1140 0785 82080000 		.4byte	0x882
+ 1141 0789 9A070000 		.4byte	0x79a
+ 1142 078d 17       		.uleb128 0x17
+ 1143 078e 01       		.uleb128 0x1
+ 1144 078f 51       		.byte	0x51
+ 1145 0790 01       		.uleb128 0x1
+ 1146 0791 31       		.byte	0x31
+ 1147 0792 17       		.uleb128 0x17
+ 1148 0793 01       		.uleb128 0x1
+ 1149 0794 50       		.byte	0x50
+ 1150 0795 03       		.uleb128 0x3
+ 1151 0796 0A       		.byte	0xa
+ 1152 0797 0040     		.2byte	0x4000
+ 1153 0799 00       		.byte	0
+ 1154 079a 16       		.uleb128 0x16
+ 1155 079b 3E000000 		.4byte	.LVL4
+ 1156 079f 99080000 		.4byte	0x899
+ 1157 07a3 BD070000 		.4byte	0x7bd
+ 1158 07a7 17       		.uleb128 0x17
+ 1159 07a8 01       		.uleb128 0x1
+ 1160 07a9 53       		.byte	0x53
+ 1161 07aa 01       		.uleb128 0x1
+ 1162 07ab 30       		.byte	0x30
+ 1163 07ac 17       		.uleb128 0x17
+ 1164 07ad 01       		.uleb128 0x1
+ 1165 07ae 52       		.byte	0x52
+ 1166 07af 01       		.uleb128 0x1
+ 1167 07b0 30       		.byte	0x30
+ 1168 07b1 17       		.uleb128 0x17
+ 1169 07b2 01       		.uleb128 0x1
+ 1170 07b3 51       		.byte	0x51
+ 1171 07b4 01       		.uleb128 0x1
+ 1172 07b5 33       		.byte	0x33
+ 1173 07b6 17       		.uleb128 0x17
+ 1174 07b7 01       		.uleb128 0x1
+ 1175 07b8 50       		.byte	0x50
+ 1176 07b9 02       		.uleb128 0x2
+ 1177 07ba 74       		.byte	0x74
+ 1178 07bb 00       		.sleb128 0
+ 1179 07bc 00       		.byte	0
+ 1180 07bd 16       		.uleb128 0x16
+ 1181 07be 48000000 		.4byte	.LVL5
+ 1182 07c2 C0080000 		.4byte	0x8c0
+ 1183 07c6 D8070000 		.4byte	0x7d8
+ 1184 07ca 17       		.uleb128 0x17
+ 1185 07cb 01       		.uleb128 0x1
+ 1186 07cc 51       		.byte	0x51
+ 1187 07cd 03       		.uleb128 0x3
+ 1188 07ce 0A       		.byte	0xa
+ 1189 07cf 3F38     		.2byte	0x383f
+ 1190 07d1 17       		.uleb128 0x17
+ 1191 07d2 01       		.uleb128 0x1
+ 1192 07d3 50       		.byte	0x50
+ 1193 07d4 02       		.uleb128 0x2
+ 1194 07d5 74       		.byte	0x74
+ 1195 07d6 00       		.sleb128 0
+ 1196 07d7 00       		.byte	0
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 22
+
+
+ 1197 07d8 16       		.uleb128 0x16
+ 1198 07d9 50000000 		.4byte	.LVL6
+ 1199 07dd D7080000 		.4byte	0x8d7
+ 1200 07e1 F1070000 		.4byte	0x7f1
+ 1201 07e5 17       		.uleb128 0x17
+ 1202 07e6 01       		.uleb128 0x1
+ 1203 07e7 51       		.byte	0x51
+ 1204 07e8 01       		.uleb128 0x1
+ 1205 07e9 31       		.byte	0x31
+ 1206 07ea 17       		.uleb128 0x17
+ 1207 07eb 01       		.uleb128 0x1
+ 1208 07ec 50       		.byte	0x50
+ 1209 07ed 02       		.uleb128 0x2
+ 1210 07ee 74       		.byte	0x74
+ 1211 07ef 00       		.sleb128 0
+ 1212 07f0 00       		.byte	0
+ 1213 07f1 16       		.uleb128 0x16
+ 1214 07f2 58000000 		.4byte	.LVL7
+ 1215 07f6 EE080000 		.4byte	0x8ee
+ 1216 07fa 09080000 		.4byte	0x809
+ 1217 07fe 17       		.uleb128 0x17
+ 1218 07ff 01       		.uleb128 0x1
+ 1219 0800 51       		.byte	0x51
+ 1220 0801 01       		.uleb128 0x1
+ 1221 0802 3B       		.byte	0x3b
+ 1222 0803 17       		.uleb128 0x17
+ 1223 0804 01       		.uleb128 0x1
+ 1224 0805 50       		.byte	0x50
+ 1225 0806 01       		.uleb128 0x1
+ 1226 0807 32       		.byte	0x32
+ 1227 0808 00       		.byte	0
+ 1228 0809 16       		.uleb128 0x16
+ 1229 080a 78000000 		.4byte	.LVL8
+ 1230 080e 04090000 		.4byte	0x904
+ 1231 0812 1D080000 		.4byte	0x81d
+ 1232 0816 17       		.uleb128 0x17
+ 1233 0817 01       		.uleb128 0x1
+ 1234 0818 50       		.byte	0x50
+ 1235 0819 02       		.uleb128 0x2
+ 1236 081a 91       		.byte	0x91
+ 1237 081b 68       		.sleb128 -24
+ 1238 081c 00       		.byte	0
+ 1239 081d 18       		.uleb128 0x18
+ 1240 081e 90000000 		.4byte	.LVL9
+ 1241 0822 1B090000 		.4byte	0x91b
+ 1242 0826 17       		.uleb128 0x17
+ 1243 0827 01       		.uleb128 0x1
+ 1244 0828 50       		.byte	0x50
+ 1245 0829 02       		.uleb128 0x2
+ 1246 082a 91       		.byte	0x91
+ 1247 082b 64       		.sleb128 -28
+ 1248 082c 00       		.byte	0
+ 1249 082d 00       		.byte	0
+ 1250 082e 19       		.uleb128 0x19
+ 1251 082f 1C070000 		.4byte	.LASF187
+ 1252 0833 01       		.byte	0x1
+ 1253 0834 4F       		.byte	0x4f
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 23
+
+
+ 1254 0835 DD000000 		.4byte	0xdd
+ 1255 0839 00000000 		.4byte	.LFB119
+ 1256 083d 28000000 		.4byte	.LFE119-.LFB119
+ 1257 0841 01       		.uleb128 0x1
+ 1258 0842 9C       		.byte	0x9c
+ 1259 0843 1A       		.uleb128 0x1a
+ 1260 0844 96070000 		.4byte	.LASF188
+ 1261 0848 0B       		.byte	0xb
+ 1262 0849 9806     		.2byte	0x698
+ 1263 084b 24030000 		.4byte	0x324
+ 1264 084f 1B       		.uleb128 0x1b
+ 1265 0850 6B090000 		.4byte	.LASF173
+ 1266 0854 07       		.byte	0x7
+ 1267 0855 C201     		.2byte	0x1c2
+ 1268 0857 6B080000 		.4byte	0x86b
+ 1269 085b 1C       		.uleb128 0x1c
+ 1270 085c E4060000 		.4byte	0x6e4
+ 1271 0860 1C       		.uleb128 0x1c
+ 1272 0861 CE060000 		.4byte	0x6ce
+ 1273 0865 1C       		.uleb128 0x1c
+ 1274 0866 D9060000 		.4byte	0x6d9
+ 1275 086a 00       		.byte	0
+ 1276 086b 1B       		.uleb128 0x1b
+ 1277 086c F3090000 		.4byte	.LASF174
+ 1278 0870 08       		.byte	0x8
+ 1279 0871 E001     		.2byte	0x1e0
+ 1280 0873 82080000 		.4byte	0x882
+ 1281 0877 1C       		.uleb128 0x1c
+ 1282 0878 B8000000 		.4byte	0xb8
+ 1283 087c 1C       		.uleb128 0x1c
+ 1284 087d 3F030000 		.4byte	0x33f
+ 1285 0881 00       		.byte	0
+ 1286 0882 1B       		.uleb128 0x1b
+ 1287 0883 AB050000 		.4byte	.LASF175
+ 1288 0887 08       		.byte	0x8
+ 1289 0888 E101     		.2byte	0x1e1
+ 1290 088a 99080000 		.4byte	0x899
+ 1291 088e 1C       		.uleb128 0x1c
+ 1292 088f B8000000 		.4byte	0xb8
+ 1293 0893 1C       		.uleb128 0x1c
+ 1294 0894 3F030000 		.4byte	0x33f
+ 1295 0898 00       		.byte	0
+ 1296 0899 1B       		.uleb128 0x1b
+ 1297 089a 0A050000 		.4byte	.LASF176
+ 1298 089e 09       		.byte	0x9
+ 1299 089f 6904     		.2byte	0x469
+ 1300 08a1 BA080000 		.4byte	0x8ba
+ 1301 08a5 1C       		.uleb128 0x1c
+ 1302 08a6 BA080000 		.4byte	0x8ba
+ 1303 08aa 1C       		.uleb128 0x1c
+ 1304 08ab A2000000 		.4byte	0xa2
+ 1305 08af 1C       		.uleb128 0x1c
+ 1306 08b0 A2000000 		.4byte	0xa2
+ 1307 08b4 1C       		.uleb128 0x1c
+ 1308 08b5 A2000000 		.4byte	0xa2
+ 1309 08b9 00       		.byte	0
+ 1310 08ba 13       		.uleb128 0x13
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 24
+
+
+ 1311 08bb 04       		.byte	0x4
+ 1312 08bc 27050000 		.4byte	0x527
+ 1313 08c0 1B       		.uleb128 0x1b
+ 1314 08c1 8D060000 		.4byte	.LASF177
+ 1315 08c5 09       		.byte	0x9
+ 1316 08c6 0804     		.2byte	0x408
+ 1317 08c8 D7080000 		.4byte	0x8d7
+ 1318 08cc 1C       		.uleb128 0x1c
+ 1319 08cd BA080000 		.4byte	0x8ba
+ 1320 08d1 1C       		.uleb128 0x1c
+ 1321 08d2 B8000000 		.4byte	0xb8
+ 1322 08d6 00       		.byte	0
+ 1323 08d7 1B       		.uleb128 0x1b
+ 1324 08d8 AF080000 		.4byte	.LASF178
+ 1325 08dc 09       		.byte	0x9
+ 1326 08dd 1004     		.2byte	0x410
+ 1327 08df EE080000 		.4byte	0x8ee
+ 1328 08e3 1C       		.uleb128 0x1c
+ 1329 08e4 BA080000 		.4byte	0x8ba
+ 1330 08e8 1C       		.uleb128 0x1c
+ 1331 08e9 3F030000 		.4byte	0x33f
+ 1332 08ed 00       		.byte	0
+ 1333 08ee 1D       		.uleb128 0x1d
+ 1334 08ef C2040000 		.4byte	.LASF179
+ 1335 08f3 0A       		.byte	0xa
+ 1336 08f4 A0       		.byte	0xa0
+ 1337 08f5 04090000 		.4byte	0x904
+ 1338 08f9 1C       		.uleb128 0x1c
+ 1339 08fa 97000000 		.4byte	0x97
+ 1340 08fe 1C       		.uleb128 0x1c
+ 1341 08ff 97000000 		.4byte	0x97
+ 1342 0903 00       		.byte	0
+ 1343 0904 1D       		.uleb128 0x1d
+ 1344 0905 39040000 		.4byte	.LASF180
+ 1345 0909 05       		.byte	0x5
+ 1346 090a 9F       		.byte	0x9f
+ 1347 090b 15090000 		.4byte	0x915
+ 1348 090f 1C       		.uleb128 0x1c
+ 1349 0910 15090000 		.4byte	0x915
+ 1350 0914 00       		.byte	0
+ 1351 0915 13       		.uleb128 0x13
+ 1352 0916 04       		.byte	0x4
+ 1353 0917 B2050000 		.4byte	0x5b2
+ 1354 091b 1D       		.uleb128 0x1d
+ 1355 091c 800A0000 		.4byte	.LASF181
+ 1356 0920 06       		.byte	0x6
+ 1357 0921 9F       		.byte	0x9f
+ 1358 0922 2C090000 		.4byte	0x92c
+ 1359 0926 1C       		.uleb128 0x1c
+ 1360 0927 2C090000 		.4byte	0x92c
+ 1361 092b 00       		.byte	0
+ 1362 092c 13       		.uleb128 0x13
+ 1363 092d 04       		.byte	0x4
+ 1364 092e F6050000 		.4byte	0x5f6
+ 1365 0932 00       		.byte	0
+ 1366              		.section	.debug_abbrev,"",%progbits
+ 1367              	.Ldebug_abbrev0:
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 25
+
+
+ 1368 0000 01       		.uleb128 0x1
+ 1369 0001 11       		.uleb128 0x11
+ 1370 0002 01       		.byte	0x1
+ 1371 0003 25       		.uleb128 0x25
+ 1372 0004 0E       		.uleb128 0xe
+ 1373 0005 13       		.uleb128 0x13
+ 1374 0006 0B       		.uleb128 0xb
+ 1375 0007 03       		.uleb128 0x3
+ 1376 0008 0E       		.uleb128 0xe
+ 1377 0009 1B       		.uleb128 0x1b
+ 1378 000a 0E       		.uleb128 0xe
+ 1379 000b 55       		.uleb128 0x55
+ 1380 000c 17       		.uleb128 0x17
+ 1381 000d 11       		.uleb128 0x11
+ 1382 000e 01       		.uleb128 0x1
+ 1383 000f 10       		.uleb128 0x10
+ 1384 0010 17       		.uleb128 0x17
+ 1385 0011 00       		.byte	0
+ 1386 0012 00       		.byte	0
+ 1387 0013 02       		.uleb128 0x2
+ 1388 0014 24       		.uleb128 0x24
+ 1389 0015 00       		.byte	0
+ 1390 0016 0B       		.uleb128 0xb
+ 1391 0017 0B       		.uleb128 0xb
+ 1392 0018 3E       		.uleb128 0x3e
+ 1393 0019 0B       		.uleb128 0xb
+ 1394 001a 03       		.uleb128 0x3
+ 1395 001b 08       		.uleb128 0x8
+ 1396 001c 00       		.byte	0
+ 1397 001d 00       		.byte	0
+ 1398 001e 03       		.uleb128 0x3
+ 1399 001f 24       		.uleb128 0x24
+ 1400 0020 00       		.byte	0
+ 1401 0021 0B       		.uleb128 0xb
+ 1402 0022 0B       		.uleb128 0xb
+ 1403 0023 3E       		.uleb128 0x3e
+ 1404 0024 0B       		.uleb128 0xb
+ 1405 0025 03       		.uleb128 0x3
+ 1406 0026 0E       		.uleb128 0xe
+ 1407 0027 00       		.byte	0
+ 1408 0028 00       		.byte	0
+ 1409 0029 04       		.uleb128 0x4
+ 1410 002a 16       		.uleb128 0x16
+ 1411 002b 00       		.byte	0
+ 1412 002c 03       		.uleb128 0x3
+ 1413 002d 0E       		.uleb128 0xe
+ 1414 002e 3A       		.uleb128 0x3a
+ 1415 002f 0B       		.uleb128 0xb
+ 1416 0030 3B       		.uleb128 0x3b
+ 1417 0031 0B       		.uleb128 0xb
+ 1418 0032 49       		.uleb128 0x49
+ 1419 0033 13       		.uleb128 0x13
+ 1420 0034 00       		.byte	0
+ 1421 0035 00       		.byte	0
+ 1422 0036 05       		.uleb128 0x5
+ 1423 0037 35       		.uleb128 0x35
+ 1424 0038 00       		.byte	0
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 26
+
+
+ 1425 0039 49       		.uleb128 0x49
+ 1426 003a 13       		.uleb128 0x13
+ 1427 003b 00       		.byte	0
+ 1428 003c 00       		.byte	0
+ 1429 003d 06       		.uleb128 0x6
+ 1430 003e 04       		.uleb128 0x4
+ 1431 003f 01       		.byte	0x1
+ 1432 0040 03       		.uleb128 0x3
+ 1433 0041 0E       		.uleb128 0xe
+ 1434 0042 0B       		.uleb128 0xb
+ 1435 0043 0B       		.uleb128 0xb
+ 1436 0044 3A       		.uleb128 0x3a
+ 1437 0045 0B       		.uleb128 0xb
+ 1438 0046 3B       		.uleb128 0x3b
+ 1439 0047 0B       		.uleb128 0xb
+ 1440 0048 01       		.uleb128 0x1
+ 1441 0049 13       		.uleb128 0x13
+ 1442 004a 00       		.byte	0
+ 1443 004b 00       		.byte	0
+ 1444 004c 07       		.uleb128 0x7
+ 1445 004d 28       		.uleb128 0x28
+ 1446 004e 00       		.byte	0
+ 1447 004f 03       		.uleb128 0x3
+ 1448 0050 0E       		.uleb128 0xe
+ 1449 0051 1C       		.uleb128 0x1c
+ 1450 0052 0D       		.uleb128 0xd
+ 1451 0053 00       		.byte	0
+ 1452 0054 00       		.byte	0
+ 1453 0055 08       		.uleb128 0x8
+ 1454 0056 04       		.uleb128 0x4
+ 1455 0057 01       		.byte	0x1
+ 1456 0058 0B       		.uleb128 0xb
+ 1457 0059 0B       		.uleb128 0xb
+ 1458 005a 3A       		.uleb128 0x3a
+ 1459 005b 0B       		.uleb128 0xb
+ 1460 005c 3B       		.uleb128 0x3b
+ 1461 005d 05       		.uleb128 0x5
+ 1462 005e 01       		.uleb128 0x1
+ 1463 005f 13       		.uleb128 0x13
+ 1464 0060 00       		.byte	0
+ 1465 0061 00       		.byte	0
+ 1466 0062 09       		.uleb128 0x9
+ 1467 0063 16       		.uleb128 0x16
+ 1468 0064 00       		.byte	0
+ 1469 0065 03       		.uleb128 0x3
+ 1470 0066 0E       		.uleb128 0xe
+ 1471 0067 3A       		.uleb128 0x3a
+ 1472 0068 0B       		.uleb128 0xb
+ 1473 0069 3B       		.uleb128 0x3b
+ 1474 006a 05       		.uleb128 0x5
+ 1475 006b 49       		.uleb128 0x49
+ 1476 006c 13       		.uleb128 0x13
+ 1477 006d 00       		.byte	0
+ 1478 006e 00       		.byte	0
+ 1479 006f 0A       		.uleb128 0xa
+ 1480 0070 13       		.uleb128 0x13
+ 1481 0071 01       		.byte	0x1
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 27
+
+
+ 1482 0072 0B       		.uleb128 0xb
+ 1483 0073 0B       		.uleb128 0xb
+ 1484 0074 3A       		.uleb128 0x3a
+ 1485 0075 0B       		.uleb128 0xb
+ 1486 0076 3B       		.uleb128 0x3b
+ 1487 0077 05       		.uleb128 0x5
+ 1488 0078 01       		.uleb128 0x1
+ 1489 0079 13       		.uleb128 0x13
+ 1490 007a 00       		.byte	0
+ 1491 007b 00       		.byte	0
+ 1492 007c 0B       		.uleb128 0xb
+ 1493 007d 0D       		.uleb128 0xd
+ 1494 007e 00       		.byte	0
+ 1495 007f 03       		.uleb128 0x3
+ 1496 0080 08       		.uleb128 0x8
+ 1497 0081 3A       		.uleb128 0x3a
+ 1498 0082 0B       		.uleb128 0xb
+ 1499 0083 3B       		.uleb128 0x3b
+ 1500 0084 05       		.uleb128 0x5
+ 1501 0085 49       		.uleb128 0x49
+ 1502 0086 13       		.uleb128 0x13
+ 1503 0087 38       		.uleb128 0x38
+ 1504 0088 0B       		.uleb128 0xb
+ 1505 0089 00       		.byte	0
+ 1506 008a 00       		.byte	0
+ 1507 008b 0C       		.uleb128 0xc
+ 1508 008c 0D       		.uleb128 0xd
+ 1509 008d 00       		.byte	0
+ 1510 008e 03       		.uleb128 0x3
+ 1511 008f 0E       		.uleb128 0xe
+ 1512 0090 3A       		.uleb128 0x3a
+ 1513 0091 0B       		.uleb128 0xb
+ 1514 0092 3B       		.uleb128 0x3b
+ 1515 0093 05       		.uleb128 0x5
+ 1516 0094 49       		.uleb128 0x49
+ 1517 0095 13       		.uleb128 0x13
+ 1518 0096 38       		.uleb128 0x38
+ 1519 0097 0B       		.uleb128 0xb
+ 1520 0098 00       		.byte	0
+ 1521 0099 00       		.byte	0
+ 1522 009a 0D       		.uleb128 0xd
+ 1523 009b 04       		.uleb128 0x4
+ 1524 009c 01       		.byte	0x1
+ 1525 009d 0B       		.uleb128 0xb
+ 1526 009e 0B       		.uleb128 0xb
+ 1527 009f 3A       		.uleb128 0x3a
+ 1528 00a0 0B       		.uleb128 0xb
+ 1529 00a1 3B       		.uleb128 0x3b
+ 1530 00a2 0B       		.uleb128 0xb
+ 1531 00a3 01       		.uleb128 0x1
+ 1532 00a4 13       		.uleb128 0x13
+ 1533 00a5 00       		.byte	0
+ 1534 00a6 00       		.byte	0
+ 1535 00a7 0E       		.uleb128 0xe
+ 1536 00a8 13       		.uleb128 0x13
+ 1537 00a9 01       		.byte	0x1
+ 1538 00aa 0B       		.uleb128 0xb
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 28
+
+
+ 1539 00ab 0B       		.uleb128 0xb
+ 1540 00ac 3A       		.uleb128 0x3a
+ 1541 00ad 0B       		.uleb128 0xb
+ 1542 00ae 3B       		.uleb128 0x3b
+ 1543 00af 0B       		.uleb128 0xb
+ 1544 00b0 01       		.uleb128 0x1
+ 1545 00b1 13       		.uleb128 0x13
+ 1546 00b2 00       		.byte	0
+ 1547 00b3 00       		.byte	0
+ 1548 00b4 0F       		.uleb128 0xf
+ 1549 00b5 0D       		.uleb128 0xd
+ 1550 00b6 00       		.byte	0
+ 1551 00b7 03       		.uleb128 0x3
+ 1552 00b8 0E       		.uleb128 0xe
+ 1553 00b9 3A       		.uleb128 0x3a
+ 1554 00ba 0B       		.uleb128 0xb
+ 1555 00bb 3B       		.uleb128 0x3b
+ 1556 00bc 0B       		.uleb128 0xb
+ 1557 00bd 49       		.uleb128 0x49
+ 1558 00be 13       		.uleb128 0x13
+ 1559 00bf 38       		.uleb128 0x38
+ 1560 00c0 0B       		.uleb128 0xb
+ 1561 00c1 00       		.byte	0
+ 1562 00c2 00       		.byte	0
+ 1563 00c3 10       		.uleb128 0x10
+ 1564 00c4 0D       		.uleb128 0xd
+ 1565 00c5 00       		.byte	0
+ 1566 00c6 03       		.uleb128 0x3
+ 1567 00c7 08       		.uleb128 0x8
+ 1568 00c8 3A       		.uleb128 0x3a
+ 1569 00c9 0B       		.uleb128 0xb
+ 1570 00ca 3B       		.uleb128 0x3b
+ 1571 00cb 0B       		.uleb128 0xb
+ 1572 00cc 49       		.uleb128 0x49
+ 1573 00cd 13       		.uleb128 0x13
+ 1574 00ce 38       		.uleb128 0x38
+ 1575 00cf 0B       		.uleb128 0xb
+ 1576 00d0 00       		.byte	0
+ 1577 00d1 00       		.byte	0
+ 1578 00d2 11       		.uleb128 0x11
+ 1579 00d3 17       		.uleb128 0x17
+ 1580 00d4 01       		.byte	0x1
+ 1581 00d5 0B       		.uleb128 0xb
+ 1582 00d6 0B       		.uleb128 0xb
+ 1583 00d7 3A       		.uleb128 0x3a
+ 1584 00d8 0B       		.uleb128 0xb
+ 1585 00d9 3B       		.uleb128 0x3b
+ 1586 00da 0B       		.uleb128 0xb
+ 1587 00db 01       		.uleb128 0x1
+ 1588 00dc 13       		.uleb128 0x13
+ 1589 00dd 00       		.byte	0
+ 1590 00de 00       		.byte	0
+ 1591 00df 12       		.uleb128 0x12
+ 1592 00e0 0D       		.uleb128 0xd
+ 1593 00e1 00       		.byte	0
+ 1594 00e2 03       		.uleb128 0x3
+ 1595 00e3 08       		.uleb128 0x8
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 29
+
+
+ 1596 00e4 3A       		.uleb128 0x3a
+ 1597 00e5 0B       		.uleb128 0xb
+ 1598 00e6 3B       		.uleb128 0x3b
+ 1599 00e7 0B       		.uleb128 0xb
+ 1600 00e8 49       		.uleb128 0x49
+ 1601 00e9 13       		.uleb128 0x13
+ 1602 00ea 00       		.byte	0
+ 1603 00eb 00       		.byte	0
+ 1604 00ec 13       		.uleb128 0x13
+ 1605 00ed 0F       		.uleb128 0xf
+ 1606 00ee 00       		.byte	0
+ 1607 00ef 0B       		.uleb128 0xb
+ 1608 00f0 0B       		.uleb128 0xb
+ 1609 00f1 49       		.uleb128 0x49
+ 1610 00f2 13       		.uleb128 0x13
+ 1611 00f3 00       		.byte	0
+ 1612 00f4 00       		.byte	0
+ 1613 00f5 14       		.uleb128 0x14
+ 1614 00f6 2E       		.uleb128 0x2e
+ 1615 00f7 01       		.byte	0x1
+ 1616 00f8 3F       		.uleb128 0x3f
+ 1617 00f9 19       		.uleb128 0x19
+ 1618 00fa 03       		.uleb128 0x3
+ 1619 00fb 0E       		.uleb128 0xe
+ 1620 00fc 3A       		.uleb128 0x3a
+ 1621 00fd 0B       		.uleb128 0xb
+ 1622 00fe 3B       		.uleb128 0x3b
+ 1623 00ff 0B       		.uleb128 0xb
+ 1624 0100 27       		.uleb128 0x27
+ 1625 0101 19       		.uleb128 0x19
+ 1626 0102 11       		.uleb128 0x11
+ 1627 0103 01       		.uleb128 0x1
+ 1628 0104 12       		.uleb128 0x12
+ 1629 0105 06       		.uleb128 0x6
+ 1630 0106 40       		.uleb128 0x40
+ 1631 0107 18       		.uleb128 0x18
+ 1632 0108 9742     		.uleb128 0x2117
+ 1633 010a 19       		.uleb128 0x19
+ 1634 010b 01       		.uleb128 0x1
+ 1635 010c 13       		.uleb128 0x13
+ 1636 010d 00       		.byte	0
+ 1637 010e 00       		.byte	0
+ 1638 010f 15       		.uleb128 0x15
+ 1639 0110 34       		.uleb128 0x34
+ 1640 0111 00       		.byte	0
+ 1641 0112 03       		.uleb128 0x3
+ 1642 0113 0E       		.uleb128 0xe
+ 1643 0114 3A       		.uleb128 0x3a
+ 1644 0115 0B       		.uleb128 0xb
+ 1645 0116 3B       		.uleb128 0x3b
+ 1646 0117 0B       		.uleb128 0xb
+ 1647 0118 49       		.uleb128 0x49
+ 1648 0119 13       		.uleb128 0x13
+ 1649 011a 02       		.uleb128 0x2
+ 1650 011b 18       		.uleb128 0x18
+ 1651 011c 00       		.byte	0
+ 1652 011d 00       		.byte	0
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 30
+
+
+ 1653 011e 16       		.uleb128 0x16
+ 1654 011f 898201   		.uleb128 0x4109
+ 1655 0122 01       		.byte	0x1
+ 1656 0123 11       		.uleb128 0x11
+ 1657 0124 01       		.uleb128 0x1
+ 1658 0125 31       		.uleb128 0x31
+ 1659 0126 13       		.uleb128 0x13
+ 1660 0127 01       		.uleb128 0x1
+ 1661 0128 13       		.uleb128 0x13
+ 1662 0129 00       		.byte	0
+ 1663 012a 00       		.byte	0
+ 1664 012b 17       		.uleb128 0x17
+ 1665 012c 8A8201   		.uleb128 0x410a
+ 1666 012f 00       		.byte	0
+ 1667 0130 02       		.uleb128 0x2
+ 1668 0131 18       		.uleb128 0x18
+ 1669 0132 9142     		.uleb128 0x2111
+ 1670 0134 18       		.uleb128 0x18
+ 1671 0135 00       		.byte	0
+ 1672 0136 00       		.byte	0
+ 1673 0137 18       		.uleb128 0x18
+ 1674 0138 898201   		.uleb128 0x4109
+ 1675 013b 01       		.byte	0x1
+ 1676 013c 11       		.uleb128 0x11
+ 1677 013d 01       		.uleb128 0x1
+ 1678 013e 31       		.uleb128 0x31
+ 1679 013f 13       		.uleb128 0x13
+ 1680 0140 00       		.byte	0
+ 1681 0141 00       		.byte	0
+ 1682 0142 19       		.uleb128 0x19
+ 1683 0143 2E       		.uleb128 0x2e
+ 1684 0144 00       		.byte	0
+ 1685 0145 3F       		.uleb128 0x3f
+ 1686 0146 19       		.uleb128 0x19
+ 1687 0147 03       		.uleb128 0x3
+ 1688 0148 0E       		.uleb128 0xe
+ 1689 0149 3A       		.uleb128 0x3a
+ 1690 014a 0B       		.uleb128 0xb
+ 1691 014b 3B       		.uleb128 0x3b
+ 1692 014c 0B       		.uleb128 0xb
+ 1693 014d 27       		.uleb128 0x27
+ 1694 014e 19       		.uleb128 0x19
+ 1695 014f 49       		.uleb128 0x49
+ 1696 0150 13       		.uleb128 0x13
+ 1697 0151 11       		.uleb128 0x11
+ 1698 0152 01       		.uleb128 0x1
+ 1699 0153 12       		.uleb128 0x12
+ 1700 0154 06       		.uleb128 0x6
+ 1701 0155 40       		.uleb128 0x40
+ 1702 0156 18       		.uleb128 0x18
+ 1703 0157 9742     		.uleb128 0x2117
+ 1704 0159 19       		.uleb128 0x19
+ 1705 015a 00       		.byte	0
+ 1706 015b 00       		.byte	0
+ 1707 015c 1A       		.uleb128 0x1a
+ 1708 015d 34       		.uleb128 0x34
+ 1709 015e 00       		.byte	0
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 31
+
+
+ 1710 015f 03       		.uleb128 0x3
+ 1711 0160 0E       		.uleb128 0xe
+ 1712 0161 3A       		.uleb128 0x3a
+ 1713 0162 0B       		.uleb128 0xb
+ 1714 0163 3B       		.uleb128 0x3b
+ 1715 0164 05       		.uleb128 0x5
+ 1716 0165 49       		.uleb128 0x49
+ 1717 0166 13       		.uleb128 0x13
+ 1718 0167 3F       		.uleb128 0x3f
+ 1719 0168 19       		.uleb128 0x19
+ 1720 0169 3C       		.uleb128 0x3c
+ 1721 016a 19       		.uleb128 0x19
+ 1722 016b 00       		.byte	0
+ 1723 016c 00       		.byte	0
+ 1724 016d 1B       		.uleb128 0x1b
+ 1725 016e 2E       		.uleb128 0x2e
+ 1726 016f 01       		.byte	0x1
+ 1727 0170 3F       		.uleb128 0x3f
+ 1728 0171 19       		.uleb128 0x19
+ 1729 0172 03       		.uleb128 0x3
+ 1730 0173 0E       		.uleb128 0xe
+ 1731 0174 3A       		.uleb128 0x3a
+ 1732 0175 0B       		.uleb128 0xb
+ 1733 0176 3B       		.uleb128 0x3b
+ 1734 0177 05       		.uleb128 0x5
+ 1735 0178 27       		.uleb128 0x27
+ 1736 0179 19       		.uleb128 0x19
+ 1737 017a 3C       		.uleb128 0x3c
+ 1738 017b 19       		.uleb128 0x19
+ 1739 017c 01       		.uleb128 0x1
+ 1740 017d 13       		.uleb128 0x13
+ 1741 017e 00       		.byte	0
+ 1742 017f 00       		.byte	0
+ 1743 0180 1C       		.uleb128 0x1c
+ 1744 0181 05       		.uleb128 0x5
+ 1745 0182 00       		.byte	0
+ 1746 0183 49       		.uleb128 0x49
+ 1747 0184 13       		.uleb128 0x13
+ 1748 0185 00       		.byte	0
+ 1749 0186 00       		.byte	0
+ 1750 0187 1D       		.uleb128 0x1d
+ 1751 0188 2E       		.uleb128 0x2e
+ 1752 0189 01       		.byte	0x1
+ 1753 018a 3F       		.uleb128 0x3f
+ 1754 018b 19       		.uleb128 0x19
+ 1755 018c 03       		.uleb128 0x3
+ 1756 018d 0E       		.uleb128 0xe
+ 1757 018e 3A       		.uleb128 0x3a
+ 1758 018f 0B       		.uleb128 0xb
+ 1759 0190 3B       		.uleb128 0x3b
+ 1760 0191 0B       		.uleb128 0xb
+ 1761 0192 27       		.uleb128 0x27
+ 1762 0193 19       		.uleb128 0x19
+ 1763 0194 3C       		.uleb128 0x3c
+ 1764 0195 19       		.uleb128 0x19
+ 1765 0196 01       		.uleb128 0x1
+ 1766 0197 13       		.uleb128 0x13
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 32
+
+
+ 1767 0198 00       		.byte	0
+ 1768 0199 00       		.byte	0
+ 1769 019a 00       		.byte	0
+ 1770              		.section	.debug_aranges,"",%progbits
+ 1771 0000 24000000 		.4byte	0x24
+ 1772 0004 0200     		.2byte	0x2
+ 1773 0006 00000000 		.4byte	.Ldebug_info0
+ 1774 000a 04       		.byte	0x4
+ 1775 000b 00       		.byte	0
+ 1776 000c 0000     		.2byte	0
+ 1777 000e 0000     		.2byte	0
+ 1778 0010 00000000 		.4byte	.LFB118
+ 1779 0014 9C000000 		.4byte	.LFE118-.LFB118
+ 1780 0018 00000000 		.4byte	.LFB119
+ 1781 001c 28000000 		.4byte	.LFE119-.LFB119
+ 1782 0020 00000000 		.4byte	0
+ 1783 0024 00000000 		.4byte	0
+ 1784              		.section	.debug_ranges,"",%progbits
+ 1785              	.Ldebug_ranges0:
+ 1786 0000 00000000 		.4byte	.LFB118
+ 1787 0004 9C000000 		.4byte	.LFE118
+ 1788 0008 00000000 		.4byte	.LFB119
+ 1789 000c 28000000 		.4byte	.LFE119
+ 1790 0010 00000000 		.4byte	0
+ 1791 0014 00000000 		.4byte	0
+ 1792              		.section	.debug_line,"",%progbits
+ 1793              	.Ldebug_line0:
+ 1794 0000 44020000 		.section	.debug_str,"MS",%progbits,1
+ 1794      0200FC01 
+ 1794      00000201 
+ 1794      FB0E0D00 
+ 1794      01010101 
+ 1795              	.LASF3:
+ 1796 0000 73686F72 		.ascii	"short int\000"
+ 1796      7420696E 
+ 1796      7400
+ 1797              	.LASF162:
+ 1798 000a 50555044 		.ascii	"PUPDR\000"
+ 1798      5200
+ 1799              	.LASF156:
+ 1800 0010 4E564943 		.ascii	"NVIC_IRQChannelCmd\000"
+ 1800      5F495251 
+ 1800      4368616E 
+ 1800      6E656C43 
+ 1800      6D6400
+ 1801              	.LASF49:
+ 1802 0023 43414E31 		.ascii	"CAN1_RX0_IRQn\000"
+ 1802      5F525830 
+ 1802      5F495251 
+ 1802      6E00
+ 1803              	.LASF30:
+ 1804 0031 5056445F 		.ascii	"PVD_IRQn\000"
+ 1804      4952516E 
+ 1804      00
+ 1805              	.LASF118:
+ 1806 003a 44494552 		.ascii	"DIER\000"
+ 1806      00
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 33
+
+
+ 1807              	.LASF98:
+ 1808 003f 444D4132 		.ascii	"DMA2_Stream6_IRQn\000"
+ 1808      5F537472 
+ 1808      65616D36 
+ 1808      5F495251 
+ 1808      6E00
+ 1809              	.LASF102:
+ 1810 0051 49324333 		.ascii	"I2C3_ER_IRQn\000"
+ 1810      5F45525F 
+ 1810      4952516E 
+ 1810      00
+ 1811              	.LASF151:
+ 1812 005e 45585449 		.ascii	"EXTI_LineCmd\000"
+ 1812      5F4C696E 
+ 1812      65436D64 
+ 1812      00
+ 1813              	.LASF160:
+ 1814 006b 4F545950 		.ascii	"OTYPER\000"
+ 1814      455200
+ 1815              	.LASF4:
+ 1816 0072 5F5F7569 		.ascii	"__uint8_t\000"
+ 1816      6E74385F 
+ 1816      7400
+ 1817              	.LASF97:
+ 1818 007c 444D4132 		.ascii	"DMA2_Stream5_IRQn\000"
+ 1818      5F537472 
+ 1818      65616D35 
+ 1818      5F495251 
+ 1818      6E00
+ 1819              	.LASF146:
+ 1820 008e 45585449 		.ascii	"EXTI_Trigger_Rising_Falling\000"
+ 1820      5F547269 
+ 1820      67676572 
+ 1820      5F526973 
+ 1820      696E675F 
+ 1821              	.LASF168:
+ 1822 00aa 696F706F 		.ascii	"ioportmask_t\000"
+ 1822      72746D61 
+ 1822      736B5F74 
+ 1822      00
+ 1823              	.LASF140:
+ 1824 00b7 54494D5F 		.ascii	"TIM_TypeDef\000"
+ 1824      54797065 
+ 1824      44656600 
+ 1825              	.LASF111:
+ 1826 00c3 44495341 		.ascii	"DISABLE\000"
+ 1826      424C4500 
+ 1827              	.LASF159:
+ 1828 00cb 4D4F4445 		.ascii	"MODER\000"
+ 1828      5200
+ 1829              	.LASF44:
+ 1830 00d1 444D4131 		.ascii	"DMA1_Stream4_IRQn\000"
+ 1830      5F537472 
+ 1830      65616D34 
+ 1830      5F495251 
+ 1830      6E00
+ 1831              	.LASF133:
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 34
+
+
+ 1832 00e3 43435234 		.ascii	"CCR4\000"
+ 1832      00
+ 1833              	.LASF70:
+ 1834 00e8 5254435F 		.ascii	"RTC_Alarm_IRQn\000"
+ 1834      416C6172 
+ 1834      6D5F4952 
+ 1834      516E00
+ 1835              	.LASF63:
+ 1836 00f7 49324332 		.ascii	"I2C2_ER_IRQn\000"
+ 1836      5F45525F 
+ 1836      4952516E 
+ 1836      00
+ 1837              	.LASF59:
+ 1838 0104 54494D34 		.ascii	"TIM4_IRQn\000"
+ 1838      5F495251 
+ 1838      6E00
+ 1839              	.LASF37:
+ 1840 010e 45585449 		.ascii	"EXTI2_IRQn\000"
+ 1840      325F4952 
+ 1840      516E00
+ 1841              	.LASF134:
+ 1842 0119 42445452 		.ascii	"BDTR\000"
+ 1842      00
+ 1843              	.LASF78:
+ 1844 011e 5344494F 		.ascii	"SDIO_IRQn\000"
+ 1844      5F495251 
+ 1844      6E00
+ 1845              	.LASF122:
+ 1846 0128 43434D52 		.ascii	"CCMR1\000"
+ 1846      3100
+ 1847              	.LASF124:
+ 1848 012e 43434D52 		.ascii	"CCMR2\000"
+ 1848      3200
+ 1849              	.LASF50:
+ 1850 0134 43414E31 		.ascii	"CAN1_RX1_IRQn\000"
+ 1850      5F525831 
+ 1850      5F495251 
+ 1850      6E00
+ 1851              	.LASF1:
+ 1852 0142 7369676E 		.ascii	"signed char\000"
+ 1852      65642063 
+ 1852      68617200 
+ 1853              	.LASF94:
+ 1854 014e 43414E32 		.ascii	"CAN2_RX1_IRQn\000"
+ 1854      5F525831 
+ 1854      5F495251 
+ 1854      6E00
+ 1855              	.LASF163:
+ 1856 015c 42535252 		.ascii	"BSRR\000"
+ 1856      00
+ 1857              	.LASF12:
+ 1858 0161 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1858      206C6F6E 
+ 1858      6720756E 
+ 1858      7369676E 
+ 1858      65642069 
+ 1859              	.LASF129:
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 35
+
+
+ 1860 0178 52455345 		.ascii	"RESERVED10\000"
+ 1860      52564544 
+ 1860      313000
+ 1861              	.LASF135:
+ 1862 0183 52455345 		.ascii	"RESERVED11\000"
+ 1862      52564544 
+ 1862      313100
+ 1863              	.LASF136:
+ 1864 018e 52455345 		.ascii	"RESERVED12\000"
+ 1864      52564544 
+ 1864      313200
+ 1865              	.LASF138:
+ 1866 0199 52455345 		.ascii	"RESERVED13\000"
+ 1866      52564544 
+ 1866      313300
+ 1867              	.LASF183:
+ 1868 01a4 656E636F 		.ascii	"encoder.c\000"
+ 1868      6465722E 
+ 1868      6300
+ 1869              	.LASF184:
+ 1870 01ae 453A5C4D 		.ascii	"E:\\Maker\\BLDC\\test_eval\\try2\\OROCA-BLDC_R15080"
+ 1870      616B6572 
+ 1870      5C424C44 
+ 1870      435C7465 
+ 1870      73745F65 
+ 1871 01dc 3700     		.ascii	"7\000"
+ 1872              	.LASF8:
+ 1873 01de 6C6F6E67 		.ascii	"long int\000"
+ 1873      20696E74 
+ 1873      00
+ 1874              	.LASF112:
+ 1875 01e7 454E4142 		.ascii	"ENABLE\000"
+ 1875      4C4500
+ 1876              	.LASF62:
+ 1877 01ee 49324332 		.ascii	"I2C2_EV_IRQn\000"
+ 1877      5F45565F 
+ 1877      4952516E 
+ 1877      00
+ 1878              	.LASF143:
+ 1879 01fb 45585449 		.ascii	"EXTIMode_TypeDef\000"
+ 1879      4D6F6465 
+ 1879      5F547970 
+ 1879      65446566 
+ 1879      00
+ 1880              	.LASF45:
+ 1881 020c 444D4131 		.ascii	"DMA1_Stream5_IRQn\000"
+ 1881      5F537472 
+ 1881      65616D35 
+ 1881      5F495251 
+ 1881      6E00
+ 1882              	.LASF52:
+ 1883 021e 45585449 		.ascii	"EXTI9_5_IRQn\000"
+ 1883      395F355F 
+ 1883      4952516E 
+ 1883      00
+ 1884              	.LASF182:
+ 1885 022b 474E5520 		.ascii	"GNU C 4.8.4 20140526 (release) [ARM/embedded-4_8-br"
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 36
+
+
+ 1885      4320342E 
+ 1885      382E3420 
+ 1885      32303134 
+ 1885      30353236 
+ 1886 025e 616E6368 		.ascii	"anch revision 211358] -mcpu=cortex-m4 -mfloat-abi=h"
+ 1886      20726576 
+ 1886      6973696F 
+ 1886      6E203231 
+ 1886      31333538 
+ 1887 0291 61726420 		.ascii	"ard -mfpu=fpv4-sp-d16 -mno-thumb-interwork -mthumb "
+ 1887      2D6D6670 
+ 1887      753D6670 
+ 1887      76342D73 
+ 1887      702D6431 
+ 1888 02c4 2D676764 		.ascii	"-ggdb -O2 -std=gnu99 -fomit-frame-pointer -falign-f"
+ 1888      62202D4F 
+ 1888      32202D73 
+ 1888      74643D67 
+ 1888      6E753939 
+ 1889 02f7 756E6374 		.ascii	"unctions=16 -ffunction-sections -fdata-sections -fn"
+ 1889      696F6E73 
+ 1889      3D313620 
+ 1889      2D666675 
+ 1889      6E637469 
+ 1890 032a 6F2D636F 		.ascii	"o-common -fsingle-precision-constant\000"
+ 1890      6D6D6F6E 
+ 1890      202D6673 
+ 1890      696E676C 
+ 1890      652D7072 
+ 1891              	.LASF126:
+ 1892 034f 43434552 		.ascii	"CCER\000"
+ 1892      00
+ 1893              	.LASF11:
+ 1894 0354 6C6F6E67 		.ascii	"long long int\000"
+ 1894      206C6F6E 
+ 1894      6720696E 
+ 1894      7400
+ 1895              	.LASF91:
+ 1896 0362 4554485F 		.ascii	"ETH_WKUP_IRQn\000"
+ 1896      574B5550 
+ 1896      5F495251 
+ 1896      6E00
+ 1897              	.LASF14:
+ 1898 0370 75696E74 		.ascii	"uint16_t\000"
+ 1898      31365F74 
+ 1898      00
+ 1899              	.LASF145:
+ 1900 0379 45585449 		.ascii	"EXTI_Trigger_Falling\000"
+ 1900      5F547269 
+ 1900      67676572 
+ 1900      5F46616C 
+ 1900      6C696E67 
+ 1901              	.LASF83:
+ 1902 038e 54494D36 		.ascii	"TIM6_DAC_IRQn\000"
+ 1902      5F444143 
+ 1902      5F495251 
+ 1902      6E00
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 37
+
+
+ 1903              	.LASF81:
+ 1904 039c 55415254 		.ascii	"UART4_IRQn\000"
+ 1904      345F4952 
+ 1904      516E00
+ 1905              	.LASF71:
+ 1906 03a7 4F54475F 		.ascii	"OTG_FS_WKUP_IRQn\000"
+ 1906      46535F57 
+ 1906      4B55505F 
+ 1906      4952516E 
+ 1906      00
+ 1907              	.LASF27:
+ 1908 03b8 50656E64 		.ascii	"PendSV_IRQn\000"
+ 1908      53565F49 
+ 1908      52516E00 
+ 1909              	.LASF73:
+ 1910 03c4 54494D38 		.ascii	"TIM8_UP_TIM13_IRQn\000"
+ 1910      5F55505F 
+ 1910      54494D31 
+ 1910      335F4952 
+ 1910      516E00
+ 1911              	.LASF161:
+ 1912 03d7 4F535045 		.ascii	"OSPEEDR\000"
+ 1912      45445200 
+ 1913              	.LASF9:
+ 1914 03df 5F5F7569 		.ascii	"__uint32_t\000"
+ 1914      6E743332 
+ 1914      5F7400
+ 1915              	.LASF23:
+ 1916 03ea 42757346 		.ascii	"BusFault_IRQn\000"
+ 1916      61756C74 
+ 1916      5F495251 
+ 1916      6E00
+ 1917              	.LASF99:
+ 1918 03f8 444D4132 		.ascii	"DMA2_Stream7_IRQn\000"
+ 1918      5F537472 
+ 1918      65616D37 
+ 1918      5F495251 
+ 1918      6E00
+ 1919              	.LASF172:
+ 1920 040a 4E564943 		.ascii	"NVIC_InitStructure\000"
+ 1920      5F496E69 
+ 1920      74537472 
+ 1920      75637475 
+ 1920      726500
+ 1921              	.LASF131:
+ 1922 041d 43435232 		.ascii	"CCR2\000"
+ 1922      00
+ 1923              	.LASF107:
+ 1924 0422 44434D49 		.ascii	"DCMI_IRQn\000"
+ 1924      5F495251 
+ 1924      6E00
+ 1925              	.LASF0:
+ 1926 042c 756E7369 		.ascii	"unsigned int\000"
+ 1926      676E6564 
+ 1926      20696E74 
+ 1926      00
+ 1927              	.LASF180:
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 38
+
+
+ 1928 0439 45585449 		.ascii	"EXTI_Init\000"
+ 1928      5F496E69 
+ 1928      7400
+ 1929              	.LASF43:
+ 1930 0443 444D4131 		.ascii	"DMA1_Stream3_IRQn\000"
+ 1930      5F537472 
+ 1930      65616D33 
+ 1930      5F495251 
+ 1930      6E00
+ 1931              	.LASF46:
+ 1932 0455 444D4131 		.ascii	"DMA1_Stream6_IRQn\000"
+ 1932      5F537472 
+ 1932      65616D36 
+ 1932      5F495251 
+ 1932      6E00
+ 1933              	.LASF22:
+ 1934 0467 4D656D6F 		.ascii	"MemoryManagement_IRQn\000"
+ 1934      72794D61 
+ 1934      6E616765 
+ 1934      6D656E74 
+ 1934      5F495251 
+ 1935              	.LASF101:
+ 1936 047d 49324333 		.ascii	"I2C3_EV_IRQn\000"
+ 1936      5F45565F 
+ 1936      4952516E 
+ 1936      00
+ 1937              	.LASF10:
+ 1938 048a 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1938      20756E73 
+ 1938      69676E65 
+ 1938      6420696E 
+ 1938      7400
+ 1939              	.LASF167:
+ 1940 049c 4750494F 		.ascii	"GPIO_TypeDef\000"
+ 1940      5F547970 
+ 1940      65446566 
+ 1940      00
+ 1941              	.LASF164:
+ 1942 04a9 4C434B52 		.ascii	"LCKR\000"
+ 1942      00
+ 1943              	.LASF103:
+ 1944 04ae 4F54475F 		.ascii	"OTG_HS_EP1_OUT_IRQn\000"
+ 1944      48535F45 
+ 1944      50315F4F 
+ 1944      55545F49 
+ 1944      52516E00 
+ 1945              	.LASF179:
+ 1946 04c2 53595343 		.ascii	"SYSCFG_EXTILineConfig\000"
+ 1946      46475F45 
+ 1946      5854494C 
+ 1946      696E6543 
+ 1946      6F6E6669 
+ 1947              	.LASF6:
+ 1948 04d8 73686F72 		.ascii	"short unsigned int\000"
+ 1948      7420756E 
+ 1948      7369676E 
+ 1948      65642069 
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 39
+
+
+ 1948      6E7400
+ 1949              	.LASF87:
+ 1950 04eb 444D4132 		.ascii	"DMA2_Stream2_IRQn\000"
+ 1950      5F537472 
+ 1950      65616D32 
+ 1950      5F495251 
+ 1950      6E00
+ 1951              	.LASF48:
+ 1952 04fd 43414E31 		.ascii	"CAN1_TX_IRQn\000"
+ 1952      5F54585F 
+ 1952      4952516E 
+ 1952      00
+ 1953              	.LASF176:
+ 1954 050a 54494D5F 		.ascii	"TIM_EncoderInterfaceConfig\000"
+ 1954      456E636F 
+ 1954      64657249 
+ 1954      6E746572 
+ 1954      66616365 
+ 1955              	.LASF69:
+ 1956 0525 45585449 		.ascii	"EXTI15_10_IRQn\000"
+ 1956      31355F31 
+ 1956      305F4952 
+ 1956      516E00
+ 1957              	.LASF64:
+ 1958 0534 53504931 		.ascii	"SPI1_IRQn\000"
+ 1958      5F495251 
+ 1958      6E00
+ 1959              	.LASF41:
+ 1960 053e 444D4131 		.ascii	"DMA1_Stream1_IRQn\000"
+ 1960      5F537472 
+ 1960      65616D31 
+ 1960      5F495251 
+ 1960      6E00
+ 1961              	.LASF68:
+ 1962 0550 55534152 		.ascii	"USART3_IRQn\000"
+ 1962      54335F49 
+ 1962      52516E00 
+ 1963              	.LASF153:
+ 1964 055c 4E564943 		.ascii	"NVIC_IRQChannel\000"
+ 1964      5F495251 
+ 1964      4368616E 
+ 1964      6E656C00 
+ 1965              	.LASF72:
+ 1966 056c 54494D38 		.ascii	"TIM8_BRK_TIM12_IRQn\000"
+ 1966      5F42524B 
+ 1966      5F54494D 
+ 1966      31325F49 
+ 1966      52516E00 
+ 1967              	.LASF28:
+ 1968 0580 53797354 		.ascii	"SysTick_IRQn\000"
+ 1968      69636B5F 
+ 1968      4952516E 
+ 1968      00
+ 1969              	.LASF56:
+ 1970 058d 54494D31 		.ascii	"TIM1_CC_IRQn\000"
+ 1970      5F43435F 
+ 1970      4952516E 
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 40
+
+
+ 1970      00
+ 1971              	.LASF157:
+ 1972 059a 4E564943 		.ascii	"NVIC_InitTypeDef\000"
+ 1972      5F496E69 
+ 1972      74547970 
+ 1972      65446566 
+ 1972      00
+ 1973              	.LASF175:
+ 1974 05ab 5243435F 		.ascii	"RCC_APB2PeriphClockCmd\000"
+ 1974      41504232 
+ 1974      50657269 
+ 1974      7068436C 
+ 1974      6F636B43 
+ 1975              	.LASF185:
+ 1976 05c2 4952516E 		.ascii	"IRQn\000"
+ 1976      00
+ 1977              	.LASF154:
+ 1978 05c7 4E564943 		.ascii	"NVIC_IRQChannelPreemptionPriority\000"
+ 1978      5F495251 
+ 1978      4368616E 
+ 1978      6E656C50 
+ 1978      7265656D 
+ 1979              	.LASF90:
+ 1980 05e9 4554485F 		.ascii	"ETH_IRQn\000"
+ 1980      4952516E 
+ 1980      00
+ 1981              	.LASF75:
+ 1982 05f2 54494D38 		.ascii	"TIM8_CC_IRQn\000"
+ 1982      5F43435F 
+ 1982      4952516E 
+ 1982      00
+ 1983              	.LASF25:
+ 1984 05ff 53564361 		.ascii	"SVCall_IRQn\000"
+ 1984      6C6C5F49 
+ 1984      52516E00 
+ 1985              	.LASF88:
+ 1986 060b 444D4132 		.ascii	"DMA2_Stream3_IRQn\000"
+ 1986      5F537472 
+ 1986      65616D33 
+ 1986      5F495251 
+ 1986      6E00
+ 1987              	.LASF116:
+ 1988 061d 534D4352 		.ascii	"SMCR\000"
+ 1988      00
+ 1989              	.LASF100:
+ 1990 0622 55534152 		.ascii	"USART6_IRQn\000"
+ 1990      54365F49 
+ 1990      52516E00 
+ 1991              	.LASF148:
+ 1992 062e 45585449 		.ascii	"EXTI_Line\000"
+ 1992      5F4C696E 
+ 1992      6500
+ 1993              	.LASF79:
+ 1994 0638 54494D35 		.ascii	"TIM5_IRQn\000"
+ 1994      5F495251 
+ 1994      6E00
+ 1995              	.LASF38:
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 41
+
+
+ 1996 0642 45585449 		.ascii	"EXTI3_IRQn\000"
+ 1996      335F4952 
+ 1996      516E00
+ 1997              	.LASF65:
+ 1998 064d 53504932 		.ascii	"SPI2_IRQn\000"
+ 1998      5F495251 
+ 1998      6E00
+ 1999              	.LASF42:
+ 2000 0657 444D4131 		.ascii	"DMA1_Stream2_IRQn\000"
+ 2000      5F537472 
+ 2000      65616D32 
+ 2000      5F495251 
+ 2000      6E00
+ 2001              	.LASF92:
+ 2002 0669 43414E32 		.ascii	"CAN2_TX_IRQn\000"
+ 2002      5F54585F 
+ 2002      4952516E 
+ 2002      00
+ 2003              	.LASF96:
+ 2004 0676 4F54475F 		.ascii	"OTG_FS_IRQn\000"
+ 2004      46535F49 
+ 2004      52516E00 
+ 2005              	.LASF139:
+ 2006 0682 52455345 		.ascii	"RESERVED14\000"
+ 2006      52564544 
+ 2006      313400
+ 2007              	.LASF177:
+ 2008 068d 54494D5F 		.ascii	"TIM_SetAutoreload\000"
+ 2008      53657441 
+ 2008      75746F72 
+ 2008      656C6F61 
+ 2008      6400
+ 2009              	.LASF137:
+ 2010 069f 444D4152 		.ascii	"DMAR\000"
+ 2010      00
+ 2011              	.LASF150:
+ 2012 06a4 45585449 		.ascii	"EXTI_Trigger\000"
+ 2012      5F547269 
+ 2012      67676572 
+ 2012      00
+ 2013              	.LASF106:
+ 2014 06b1 4F54475F 		.ascii	"OTG_HS_IRQn\000"
+ 2014      48535F49 
+ 2014      52516E00 
+ 2015              	.LASF166:
+ 2016 06bd 41465248 		.ascii	"AFRH\000"
+ 2016      00
+ 2017              	.LASF20:
+ 2018 06c2 666C6F61 		.ascii	"float\000"
+ 2018      7400
+ 2019              	.LASF171:
+ 2020 06c8 45585449 		.ascii	"EXTI_InitStructure\000"
+ 2020      5F496E69 
+ 2020      74537472 
+ 2020      75637475 
+ 2020      726500
+ 2021              	.LASF165:
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 42
+
+
+ 2022 06db 4146524C 		.ascii	"AFRL\000"
+ 2022      00
+ 2023              	.LASF149:
+ 2024 06e0 45585449 		.ascii	"EXTI_Mode\000"
+ 2024      5F4D6F64 
+ 2024      6500
+ 2025              	.LASF114:
+ 2026 06ea 52455345 		.ascii	"RESERVED0\000"
+ 2026      52564544 
+ 2026      3000
+ 2027              	.LASF115:
+ 2028 06f4 52455345 		.ascii	"RESERVED1\000"
+ 2028      52564544 
+ 2028      3100
+ 2029              	.LASF117:
+ 2030 06fe 52455345 		.ascii	"RESERVED2\000"
+ 2030      52564544 
+ 2030      3200
+ 2031              	.LASF119:
+ 2032 0708 52455345 		.ascii	"RESERVED3\000"
+ 2032      52564544 
+ 2032      3300
+ 2033              	.LASF121:
+ 2034 0712 52455345 		.ascii	"RESERVED5\000"
+ 2034      52564544 
+ 2034      3500
+ 2035              	.LASF187:
+ 2036 071c 656E636F 		.ascii	"encoder_read_deg\000"
+ 2036      6465725F 
+ 2036      72656164 
+ 2036      5F646567 
+ 2036      00
+ 2037              	.LASF125:
+ 2038 072d 52455345 		.ascii	"RESERVED7\000"
+ 2038      52564544 
+ 2038      3700
+ 2039              	.LASF80:
+ 2040 0737 53504933 		.ascii	"SPI3_IRQn\000"
+ 2040      5F495251 
+ 2040      6E00
+ 2041              	.LASF128:
+ 2042 0741 52455345 		.ascii	"RESERVED9\000"
+ 2042      52564544 
+ 2042      3900
+ 2043              	.LASF89:
+ 2044 074b 444D4132 		.ascii	"DMA2_Stream4_IRQn\000"
+ 2044      5F537472 
+ 2044      65616D34 
+ 2044      5F495251 
+ 2044      6E00
+ 2045              	.LASF77:
+ 2046 075d 46534D43 		.ascii	"FSMC_IRQn\000"
+ 2046      5F495251 
+ 2046      6E00
+ 2047              	.LASF17:
+ 2048 0767 5F426F6F 		.ascii	"_Bool\000"
+ 2048      6C00
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 43
+
+
+ 2049              	.LASF15:
+ 2050 076d 696E7433 		.ascii	"int32_t\000"
+ 2050      325F7400 
+ 2051              	.LASF2:
+ 2052 0775 756E7369 		.ascii	"unsigned char\000"
+ 2052      676E6564 
+ 2052      20636861 
+ 2052      7200
+ 2053              	.LASF53:
+ 2054 0783 54494D31 		.ascii	"TIM1_BRK_TIM9_IRQn\000"
+ 2054      5F42524B 
+ 2054      5F54494D 
+ 2054      395F4952 
+ 2054      516E00
+ 2055              	.LASF188:
+ 2056 0796 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 2056      52784275 
+ 2056      66666572 
+ 2056      00
+ 2057              	.LASF54:
+ 2058 07a3 54494D31 		.ascii	"TIM1_UP_TIM10_IRQn\000"
+ 2058      5F55505F 
+ 2058      54494D31 
+ 2058      305F4952 
+ 2058      516E00
+ 2059              	.LASF39:
+ 2060 07b6 45585449 		.ascii	"EXTI4_IRQn\000"
+ 2060      345F4952 
+ 2060      516E00
+ 2061              	.LASF109:
+ 2062 07c1 48415348 		.ascii	"HASH_RNG_IRQn\000"
+ 2062      5F524E47 
+ 2062      5F495251 
+ 2062      6E00
+ 2063              	.LASF32:
+ 2064 07cf 5254435F 		.ascii	"RTC_WKUP_IRQn\000"
+ 2064      574B5550 
+ 2064      5F495251 
+ 2064      6E00
+ 2065              	.LASF93:
+ 2066 07dd 43414E32 		.ascii	"CAN2_RX0_IRQn\000"
+ 2066      5F525830 
+ 2066      5F495251 
+ 2066      6E00
+ 2067              	.LASF82:
+ 2068 07eb 55415254 		.ascii	"UART5_IRQn\000"
+ 2068      355F4952 
+ 2068      516E00
+ 2069              	.LASF55:
+ 2070 07f6 54494D31 		.ascii	"TIM1_TRG_COM_TIM11_IRQn\000"
+ 2070      5F545247 
+ 2070      5F434F4D 
+ 2070      5F54494D 
+ 2070      31315F49 
+ 2071              	.LASF74:
+ 2072 080e 54494D38 		.ascii	"TIM8_TRG_COM_TIM14_IRQn\000"
+ 2072      5F545247 
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 44
+
+
+ 2072      5F434F4D 
+ 2072      5F54494D 
+ 2072      31345F49 
+ 2073              	.LASF33:
+ 2074 0826 464C4153 		.ascii	"FLASH_IRQn\000"
+ 2074      485F4952 
+ 2074      516E00
+ 2075              	.LASF158:
+ 2076 0831 636C6561 		.ascii	"clear\000"
+ 2076      7200
+ 2077              	.LASF123:
+ 2078 0837 52455345 		.ascii	"RESERVED6\000"
+ 2078      52564544 
+ 2078      3600
+ 2079              	.LASF16:
+ 2080 0841 75696E74 		.ascii	"uint32_t\000"
+ 2080      33325F74 
+ 2080      00
+ 2081              	.LASF155:
+ 2082 084a 4E564943 		.ascii	"NVIC_IRQChannelSubPriority\000"
+ 2082      5F495251 
+ 2082      4368616E 
+ 2082      6E656C53 
+ 2082      75625072 
+ 2083              	.LASF67:
+ 2084 0865 55534152 		.ascii	"USART2_IRQn\000"
+ 2084      54325F49 
+ 2084      52516E00 
+ 2085              	.LASF24:
+ 2086 0871 55736167 		.ascii	"UsageFault_IRQn\000"
+ 2086      65466175 
+ 2086      6C745F49 
+ 2086      52516E00 
+ 2087              	.LASF60:
+ 2088 0881 49324331 		.ascii	"I2C1_EV_IRQn\000"
+ 2088      5F45565F 
+ 2088      4952516E 
+ 2088      00
+ 2089              	.LASF76:
+ 2090 088e 444D4131 		.ascii	"DMA1_Stream7_IRQn\000"
+ 2090      5F537472 
+ 2090      65616D37 
+ 2090      5F495251 
+ 2090      6E00
+ 2091              	.LASF19:
+ 2092 08a0 63686172 		.ascii	"char\000"
+ 2092      00
+ 2093              	.LASF108:
+ 2094 08a5 43525950 		.ascii	"CRYP_IRQn\000"
+ 2094      5F495251 
+ 2094      6E00
+ 2095              	.LASF178:
+ 2096 08af 54494D5F 		.ascii	"TIM_Cmd\000"
+ 2096      436D6400 
+ 2097              	.LASF5:
+ 2098 08b7 5F5F7569 		.ascii	"__uint16_t\000"
+ 2098      6E743136 
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 45
+
+
+ 2098      5F7400
+ 2099              	.LASF84:
+ 2100 08c2 54494D37 		.ascii	"TIM7_IRQn\000"
+ 2100      5F495251 
+ 2100      6E00
+ 2101              	.LASF104:
+ 2102 08cc 4F54475F 		.ascii	"OTG_HS_EP1_IN_IRQn\000"
+ 2102      48535F45 
+ 2102      50315F49 
+ 2102      4E5F4952 
+ 2102      516E00
+ 2103              	.LASF21:
+ 2104 08df 4E6F6E4D 		.ascii	"NonMaskableInt_IRQn\000"
+ 2104      61736B61 
+ 2104      626C6549 
+ 2104      6E745F49 
+ 2104      52516E00 
+ 2105              	.LASF7:
+ 2106 08f3 5F5F696E 		.ascii	"__int32_t\000"
+ 2106      7433325F 
+ 2106      7400
+ 2107              	.LASF147:
+ 2108 08fd 45585449 		.ascii	"EXTITrigger_TypeDef\000"
+ 2108      54726967 
+ 2108      6765725F 
+ 2108      54797065 
+ 2108      44656600 
+ 2109              	.LASF29:
+ 2110 0911 57574447 		.ascii	"WWDG_IRQn\000"
+ 2110      5F495251 
+ 2110      6E00
+ 2111              	.LASF152:
+ 2112 091b 45585449 		.ascii	"EXTI_InitTypeDef\000"
+ 2112      5F496E69 
+ 2112      74547970 
+ 2112      65446566 
+ 2112      00
+ 2113              	.LASF113:
+ 2114 092c 46756E63 		.ascii	"FunctionalState\000"
+ 2114      74696F6E 
+ 2114      616C5374 
+ 2114      61746500 
+ 2115              	.LASF170:
+ 2116 093c 696F706F 		.ascii	"ioportid_t\000"
+ 2116      72746964 
+ 2116      5F7400
+ 2117              	.LASF144:
+ 2118 0947 45585449 		.ascii	"EXTI_Trigger_Rising\000"
+ 2118      5F547269 
+ 2118      67676572 
+ 2118      5F526973 
+ 2118      696E6700 
+ 2119              	.LASF31:
+ 2120 095b 54414D50 		.ascii	"TAMP_STAMP_IRQn\000"
+ 2120      5F535441 
+ 2120      4D505F49 
+ 2120      52516E00 
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 46
+
+
+ 2121              	.LASF173:
+ 2122 096b 5F70616C 		.ascii	"_pal_lld_setgroupmode\000"
+ 2122      5F6C6C64 
+ 2122      5F736574 
+ 2122      67726F75 
+ 2122      706D6F64 
+ 2123              	.LASF120:
+ 2124 0981 52455345 		.ascii	"RESERVED4\000"
+ 2124      52564544 
+ 2124      3400
+ 2125              	.LASF85:
+ 2126 098b 444D4132 		.ascii	"DMA2_Stream0_IRQn\000"
+ 2126      5F537472 
+ 2126      65616D30 
+ 2126      5F495251 
+ 2126      6E00
+ 2127              	.LASF186:
+ 2128 099d 656E636F 		.ascii	"encoder_init\000"
+ 2128      6465725F 
+ 2128      696E6974 
+ 2128      00
+ 2129              	.LASF127:
+ 2130 09aa 52455345 		.ascii	"RESERVED8\000"
+ 2130      52564544 
+ 2130      3800
+ 2131              	.LASF141:
+ 2132 09b4 45585449 		.ascii	"EXTI_Mode_Interrupt\000"
+ 2132      5F4D6F64 
+ 2132      655F496E 
+ 2132      74657272 
+ 2132      75707400 
+ 2133              	.LASF130:
+ 2134 09c8 43435231 		.ascii	"CCR1\000"
+ 2134      00
+ 2135              	.LASF57:
+ 2136 09cd 54494D32 		.ascii	"TIM2_IRQn\000"
+ 2136      5F495251 
+ 2136      6E00
+ 2137              	.LASF132:
+ 2138 09d7 43435233 		.ascii	"CCR3\000"
+ 2138      00
+ 2139              	.LASF35:
+ 2140 09dc 45585449 		.ascii	"EXTI0_IRQn\000"
+ 2140      305F4952 
+ 2140      516E00
+ 2141              	.LASF66:
+ 2142 09e7 55534152 		.ascii	"USART1_IRQn\000"
+ 2142      54315F49 
+ 2142      52516E00 
+ 2143              	.LASF174:
+ 2144 09f3 5243435F 		.ascii	"RCC_APB1PeriphClockCmd\000"
+ 2144      41504231 
+ 2144      50657269 
+ 2144      7068436C 
+ 2144      6F636B43 
+ 2145              	.LASF13:
+ 2146 0a0a 75696E74 		.ascii	"uint8_t\000"
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 47
+
+
+ 2146      385F7400 
+ 2147              	.LASF34:
+ 2148 0a12 5243435F 		.ascii	"RCC_IRQn\000"
+ 2148      4952516E 
+ 2148      00
+ 2149              	.LASF18:
+ 2150 0a1b 73697A65 		.ascii	"sizetype\000"
+ 2150      74797065 
+ 2150      00
+ 2151              	.LASF142:
+ 2152 0a24 45585449 		.ascii	"EXTI_Mode_Event\000"
+ 2152      5F4D6F64 
+ 2152      655F4576 
+ 2152      656E7400 
+ 2153              	.LASF110:
+ 2154 0a34 4650555F 		.ascii	"FPU_IRQn\000"
+ 2154      4952516E 
+ 2154      00
+ 2155              	.LASF26:
+ 2156 0a3d 44656275 		.ascii	"DebugMonitor_IRQn\000"
+ 2156      674D6F6E 
+ 2156      69746F72 
+ 2156      5F495251 
+ 2156      6E00
+ 2157              	.LASF61:
+ 2158 0a4f 49324331 		.ascii	"I2C1_ER_IRQn\000"
+ 2158      5F45525F 
+ 2158      4952516E 
+ 2158      00
+ 2159              	.LASF47:
+ 2160 0a5c 4144435F 		.ascii	"ADC_IRQn\000"
+ 2160      4952516E 
+ 2160      00
+ 2161              	.LASF86:
+ 2162 0a65 444D4132 		.ascii	"DMA2_Stream1_IRQn\000"
+ 2162      5F537472 
+ 2162      65616D31 
+ 2162      5F495251 
+ 2162      6E00
+ 2163              	.LASF169:
+ 2164 0a77 696F6D6F 		.ascii	"iomode_t\000"
+ 2164      64655F74 
+ 2164      00
+ 2165              	.LASF181:
+ 2166 0a80 4E564943 		.ascii	"NVIC_Init\000"
+ 2166      5F496E69 
+ 2166      7400
+ 2167              	.LASF51:
+ 2168 0a8a 43414E31 		.ascii	"CAN1_SCE_IRQn\000"
+ 2168      5F534345 
+ 2168      5F495251 
+ 2168      6E00
+ 2169              	.LASF95:
+ 2170 0a98 43414E32 		.ascii	"CAN2_SCE_IRQn\000"
+ 2170      5F534345 
+ 2170      5F495251 
+ 2170      6E00
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 48
+
+
+ 2171              	.LASF105:
+ 2172 0aa6 4F54475F 		.ascii	"OTG_HS_WKUP_IRQn\000"
+ 2172      48535F57 
+ 2172      4B55505F 
+ 2172      4952516E 
+ 2172      00
+ 2173              	.LASF58:
+ 2174 0ab7 54494D33 		.ascii	"TIM3_IRQn\000"
+ 2174      5F495251 
+ 2174      6E00
+ 2175              	.LASF36:
+ 2176 0ac1 45585449 		.ascii	"EXTI1_IRQn\000"
+ 2176      315F4952 
+ 2176      516E00
+ 2177              	.LASF40:
+ 2178 0acc 444D4131 		.ascii	"DMA1_Stream0_IRQn\000"
+ 2178      5F537472 
+ 2178      65616D30 
+ 2178      5F495251 
+ 2178      6E00
+ 2179              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.8.4 20140526 (release) [ARM/embedded-4_8-br
+ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s 			page 49
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 encoder.c
+C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s:21     .text.encoder_init:00000000 $t
+C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s:27     .text.encoder_init:00000000 encoder_init
+C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s:133    .text.encoder_init:00000094 $d
+C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s:139    .text.encoder_read_deg:00000000 $t
+C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s:145    .text.encoder_read_deg:00000000 encoder_read_deg
+C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s:165    .text.encoder_read_deg:0000001c $d
+                     .debug_frame:00000010 $d
+C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s:138    .text.encoder_init:0000009c $t
+C:\Users\jsyoon\AppData\Local\Temp\ccYLUgOo.s:171    .text.encoder_read_deg:00000028 $t
+
+UNDEFINED SYMBOLS
+_pal_lld_setgroupmode
+RCC_APB1PeriphClockCmd
+RCC_APB2PeriphClockCmd
+TIM_EncoderInterfaceConfig
+TIM_SetAutoreload
+TIM_Cmd
+SYSCFG_EXTILineConfig
+EXTI_Init
+NVIC_Init
