@@ -30,7 +30,7 @@
 #define DISABLE_GATE()			palClearPad(GPIOC, 10)
 #define DCCAL_ON()				palSetPad(GPIOB, 12)
 #define DCCAL_OFF()				palClearPad(GPIOB, 12)
-#define IS_DRV_FAULT()			(!palReadPad(GPIOC, 12))
+#define IS_DRV_FAULT()			(!palReadPad(GPIOB, 12))
 
 #define LED_GREEN_ON()				palSetPad(GPIOC, 4)
 #define LED_GREEN_OFF()				palClearPad(GPIOC, 4)

@@ -39,6 +39,8 @@
 #include "hw_bw.h"
 #elif defined HW_VERSION_VICTOR_R1A
 #include "hw_victor_r1a.h"
+#elif defined HW_VERSION_OROCA_R151030
+#include "hw_oroca_R151030.h"
 #else
 #error "No hardware version defined"
 #endif

@@ -52,10 +52,12 @@
  */
 //#define HW_VERSION_BW
 //#define HW_VERSION_40
-#define HW_VERSION_45
+//#define HW_VERSION_45
 //#define HW_VERSION_46
 //#define HW_VERSION_R2
 //#define HW_VERSION_VICTOR_R1A
+#define HW_VERSION_OROCA_R151030
+
 
 /*
  * Select only one (default) motor configuration

@@ -285,6 +285,33 @@ void main_sample_print_data(bool at_start, uint16_t len, uint8_t decimation) {
 
 }
 
+
+
+static volatile short dacDataA = 0;
+void test_dac_loop()
+{
+	while(1){
+		static debugCnt=0;
+		//chThdSleepMilliseconds( 500);
+		//chThdSleepMilliseconds( 20);
+		// 12bit
+		spi_dac_write_A( dacDataA);
+		spi_dac_write_B( dacDataA++);
+
+		if(2048<dacDataA)dacDataA=0;
+
+		//chThdSleepMilliseconds( 20);
+		//spi_dac_write_A( 0x7FF);
+		//spi_dac_write_B( 0x7FF);
+
+		//chThdSleepMilliseconds( 500);
+		//chThdSleepMilliseconds( 20);
+		//spi_dac_write_A( 0xFFF);
+		//spi_dac_write_B( 0x000);
+		// debug_print_uart( "2-debugCnt=%d \r\n",  debugCnt++);
+	}
+}
+
 int main(void) {
 	halInit();
 	chSysInit();
@@ -293,6 +320,9 @@ int main(void) {
 
 	conf_general_init();
 	hw_init_gpio();
+
+	//jsyoon 2015.12.14
+	spi_dac_hw_init();
 
 	ledpwm_init();
 
@@ -337,8 +367,13 @@ int main(void) {
 	chThdCreateStatic(timer_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, timer_thread, NULL);
 
 
+	//jsyoon 12.14 
+	// 실험용
+	 //test_dac_loop();
+
+
 	for(;;) {
-		static int debug_out_cnt=0;
+		//static int debug_out_cnt=0;
 
 		#ifdef _TEST_STM32F4_DISCOVERY
 		
@@ -348,9 +383,9 @@ int main(void) {
 		#endif // _TEST_STM32F4_DISCOVERY
 
 
-		debug_print_usb("TTTT =%d \n\r", debug_out_cnt);
-		//debug_out_cnt += 1234567;
-		debug_out_cnt += 12;
+		//debug_print_usb("TTTT =%d \n\r", debug_out_cnt);
+		////debug_out_cnt += 1234567;
+		//debug_out_cnt += 12;
 
 
 		//palSetPad(GPIOA, 7);
@@ -358,7 +393,7 @@ int main(void) {
 		chThdSleepMilliseconds(200);
 		//palClearPad(GPIOA, 7);
 
-		
+
 	}
 }
 

@@ -120,6 +120,7 @@ CSRC = $(PORTSRC) \
        led_external.c \
        encoder.c \
        flash_helper.c \
+       spi_dac.c \
        $(HWSRC) \
        $(APPSRC) \
        $(NRFSRC)

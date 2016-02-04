@@ -1,9 +1,9 @@
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 1
 
 
    1              		.syntax unified
    2              		.cpu cortex-m4
-   3              		.eabi_attribute 27, 3
+   3              		.eabi_attribute 27, 1
    4              		.eabi_attribute 28, 1
    5              		.fpu fpv4-sp-d16
    6              		.eabi_attribute 20, 1
@@ -36,7 +36,7 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
   33              		@ frame_needed = 0, uses_anonymous_args = 0
   34              	.LVL0:
   35              		.loc 1 76 0
-  36 0000 0C4B     		ldr	r3, .L5
+  36 0000 0C4B     		ldr	r3, .L6
   37              		.loc 1 75 0
   38 0002 70B5     		push	{r4, r5, r6, lr}
   39              		.cfi_def_cfa_offset 16
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
   55 000c 067F     		ldrb	r6, [r0, #28]	@ zero_extendqisi2
   56              		.loc 1 82 0
   57 000e 6562     		str	r5, [r4, #36]
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 2
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 2
 
 
   58              	.LVL2:
@@ -84,7 +84,7 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
   78              	.LBE8:
   79              	.LBE9:
   80              		.loc 1 84 0
-  81 001e 05D0     		beq	.L4
+  81 001e 05D0     		beq	.L5
   82              	.LVL3:
   83              	.L2:
   84              		.loc 1 86 0
@@ -102,26 +102,25 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
   96              		.thumb
   97 002a 70BD     		pop	{r4, r5, r6, pc}
   98              	.LVL6:
-  99              	.L4:
+  99              	.L5:
  100              		.loc 1 85 0
  101 002c FFF7FEFF 		bl	chSchReadyI
  102              	.LVL7:
  103 0030 F6E7     		b	.L2
- 104              	.L6:
+ 104              	.L7:
  105 0032 00BF     		.align	2
- 106              	.L5:
+ 106              	.L6:
  107 0034 00000000 		.word	rlist
  108              		.cfi_endproc
  109              	.LFE7:
  110              		.size	chMsgSend, .-chMsgSend
- 111 0038 AFF30080 		.section	.text.chMsgWait,"ax",%progbits
- 111      AFF30080 
+ 111              		.section	.text.chMsgWait,"ax",%progbits
  112              		.align	2
  113              		.p2align 4,,15
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 3
-
-
  114              		.global	chMsgWait
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 3
+
+
  115              		.thumb
  116              		.thumb_func
  117              		.type	chMsgWait, %function
@@ -141,13 +140,13 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  131              	@ 0 "" 2
  132              		.loc 1 110 0
  133              		.thumb
- 134 0004 0A4C     		ldr	r4, .L10
+ 134 0004 0A4C     		ldr	r4, .L12
  135 0006 A269     		ldr	r2, [r4, #24]
  136 0008 1346     		mov	r3, r2
  137 000a 53F82C0F 		ldr	r0, [r3, #44]!
  138 000e 9842     		cmp	r0, r3
- 139 0010 06D0     		beq	.L9
- 140              	.L8:
+ 139 0010 06D0     		beq	.L11
+ 140              	.L9:
  141              	.LVL8:
  142              	.LBB10:
  143              	.LBB11:
@@ -174,28 +173,26 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  164              		.thumb
  165 001e 10BD     		pop	{r4, pc}
  166              	.LVL9:
- 167              	.L9:
+ 167              	.L11:
  168              		.loc 1 111 0
  169 0020 0C20     		movs	r0, #12
  170 0022 FFF7FEFF 		bl	chSchGoSleepS
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 4
-
-
  171              	.LVL10:
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 4
+
+
  172 0026 A269     		ldr	r2, [r4, #24]
  173 0028 D06A     		ldr	r0, [r2, #44]
  174 002a 02F12C03 		add	r3, r2, #44
- 175 002e F0E7     		b	.L8
- 176              	.L11:
+ 175 002e F0E7     		b	.L9
+ 176              	.L13:
  177              		.align	2
- 178              	.L10:
+ 178              	.L12:
  179 0030 00000000 		.word	rlist
  180              		.cfi_endproc
  181              	.LFE8:
  182              		.size	chMsgWait, .-chMsgWait
- 183 0034 AFF30080 		.section	.text.chMsgRelease,"ax",%progbits
- 183      AFF30080 
- 183      AFF30080 
+ 183              		.section	.text.chMsgRelease,"ax",%progbits
  184              		.align	2
  185              		.p2align 4,,15
  186              		.global	chMsgRelease
@@ -230,30 +227,30 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  215              		.cfi_endproc
  216              	.LFE9:
  217              		.size	chMsgRelease, .-chMsgRelease
- 218 000c AFF30080 		.text
+ 218              		.text
  219              	.Letext0:
- 220              		.file 3 "c:\\crosstools\\gcc-arm-embedded\\4.8_2014q2\\arm-none-eabi\\include\\machine\\_default_t
- 221              		.file 4 "c:\\crosstools\\gcc-arm-embedded\\4.8_2014q2\\arm-none-eabi\\include\\stdint.h"
+ 220              		.file 3 "c:\\program files\\gnu tools arm embedded\\4.9 2015q2\\arm-none-eabi\\include\\machine\\_
+ 221              		.file 4 "c:\\program files\\gnu tools arm embedded\\4.9 2015q2\\arm-none-eabi\\include\\sys\\_stdi
  222              		.file 5 "ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chtypes.h"
  223              		.file 6 "ChibiOS_2.6.6/os/kernel/include/chlists.h"
  224              		.file 7 "ChibiOS_2.6.6/os/kernel/include/chthreads.h"
  225              		.file 8 "ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chcore_v7m.h"
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 5
-
-
  226              		.file 9 "ChibiOS_2.6.6/os/kernel/include/chschd.h"
  227              		.file 10 "ChibiOS_2.6.6/os/kernel/include/chmtx.h"
  228              		.section	.debug_info,"",%progbits
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 5
+
+
  229              	.Ldebug_info0:
  230 0000 91060000 		.4byte	0x691
  231 0004 0400     		.2byte	0x4
  232 0006 00000000 		.4byte	.Ldebug_abbrev0
  233 000a 04       		.byte	0x4
  234 000b 01       		.uleb128 0x1
- 235 000c C2000000 		.4byte	.LASF68
+ 235 000c 76020000 		.4byte	.LASF68
  236 0010 01       		.byte	0x1
- 237 0011 82020000 		.4byte	.LASF69
- 238 0015 76000000 		.4byte	.LASF70
+ 237 0011 2E010000 		.4byte	.LASF69
+ 238 0015 DB030000 		.4byte	.LASF70
  239 0019 30000000 		.4byte	.Ldebug_ranges0+0x30
  240 001d 00000000 		.4byte	0
  241 0021 00000000 		.4byte	.Ldebug_line0
@@ -264,7 +261,7 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  246 002c 03       		.uleb128 0x3
  247 002d 04       		.byte	0x4
  248 002e 07       		.byte	0x7
- 249 002f 0B020000 		.4byte	.LASF0
+ 249 002f B7000000 		.4byte	.LASF0
  250 0033 03       		.uleb128 0x3
  251 0034 01       		.byte	0x1
  252 0035 06       		.byte	0x6
@@ -272,41 +269,41 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  254 003a 04       		.uleb128 0x4
  255 003b 1A000000 		.4byte	.LASF5
  256 003f 03       		.byte	0x3
- 257 0040 1C       		.byte	0x1c
+ 257 0040 1D       		.byte	0x1d
  258 0041 45000000 		.4byte	0x45
  259 0045 03       		.uleb128 0x3
  260 0046 01       		.byte	0x1
  261 0047 08       		.byte	0x8
- 262 0048 F8020000 		.4byte	.LASF2
+ 262 0048 A4010000 		.4byte	.LASF2
  263 004c 03       		.uleb128 0x3
  264 004d 02       		.byte	0x2
  265 004e 05       		.byte	0x5
- 266 004f 10030000 		.4byte	.LASF3
+ 266 004f BC010000 		.4byte	.LASF3
  267 0053 03       		.uleb128 0x3
  268 0054 02       		.byte	0x2
  269 0055 07       		.byte	0x7
- 270 0056 32020000 		.4byte	.LASF4
+ 270 0056 DE000000 		.4byte	.LASF4
  271 005a 04       		.uleb128 0x4
- 272 005b C0030000 		.4byte	.LASF6
+ 272 005b 6C020000 		.4byte	.LASF6
  273 005f 03       		.byte	0x3
- 274 0060 37       		.byte	0x37
+ 274 0060 3F       		.byte	0x3f
  275 0061 65000000 		.4byte	0x65
  276 0065 03       		.uleb128 0x3
  277 0066 04       		.byte	0x4
  278 0067 05       		.byte	0x5
- 279 0068 A6000000 		.4byte	.LASF7
+ 279 0068 76000000 		.4byte	.LASF7
  280 006c 04       		.uleb128 0x4
- 281 006d F7010000 		.4byte	.LASF8
+ 281 006d A3000000 		.4byte	.LASF8
  282 0071 03       		.byte	0x3
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 6
-
-
- 283 0072 38       		.byte	0x38
+ 283 0072 41       		.byte	0x41
  284 0073 77000000 		.4byte	0x77
  285 0077 03       		.uleb128 0x3
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 6
+
+
  286 0078 04       		.byte	0x4
  287 0079 07       		.byte	0x7
- 288 007a 18020000 		.4byte	.LASF9
+ 288 007a C4000000 		.4byte	.LASF9
  289 007e 03       		.uleb128 0x3
  290 007f 08       		.byte	0x8
  291 0080 05       		.byte	0x5
@@ -316,36 +313,36 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  295 0087 07       		.byte	0x7
  296 0088 24000000 		.4byte	.LASF11
  297 008c 04       		.uleb128 0x4
- 298 008d 11040000 		.4byte	.LASF12
+ 298 008d F3030000 		.4byte	.LASF12
  299 0091 04       		.byte	0x4
- 300 0092 2A       		.byte	0x2a
+ 300 0092 14       		.byte	0x14
  301 0093 3A000000 		.4byte	0x3a
  302 0097 04       		.uleb128 0x4
- 303 0098 F0020000 		.4byte	.LASF13
+ 303 0098 9C010000 		.4byte	.LASF13
  304 009c 04       		.byte	0x4
- 305 009d 41       		.byte	0x41
+ 305 009d 1F       		.byte	0x1f
  306 009e 5A000000 		.4byte	0x5a
  307 00a2 04       		.uleb128 0x4
- 308 00a3 76030000 		.4byte	.LASF14
+ 308 00a3 22020000 		.4byte	.LASF14
  309 00a7 04       		.byte	0x4
- 310 00a8 42       		.byte	0x42
+ 310 00a8 20       		.byte	0x20
  311 00a9 6C000000 		.4byte	0x6c
  312 00ad 03       		.uleb128 0x3
  313 00ae 01       		.byte	0x1
  314 00af 02       		.byte	0x2
- 315 00b0 EA020000 		.4byte	.LASF15
+ 315 00b0 96010000 		.4byte	.LASF15
  316 00b4 04       		.uleb128 0x4
- 317 00b5 53020000 		.4byte	.LASF16
+ 317 00b5 FF000000 		.4byte	.LASF16
  318 00b9 05       		.byte	0x5
  319 00ba 2C       		.byte	0x2c
  320 00bb 8C000000 		.4byte	0x8c
  321 00bf 04       		.uleb128 0x4
- 322 00c0 B9000000 		.4byte	.LASF17
+ 322 00c0 89000000 		.4byte	.LASF17
  323 00c4 05       		.byte	0x5
  324 00c5 2D       		.byte	0x2d
  325 00c6 8C000000 		.4byte	0x8c
  326 00ca 04       		.uleb128 0x4
- 327 00cb D3020000 		.4byte	.LASF18
+ 327 00cb 7F010000 		.4byte	.LASF18
  328 00cf 05       		.byte	0x5
  329 00d0 2E       		.byte	0x2e
  330 00d1 8C000000 		.4byte	0x8c
@@ -355,47 +352,47 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  334 00db 2F       		.byte	0x2f
  335 00dc 8C000000 		.4byte	0x8c
  336 00e0 04       		.uleb128 0x4
- 337 00e1 E2020000 		.4byte	.LASF20
+ 337 00e1 8E010000 		.4byte	.LASF20
  338 00e5 05       		.byte	0x5
  339 00e6 30       		.byte	0x30
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 7
-
-
  340 00e7 A2000000 		.4byte	0xa2
  341 00eb 04       		.uleb128 0x4
- 342 00ec 45020000 		.4byte	.LASF21
+ 342 00ec F1000000 		.4byte	.LASF21
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 7
+
+
  343 00f0 05       		.byte	0x5
  344 00f1 31       		.byte	0x31
  345 00f2 97000000 		.4byte	0x97
  346 00f6 04       		.uleb128 0x4
- 347 00f7 67020000 		.4byte	.LASF22
+ 347 00f7 13010000 		.4byte	.LASF22
  348 00fb 05       		.byte	0x5
  349 00fc 33       		.byte	0x33
  350 00fd A2000000 		.4byte	0xa2
  351 0101 04       		.uleb128 0x4
- 352 0102 AB030000 		.4byte	.LASF23
+ 352 0102 57020000 		.4byte	.LASF23
  353 0106 05       		.byte	0x5
  354 0107 35       		.byte	0x35
  355 0108 A2000000 		.4byte	0xa2
  356 010c 04       		.uleb128 0x4
- 357 010d 49030000 		.4byte	.LASF24
+ 357 010d F5010000 		.4byte	.LASF24
  358 0111 06       		.byte	0x6
  359 0112 2A       		.byte	0x2a
  360 0113 17010000 		.4byte	0x117
  361 0117 05       		.uleb128 0x5
- 362 0118 49030000 		.4byte	.LASF24
+ 362 0118 F5010000 		.4byte	.LASF24
  363 011c 48       		.byte	0x48
  364 011d 07       		.byte	0x7
  365 011e 5E       		.byte	0x5e
  366 011f 14020000 		.4byte	0x214
  367 0123 06       		.uleb128 0x6
- 368 0124 3A030000 		.4byte	.LASF25
+ 368 0124 E6010000 		.4byte	.LASF25
  369 0128 07       		.byte	0x7
  370 0129 5F       		.byte	0x5f
  371 012a 35020000 		.4byte	0x235
  372 012e 00       		.byte	0
  373 012f 06       		.uleb128 0x6
- 374 0130 DB020000 		.4byte	.LASF26
+ 374 0130 87010000 		.4byte	.LASF26
  375 0134 07       		.byte	0x7
  376 0135 61       		.byte	0x61
  377 0136 35020000 		.4byte	0x235
@@ -407,58 +404,58 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  383 0142 E0000000 		.4byte	0xe0
  384 0146 08       		.byte	0x8
  385 0147 06       		.uleb128 0x6
- 386 0148 2F040000 		.4byte	.LASF28
+ 386 0148 11040000 		.4byte	.LASF28
  387 014c 07       		.byte	0x7
  388 014d 64       		.byte	0x64
  389 014e BF030000 		.4byte	0x3bf
  390 0152 0C       		.byte	0xc
  391 0153 06       		.uleb128 0x6
- 392 0154 E6010000 		.4byte	.LASF29
+ 392 0154 92000000 		.4byte	.LASF29
  393 0158 07       		.byte	0x7
  394 0159 66       		.byte	0x66
  395 015a 35020000 		.4byte	0x235
  396 015e 10       		.byte	0x10
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 8
-
-
  397 015f 06       		.uleb128 0x6
- 398 0160 A6020000 		.4byte	.LASF30
+ 398 0160 52010000 		.4byte	.LASF30
  399 0164 07       		.byte	0x7
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 8
+
+
  400 0165 67       		.byte	0x67
  401 0166 35020000 		.4byte	0x235
  402 016a 14       		.byte	0x14
  403 016b 06       		.uleb128 0x6
- 404 016c 20040000 		.4byte	.LASF31
+ 404 016c 02040000 		.4byte	.LASF31
  405 0170 07       		.byte	0x7
  406 0171 6E       		.byte	0x6e
  407 0172 BF040000 		.4byte	0x4bf
  408 0176 18       		.byte	0x18
  409 0177 06       		.uleb128 0x6
- 410 0178 1A030000 		.4byte	.LASF32
+ 410 0178 C6010000 		.4byte	.LASF32
  411 017c 07       		.byte	0x7
  412 017d 79       		.byte	0x79
  413 017e BF000000 		.4byte	0xbf
  414 0182 1C       		.byte	0x1c
  415 0183 06       		.uleb128 0x6
- 416 0184 41030000 		.4byte	.LASF33
+ 416 0184 ED010000 		.4byte	.LASF33
  417 0188 07       		.byte	0x7
  418 0189 7D       		.byte	0x7d
  419 018a B4000000 		.4byte	0xb4
  420 018e 1D       		.byte	0x1d
  421 018f 06       		.uleb128 0x6
- 422 0190 FA030000 		.4byte	.LASF34
+ 422 0190 CA030000 		.4byte	.LASF34
  423 0194 07       		.byte	0x7
  424 0195 82       		.byte	0x82
  425 0196 CA000000 		.4byte	0xca
  426 019a 1E       		.byte	0x1e
  427 019b 06       		.uleb128 0x6
- 428 019c 22030000 		.4byte	.LASF35
+ 428 019c CE010000 		.4byte	.LASF35
  429 01a0 07       		.byte	0x7
  430 01a1 88       		.byte	0x88
  431 01a2 D5000000 		.4byte	0xd5
  432 01a6 1F       		.byte	0x1f
  433 01a7 06       		.uleb128 0x6
- 434 01a8 CA030000 		.4byte	.LASF36
+ 434 01a8 9A030000 		.4byte	.LASF36
  435 01ac 07       		.byte	0x7
  436 01ad 8F       		.byte	0x8f
  437 01ae E7030000 		.4byte	0x3e7
@@ -470,20 +467,20 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  443 01ba 8A040000 		.4byte	0x48a
  444 01be 24       		.byte	0x24
  445 01bf 06       		.uleb128 0x6
- 446 01c0 35040000 		.4byte	.LASF37
+ 446 01c0 17040000 		.4byte	.LASF37
  447 01c4 07       		.byte	0x7
  448 01c5 B9       		.byte	0xb9
  449 01c6 5B020000 		.4byte	0x25b
  450 01ca 28       		.byte	0x28
  451 01cb 06       		.uleb128 0x6
- 452 01cc D8030000 		.4byte	.LASF38
+ 452 01cc A8030000 		.4byte	.LASF38
  453 01d0 07       		.byte	0x7
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 9
-
-
  454 01d1 BF       		.byte	0xbf
  455 01d2 3B020000 		.4byte	0x23b
  456 01d6 2C       		.byte	0x2c
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 9
+
+
  457 01d7 06       		.uleb128 0x6
  458 01d8 00000000 		.4byte	.LASF39
  459 01dc 07       		.byte	0x7
@@ -491,19 +488,19 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  461 01de EB000000 		.4byte	0xeb
  462 01e2 34       		.byte	0x34
  463 01e3 06       		.uleb128 0x6
- 464 01e4 6B030000 		.4byte	.LASF40
+ 464 01e4 17020000 		.4byte	.LASF40
  465 01e8 07       		.byte	0x7
  466 01e9 C9       		.byte	0xc9
  467 01ea F6000000 		.4byte	0xf6
  468 01ee 38       		.byte	0x38
  469 01ef 06       		.uleb128 0x6
- 470 01f0 06030000 		.4byte	.LASF41
+ 470 01f0 B2010000 		.4byte	.LASF41
  471 01f4 07       		.byte	0x7
  472 01f5 D0       		.byte	0xd0
  473 01f6 D1040000 		.4byte	0x4d1
  474 01fa 3C       		.byte	0x3c
  475 01fb 06       		.uleb128 0x6
- 476 01fc B5030000 		.4byte	.LASF42
+ 476 01fc 61020000 		.4byte	.LASF42
  477 0200 07       		.byte	0x7
  478 0201 D4       		.byte	0xd4
  479 0202 E0000000 		.4byte	0xe0
@@ -521,13 +518,13 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  491 0217 61       		.byte	0x61
  492 0218 35020000 		.4byte	0x235
  493 021c 06       		.uleb128 0x6
- 494 021d 3A030000 		.4byte	.LASF25
+ 494 021d E6010000 		.4byte	.LASF25
  495 0221 06       		.byte	0x6
  496 0222 62       		.byte	0x62
  497 0223 35020000 		.4byte	0x235
  498 0227 00       		.byte	0
  499 0228 06       		.uleb128 0x6
- 500 0229 DB020000 		.4byte	.LASF26
+ 500 0229 87010000 		.4byte	.LASF26
  501 022d 06       		.byte	0x6
  502 022e 64       		.byte	0x64
  503 022f 35020000 		.4byte	0x235
@@ -537,39 +534,39 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  507 0236 04       		.byte	0x4
  508 0237 0C010000 		.4byte	0x10c
  509 023b 04       		.uleb128 0x4
- 510 023c B4020000 		.4byte	.LASF44
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 10
-
-
+ 510 023c 60010000 		.4byte	.LASF44
  511 0240 06       		.byte	0x6
  512 0241 66       		.byte	0x66
  513 0242 14020000 		.4byte	0x214
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 10
+
+
  514 0246 08       		.uleb128 0x8
  515 0247 04       		.byte	0x4
  516 0248 06       		.byte	0x6
  517 0249 6B       		.byte	0x6b
  518 024a 5B020000 		.4byte	0x25b
  519 024e 06       		.uleb128 0x6
- 520 024f 3A030000 		.4byte	.LASF25
+ 520 024f E6010000 		.4byte	.LASF25
  521 0253 06       		.byte	0x6
  522 0254 6D       		.byte	0x6d
  523 0255 35020000 		.4byte	0x235
  524 0259 00       		.byte	0
  525 025a 00       		.byte	0
  526 025b 04       		.uleb128 0x4
- 527 025c 5B020000 		.4byte	.LASF45
+ 527 025c 07010000 		.4byte	.LASF45
  528 0260 06       		.byte	0x6
  529 0261 70       		.byte	0x70
  530 0262 46020000 		.4byte	0x246
  531 0266 04       		.uleb128 0x4
- 532 0267 02020000 		.4byte	.LASF46
+ 532 0267 AE000000 		.4byte	.LASF46
  533 026b 08       		.byte	0x8
  534 026c E5       		.byte	0xe5
  535 026d 71020000 		.4byte	0x271
  536 0271 0A       		.uleb128 0xa
  537 0272 04       		.byte	0x4
  538 0273 0B       		.uleb128 0xb
- 539 0274 D1030000 		.4byte	.LASF47
+ 539 0274 A1030000 		.4byte	.LASF47
  540 0278 64       		.byte	0x64
  541 0279 08       		.byte	0x8
  542 027a 0C01     		.2byte	0x10c
@@ -598,12 +595,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  565 02ad 1101     		.2byte	0x111
  566 02af 66020000 		.4byte	0x266
  567 02b3 0C       		.byte	0xc
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 11
-
-
  568 02b4 0C       		.uleb128 0xc
  569 02b5 73323000 		.ascii	"s20\000"
  570 02b9 08       		.byte	0x8
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 11
+
+
  571 02ba 1201     		.2byte	0x112
  572 02bc 66020000 		.4byte	0x266
  573 02c0 10       		.byte	0x10
@@ -658,12 +655,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  622 0329 0C       		.uleb128 0xc
  623 032a 73323900 		.ascii	"s29\000"
  624 032e 08       		.byte	0x8
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 12
-
-
  625 032f 1B01     		.2byte	0x11b
  626 0331 66020000 		.4byte	0x266
  627 0335 34       		.byte	0x34
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 12
+
+
  628 0336 0C       		.uleb128 0xc
  629 0337 73333000 		.ascii	"s30\000"
  630 033b 08       		.byte	0x8
@@ -718,12 +715,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  679 039e 2501     		.2byte	0x125
  680 03a0 66020000 		.4byte	0x266
  681 03a4 58       		.byte	0x58
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 13
-
-
  682 03a5 0C       		.uleb128 0xc
  683 03a6 72313100 		.ascii	"r11\000"
  684 03aa 08       		.byte	0x8
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 13
+
+
  685 03ab 2601     		.2byte	0x126
  686 03ad 66020000 		.4byte	0x266
  687 03b1 5C       		.byte	0x5c
@@ -735,7 +732,7 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  693 03bd 60       		.byte	0x60
  694 03be 00       		.byte	0
  695 03bf 0B       		.uleb128 0xb
- 696 03c0 2A020000 		.4byte	.LASF48
+ 696 03c0 D6000000 		.4byte	.LASF48
  697 03c4 04       		.byte	0x4
  698 03c5 08       		.byte	0x8
  699 03c6 3101     		.2byte	0x131
@@ -753,7 +750,7 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  711 03e0 03       		.uleb128 0x3
  712 03e1 04       		.byte	0x4
  713 03e2 07       		.byte	0x7
- 714 03e3 79020000 		.4byte	.LASF49
+ 714 03e3 25010000 		.4byte	.LASF49
  715 03e7 0D       		.uleb128 0xd
  716 03e8 01010000 		.4byte	0x101
  717 03ec 08       		.uleb128 0x8
@@ -762,52 +759,52 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  720 03ef 5E       		.byte	0x5e
  721 03f0 3D040000 		.4byte	0x43d
  722 03f4 06       		.uleb128 0x6
- 723 03f5 7F030000 		.4byte	.LASF50
+ 723 03f5 2B020000 		.4byte	.LASF50
  724 03f9 09       		.byte	0x9
  725 03fa 5F       		.byte	0x5f
  726 03fb 3B020000 		.4byte	0x23b
  727 03ff 00       		.byte	0
  728 0400 06       		.uleb128 0x6
- 729 0401 2C030000 		.4byte	.LASF51
+ 729 0401 D8010000 		.4byte	.LASF51
  730 0405 09       		.byte	0x9
  731 0406 60       		.byte	0x60
  732 0407 E0000000 		.4byte	0xe0
  733 040b 08       		.byte	0x8
  734 040c 06       		.uleb128 0x6
- 735 040d AE020000 		.4byte	.LASF52
+ 735 040d 5A010000 		.4byte	.LASF52
  736 0411 09       		.byte	0x9
  737 0412 62       		.byte	0x62
  738 0413 BF030000 		.4byte	0x3bf
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 14
-
-
  739 0417 0C       		.byte	0xc
  740 0418 06       		.uleb128 0x6
- 741 0419 4B020000 		.4byte	.LASF53
+ 741 0419 F7000000 		.4byte	.LASF53
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 14
+
+
  742 041d 09       		.byte	0x9
  743 041e 65       		.byte	0x65
  744 041f 35020000 		.4byte	0x235
  745 0423 10       		.byte	0x10
  746 0424 06       		.uleb128 0x6
- 747 0425 CB020000 		.4byte	.LASF54
+ 747 0425 77010000 		.4byte	.LASF54
  748 0429 09       		.byte	0x9
  749 042a 66       		.byte	0x66
  750 042b 35020000 		.4byte	0x235
  751 042f 14       		.byte	0x14
  752 0430 06       		.uleb128 0x6
- 753 0431 C1020000 		.4byte	.LASF55
+ 753 0431 6D010000 		.4byte	.LASF55
  754 0435 09       		.byte	0x9
  755 0436 69       		.byte	0x69
  756 0437 35020000 		.4byte	0x235
  757 043b 18       		.byte	0x18
  758 043c 00       		.byte	0
  759 043d 04       		.uleb128 0x4
- 760 043e 01040000 		.4byte	.LASF56
+ 760 043e D1030000 		.4byte	.LASF56
  761 0442 09       		.byte	0x9
  762 0443 6B       		.byte	0x6b
  763 0444 EC030000 		.4byte	0x3ec
  764 0448 05       		.uleb128 0x5
- 765 0449 73020000 		.4byte	.LASF57
+ 765 0449 1F010000 		.4byte	.LASF57
  766 044d 10       		.byte	0x10
  767 044e 0A       		.byte	0xa
  768 044f 2C       		.byte	0x2c
@@ -819,13 +816,13 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  774 045b 3B020000 		.4byte	0x23b
  775 045f 00       		.byte	0
  776 0460 06       		.uleb128 0x6
- 777 0461 27040000 		.4byte	.LASF59
+ 777 0461 09040000 		.4byte	.LASF59
  778 0465 0A       		.byte	0xa
  779 0466 2F       		.byte	0x2f
  780 0467 35020000 		.4byte	0x235
  781 046b 08       		.byte	0x8
  782 046c 06       		.uleb128 0x6
- 783 046d A4030000 		.4byte	.LASF60
+ 783 046d 50020000 		.4byte	.LASF60
  784 0471 0A       		.byte	0xa
  785 0472 31       		.byte	0x31
  786 0473 79040000 		.4byte	0x479
@@ -835,15 +832,15 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  790 047a 04       		.byte	0x4
  791 047b 48040000 		.4byte	0x448
  792 047f 04       		.uleb128 0x4
- 793 0480 73020000 		.4byte	.LASF57
+ 793 0480 1F010000 		.4byte	.LASF57
  794 0484 0A       		.byte	0xa
  795 0485 33       		.byte	0x33
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 15
-
-
  796 0486 48040000 		.4byte	0x448
  797 048a 0E       		.uleb128 0xe
  798 048b 04       		.byte	0x4
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 15
+
+
  799 048c 07       		.byte	0x7
  800 048d 96       		.byte	0x96
  801 048e BF040000 		.4byte	0x4bf
@@ -853,17 +850,17 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  805 0498 9D       		.byte	0x9d
  806 0499 EB000000 		.4byte	0xeb
  807 049d 0F       		.uleb128 0xf
- 808 049e EE010000 		.4byte	.LASF62
+ 808 049e 9A000000 		.4byte	.LASF62
  809 04a2 07       		.byte	0x7
  810 04a3 A4       		.byte	0xa4
  811 04a4 EB000000 		.4byte	0xeb
  812 04a8 0F       		.uleb128 0xf
- 813 04a9 19040000 		.4byte	.LASF63
+ 813 04a9 FB030000 		.4byte	.LASF63
  814 04ad 07       		.byte	0x7
  815 04ae AB       		.byte	0xab
  816 04af 71020000 		.4byte	0x271
  817 04b3 0F       		.uleb128 0xf
- 818 04b4 33030000 		.4byte	.LASF64
+ 818 04b4 DF010000 		.4byte	.LASF64
  819 04b8 07       		.byte	0x7
  820 04b9 B2       		.byte	0xb2
  821 04ba F6000000 		.4byte	0xf6
@@ -876,7 +873,7 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  828 04ca 03       		.uleb128 0x3
  829 04cb 01       		.byte	0x1
  830 04cc 08       		.byte	0x8
- 831 04cd 87030000 		.4byte	.LASF65
+ 831 04cd 33020000 		.4byte	.LASF65
  832 04d1 09       		.uleb128 0x9
  833 04d2 04       		.byte	0x4
  834 04d3 7F040000 		.4byte	0x47f
@@ -898,13 +895,13 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  850 04f4 F9040000 		.4byte	0x4f9
  851 04f8 00       		.byte	0
  852 04f9 09       		.uleb128 0x9
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 16
-
-
  853 04fa 04       		.byte	0x4
  854 04fb 3B020000 		.4byte	0x23b
  855 04ff 13       		.uleb128 0x13
- 856 0500 8C030000 		.4byte	.LASF72
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 16
+
+
+ 856 0500 38020000 		.4byte	.LASF72
  857 0504 02       		.byte	0x2
  858 0505 3B       		.byte	0x3b
  859 0506 35020000 		.4byte	0x235
@@ -922,7 +919,7 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  871 0520 35020000 		.4byte	0x235
  872 0524 00       		.byte	0
  873 0525 15       		.uleb128 0x15
- 874 0526 AF000000 		.4byte	.LASF66
+ 874 0526 7F000000 		.4byte	.LASF66
  875 052a 01       		.byte	0x1
  876 052b 4B       		.byte	0x4b
  877 052c EB000000 		.4byte	0xeb
@@ -958,12 +955,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  907 0576 53       		.byte	0x53
  908 0577 8A050000 		.4byte	0x58a
  909 057b 19       		.uleb128 0x19
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 17
-
-
  910 057c ED040000 		.4byte	0x4ed
  911 0580 01       		.uleb128 0x1
  912 0581 55       		.byte	0x55
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 17
+
+
  913 0582 19       		.uleb128 0x19
  914 0583 E3040000 		.4byte	0x4e3
  915 0587 01       		.uleb128 0x1
@@ -984,7 +981,7 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  930 05a2 6D060000 		.4byte	0x66d
  931 05a6 00       		.byte	0
  932 05a7 15       		.uleb128 0x15
- 933 05a8 F0030000 		.4byte	.LASF67
+ 933 05a8 C0030000 		.4byte	.LASF67
  934 05ac 01       		.byte	0x1
  935 05ad 6A       		.byte	0x6a
  936 05ae 35020000 		.4byte	0x235
@@ -1018,18 +1015,18 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  964 05f6 20       		.uleb128 0x20
  965 05f7 26000000 		.4byte	.LVL10
  966 05fb 5C060000 		.4byte	0x65c
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 18
-
-
  967 05ff 1B       		.uleb128 0x1b
  968 0600 01       		.uleb128 0x1
  969 0601 50       		.byte	0x50
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 18
+
+
  970 0602 01       		.uleb128 0x1
  971 0603 3C       		.byte	0x3c
  972 0604 00       		.byte	0
  973 0605 00       		.byte	0
  974 0606 21       		.uleb128 0x21
- 975 0607 50030000 		.4byte	.LASF73
+ 975 0607 FC010000 		.4byte	.LASF73
  976 060b 01       		.byte	0x1
  977 060c 80       		.byte	0x80
  978 060d 00000000 		.4byte	.LFB9
@@ -1069,23 +1066,23 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1012 064f 00       		.byte	0
  1013 0650 00       		.byte	0
  1014 0651 22       		.uleb128 0x22
- 1015 0652 0B040000 		.4byte	.LASF74
+ 1015 0652 ED030000 		.4byte	.LASF74
  1016 0656 09       		.byte	0x9
  1017 0657 6F       		.byte	0x6f
  1018 0658 3D040000 		.4byte	0x43d
  1019 065c 23       		.uleb128 0x23
- 1020 065d 5D030000 		.4byte	.LASF75
+ 1020 065d 09020000 		.4byte	.LASF75
  1021 0661 09       		.byte	0x9
  1022 0662 93       		.byte	0x93
  1023 0663 6D060000 		.4byte	0x66d
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 19
-
-
  1024 0667 24       		.uleb128 0x24
  1025 0668 BF000000 		.4byte	0xbf
  1026 066c 00       		.byte	0
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 19
+
+
  1027 066d 25       		.uleb128 0x25
- 1028 066e 98030000 		.4byte	.LASF76
+ 1028 066e 44020000 		.4byte	.LASF76
  1029 0672 09       		.byte	0x9
  1030 0673 90       		.byte	0x90
  1031 0674 35020000 		.4byte	0x235
@@ -1094,7 +1091,7 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1034 067d 35020000 		.4byte	0x235
  1035 0681 00       		.byte	0
  1036 0682 26       		.uleb128 0x26
- 1037 0683 E3030000 		.4byte	.LASF77
+ 1037 0683 B3030000 		.4byte	.LASF77
  1038 0687 09       		.byte	0x9
  1039 0688 99       		.byte	0x99
  1040 0689 24       		.uleb128 0x24
@@ -1138,12 +1135,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1078 001e 03       		.uleb128 0x3
  1079 001f 24       		.uleb128 0x24
  1080 0020 00       		.byte	0
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 20
-
-
  1081 0021 0B       		.uleb128 0xb
  1082 0022 0B       		.uleb128 0xb
  1083 0023 3E       		.uleb128 0x3e
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 20
+
+
  1084 0024 0B       		.uleb128 0xb
  1085 0025 03       		.uleb128 0x3
  1086 0026 0E       		.uleb128 0xe
@@ -1198,12 +1195,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1135 0057 03       		.uleb128 0x3
  1136 0058 08       		.uleb128 0x8
  1137 0059 3A       		.uleb128 0x3a
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 21
-
-
  1138 005a 0B       		.uleb128 0xb
  1139 005b 3B       		.uleb128 0x3b
  1140 005c 0B       		.uleb128 0xb
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 21
+
+
  1141 005d 49       		.uleb128 0x49
  1142 005e 13       		.uleb128 0x13
  1143 005f 38       		.uleb128 0x38
@@ -1258,12 +1255,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1192 0090 0D       		.uleb128 0xd
  1193 0091 00       		.byte	0
  1194 0092 03       		.uleb128 0x3
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 22
-
-
  1195 0093 08       		.uleb128 0x8
  1196 0094 3A       		.uleb128 0x3a
  1197 0095 0B       		.uleb128 0xb
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 22
+
+
  1198 0096 3B       		.uleb128 0x3b
  1199 0097 05       		.uleb128 0x5
  1200 0098 49       		.uleb128 0x49
@@ -1318,12 +1315,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1249 00c9 03       		.uleb128 0x3
  1250 00ca 0E       		.uleb128 0xe
  1251 00cb 3A       		.uleb128 0x3a
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 23
-
-
  1252 00cc 0B       		.uleb128 0xb
  1253 00cd 3B       		.uleb128 0x3b
  1254 00ce 0B       		.uleb128 0xb
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 23
+
+
  1255 00cf 27       		.uleb128 0x27
  1256 00d0 19       		.uleb128 0x19
  1257 00d1 20       		.uleb128 0x20
@@ -1378,12 +1375,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1306 0102 00       		.byte	0
  1307 0103 00       		.byte	0
  1308 0104 15       		.uleb128 0x15
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 24
-
-
  1309 0105 2E       		.uleb128 0x2e
  1310 0106 01       		.byte	0x1
  1311 0107 3F       		.uleb128 0x3f
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 24
+
+
  1312 0108 19       		.uleb128 0x19
  1313 0109 03       		.uleb128 0x3
  1314 010a 0E       		.uleb128 0xe
@@ -1438,12 +1435,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1363 013c 00       		.byte	0
  1364 013d 00       		.byte	0
  1365 013e 18       		.uleb128 0x18
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 25
-
-
  1366 013f 1D       		.uleb128 0x1d
  1367 0140 01       		.byte	0x1
  1368 0141 31       		.uleb128 0x31
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 25
+
+
  1369 0142 13       		.uleb128 0x13
  1370 0143 52       		.uleb128 0x52
  1371 0144 01       		.uleb128 0x1
@@ -1498,12 +1495,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1420 017c 1D       		.uleb128 0x1d
  1421 017d 05       		.uleb128 0x5
  1422 017e 00       		.byte	0
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 26
-
-
  1423 017f 31       		.uleb128 0x31
  1424 0180 13       		.uleb128 0x13
  1425 0181 02       		.uleb128 0x2
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 26
+
+
  1426 0182 17       		.uleb128 0x17
  1427 0183 00       		.byte	0
  1428 0184 00       		.byte	0
@@ -1558,12 +1555,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1477 01b8 00       		.byte	0
  1478 01b9 00       		.byte	0
  1479 01ba 22       		.uleb128 0x22
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 27
-
-
  1480 01bb 34       		.uleb128 0x34
  1481 01bc 00       		.byte	0
  1482 01bd 03       		.uleb128 0x3
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 27
+
+
  1483 01be 0E       		.uleb128 0xe
  1484 01bf 3A       		.uleb128 0x3a
  1485 01c0 0B       		.uleb128 0xb
@@ -1618,12 +1615,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1534 01f1 19       		.uleb128 0x19
  1535 01f2 49       		.uleb128 0x49
  1536 01f3 13       		.uleb128 0x13
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 28
-
-
  1537 01f4 3C       		.uleb128 0x3c
  1538 01f5 19       		.uleb128 0x19
  1539 01f6 01       		.uleb128 0x1
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 28
+
+
  1540 01f7 13       		.uleb128 0x13
  1541 01f8 00       		.byte	0
  1542 01f9 00       		.byte	0
@@ -1678,12 +1675,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1591 0043 20000000 		.4byte	.LVL3
  1592 0047 28000000 		.4byte	.LVL5
  1593 004b 0400     		.2byte	0x4
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 29
-
-
  1594 004d F3       		.byte	0xf3
  1595 004e 01       		.uleb128 0x1
  1596 004f 51       		.byte	0x51
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 29
+
+
  1597 0050 9F       		.byte	0x9f
  1598 0051 28000000 		.4byte	.LVL5
  1599 0055 2C000000 		.4byte	.LVL6
@@ -1738,12 +1735,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1648 00cf 07000000 		.4byte	.LVL12-1
  1649 00d3 0C000000 		.4byte	.LFE9
  1650 00d7 0400     		.2byte	0x4
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 30
-
-
  1651 00d9 F3       		.byte	0xf3
  1652 00da 01       		.uleb128 0x1
  1653 00db 51       		.byte	0x51
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 30
+
+
  1654 00dc 9F       		.byte	0x9f
  1655 00dd 00000000 		.4byte	0
  1656 00e1 00000000 		.4byte	0
@@ -1787,8 +1784,8 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1694 004c 00000000 		.4byte	0
  1695              		.section	.debug_line,"",%progbits
  1696              	.Ldebug_line0:
- 1697 0000 F6010000 		.section	.debug_str,"MS",%progbits,1
- 1697      02008201 
+ 1697 0000 0D020000 		.section	.debug_str,"MS",%progbits,1
+ 1697      02009901 
  1697      00000201 
  1697      FB0E0D00 
  1697      01010101 
@@ -1798,12 +1795,12 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1700              	.LASF71:
  1701 0006 71756575 		.ascii	"queue_insert\000"
  1701      655F696E 
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 31
-
-
  1701      73657274 
  1701      00
  1702              	.LASF61:
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 31
+
+
  1703 0013 7264796D 		.ascii	"rdymsg\000"
  1703      736700
  1704              	.LASF5:
@@ -1838,316 +1835,313 @@ ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 1
  1719 006c 74736C69 		.ascii	"tslices_t\000"
  1719      6365735F 
  1719      7400
- 1720              	.LASF70:
- 1721 0076 453A5C4D 		.ascii	"E:\\Maker\\BLDC\\test_eval\\try2\\OROCA-BLDC_R15080"
- 1721      616B6572 
- 1721      5C424C44 
- 1721      435C7465 
- 1721      73745F65 
- 1722 00a4 3700     		.ascii	"7\000"
- 1723              	.LASF7:
- 1724 00a6 6C6F6E67 		.ascii	"long int\000"
- 1724      20696E74 
- 1724      00
- 1725              	.LASF66:
- 1726 00af 63684D73 		.ascii	"chMsgSend\000"
- 1726      6753656E 
- 1726      6400
- 1727              	.LASF17:
- 1728 00b9 74737461 		.ascii	"tstate_t\000"
- 1728      74655F74 
- 1728      00
- 1729              	.LASF68:
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 32
+ 1720              	.LASF7:
+ 1721 0076 6C6F6E67 		.ascii	"long int\000"
+ 1721      20696E74 
+ 1721      00
+ 1722              	.LASF66:
+ 1723 007f 63684D73 		.ascii	"chMsgSend\000"
+ 1723      6753656E 
+ 1723      6400
+ 1724              	.LASF17:
+ 1725 0089 74737461 		.ascii	"tstate_t\000"
+ 1725      74655F74 
+ 1725      00
+ 1726              	.LASF29:
+ 1727 0092 705F6E65 		.ascii	"p_newer\000"
+ 1727      77657200 
+ 1728              	.LASF62:
+ 1729 009a 65786974 		.ascii	"exitcode\000"
+ 1729      636F6465 
+ 1729      00
+ 1730              	.LASF8:
+ 1731 00a3 5F5F7569 		.ascii	"__uint32_t\000"
+ 1731      6E743332 
+ 1731      5F7400
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 32
 
 
- 1730 00c2 474E5520 		.ascii	"GNU C 4.8.4 20140526 (release) [ARM/embedded-4_8-br"
- 1730      4320342E 
- 1730      382E3420 
- 1730      32303134 
- 1730      30353236 
- 1731 00f5 616E6368 		.ascii	"anch revision 211358] -mcpu=cortex-m4 -mfloat-abi=h"
- 1731      20726576 
- 1731      6973696F 
- 1731      6E203231 
- 1731      31333538 
- 1732 0128 61726420 		.ascii	"ard -mfpu=fpv4-sp-d16 -mno-thumb-interwork -mthumb "
- 1732      2D6D6670 
- 1732      753D6670 
- 1732      76342D73 
- 1732      702D6431 
- 1733 015b 2D676764 		.ascii	"-ggdb -O2 -std=gnu99 -fomit-frame-pointer -falign-f"
- 1733      62202D4F 
- 1733      32202D73 
- 1733      74643D67 
- 1733      6E753939 
- 1734 018e 756E6374 		.ascii	"unctions=16 -ffunction-sections -fdata-sections -fn"
- 1734      696F6E73 
- 1734      3D313620 
- 1734      2D666675 
- 1734      6E637469 
- 1735 01c1 6F2D636F 		.ascii	"o-common -fsingle-precision-constant\000"
- 1735      6D6D6F6E 
- 1735      202D6673 
- 1735      696E676C 
- 1735      652D7072 
- 1736              	.LASF29:
- 1737 01e6 705F6E65 		.ascii	"p_newer\000"
- 1737      77657200 
- 1738              	.LASF62:
- 1739 01ee 65786974 		.ascii	"exitcode\000"
- 1739      636F6465 
- 1739      00
- 1740              	.LASF8:
- 1741 01f7 5F5F7569 		.ascii	"__uint32_t\000"
- 1741      6E743332 
- 1741      5F7400
- 1742              	.LASF46:
- 1743 0202 72656761 		.ascii	"regarm_t\000"
- 1743      726D5F74 
- 1743      00
- 1744              	.LASF0:
- 1745 020b 756E7369 		.ascii	"unsigned int\000"
- 1745      676E6564 
- 1745      20696E74 
- 1745      00
- 1746              	.LASF9:
- 1747 0218 6C6F6E67 		.ascii	"long unsigned int\000"
- 1747      20756E73 
- 1747      69676E65 
- 1747      6420696E 
- 1747      7400
- 1748              	.LASF48:
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 33
+ 1732              	.LASF46:
+ 1733 00ae 72656761 		.ascii	"regarm_t\000"
+ 1733      726D5F74 
+ 1733      00
+ 1734              	.LASF0:
+ 1735 00b7 756E7369 		.ascii	"unsigned int\000"
+ 1735      676E6564 
+ 1735      20696E74 
+ 1735      00
+ 1736              	.LASF9:
+ 1737 00c4 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1737      20756E73 
+ 1737      69676E65 
+ 1737      6420696E 
+ 1737      7400
+ 1738              	.LASF48:
+ 1739 00d6 636F6E74 		.ascii	"context\000"
+ 1739      65787400 
+ 1740              	.LASF4:
+ 1741 00de 73686F72 		.ascii	"short unsigned int\000"
+ 1741      7420756E 
+ 1741      7369676E 
+ 1741      65642069 
+ 1741      6E7400
+ 1742              	.LASF21:
+ 1743 00f1 6D73675F 		.ascii	"msg_t\000"
+ 1743      7400
+ 1744              	.LASF53:
+ 1745 00f7 725F6E65 		.ascii	"r_newer\000"
+ 1745      77657200 
+ 1746              	.LASF16:
+ 1747 00ff 746D6F64 		.ascii	"tmode_t\000"
+ 1747      655F7400 
+ 1748              	.LASF45:
+ 1749 0107 54687265 		.ascii	"ThreadsList\000"
+ 1749      6164734C 
+ 1749      69737400 
+ 1750              	.LASF22:
+ 1751 0113 6576656E 		.ascii	"eventmask_t\000"
+ 1751      746D6173 
+ 1751      6B5F7400 
+ 1752              	.LASF57:
+ 1753 011f 4D757465 		.ascii	"Mutex\000"
+ 1753      7800
+ 1754              	.LASF49:
+ 1755 0125 73697A65 		.ascii	"sizetype\000"
+ 1755      74797065 
+ 1755      00
+ 1756              	.LASF69:
+ 1757 012e 43686962 		.ascii	"ChibiOS_2.6.6/os/kernel/src/chmsg.c\000"
+ 1757      694F535F 
+ 1757      322E362E 
+ 1757      362F6F73 
+ 1757      2F6B6572 
+ 1758              	.LASF30:
+ 1759 0152 705F6F6C 		.ascii	"p_older\000"
+ 1759      64657200 
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 33
 
 
- 1749 022a 636F6E74 		.ascii	"context\000"
- 1749      65787400 
- 1750              	.LASF4:
- 1751 0232 73686F72 		.ascii	"short unsigned int\000"
- 1751      7420756E 
- 1751      7369676E 
- 1751      65642069 
- 1751      6E7400
- 1752              	.LASF21:
- 1753 0245 6D73675F 		.ascii	"msg_t\000"
- 1753      7400
- 1754              	.LASF53:
- 1755 024b 725F6E65 		.ascii	"r_newer\000"
- 1755      77657200 
- 1756              	.LASF16:
- 1757 0253 746D6F64 		.ascii	"tmode_t\000"
- 1757      655F7400 
- 1758              	.LASF45:
- 1759 025b 54687265 		.ascii	"ThreadsList\000"
- 1759      6164734C 
- 1759      69737400 
- 1760              	.LASF22:
- 1761 0267 6576656E 		.ascii	"eventmask_t\000"
- 1761      746D6173 
- 1761      6B5F7400 
- 1762              	.LASF57:
- 1763 0273 4D757465 		.ascii	"Mutex\000"
- 1763      7800
- 1764              	.LASF49:
- 1765 0279 73697A65 		.ascii	"sizetype\000"
- 1765      74797065 
- 1765      00
- 1766              	.LASF69:
- 1767 0282 43686962 		.ascii	"ChibiOS_2.6.6/os/kernel/src/chmsg.c\000"
- 1767      694F535F 
- 1767      322E362E 
- 1767      362F6F73 
- 1767      2F6B6572 
- 1768              	.LASF30:
- 1769 02a6 705F6F6C 		.ascii	"p_older\000"
- 1769      64657200 
- 1770              	.LASF52:
- 1771 02ae 725F6374 		.ascii	"r_ctx\000"
- 1771      7800
- 1772              	.LASF44:
- 1773 02b4 54687265 		.ascii	"ThreadsQueue\000"
- 1773      61647351 
- 1773      75657565 
- 1773      00
- 1774              	.LASF55:
- 1775 02c1 725F6375 		.ascii	"r_current\000"
- 1775      7272656E 
- 1775      7400
- 1776              	.LASF54:
- 1777 02cb 725F6F6C 		.ascii	"r_older\000"
- 1777      64657200 
- 1778              	.LASF18:
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 34
+ 1760              	.LASF52:
+ 1761 015a 725F6374 		.ascii	"r_ctx\000"
+ 1761      7800
+ 1762              	.LASF44:
+ 1763 0160 54687265 		.ascii	"ThreadsQueue\000"
+ 1763      61647351 
+ 1763      75657565 
+ 1763      00
+ 1764              	.LASF55:
+ 1765 016d 725F6375 		.ascii	"r_current\000"
+ 1765      7272656E 
+ 1765      7400
+ 1766              	.LASF54:
+ 1767 0177 725F6F6C 		.ascii	"r_older\000"
+ 1767      64657200 
+ 1768              	.LASF18:
+ 1769 017f 74726566 		.ascii	"trefs_t\000"
+ 1769      735F7400 
+ 1770              	.LASF26:
+ 1771 0187 705F7072 		.ascii	"p_prev\000"
+ 1771      657600
+ 1772              	.LASF20:
+ 1773 018e 74707269 		.ascii	"tprio_t\000"
+ 1773      6F5F7400 
+ 1774              	.LASF15:
+ 1775 0196 5F426F6F 		.ascii	"_Bool\000"
+ 1775      6C00
+ 1776              	.LASF13:
+ 1777 019c 696E7433 		.ascii	"int32_t\000"
+ 1777      325F7400 
+ 1778              	.LASF2:
+ 1779 01a4 756E7369 		.ascii	"unsigned char\000"
+ 1779      676E6564 
+ 1779      20636861 
+ 1779      7200
+ 1780              	.LASF41:
+ 1781 01b2 705F6D74 		.ascii	"p_mtxlist\000"
+ 1781      786C6973 
+ 1781      7400
+ 1782              	.LASF3:
+ 1783 01bc 73686F72 		.ascii	"short int\000"
+ 1783      7420696E 
+ 1783      7400
+ 1784              	.LASF32:
+ 1785 01c6 705F7374 		.ascii	"p_state\000"
+ 1785      61746500 
+ 1786              	.LASF35:
+ 1787 01ce 705F7072 		.ascii	"p_preempt\000"
+ 1787      65656D70 
+ 1787      7400
+ 1788              	.LASF51:
+ 1789 01d8 725F7072 		.ascii	"r_prio\000"
+ 1789      696F00
+ 1790              	.LASF64:
+ 1791 01df 65776D61 		.ascii	"ewmask\000"
+ 1791      736B00
+ 1792              	.LASF25:
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 34
 
 
- 1779 02d3 74726566 		.ascii	"trefs_t\000"
- 1779      735F7400 
- 1780              	.LASF26:
- 1781 02db 705F7072 		.ascii	"p_prev\000"
- 1781      657600
- 1782              	.LASF20:
- 1783 02e2 74707269 		.ascii	"tprio_t\000"
- 1783      6F5F7400 
- 1784              	.LASF15:
- 1785 02ea 5F426F6F 		.ascii	"_Bool\000"
- 1785      6C00
- 1786              	.LASF13:
- 1787 02f0 696E7433 		.ascii	"int32_t\000"
- 1787      325F7400 
- 1788              	.LASF2:
- 1789 02f8 756E7369 		.ascii	"unsigned char\000"
- 1789      676E6564 
- 1789      20636861 
- 1789      7200
- 1790              	.LASF41:
- 1791 0306 705F6D74 		.ascii	"p_mtxlist\000"
- 1791      786C6973 
- 1791      7400
- 1792              	.LASF3:
- 1793 0310 73686F72 		.ascii	"short int\000"
- 1793      7420696E 
- 1793      7400
- 1794              	.LASF32:
- 1795 031a 705F7374 		.ascii	"p_state\000"
- 1795      61746500 
- 1796              	.LASF35:
- 1797 0322 705F7072 		.ascii	"p_preempt\000"
- 1797      65656D70 
- 1797      7400
- 1798              	.LASF51:
- 1799 032c 725F7072 		.ascii	"r_prio\000"
- 1799      696F00
- 1800              	.LASF64:
- 1801 0333 65776D61 		.ascii	"ewmask\000"
- 1801      736B00
- 1802              	.LASF25:
- 1803 033a 705F6E65 		.ascii	"p_next\000"
- 1803      787400
- 1804              	.LASF33:
- 1805 0341 705F666C 		.ascii	"p_flags\000"
- 1805      61677300 
- 1806              	.LASF24:
- 1807 0349 54687265 		.ascii	"Thread\000"
- 1807      616400
- 1808              	.LASF73:
- 1809 0350 63684D73 		.ascii	"chMsgRelease\000"
- 1809      6752656C 
- 1809      65617365 
+ 1793 01e6 705F6E65 		.ascii	"p_next\000"
+ 1793      787400
+ 1794              	.LASF33:
+ 1795 01ed 705F666C 		.ascii	"p_flags\000"
+ 1795      61677300 
+ 1796              	.LASF24:
+ 1797 01f5 54687265 		.ascii	"Thread\000"
+ 1797      616400
+ 1798              	.LASF73:
+ 1799 01fc 63684D73 		.ascii	"chMsgRelease\000"
+ 1799      6752656C 
+ 1799      65617365 
+ 1799      00
+ 1800              	.LASF75:
+ 1801 0209 63685363 		.ascii	"chSchGoSleepS\000"
+ 1801      68476F53 
+ 1801      6C656570 
+ 1801      5300
+ 1802              	.LASF40:
+ 1803 0217 705F6570 		.ascii	"p_epending\000"
+ 1803      656E6469 
+ 1803      6E6700
+ 1804              	.LASF14:
+ 1805 0222 75696E74 		.ascii	"uint32_t\000"
+ 1805      33325F74 
+ 1805      00
+ 1806              	.LASF50:
+ 1807 022b 725F7175 		.ascii	"r_queue\000"
+ 1807      65756500 
+ 1808              	.LASF65:
+ 1809 0233 63686172 		.ascii	"char\000"
  1809      00
- 1810              	.LASF75:
- 1811 035d 63685363 		.ascii	"chSchGoSleepS\000"
- 1811      68476F53 
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 35
+ 1810              	.LASF72:
+ 1811 0238 6669666F 		.ascii	"fifo_remove\000"
+ 1811      5F72656D 
+ 1811      6F766500 
+ 1812              	.LASF76:
+ 1813 0244 63685363 		.ascii	"chSchReadyI\000"
+ 1813      68526561 
+ 1813      64794900 
+ 1814              	.LASF60:
+ 1815 0250 6D5F6E65 		.ascii	"m_next\000"
+ 1815      787400
+ 1816              	.LASF23:
+ 1817 0257 73797374 		.ascii	"systime_t\000"
+ 1817      696D655F 
+ 1817      7400
+ 1818              	.LASF42:
+ 1819 0261 705F7265 		.ascii	"p_realprio\000"
+ 1819      616C7072 
+ 1819      696F00
+ 1820              	.LASF6:
+ 1821 026c 5F5F696E 		.ascii	"__int32_t\000"
+ 1821      7433325F 
+ 1821      7400
+ 1822              	.LASF68:
+ 1823 0276 474E5520 		.ascii	"GNU C 4.9.3 20150529 (release) [ARM/embedded-4_9-br"
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 35
 
 
- 1811      6C656570 
- 1811      5300
- 1812              	.LASF40:
- 1813 036b 705F6570 		.ascii	"p_epending\000"
- 1813      656E6469 
- 1813      6E6700
- 1814              	.LASF14:
- 1815 0376 75696E74 		.ascii	"uint32_t\000"
- 1815      33325F74 
- 1815      00
- 1816              	.LASF50:
- 1817 037f 725F7175 		.ascii	"r_queue\000"
- 1817      65756500 
- 1818              	.LASF65:
- 1819 0387 63686172 		.ascii	"char\000"
- 1819      00
- 1820              	.LASF72:
- 1821 038c 6669666F 		.ascii	"fifo_remove\000"
- 1821      5F72656D 
- 1821      6F766500 
- 1822              	.LASF76:
- 1823 0398 63685363 		.ascii	"chSchReadyI\000"
- 1823      68526561 
- 1823      64794900 
- 1824              	.LASF60:
- 1825 03a4 6D5F6E65 		.ascii	"m_next\000"
- 1825      787400
- 1826              	.LASF23:
- 1827 03ab 73797374 		.ascii	"systime_t\000"
- 1827      696D655F 
- 1827      7400
- 1828              	.LASF42:
- 1829 03b5 705F7265 		.ascii	"p_realprio\000"
- 1829      616C7072 
- 1829      696F00
- 1830              	.LASF6:
- 1831 03c0 5F5F696E 		.ascii	"__int32_t\000"
- 1831      7433325F 
- 1831      7400
- 1832              	.LASF36:
- 1833 03ca 705F7469 		.ascii	"p_time\000"
- 1833      6D6500
- 1834              	.LASF47:
- 1835 03d1 696E7463 		.ascii	"intctx\000"
- 1835      747800
- 1836              	.LASF38:
- 1837 03d8 705F6D73 		.ascii	"p_msgqueue\000"
- 1837      67717565 
- 1837      756500
- 1838              	.LASF77:
- 1839 03e3 63685363 		.ascii	"chSchWakeupS\000"
- 1839      6857616B 
- 1839      65757053 
- 1839      00
- 1840              	.LASF67:
- 1841 03f0 63684D73 		.ascii	"chMsgWait\000"
- 1841      67576169 
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 36
+ 1823      4320342E 
+ 1823      392E3320 
+ 1823      32303135 
+ 1823      30353239 
+ 1824 02a9 616E6368 		.ascii	"anch revision 224288] -mcpu=cortex-m4 -mfloat-abi=h"
+ 1824      20726576 
+ 1824      6973696F 
+ 1824      6E203232 
+ 1824      34323838 
+ 1825 02dc 61726420 		.ascii	"ard -mfpu=fpv4-sp-d16 -mno-thumb-interwork -mthumb "
+ 1825      2D6D6670 
+ 1825      753D6670 
+ 1825      76342D73 
+ 1825      702D6431 
+ 1826 030f 2D676764 		.ascii	"-ggdb -O2 -std=gnu99 -fomit-frame-pointer -falign-f"
+ 1826      62202D4F 
+ 1826      32202D73 
+ 1826      74643D67 
+ 1826      6E753939 
+ 1827 0342 756E6374 		.ascii	"unctions=16 -ffunction-sections -fdata-sections -fn"
+ 1827      696F6E73 
+ 1827      3D313620 
+ 1827      2D666675 
+ 1827      6E637469 
+ 1828 0375 6F2D636F 		.ascii	"o-common -fsingle-precision-constant\000"
+ 1828      6D6D6F6E 
+ 1828      202D6673 
+ 1828      696E676C 
+ 1828      652D7072 
+ 1829              	.LASF36:
+ 1830 039a 705F7469 		.ascii	"p_time\000"
+ 1830      6D6500
+ 1831              	.LASF47:
+ 1832 03a1 696E7463 		.ascii	"intctx\000"
+ 1832      747800
+ 1833              	.LASF38:
+ 1834 03a8 705F6D73 		.ascii	"p_msgqueue\000"
+ 1834      67717565 
+ 1834      756500
+ 1835              	.LASF77:
+ 1836 03b3 63685363 		.ascii	"chSchWakeupS\000"
+ 1836      6857616B 
+ 1836      65757053 
+ 1836      00
+ 1837              	.LASF67:
+ 1838 03c0 63684D73 		.ascii	"chMsgWait\000"
+ 1838      67576169 
+ 1838      7400
+ 1839              	.LASF34:
+ 1840 03ca 705F7265 		.ascii	"p_refs\000"
+ 1840      667300
+ 1841              	.LASF56:
+ 1842 03d1 52656164 		.ascii	"ReadyList\000"
+ 1842      794C6973 
+ 1842      7400
+ 1843              	.LASF70:
+ 1844 03db 563A5C6F 		.ascii	"V:\\oroca_bldc_dev\000"
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 36
 
 
- 1841      7400
- 1842              	.LASF34:
- 1843 03fa 705F7265 		.ascii	"p_refs\000"
- 1843      667300
- 1844              	.LASF56:
- 1845 0401 52656164 		.ascii	"ReadyList\000"
- 1845      794C6973 
- 1845      7400
- 1846              	.LASF74:
- 1847 040b 726C6973 		.ascii	"rlist\000"
- 1847      7400
- 1848              	.LASF12:
- 1849 0411 75696E74 		.ascii	"uint8_t\000"
- 1849      385F7400 
- 1850              	.LASF63:
- 1851 0419 77746F62 		.ascii	"wtobjp\000"
- 1851      6A7000
- 1852              	.LASF31:
- 1853 0420 705F6E61 		.ascii	"p_name\000"
- 1853      6D6500
- 1854              	.LASF59:
- 1855 0427 6D5F6F77 		.ascii	"m_owner\000"
- 1855      6E657200 
- 1856              	.LASF28:
- 1857 042f 705F6374 		.ascii	"p_ctx\000"
- 1857      7800
- 1858              	.LASF37:
- 1859 0435 705F7761 		.ascii	"p_waiting\000"
- 1859      6974696E 
- 1859      6700
- 1860              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.8.4 20140526 (release) [ARM/embedded-4_8-br
-ARM GAS  C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s 			page 37
+ 1844      726F6361 
+ 1844      5F626C64 
+ 1844      635F6465 
+ 1844      7600
+ 1845              	.LASF74:
+ 1846 03ed 726C6973 		.ascii	"rlist\000"
+ 1846      7400
+ 1847              	.LASF12:
+ 1848 03f3 75696E74 		.ascii	"uint8_t\000"
+ 1848      385F7400 
+ 1849              	.LASF63:
+ 1850 03fb 77746F62 		.ascii	"wtobjp\000"
+ 1850      6A7000
+ 1851              	.LASF31:
+ 1852 0402 705F6E61 		.ascii	"p_name\000"
+ 1852      6D6500
+ 1853              	.LASF59:
+ 1854 0409 6D5F6F77 		.ascii	"m_owner\000"
+ 1854      6E657200 
+ 1855              	.LASF28:
+ 1856 0411 705F6374 		.ascii	"p_ctx\000"
+ 1856      7800
+ 1857              	.LASF37:
+ 1858 0417 705F7761 		.ascii	"p_waiting\000"
+ 1858      6974696E 
+ 1858      6700
+ 1859              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150529 (release) [ARM/embedded-4_9-br
+ARM GAS  C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s 			page 37
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 chmsg.c
-C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s:21     .text.chMsgSend:00000000 $t
-C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s:27     .text.chMsgSend:00000000 chMsgSend
-C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s:107    .text.chMsgSend:00000034 $d
-C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s:112    .text.chMsgWait:00000000 $t
-C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s:118    .text.chMsgWait:00000000 chMsgWait
-C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s:179    .text.chMsgWait:00000030 $d
-C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s:184    .text.chMsgRelease:00000000 $t
-C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s:190    .text.chMsgRelease:00000000 chMsgRelease
+C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s:21     .text.chMsgSend:00000000 $t
+C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s:27     .text.chMsgSend:00000000 chMsgSend
+C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s:107    .text.chMsgSend:00000034 $d
+C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s:112    .text.chMsgWait:00000000 $t
+C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s:118    .text.chMsgWait:00000000 chMsgWait
+C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s:179    .text.chMsgWait:00000030 $d
+C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s:184    .text.chMsgRelease:00000000 $t
+C:\Users\ADMINI~1\AppData\Local\Temp\ccynNbRV.s:190    .text.chMsgRelease:00000000 chMsgRelease
                      .debug_frame:00000010 $d
-C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s:111    .text.chMsgSend:00000038 $t
-C:\Users\jsyoon\AppData\Local\Temp\ccTaZhgn.s:183    .text.chMsgWait:00000034 $t
 
 UNDEFINED SYMBOLS
 chSchGoSleepS

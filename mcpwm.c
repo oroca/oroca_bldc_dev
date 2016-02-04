@@ -25,6 +25,7 @@
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
+#include "stm32f4xx_dac.h"
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
@@ -179,6 +180,12 @@ typedef struct {
     } tSVGenParm;
 
 
+
+
+static volatile mc_fault_code fault_now;
+static volatile bool dccal_done;
+
+
 // Private variables
 int count = 0; // delay for ramping the reference velocity 
 int VelReq = 0; 
@@ -208,6 +215,7 @@ tParkParm ParkParm;
   tPIParm     PIParmD;	// Structure definition for Flux component of current, or Id
   tPIParm     PIParmQ;	// Structure definition for Torque component of current, or Iq
   tPIParm     PIParmW;	// Structure definition for Speed, or Omega
+  tPIParm     PIParmPLL;
 
   tCtrlParm CtrlParm;
   tSVGenParm SVGenParm;
@@ -257,7 +265,10 @@ tParkParm ParkParm;
   						// than 0.05 degrees.
 
 // Private functions
+static void do_dc_cal(void);
 void SMC_Position_Estimation (SMC *s);
+void SMC_HallSensor_Estimation (SMC *s);
+
 void SMCInit(SMC *s);
 void CalcPI( tPIParm *pParm);
 void DoControl( void );
@@ -267,8 +278,8 @@ void CalculateParkAngle(void);
 void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
 
 // Threads
-static WORKING_AREA(timer_thread_wa, 2048);
-static msg_t timer_thread(void *arg);
+static WORKING_AREA(SEQUENCE_thread_wa, 2048);
+static msg_t SEQUENCE_thread(void *arg);
 //static WORKING_AREA(rpm_thread_wa, 1024);
 //static msg_t rpm_thread(void *arg);
 
@@ -280,11 +291,14 @@ void mcpwm_init(mc_configuration *configuration) {
 	TIM_BDTRInitTypeDef TIM_BDTRInitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
 
+	// Initialize variables
+	fault_now = FAULT_CODE_NONE;
+	dccal_done = false;
 
 	TIM_DeInit(TIM1);
-	//TIM_DeInit(TIM8);
+	TIM_DeInit(TIM8);
 	TIM1->CNT = 0;
-	//TIM8->CNT = 0;
+	TIM8->CNT = 0;
 
 	// TIM1 clock enable
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
@@ -292,9 +306,9 @@ void mcpwm_init(mc_configuration *configuration) {
 	// Time Base configuration
 	TIM_TimeBaseStructure.TIM_Prescaler = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_CenterAligned1;
-	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK / (int)switching_frequency_now;
+	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now /2;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
+	TIM_TimeBaseStructure.TIM_RepetitionCounter = 1;
 
 	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
 
@@ -399,7 +413,7 @@ void mcpwm_init(mc_configuration *configuration) {
 
 	// Injected channels for current measurement at end of cycle
 	ADC_ExternalTrigInjectedConvConfig(ADC1, ADC_ExternalTrigInjecConv_T8_CC2);
-	ADC_ExternalTrigInjectedConvConfig(ADC2, ADC_ExternalTrigInjecConv_T8_CC2);
+	ADC_ExternalTrigInjectedConvConfig(ADC2, ADC_ExternalTrigInjecConv_T8_CC3);
 	ADC_ExternalTrigInjectedConvEdgeConfig(ADC1, ADC_ExternalTrigInjecConvEdge_Falling);
 	ADC_ExternalTrigInjectedConvEdgeConfig(ADC2, ADC_ExternalTrigInjecConvEdge_Falling);
 	ADC_InjectedSequencerLengthConfig(ADC1, 1);
@@ -422,29 +436,28 @@ void mcpwm_init(mc_configuration *configuration) {
 	// Enable ADC3
 	ADC_Cmd(ADC3, ENABLE);
 
-#if 1
 	// ------------- Timer8 for ADC sampling ------------- //
 	// Time Base configuration
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8, ENABLE);
 
 	TIM_TimeBaseStructure.TIM_Prescaler = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseStructure.TIM_Period = 0xFFFF;
+	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
+
 	TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
 
 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-	TIM_OCInitStructure.TIM_Pulse = 500;
+	TIM_OCInitStructure.TIM_Pulse = TIM1->ARR;
 	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
 	TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
 	TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
 	TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
-	TIM_OC1Init(TIM8, &TIM_OCInitStructure);
-	TIM_OC1PreloadConfig(TIM8, TIM_OCPreload_Enable);
-	TIM_OC2Init(TIM8, &TIM_OCInitStructure);
-	TIM_OC2PreloadConfig(TIM8, TIM_OCPreload_Enable);
+	TIM_OC1Init(TIM8, &TIM_OCInitStructure);	TIM_OC1PreloadConfig(TIM8, TIM_OCPreload_Enable);
+	TIM_OC2Init(TIM8, &TIM_OCInitStructure);	TIM_OC2PreloadConfig(TIM8, TIM_OCPreload_Enable);
+	TIM_OC3Init(TIM8, &TIM_OCInitStructure);	TIM_OC3PreloadConfig(TIM8, TIM_OCPreload_Enable);
 
 	TIM_ARRPreloadConfig(TIM8, ENABLE);
 	TIM_CCPreloadControl(TIM8, ENABLE);
@@ -460,7 +473,7 @@ void mcpwm_init(mc_configuration *configuration) {
 
 	// Enable TIM8
 	TIM_Cmd(TIM8, ENABLE);
-#endif
+
 	// Enable TIM1
 	TIM_Cmd(TIM1, ENABLE);
 
@@ -491,14 +504,8 @@ void mcpwm_init(mc_configuration *configuration) {
 	TIM8->CR1 |= TIM_CR1_UDIS;
 
 	TIM8->CCR1 = 500;//for vdc
-	TIM8->CCR2 = TIM1->ARR /2;//for Ib
-	//TIM1->CCR4 = 100;//for Ia
-	
-
-//	TIM1->CCR1 = 100;
-//	TIM1->CCR2 = 200;
-//	TIM1->CCR3 = 300;
-	
+	TIM8->CCR2 = TIM1->ARR;//for Ib
+	TIM8->CCR3 = TIM1->ARR;//for Ia
 
 	// Enables preload register updates
 	TIM1->CR1 &= ~TIM_CR1_UDIS;
@@ -509,9 +516,9 @@ void mcpwm_init(mc_configuration *configuration) {
 
 	// Calibrate current offset
 	ENABLE_GATE();
-	//DISABLE_GATE();
 	DCCAL_OFF();
-	//do_dc_cal();
+	GAIN_FULLDN();
+	do_dc_cal();
 
 
 	// Various time measurements
@@ -529,7 +536,7 @@ void mcpwm_init(mc_configuration *configuration) {
 	TIM_Cmd(TIM12, ENABLE);
 
 	// Start threads
-	chThdCreateStatic(timer_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, timer_thread, NULL);
+	chThdCreateStatic(SEQUENCE_thread_wa, sizeof(SEQUENCE_thread_wa), NORMALPRIO, SEQUENCE_thread, NULL);
 	////chThdCreateStatic(rpm_thread_wa, sizeof(rpm_thread_wa), NORMALPRIO, rpm_thread, NULL);
 
 	// WWDG configuration
@@ -538,9 +545,21 @@ void mcpwm_init(mc_configuration *configuration) {
 	WWDG_SetWindowValue(255);
 	WWDG_Enable(100);
 
+
+//---------------------------------------------------------------------------
+
 	SMCInit(&smc1);
 	SetupControlParameters();
 	FWInit();
+
+
+
+#if 0 //pbhp 151001
+	Start_Flag = 1;
+	Seq = SEQ_NoReady;
+	Flag_First_Run = 1;
+#endif
+
 
 	uGF.Word = 0;                   // clear flags
 	#ifdef TORQUEMODE
@@ -551,15 +570,27 @@ void mcpwm_init(mc_configuration *configuration) {
     	uGF.bit.EnVoltRipCo = 1;
 	#endif
 
+	uGF.bit.RunMotor = 1;
 
 }
-void do_dc_cal(void)
-{
+
+static volatile int curr0_sum;
+static volatile int curr1_sum;
+static volatile int curr_start_samples;
+static volatile int curr0_offset;
+static volatile int curr1_offset;
+static void do_dc_cal(void) {
 	DCCAL_ON();
 	while(IS_DRV_FAULT()){};
 	chThdSleepMilliseconds(1000);
+	curr0_sum = 0;
+	curr1_sum = 0;
+	curr_start_samples = 0;
+	while(curr_start_samples < 4000) {};
+	curr0_offset = curr0_sum / curr_start_samples;
+	curr1_offset = curr1_sum / curr_start_samples;
 	DCCAL_OFF();
-
+	dccal_done = true;
 }
 
 
@@ -571,6 +602,21 @@ int fputc(int ch, FILE *f)
 void mcpwm_adc_inj_int_handler(void) 
 {
 	TIM12->CNT = 0;
+
+	int curr0 = ADC_GetInjectedConversionValue(ADC1, ADC_InjectedChannel_1);
+	int curr1 = ADC_GetInjectedConversionValue(ADC2, ADC_InjectedChannel_1);
+
+	curr0_sum += curr0;
+	curr1_sum += curr1;
+	curr_start_samples++;
+
+
+
+#if 0 //pbhp 151001
+	// �ʱ� ���� üũ
+	if(Init_Charge_cnt_EN) 	Init_Charge_cnt++;
+	else 					Init_Charge_cnt=0;
+#endif
 
 	// jsyoon TEST
 	/*
@@ -589,46 +635,57 @@ void mcpwm_adc_inj_int_handler(void)
 		debug_print_usb( " Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test 12345 \r\n");
 	}
 	*/
-	debug_print_usb( "iT ");
+	//debug_print_usb( "iT ");
 	
+	SMC_HallSensor_Estimation (&smc1);
 
+	//spi_dac_write_A( dacDataA++);
+	//spi_dac_write_B( dacDataB--);
 
-	uGF.bit.RunMotor = 1;
+	
 	if( uGF.bit.RunMotor )
 	{
-		palSetPad(GPIOC, 4);
+	ENABLE_GATE();
+		LED_RED_ON();
+
 		// Calculate qIa,qIb
-		MeasCompCurr();
+		MeasCompCurr(curr0,curr1);
+
+
+		//debug_print_usb( "%f,%d,%d\r\n",ParkParm.qAngle ,curr0,curr1);
+		
 
 		// Calculate commutation angle using estimator
 		//CalculateParkAngle();
+		ParkParm.qAngle = smc1.Theta;
 
-		//printf("Hallo World!\n");
 		//ParkParm.qAngle = (float)IN[2];
 		//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
 
-		//AccumThetaCnt++;
-		//if (AccumThetaCnt == IRP_PERCALC)
-		//{
-		//	AccumThetaCnt = 0;
-		//}
+		AccumThetaCnt++;
+		if (AccumThetaCnt == IRP_PERCALC)
+		{
+			AccumThetaCnt = 0;
+		}
 
 
 		// Calculate qId,qIq from qSin,qCos,qIa,qIb
-		//ClarkePark();
+		ClarkePark();
 
 		// Calculate control values
-		//DoControl();
+		DoControl();
 
 
-		ParkParm.qVd =1.0f;
-		ParkParm.qVq = 0.0f;
+		//ParkParm.qVd =0.5f;
+		//ParkParm.qVq = 0.0f;
 
-		//ParkParm.qAngle-= 0.002f;
+		//ParkParm.qAngle = 0.0f;
+
+		//ParkParm.qAngle -= 0.002f;
 		//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
 
-		ParkParm.qAngle += 0.002f;
-		if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=0.0f;
+		///ParkParm.qAngle += 0.002f;
+		//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
 
 
 		// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
@@ -640,10 +697,17 @@ void mcpwm_adc_inj_int_handler(void)
 		// Calculate and set PWM duty cycles from Vr1,Vr2,Vr3
 		CalcSVGen();
 
-		palClearPad(GPIOC, 4);
+		LED_RED_OFF();
+		//DISABLE_GATE();
+
 			
 		} 
+
+	
 }
+
+
+
 
 /*
  * New ADC samples ready. Do commutation!
@@ -653,73 +717,210 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags) {
 	(void)flags;
 
 	TIM12->CNT = 0;
-	palSetPad(GPIOA, 7);	
-	palClearPad(GPIOA, 7);
+	LED_GREEN_ON();
+	LED_GREEN_OFF();
 
 
 	// Reset the watchdog
 	WWDG_SetCounter(100);
 
+
+	// Check for faults that should stop the motor
+	const float input_voltage = GET_INPUT_VOLTAGE();
+	static float wrong_voltage_iterations = 0;
+
+
+	
+#if 0 //pbhp 151001
+	if (input_voltage < conf.l_min_vin ||input_voltage > conf.l_max_vin) 
+	{
+		wrong_voltage_iterations++;
+
+		if ((wrong_voltage_iterations >= 8)) 
+		{
+			fault_stop(input_voltage < conf.l_min_vin ?FAULT_CODE_UNDER_VOLTAGE : FAULT_CODE_OVER_VOLTAGE);
+		}
+	}
+	else 
+	{
+		wrong_voltage_iterations = 0;
+	}
+#endif
+
 }
-static msg_t timer_thread(void *arg) 
+
+
+
+// Sequence Definition
+#define	SEQ_NoReady	 0	// �ý��� ���� ������ ��� �Ǵ� DC build up �̷������ �� ����
+#define SEQ_Wait	 1	// �ý��� Ready �����̸� Run Signal ��� ���� ��
+#define	SEQ_Normal	 2	// Run ��ȣ �ΰ� �� �ý��� ���� ����
+#define	SEQ_Fault	 3	// �ý��� ��Ʈ ����
+#define	SEQ_Retrial	 4	// Fault Reset �� ���� ��� Ȯ�� ���
+#define SEQ_F_R_Read 5	// Fault Record Read
+#define	SEQ_SYS_INIT 6	// System Initialize Sequence 
+
+
+int Seq = 0;
+int Fault_seq = 0;
+int Init_Charge_cnt_EN = 0;
+long Init_Charge_cnt = 0.;
+unsigned int Init_Charge_Time = 3000;	// 3��
+
+//int Retry_cnt_En = 0;
+//long Retry_cnt = 0;
+//int Retry_Time_set = 0;
+//int DRIVE_ENABLE = 0;
+
+unsigned int Drive_Status = 0;
+unsigned int State_Index = 0;
+
+
+static msg_t SEQUENCE_thread(void *arg) 
 {
 	(void)arg;
 
 	chRegSetThreadName("mcpwm timer");
+#if 0 //pbhp 151001
+		fault_now = Flag.Fault1.all;
 
-	int state = 0;
+		if( fault_now)
+		{
+			Fault_seq = Seq;
+			Seq=SEQ_Fault;
+		}
 
-	for(;;)
-	{
-#if 0
-		if(state == 0)
+		switch(Seq)
 		{
-			uGF.bit.ChangeSpeed = 1;
-			// init Mode
-			uGF.bit.OpenLoop = 1;			// start in openloop
+		// �ý��� ���� ������ ��� �Ǵ� Run��ȣ �ΰ� �� �ý��� ������ �� ���
+			case SEQ_NoReady:							//	" 0 "
+				stop_pwm_hw();
+				//	���� ���� �� �ð� �鷹�� ������ ������ �Ϸ� ��ȣ �߻�
+				Init_Charge_cnt_EN=1;
+				if(Init_Charge_cnt >= (float)Init_Charge_Time * 1e-3 / LOOPTIMEINSEC)		// �ʱ� ���� �ð� 3��
+				{
+					nDC_CONTACT_CLEAR;
+					Flag.Fault_Cntl.bit.UV_Check_En = 1;
+					if(Init_Charge_cnt >= ((float)Init_Charge_Time + 100.) * 1e-3 / LOOPTIMEINSEC)	// �ʱ� ������ ���� �� 3.1�� �� ������ ��ȯ
+					{
+						// ���� �ʱ� ���� ȸ�� ������ ����Ͽ� �ٷ� ���� ���� �Ѿ� ���� �ʰ�
+						// ���� ������ Ȯ�� �� �Ѿ���� ���� �� ��
+						Seq = SEQ_Wait;
+						Init_Charge_cnt_EN=0;
+					}
+				}
+	//			Seq = SEQ_Wait;
+				Green_LED_off;
+			break;
+
+
+		// �ý��� Ready �����̸� Run Signal ��� ���� ��
+			case SEQ_Wait:						//	" 1 "
+					if(( FaultReg1[1] )||( FaultReg2[1] )) Fault_seq = SEQ_Wait, Seq=SEQ_Fault;
+					else
+					{
+						State_Index = STATE_READY;
+						Run_Stop_Status = 0;
+						Run_Stop_Operation();
+						if(DRIVE_ENABLE==RUNN)	Seq=SEQ_Normal;
+						else					Drive_Off();
+					}
+					Red_LED_off;
+					State_Index = STATE_STOP;
+			break;
+
+		// Run ��ȣ �ΰ� �� �ý��� ���� ����
+			case SEQ_Normal:							//	" 2 "
+				if(( FaultReg1[1] )||( FaultReg2[1] )) Fault_seq = SEQ_Normal, Seq=SEQ_Fault;
+				else
+				{
+					State_Index = STATE_RUNNING;
+					// Run_Time_Delay_time �� Machine_state 1�� �ȴ�
+	/*				if (Machine_state == RUNN)
+					{
+	//					Flag.Monitoring.bit.
+					}
+	*/
+					Run_Stop_Operation();
+					if(DRIVE_ENABLE==RUNN)	Drive_On();
+					else
+					{
+						if((Position_Flag)||(Start_Flag))	Seq=SEQ_Wait;
+						else 								Wrpm_ref_set = 0.0;
+					}
+				}
+				Red_LED_off;
+				Green_LED_on;
+			break;
+
+
+		// System Fault
+			case SEQ_Fault:							//	" 3 "
+
+				State_Index = STATE_FAULT;
+				Run_Stop_Status = 0;
+				stop_pwm_hw(); // Converter Off
+				// ���� �������� ��Ʈ ���� ��ȯ ���� ǥ��
 			
-			// init user specified parms and stop on error
-			if( SetupParm() )
-			{
-				// Error
-				uGF.bit.RunMotor=0;
-				return 0;
-			}
-			
-			// zero out i sums 
-			PIParmD.qdSum = 0;
-			PIParmQ.qdSum = 0;
-			PIParmW.qdSum = 0;
-		 
-			state = 1;
+				if((!FaultReg1[1])&&(!FaultReg2[1])) Seq=SEQ_Retrial;
+
+				if ((( FaultReg1[1] ) || ( FaultReg2[1] ))
+					 && (( FaultReg1[1] > FaultReg1[0] ) || ( FaultReg2[1] > FaultReg2[0] )))
+				{
+					// ���� ��� ���õ� ��Ʈ�� ���ؼ� ���� �Ķ��Ÿ���� �ʱ�ȭ
+					Fault_count++;
+					Word_Write_data(2379, Fault_count);		// Fault Ƚ���� EEPROM�� ���� �ؾ� �Ѵ�.
+					Flag.Fault_Cntl.bit.Rec_Complete = 0;
+					Flag.Fault_Cntl.bit.Rst_Complete = 0;
+	//				if (!FAULT_RECORD_COMPLETE)	Fault_Recording( Fault_count );
+					Fault_Recording( Fault_count );
+				}
+
+				if ((!Flag.Fault_Cntl.bit.Rst_Complete)&&((Flag.DI.bit.FAULT_RESET == 1)||(Flag.Fault_Cntl.bit.Reset == 1)))
+				{
+					FaultReg1= 0;
+
+					OL_TimeOver_Count = 0;
+					MaxCon_Curr_Count = 0;
+					OverVoltCount = 0;
+					UnderVoltCount = 0;
+					Flag.Fault_Cntl.bit.Reset = 0;
+					Flag.Fault1.all=0;
+					Flag.Fault2.all=0;
+					Flag.Fault3.all=0;
+					Seq = SEQ_Retrial;
+					Flag.Fault_Cntl.bit.Rst_Complete = 1;
+				}
+
+				FaultReg1[0] = FaultReg1[1];
+				FaultReg2[0] = FaultReg2[1];
+
+				Red_LED_on;
+				Green_LED_off;
+
+			break;
+
+
+		//  Retrial for Operation
+			case SEQ_Retrial:							//	" 4 "
+				{
+					State_Index = STATE_STOP;
+					Retry_cnt_En = 1;
+					if( Retry_cnt >= Retry_Time_set)
+					{
+						Retry_cnt_En = 0;
+						Seq = SEQ_Wait;
+					}
+				}
+			break;
+			default: Seq=SEQ_NoReady;
 		}
-		else if(state == 1)
-		{
-			///---------------------------------------motor start code
-			//if(start cmd)
-			{	
-				SetupParm();
-				uGF.bit.RunMotor = 1;				//then start motor
-							// Run the motor
-				uGF.bit.ChangeMode = 1; // Ensure variable initialization when open loop is
-									// executed for the first time
-				state = 2;
-			}
-			
-		}
-		else if(state == 2)
-		{
-			//if(stop cmd)
-			{
-				uGF.bit.RunMotor = 0;
-				state = 0;
-			}
-		}
-#else 
-		//jsyoon
-		chThdSleepMilliseconds(200);
-#endif
-	}
+	//	asm("   nop");					//END_SEQ:
+
+
+#endif //pbhp 151001
+
+	chThdSleepMilliseconds(1);
 
 	return 0;
 }
@@ -746,7 +947,7 @@ bool SetupParm(void)
     MeasCurrParm.qKb    = DQKB;   
 
     // Initial Current offsets
-	InitMeasCompCurr( ADC_Value[ADC_IND_CURR1], ADC_Value[ADC_IND_CURR1] ); 
+	InitMeasCompCurr( curr0_offset, curr1_offset ); 
 
 	// Target DC Bus, without sign.
 	TargetDCbus = GET_INPUT_VOLTAGE();
@@ -926,7 +1127,7 @@ void DoControl( void )
 			// Pressing one of the push buttons, speed reference (or torque reference
 			// if enabled) will be doubled. This is done to test transient response
 			// of the controllers
-			if( ++count == SPEEDDELAY ) 
+			/*if( ++count == SPEEDDELAY )
 			{
 				VelReq = (SpeedReference* DQK) + ((OMEGA10 + OMEGA1)/2.0);
 	
@@ -940,7 +1141,7 @@ void DoControl( void )
 				}
 				
 				count = 0;
-			}
+			}*/
 			
 			// When it first transition from open to closed loop, this If statement is
 			// executed
@@ -976,7 +1177,7 @@ void DoControl( void )
 			{
 				// Execute the velocity control loop
 				PIParmW.qInMeas = smc1.Omega;
-				PIParmW.qInRef	= CtrlParm.qVelRef;
+				PIParmW.qInRef	=  0.01f;//CtrlParm.qVelRef;
 				CalcPI(&PIParmW);
 				CtrlParm.qVqRef = PIParmW.qOut;
 			}
@@ -1000,7 +1201,7 @@ void DoControl( void )
 	
 			// PI control for D
 			PIParmD.qInMeas = ParkParm.qId;
-			PIParmD.qInRef	= CtrlParm.qVdRef;
+			PIParmD.qInRef	= 0.0f;//CtrlParm.qVdRef;
 			CalcPI(&PIParmD);
 	
 			// If voltage ripple compensation flag is set, adjust the output
@@ -1053,13 +1254,6 @@ void InitPI( tPIParm *pParm)
 	pParm->qdSum=0;
 	pParm->qOut=0;
 
-	//pParm->qInMeas=0;
-	//pParm->qInRef=0;
-	//pParm->qKc=0;
-	//pParm->qKi=0;
-	//pParm->qKp=0;
-	//pParm->qOutMax=0;
-	//pParm->qOutMin=0;
 }
 void CalcPI( tPIParm *pParm)
 {
@@ -1107,6 +1301,17 @@ void SetupControlParameters(void)
     PIParmW.qOutMin = -PIParmW.qOutMax;
 
     InitPI(&PIParmW);
+
+// ============= PI PLL Term ===============
+	PIParmPLL.qKp = WKP;		 
+	PIParmPLL.qKi = WKI;		 
+	PIParmPLL.qKc = WKC;		 
+	PIParmPLL.qOutMax = WOUTMAX;	 
+	PIParmPLL.qOutMin = -PIParmPLL.qOutMax;
+
+	InitPI(&PIParmPLL);
+
+	
 	return;
 }
 void DebounceDelay(void)
@@ -1155,13 +1360,10 @@ float VoltRippleComp(float Vdq)
 
 	return CompVdq;
 }
-void MeasCompCurr( void )
+void MeasCompCurr( int curr1, int curr2 )
 {
 	 int CorrADC1, CorrADC2;
 
-	 int curr1 = ADC_GetInjectedConversionValue(ADC1, ADC_InjectedChannel_1);
-	 int curr2 = ADC_GetInjectedConversionValue(ADC2, ADC_InjectedChannel_1);
-	 
 	 CorrADC1 = curr1 - MeasCurrParm.Offseta;
 	 CorrADC2 = curr2 - MeasCurrParm.Offsetb;
 	// ADC_curr_norm_value[2] = -(ADC_curr_norm_value[0] + ADC_curr_norm_value[1]);
@@ -1213,17 +1415,22 @@ void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty
 
 	// Disable preload register updates
 	TIM1->CR1 |= TIM_CR1_UDIS;
-	//TIM8->CR1 |= TIM_CR1_UDIS;
+	TIM8->CR1 |= TIM_CR1_UDIS;
 
 	TIM1->CCR1 = duty_A;
 	TIM1->CCR2 = duty_B;
 	TIM1->CCR3 = duty_C;
+
+	//debug_print_usb( "%u,%u,%u\r\n",duty_A ,duty_B,duty_C);
 	//TIM1->CCR4 = 100;
+	//TIM8->CCR1 = duty_A;
+	//TIM8->CCR2 = duty_A;
+	//TIM8->CCR3 = duty_C;
 
 
 	// Enables preload register updates
 	TIM1->CR1 &= ~TIM_CR1_UDIS;
-	//TIM8->CR1 &= ~TIM_CR1_UDIS;
+	TIM8->CR1 &= ~TIM_CR1_UDIS;
 
 	utils_sys_unlock_cnt();
 }
@@ -1334,7 +1541,193 @@ void SMCInit(SMC *s)
 	s->FiltOmCoef = (OMEGA0 * PI / IRP_PERCALC); // Cutoff frequency for omega filter
 											 // is minimum omega, or OMEGA0
 	return;
-}	
+}
+
+
+/********************************PLL loop **********************************/	
+#define Fsamp           16000
+#define Tsamp           1./16000
+
+float HallPLLlead      = 0.0;
+float HallPLLlead1     = 0.0;
+float HallPLLlead2     = 0.0;
+float HallPLLqe        = 0.0;
+float HallPLLde        = 0.0;
+float HallPLLde1       = 0.0;
+float HallPLLdef       = 0.0;
+float HallPLLdef1      = 0.0;
+#define WMd      2.*3.141592654*180.
+#define AMd      (WMd-(2./Tsamp))/(WMd+(2./Tsamp))
+#define BMd      WMd/(WMd+(2./Tsamp))
+	
+static volatile float Theta	 	= 0.0;
+static volatile float ThetaCal	 	= 0.0;
+
+static volatile float Futi	 	= 0.0;
+float Wpll	 	= 0.0;
+float Wpll1	 	= 0.0;
+float Wpllp	 	= 0.0;
+float Wplli	 	= 0.0;
+
+float Kpll       = 0.428;
+float Ipll       = 28.83;
+
+
+static volatile float Hall_KA = 0.0;
+static volatile float Hall_KB = 0.0;
+
+static volatile float Hall_PIout = 0.0;
+static volatile float Hall_Err0 = 0.0;
+
+#define Digital_PI_controller(out, ref, in, err0, limit, kp, ki, tsample)   \
+		{						                                            \
+			float err, tmp_kp, tmp_kpi;                                     \
+			tmp_kp = (float)(kp);                                           \
+			tmp_kpi = (float)(kp + ki*tsample);                             \
+			err = ref - in;					                                \
+			out += ((tmp_kpi * err) - (tmp_kp * err0));	                    \
+			out = Bound_limit(out, limit);                                  \
+			err0 = err;                                                     \
+		}
+#define Bound_limit(in,lim)	((in > (lim)) ? (lim) : ((in < -(lim)) ? -(lim) : in))
+#define Bound_min_max(in, min, max)	((in > (max)) ? (max) : ((in < (min)) ? (min) : in))
+
+#define Low_pass_filter(out, in, in_old, alpha)     \
+		{												\
+			float tmp;									\
+			tmp = alpha*(in + in_old - (out*2)); \
+			out += tmp; 								\
+			in_old = in;								\
+		}	
+
+
+float HallPLLA	 = 0.0f;			// inverter output voltage
+float HallPLLA1 	= 0.0f;
+float HallPLLB	   = 0.0f;
+
+float HallPLLA_old = 0.0f;
+float HallPLLB_old = 0.0f;
+
+float HallPLLA_filtered = 0.0f;
+float HallPLLB_filtered = 0.0f;
+
+float Hall_SinCos;
+float Hall_CosSin;
+
+float costh;
+float sinth;
+
+
+
+void SMC_HallSensor_Estimation (SMC *s)
+{
+
+
+	HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
+	HallPLLB = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
+	
+	//if(HallPLLA > Hall_KA )Hall_KA = HallPLLA;
+	//if(HallPLLB > Hall_KB )Hall_KB = HallPLLB;
+	
+	//HallPLLA = HallPLLA / Hall_KA;
+	//HallPLLB = HallPLLB / Hall_KB;
+
+ 	//Low_pass_filter(HallPLLA_filtered, HallPLLA, HallPLLA_old, alpha);
+	//Low_pass_filter(HallPLLA_filtered, HallPLLA, HallPLLA_old, alpha);
+	
+	costh = cosf(Theta);
+	sinth = sinf(Theta);
+
+	//Hall_SinCos = HallPLLA_filtered * costh;
+	//Hall_CosSin = HallPLLB_filtered * sinth;
+	
+	Hall_SinCos = HallPLLA * costh;
+	Hall_CosSin = HallPLLB * sinth;
+	
+	//Digital_PI_controller(Hall_PIout, Hall_SinCos, Hall_CosSin, Hall_Err0, 10, 1, 1, Tsamp);
+
+	float err, tmp_kp, tmp_kpi; 									
+	tmp_kp = 1.0f;										
+	tmp_kpi = (1.0f + 1.0f * Tsamp); 							
+	err = Hall_SinCos - Hall_CosSin; 											
+	Hall_PIout += ((tmp_kpi * err) - (tmp_kp * Hall_Err0)); 					
+	Hall_PIout = Bound_limit(Hall_PIout, 10.0f);						
+	Hall_Err0= err;									
+	
+	Theta += Hall_PIout ;
+	Theta + 0.5;
+	if((2.0f * PI) < Theta) Theta = Theta - (2.0f * PI);
+	else if(Theta < 0.0f) Theta = (2.0f * PI) + Theta;
+
+	smc1.Theta= Theta + 1.3f;
+
+	if((2.0f * PI) < smc1.Theta) smc1.Theta = smc1.Theta - (2.0f * PI);
+	else if(smc1.Theta < 0.0f) smc1.Theta = (2.0f * PI) + smc1.Theta;
+
+	smc1.Omega = Hall_PIout;
+	//Futi   = Hall_PIout / (2.* PI) *Fsamp;
+
+
+
+
+#if 0
+	/************************* Phase lead(90 degree) ***************************/
+	HallPLLlead  = -0.931727141f * HallPLLlead1 + 0.931727141f * HallPLLA - HallPLLA1;//all pass filter
+
+	HallPLLA2 = HallPLLA1;
+	HallPLLA1 = HallPLLA;
+
+	HallPLLlead2 = HallPLLlead1;
+	HallPLLlead1 = HallPLLlead;
+
+
+	/***************************************************************************/
+	/*********************************  PLL  ***********************************/
+	costh  = cosf(Theta);
+	sinth  = sinf(Theta );
+	HallPLLqe    = costh * HallPLLA - sinth * (HallPLLlead);    
+	HallPLLde    = sinth * HallPLLA + costh * (HallPLLlead);
+	
+	HallPLLdef   = -AMd * HallPLLdef1 + BMd * HallPLLde + BMd * HallPLLde1;
+	HallPLLde1   = HallPLLde;
+	HallPLLdef1  = HallPLLdef;
+
+	Wpllp  = -HallPLLdef * Kpll;  // modify by LEE Y J  0.428
+	Wplli  = Wplli - HallPLLdef * Tsamp * Ipll;   //28.83
+
+	Wpll   = Wpllp + Wplli + (2. * 3.141592654 * 60.0);
+	Theta += (Wpll) * Tsamp ;
+	Wpll1  = Wpll;
+	if(Theta  >= 3.141592654 * 3.141592654) Theta =0.0;
+
+	Futi   = Wpll / (2.*3.141592654);
+#endif
+
+	//spi_dac_write_A((HallPLLA+ 1.0f) * 2000.0f);
+	//spi_dac_write_B((HallPLLB+ 1.0f) * 2048.0f);
+
+	//spi_dac_write_A((costh + 1.0f) * 2000.0f);
+	//spi_dac_write_B((sinth + 1.0f) * 2047.0f);
+
+	//spi_dac_write_A( (Hall_SinCos+ 1.0f) * 2048.0f);
+	//spi_dac_write_B( (Hall_CosSin+ 1.0f) * 2048.0f);
+
+	//spi_dac_write_A( (Hall_err+ 1.0f) * 2048.0f);
+	//spi_dac_write_B( (Theta * 200.0f) );
+
+	//spi_dac_write_B( Hall_PIout * 100.0f);
+
+
+	//spi_dac_write_A( (ParkParm.qAngle * 200.0f) );
+	//spi_dac_write_B( (ThetaCal * 200.0f) );
+
+
+	//s->Omega = Wpll;
+	//s->Theta =Theta;
+
+	//DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
+}
+
 void SMC_Position_Estimation (SMC *s)
 {
 	// Sliding mode current observer
@@ -1517,7 +1910,38 @@ float FieldWeakening(float qMotorSpeed)
 	return FdWeakParm.qIdRef;
 }
 
-static void stop_pwm_hw(void) {
+static void fault_stop(mc_fault_code fault) {
+	if (dccal_done && fault_now == FAULT_CODE_NONE) {
+		// Sent to terminal fault logger so that all faults and their conditions
+		// can be printed for debugging.
+		chSysLock();
+		volatile int t1_cnt = TIM1->CNT;
+		volatile int t8_cnt = TIM8->CNT;
+		chSysUnlock();
+
+#if 0 //pbhp 151001
+		fault_data fdata;
+		fdata.fault = fault;
+		fdata.current = mcpwm_get_tot_current();
+		fdata.current_filtered = mcpwm_get_tot_current_filtered();
+		fdata.voltage = GET_INPUT_VOLTAGE();
+		fdata.duty = dutycycle_now;
+		fdata.rpm = mcpwm_get_rpm();
+		fdata.tacho = mcpwm_get_tachometer_value(false);
+		fdata.tim_pwm_cnt = t1_cnt;
+		fdata.tim_samp_cnt = t8_cnt;
+		fdata.comm_step = comm_step;
+		fdata.temperature = NTC_TEMP(ADC_IND_TEMP_MOS1);
+		terminal_add_fault_data(&fdata);
+#endif
+	}
+
+	stop_pwm_hw();
+	fault_now = fault;
+}
+
+
+void stop_pwm_hw(void) {
 	TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_ForcedAction_InActive);
 	TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Enable);
 	TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Disable);
@@ -1532,15 +1956,57 @@ static void stop_pwm_hw(void) {
 
 	TIM_GenerateEvent(TIM1, TIM_EventSource_COM);
 }
-float mcpwm_get_rpm(void) {
-	return 0.0;
+
+
+/**
+ * Get the motor current. The sign of this value will
+ * represent whether the motor is drawing (positive) or generating
+ * (negative) current.
+ *
+ * @return
+ * The motor current.
+ */
+ static volatile float last_current_sample;
+float mcpwm_get_tot_current(void) {
+	return last_current_sample * (V_REG / 4095.0) / (CURRENT_SHUNT_RES * CURRENT_AMP_GAIN);
 }
+
+/**
+ * Get the FIR-filtered motor current. The sign of this value will
+ * represent whether the motor is drawing (positive) or generating
+ * (negative) current.
+ *
+ * @return
+ * The filtered motor current.
+ */
+ static volatile float last_current_sample_filtered;
+ static volatile float mcpwm_get_tot_current_filtered(void) {
+	return last_current_sample_filtered * (V_REG / 4095.0) / (CURRENT_SHUNT_RES * CURRENT_AMP_GAIN);
+}
+
+
+/**
+ * Calculate the current RPM of the motor. This is a signed value and the sign
+ * depends on the direction the motor is rotating in. Note that this value has
+ * to be divided by half the number of motor poles.
+ *
+ * @return
+ * The RPM value.
+ */
+ static volatile float rpm_now;
+static volatile int direction;
+float mcpwm_get_rpm(void) {
+	return direction ? rpm_now : -rpm_now;
+}
+
 mc_state mcpwm_get_state(void) {
 	return 0;
 }
+
 mc_fault_code mcpwm_get_fault(void) {
-	return 0;
+	return fault_now;
 }
+
 const char* mcpwm_fault_to_string(mc_fault_code fault) {
 	switch (fault) {
 	case FAULT_CODE_NONE: return "FAULT_CODE_NONE"; break;

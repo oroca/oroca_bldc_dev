@@ -28,6 +28,13 @@
 #include <stdint.h>
 #include "conf_general.h"
 
+//jsyoon 2015.12.14
+void spi_dac_hw_init(void);
+void spi_dac_write_A( short data);
+void spi_dac_write_B( short data);
+void spi_dac_write_AB( short data);
+
+
 // Function prototypes
 void main_dma_adc_handler(void);
 float main_get_last_adc_isr_duration(void);

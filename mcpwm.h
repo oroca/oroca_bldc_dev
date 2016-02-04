@@ -105,7 +105,7 @@ typedef unsigned char  BYTE;
 
 //************** PWM and Control Timing Parameters **********
 
-#define PWMFREQUENCY	8000		// PWM Frequency in Hertz
+#define PWMFREQUENCY	16000		// PWM Frequency in Hertz
 #define DEADTIMESEC		0.000002f	// Deadtime in seconds
 #define BUTPOLLOOPTIME	0.100f		// Button polling loop period in sec
 #define SPEEDLOOPFREQ	1000		// Speed loop Frequency in Hertz. This value must
@@ -130,7 +130,7 @@ typedef unsigned char  BYTE;
 #define VDD				3.3f		// VDD voltage, only used to convert torque
 								// reference from Amps to internal variables
 
-#define SPEEDDELAY 0.01f // Delay for the speed ramp.
+#define SPEEDDELAY  1000 * LOOPTIMEINSEC;	// Delay for the speed ramp.
 					  // Necessary for the PI control to work properly at high speeds.
 
 //*************** Optional Modes **************
@@ -152,16 +152,16 @@ typedef unsigned char  BYTE;
 #define     QOUTMAX    0.99999
 
 //*** Velocity Control Loop Coefficients *****
-#define     WKP        0.05
-#define     WKI        0.0025
+#define     WKP       2.0
+#define     WKI        0.01
 #define     WKC        0.99999
 #define     WOUTMAX    0.95
 
 //************** ADC Scaling **************
 // Scaling constants: Determined by calibration or hardware design. 
 #define     DQK        (OMEGA10 - OMEGA1)/2.0	// POT Scaling
-#define     DQKA       0.080566406	// Current feedback software gain : adc*(1/resol)*(AVDD/AmpGAIN)*(1/R) 
-#define     DQKB       0.080566406	// Current feedback software gain : adc*(1/4096)*(3.3/10)*(1/0.001)
+#define     DQKA       0.0008058608f	// Current feedback software gain : adc*(1/resol)*(AVDD/AmpGAIN)*(1/R) 
+#define     DQKB       0.0008058608f	// Current feedback software gain : adc*(1/4096)*(3.3/10)*(1/0.001)
 
 //************** Field Weakening **************
 // Enter flux demand Amperes using REFINAMPS() macro. Maximum Value for
@@ -268,7 +268,7 @@ typedef unsigned char  BYTE;
 #define CONSTANT_PHASE_SHIFT (THETA_ALL)
 
 
-#define		PI				3.141592654f
+#define		PI				3.14159265358979f
 #define		SQRT2			1.414213562f
 #define		SQRT3			1.732050808f
 #define		INV_SQRT3		(float)(1./SQRT3)
@@ -283,7 +283,7 @@ extern   int SpeedReference;
 // Functions
 bool SetupParm(void);
 
-void MeasCompCurr( void );
+void MeasCompCurr( int curr1, int curr2 );
 void InitMeasCompCurr( short Offset_a, short Offset_b );
 
 //void InitPI( tPIParm *pParm);
