@@ -118,11 +118,11 @@ static void send_packet(unsigned char *buffer, unsigned int len) {
 
 void comm_usb_init(void) {
 	usb_uart_init();
-	packet_init(send_packet, process_packet, PACKET_HANDLER);
+	//packet_init(send_packet, process_packet, PACKET_HANDLER);
 
 	chMtxInit(&send_mutex);
 
 	// Threads
-	chThdCreateStatic(serial_read_thread_wa, sizeof(serial_read_thread_wa), NORMALPRIO, serial_read_thread, NULL);
-	chThdCreateStatic(serial_process_thread_wa, sizeof(serial_process_thread_wa), NORMALPRIO, serial_process_thread, NULL);
+	//chThdCreateStatic(serial_read_thread_wa, sizeof(serial_read_thread_wa), NORMALPRIO, serial_read_thread, NULL);
+	//chThdCreateStatic(serial_process_thread_wa, sizeof(serial_process_thread_wa), NORMALPRIO, serial_process_thread, NULL);
 }

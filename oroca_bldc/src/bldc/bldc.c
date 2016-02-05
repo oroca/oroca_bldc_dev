@@ -21,7 +21,7 @@
  */
 
 #include "bldc.h"
-
+#include "usb_uart.h"
 
 
 
@@ -63,6 +63,17 @@ int debug_print_usb( const char *fmt, ...){
 	return ret;
 }
 
+uint8_t USB_Uart_Getch( void )
+{
+	uint8_t buffer[128];
+	int i;
+	int len;
+	int had_data = 0;
+
+	len = chSequentialStreamRead(&SDU1, (uint8_t*) buffer, 1);
+
+	return buffer[0];
+}
 
 /*
  * Timers used:
@@ -329,10 +340,12 @@ int bldc_init(void)
 }
 
 
-
+float qVelRef = 0.0f;
 
 int bldc_start(void)
 {
+	uint8_t Ch;
+
 
 	//-- 스레드 생성
 	//
@@ -346,8 +359,22 @@ int bldc_start(void)
 	for(;;)
 	{
 		//palSetPad(GPIOA, 7);
-		chThdSleepMilliseconds(500);
+		chThdSleepMilliseconds(1);
 		//palClearPad(GPIOA, 7);
+
+		Ch = USB_Uart_Getch();
+
+		if( Ch == 'q' )
+		{
+			qVelRef += 0.01;
+			debug_print_usb("Enter q : %f\r\n", qVelRef);
+
+		}
+		if( Ch == 'a' )
+		{
+			qVelRef -= 0.01;
+			debug_print_usb("Enter a : %f\r\n", qVelRef);
+		}
 	}
 }
 

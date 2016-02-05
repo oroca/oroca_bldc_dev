@@ -3,11 +3,12 @@ build/obj/stm32f4xx_dac.o: \
  lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_dac.h \
  lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/stm32f4xx.h \
  lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cm4.h \
- /Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/stdint.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_default_types.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/features.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_intsup.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/stdint.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/_default_types.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/features.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_intsup.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_stdint.h \
  lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cmInstr.h \
  lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cmFunc.h \
  lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cm4_simd.h \
@@ -43,15 +44,17 @@ lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/stm32f4xx.h:
 
 lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cm4.h:
 
-/Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/stdint.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/stdint.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_default_types.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/_default_types.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/features.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/features.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_intsup.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_intsup.h:
+
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_stdint.h:
 
 lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cmInstr.h:
 

@@ -45,7 +45,7 @@
 //jsyoon
 #include <stdarg.h>
 extern int debug_print_usb( const char *fmt, ...);
-
+extern float qVelRef;
 
 // Structs
 union{
@@ -613,7 +613,7 @@ void mcpwm_adc_inj_int_handler(void)
 
 
 #if 0 //pbhp 151001
-	// �ʱ� ���� üũ
+	// 占십깍옙 占쏙옙占쏙옙 체크
 	if(Init_Charge_cnt_EN) 	Init_Charge_cnt++;
 	else 					Init_Charge_cnt=0;
 #endif
@@ -752,11 +752,11 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags) {
 
 
 // Sequence Definition
-#define	SEQ_NoReady	 0	// �ý��� ���� ������ ��� �Ǵ� DC build up �̷������ �� ����
-#define SEQ_Wait	 1	// �ý��� Ready �����̸� Run Signal ��� ���� ��
-#define	SEQ_Normal	 2	// Run ��ȣ �ΰ� �� �ý��� ���� ����
-#define	SEQ_Fault	 3	// �ý��� ��Ʈ ����
-#define	SEQ_Retrial	 4	// Fault Reset �� ���� ��� Ȯ�� ���
+#define	SEQ_NoReady	 0	// 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占� 占실댐옙 DC build up 占싱뤄옙占쏙옙占쏙옙占� 占쏙옙 占쏙옙占쏙옙
+#define SEQ_Wait	 1	// 占시쏙옙占쏙옙 Ready 占쏙옙占쏙옙占싱몌옙 Run Signal 占쏙옙占� 占쏙옙占쏙옙 占쏙옙
+#define	SEQ_Normal	 2	// Run 占쏙옙호 占싸곤옙 占쏙옙 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
+#define	SEQ_Fault	 3	// 占시쏙옙占쏙옙 占쏙옙트 占쏙옙占쏙옙
+#define	SEQ_Retrial	 4	// Fault Reset 占쏙옙 占쏙옙占쏙옙 占쏙옙占� 확占쏙옙 占쏙옙占�
 #define SEQ_F_R_Read 5	// Fault Record Read
 #define	SEQ_SYS_INIT 6	// System Initialize Sequence 
 
@@ -765,7 +765,7 @@ int Seq = 0;
 int Fault_seq = 0;
 int Init_Charge_cnt_EN = 0;
 long Init_Charge_cnt = 0.;
-unsigned int Init_Charge_Time = 3000;	// 3��
+unsigned int Init_Charge_Time = 3000;	// 3占쏙옙
 
 //int Retry_cnt_En = 0;
 //long Retry_cnt = 0;
@@ -792,19 +792,19 @@ static msg_t SEQUENCE_thread(void *arg)
 
 		switch(Seq)
 		{
-		// �ý��� ���� ������ ��� �Ǵ� Run��ȣ �ΰ� �� �ý��� ������ �� ���
+		// 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占� 占실댐옙 Run占쏙옙호 占싸곤옙 占쏙옙 占시쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙 占쏙옙占�
 			case SEQ_NoReady:							//	" 0 "
 				stop_pwm_hw();
-				//	���� ���� �� �ð� �鷹�� ������ ������ �Ϸ� ��ȣ �߻�
+				//	占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 占시곤옙 占썽레占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占싹뤄옙 占쏙옙호 占쌩삼옙
 				Init_Charge_cnt_EN=1;
-				if(Init_Charge_cnt >= (float)Init_Charge_Time * 1e-3 / LOOPTIMEINSEC)		// �ʱ� ���� �ð� 3��
+				if(Init_Charge_cnt >= (float)Init_Charge_Time * 1e-3 / LOOPTIMEINSEC)		// 占십깍옙 占쏙옙占쏙옙 占시곤옙 3占쏙옙
 				{
 					nDC_CONTACT_CLEAR;
 					Flag.Fault_Cntl.bit.UV_Check_En = 1;
-					if(Init_Charge_cnt >= ((float)Init_Charge_Time + 100.) * 1e-3 / LOOPTIMEINSEC)	// �ʱ� ������ ���� �� 3.1�� �� ������ ��ȯ
+					if(Init_Charge_cnt >= ((float)Init_Charge_Time + 100.) * 1e-3 / LOOPTIMEINSEC)	// 占십깍옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 3.1占쏙옙 占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙환
 					{
-						// ���� �ʱ� ���� ȸ�� ������ ����Ͽ� �ٷ� ���� ���� �Ѿ� ���� �ʰ�
-						// ���� ������ Ȯ�� �� �Ѿ���� ���� �� ��
+						// 占쏙옙占쏙옙 占십깍옙 占쏙옙占쏙옙 회占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙臼占� 占쌕뤄옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占싼억옙 占쏙옙占쏙옙 占십곤옙
+						// 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 확占쏙옙 占쏙옙 占싼어가占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 占쏙옙
 						Seq = SEQ_Wait;
 						Init_Charge_cnt_EN=0;
 					}
@@ -814,7 +814,7 @@ static msg_t SEQUENCE_thread(void *arg)
 			break;
 
 
-		// �ý��� Ready �����̸� Run Signal ��� ���� ��
+		// 占시쏙옙占쏙옙 Ready 占쏙옙占쏙옙占싱몌옙 Run Signal 占쏙옙占� 占쏙옙占쏙옙 占쏙옙
 			case SEQ_Wait:						//	" 1 "
 					if(( FaultReg1[1] )||( FaultReg2[1] )) Fault_seq = SEQ_Wait, Seq=SEQ_Fault;
 					else
@@ -829,13 +829,13 @@ static msg_t SEQUENCE_thread(void *arg)
 					State_Index = STATE_STOP;
 			break;
 
-		// Run ��ȣ �ΰ� �� �ý��� ���� ����
+		// Run 占쏙옙호 占싸곤옙 占쏙옙 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
 			case SEQ_Normal:							//	" 2 "
 				if(( FaultReg1[1] )||( FaultReg2[1] )) Fault_seq = SEQ_Normal, Seq=SEQ_Fault;
 				else
 				{
 					State_Index = STATE_RUNNING;
-					// Run_Time_Delay_time �� Machine_state 1�� �ȴ�
+					// Run_Time_Delay_time 占쏙옙 Machine_state 1占쏙옙 占싫댐옙
 	/*				if (Machine_state == RUNN)
 					{
 	//					Flag.Monitoring.bit.
@@ -860,16 +860,16 @@ static msg_t SEQUENCE_thread(void *arg)
 				State_Index = STATE_FAULT;
 				Run_Stop_Status = 0;
 				stop_pwm_hw(); // Converter Off
-				// ���� �������� ��Ʈ ���� ��ȯ ���� ǥ��
+				// 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙트 占쏙옙占쏙옙 占쏙옙환 占쏙옙占쏙옙 표占쏙옙
 			
 				if((!FaultReg1[1])&&(!FaultReg2[1])) Seq=SEQ_Retrial;
 
 				if ((( FaultReg1[1] ) || ( FaultReg2[1] ))
 					 && (( FaultReg1[1] > FaultReg1[0] ) || ( FaultReg2[1] > FaultReg2[0] )))
 				{
-					// ���� ��� ���õ� ��Ʈ�� ���ؼ� ���� �Ķ��Ÿ���� �ʱ�ȭ
+					// 占쏙옙占쏙옙 占쏙옙占� 占쏙옙占시듸옙 占쏙옙트占쏙옙 占쏙옙占쌔쇽옙 占쏙옙占쏙옙 占식띰옙占신몌옙占쏙옙占� 占십깍옙화
 					Fault_count++;
-					Word_Write_data(2379, Fault_count);		// Fault Ƚ���� EEPROM�� ���� �ؾ� �Ѵ�.
+					Word_Write_data(2379, Fault_count);		// Fault 횟占쏙옙占쏙옙 EEPROM占쏙옙 占쏙옙占쏙옙 占쌔억옙 占싼댐옙.
 					Flag.Fault_Cntl.bit.Rec_Complete = 0;
 					Flag.Fault_Cntl.bit.Rst_Complete = 0;
 	//				if (!FAULT_RECORD_COMPLETE)	Fault_Recording( Fault_count );
@@ -1175,9 +1175,11 @@ void DoControl( void )
 	
 			if(AccumThetaCnt == 0)
 			{
+				// oroca
 				// Execute the velocity control loop
 				PIParmW.qInMeas = smc1.Omega;
-				PIParmW.qInRef	=  0.01f;//CtrlParm.qVelRef;
+				//PIParmW.qInRef	=  0.01f;//CtrlParm.qVelRef;
+				PIParmW.qInRef	=  qVelRef;
 				CalcPI(&PIParmW);
 				CtrlParm.qVqRef = PIParmW.qOut;
 			}

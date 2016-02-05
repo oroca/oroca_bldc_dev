@@ -1,14 +1,15 @@
 build/obj/conf_general.o: src/core/conf_general.c src/core/conf_general.h \
  src/core/datatypes.h \
- /Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/stdint.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_default_types.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/features.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_intsup.h \
- /Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/stdint.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/_default_types.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/features.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_intsup.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_stdint.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h \
  lib/ChibiOS_2.6.6/os/kernel/include/ch.h src/core/chconf.h \
  lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chtypes.h \
- /Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h \
  lib/ChibiOS_2.6.6/os/kernel/include/chlists.h \
  lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chcore.h \
  lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/STM32F4xx/cmparams.h \
@@ -68,35 +69,37 @@ build/obj/conf_general.o: src/core/conf_general.c src/core/conf_general.h \
  lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/misc.h src/bldc/mcpwm.h \
  src/core/conf_general.h src/core/datatypes.h lib/hwconf/hw.h \
  lib/hwconf/hw_oroca.h src/core/utils.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/string.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/_ansi.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/newlib.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/config.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/ieeefp.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/reent.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/_ansi.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_types.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_types.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/lock.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/cdefs.h \
- /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/string.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/string.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/_ansi.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/newlib.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/config.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/ieeefp.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/reent.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/_ansi.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_types.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/_types.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/lock.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/cdefs.h \
+ /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/string.h \
  lib/mcconf/mcconf_outrunner2.h src/core/stm32f4xx_conf.h
 
 src/core/conf_general.h:
 
 src/core/datatypes.h:
 
-/Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/stdint.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/stdint.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_default_types.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/_default_types.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/features.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/features.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_intsup.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_intsup.h:
 
-/Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_stdint.h:
+
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h:
 
 lib/ChibiOS_2.6.6/os/kernel/include/ch.h:
 
@@ -104,7 +107,7 @@ src/core/chconf.h:
 
 lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chtypes.h:
 
-/Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h:
 
 lib/ChibiOS_2.6.6/os/kernel/include/chlists.h:
 
@@ -234,29 +237,29 @@ lib/hwconf/hw_oroca.h:
 
 src/core/utils.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/string.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/string.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/_ansi.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/_ansi.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/newlib.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/newlib.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/config.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/config.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/ieeefp.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/ieeefp.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/reent.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/reent.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/_ansi.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/_ansi.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_types.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_types.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_types.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/_types.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/lock.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/lock.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/cdefs.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/cdefs.h:
 
-/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/string.h:
+/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/string.h:
 
 lib/mcconf/mcconf_outrunner2.h:
 
