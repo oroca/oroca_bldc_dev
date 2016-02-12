@@ -152,8 +152,8 @@ typedef unsigned char  BYTE;
 #define     QOUTMAX    0.99999
 
 //*** Velocity Control Loop Coefficients *****
-#define     WKP       2.0
-#define     WKI        0.01
+#define     WKP        2.0  // 2.0
+#define     WKI        0.01 // 0.01
 #define     WKC        0.99999
 #define     WOUTMAX    0.95
 

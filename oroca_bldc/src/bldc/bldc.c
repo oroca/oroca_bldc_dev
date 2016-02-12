@@ -139,6 +139,9 @@ static WORKING_AREA(periodic_thread_wa, 1024);
 static WORKING_AREA(sample_send_thread_wa, 1024);
 static WORKING_AREA(timer_thread_wa, 128);
 
+static WORKING_AREA(uart_thread_wa, 128);
+
+
 static Thread *sample_send_tp;
 
 static msg_t periodic_thread(void *arg) {
@@ -340,11 +343,36 @@ int bldc_init(void)
 }
 
 
+uint8_t Ch;
+
+static msg_t uart_process_thread(void *arg) {
+	(void)arg;
+
+	chRegSetThreadName("uart rx process");
+
+	//process_tp = chThdSelf();
+
+	for(;;) {
+
+		chThdSleepMilliseconds(1);
+
+		Ch = USB_Uart_Getch();
+
+		}
+
+
+	return 0;
+}
+
+
 float qVelRef = 0.0f;
+float dbg_fTheta;
+float dbg_fMea;
+uint16_t dbg_AccumTheta;
 
 int bldc_start(void)
 {
-	uint8_t Ch;
+
 
 
 	//-- 스레드 생성
@@ -352,6 +380,9 @@ int bldc_start(void)
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
 	chThdCreateStatic(sample_send_thread_wa, sizeof(sample_send_thread_wa), NORMALPRIO - 1, sample_send_thread, NULL);
 	chThdCreateStatic(timer_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, timer_thread, NULL);
+
+	chThdCreateStatic(uart_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, uart_process_thread, NULL);
+
 
 
 	//-- IDLE
@@ -362,19 +393,25 @@ int bldc_start(void)
 		chThdSleepMilliseconds(1);
 		//palClearPad(GPIOA, 7);
 
-		Ch = USB_Uart_Getch();
+		//Ch = USB_Uart_Getch();
 
 		if( Ch == 'q' )
 		{
-			qVelRef += 0.01;
+			Ch = 0;
+			qVelRef += 0.001;
 			debug_print_usb("Enter q : %f\r\n", qVelRef);
 
 		}
 		if( Ch == 'a' )
 		{
-			qVelRef -= 0.01;
+			Ch = 0;
+			qVelRef -= 0.001;
 			debug_print_usb("Enter a : %f\r\n", qVelRef);
 		}
+
+		//debug_print_usb("8 %f 0\r\n", dbg_fTheta );
+		//debug_print_usb("%d\r\n", dbg_AccumTheta );
+		debug_print_usb("500 %f %f 0\r\n", qVelRef*10000, dbg_fMea*10000 );
 	}
 }
 

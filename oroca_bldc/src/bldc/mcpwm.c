@@ -46,6 +46,9 @@
 #include <stdarg.h>
 extern int debug_print_usb( const char *fmt, ...);
 extern float qVelRef;
+extern float dbg_fTheta;
+extern float dbg_fMea;
+extern uint16_t dbg_AccumTheta;
 
 // Structs
 union{
@@ -659,6 +662,8 @@ void mcpwm_adc_inj_int_handler(void)
 		//CalculateParkAngle();
 		ParkParm.qAngle = smc1.Theta;
 
+
+
 		//ParkParm.qAngle = (float)IN[2];
 		//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
 
@@ -667,7 +672,6 @@ void mcpwm_adc_inj_int_handler(void)
 		{
 			AccumThetaCnt = 0;
 		}
-
 
 		// Calculate qId,qIq from qSin,qCos,qIa,qIb
 		ClarkePark();
@@ -700,6 +704,10 @@ void mcpwm_adc_inj_int_handler(void)
 		LED_RED_OFF();
 		//DISABLE_GATE();
 
+		// chcbaram
+		dbg_fTheta = smc1.Theta;
+		dbg_fMea   = smc1.Omega;
+		dbg_AccumTheta = AccumThetaCnt;
 			
 		} 
 
