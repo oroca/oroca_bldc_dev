@@ -34,7 +34,6 @@
 #include "mcpwm.h"
 #include "digital_filter.h"
 #include "utils.h"
-#include "ledpwm.h"
 #include "hw.h"
 #include "terminal.h"
 #include "encoder.h"

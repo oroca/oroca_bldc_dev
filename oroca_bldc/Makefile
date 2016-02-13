@@ -113,10 +113,8 @@ CSRC = main.c \
        $(CORESRC)/comm_usb.c \
        $(CORESRC)/crc.c \
        $(CORESRC)/digital_filter.c \
-       $(CORESRC)/ledpwm.c \
        $(CORESRC)/servo_dec.c \
        $(CORESRC)/utils.c \
-       $(CORESRC)/servo.c \
        $(CORESRC)/packet.c \
        $(CORESRC)/terminal.c \
        $(CORESRC)/conf_general.c \
@@ -124,8 +122,6 @@ CSRC = main.c \
        $(CORESRC)/commands.c \
        $(CORESRC)/timeout.c \
        $(CORESRC)/comm_can.c \
-       $(CORESRC)/ws2811.c \
-       $(CORESRC)/led_external.c \
        $(CORESRC)/encoder.c \
        $(CORESRC)/flash_helper.c \
        $(CORESRC)/spi_dac.c \

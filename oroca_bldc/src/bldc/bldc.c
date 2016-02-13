@@ -66,9 +66,8 @@ int debug_print_usb( const char *fmt, ...){
 uint8_t USB_Uart_Getch( void )
 {
 	uint8_t buffer[128];
-	int i;
 	int len;
-	int had_data = 0;
+
 
 	len = chSequentialStreamRead(&SDU1, (uint8_t*) buffer, 1);
 
@@ -98,51 +97,13 @@ uint8_t USB_Uart_Getch( void )
  *
  */
 
-/*
- * Notes:
- *
- * Disable USB VBUS sensing:
- * ChibiOS-RT-master/os/hal/platforms/STM32/OTGv1/usb_lld.c
- *
- * change
- * otgp->GCCFG = GCCFG_VBUSASEN | GCCFG_VBUSBSEN | GCCFG_PWRDWN;
- * to
- * otgp->GCCFG = GCCFG_NOVBUSSENS | GCCFG_PWRDWN;
- *
- * This should be handled automatically with the latest version of
- * ChibiOS since I have added an option to the makefile.
- *
- */
 
-// Private variables
-#define ADC_SAMPLE_MAX_LEN		2000
-static volatile int16_t curr0_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t curr1_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t ph1_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t ph2_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t ph3_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t vzero_samples[ADC_SAMPLE_MAX_LEN];
-static volatile uint8_t status_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t curr_fir_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t f_sw_samples[ADC_SAMPLE_MAX_LEN];
-
-static volatile int sample_len = 1000;
-static volatile int sample_int = 1;
-static volatile int sample_ready = 1;
-static volatile int sample_now = 0;
-static volatile int sample_at_start = 0;
-static volatile int was_start_sample = 0;
-static volatile int start_comm = 0;
-static volatile float main_last_adc_duration = 0.0;
 
 static WORKING_AREA(periodic_thread_wa, 1024);
-static WORKING_AREA(sample_send_thread_wa, 1024);
 static WORKING_AREA(timer_thread_wa, 128);
-
 static WORKING_AREA(uart_thread_wa, 128);
 
 
-static Thread *sample_send_tp;
 
 static msg_t periodic_thread(void *arg) {
 	(void)arg;
@@ -153,33 +114,42 @@ static msg_t periodic_thread(void *arg) {
 
 	for(;;) {
 
-		if (mcpwm_get_state() == MC_STATE_RUNNING) {
-			ledpwm_set_intensity(LED_GREEN, 1.0);
-		} else {
-			ledpwm_set_intensity(LED_GREEN, 0.2);
+		if (mcpwm_get_state() == MC_STATE_RUNNING)
+		{
+			LED_GREEN_ON();
+		}
+		else
+		{
+			LED_GREEN_OFF();
 		}
 
 		mc_fault_code fault = mcpwm_get_fault();
-		if (fault != FAULT_CODE_NONE) {
-			if (!fault_print && AUTO_PRINT_FAULTS) {
+		if (fault != FAULT_CODE_NONE)
+		{
+			if (!fault_print && AUTO_PRINT_FAULTS)
+			{
 				fault_print = 1;
 				commands_printf("%s\n", mcpwm_fault_to_string(mcpwm_get_fault()));
 			}
 
-			for (int i = 0;i < (int)fault;i++) {
-				ledpwm_set_intensity(LED_RED, 1.0);
+			for (int i = 0;i < (int)fault;i++)
+			{
+				LED_GREEN_ON();
 				chThdSleepMilliseconds(250);
-				ledpwm_set_intensity(LED_RED, 0.0);
+				LED_GREEN_OFF();
 				chThdSleepMilliseconds(250);
 			}
 
 			chThdSleepMilliseconds(500);
-		} else {
-			ledpwm_set_intensity(LED_RED, 0.0);
+		}
+		else
+		{
+			//ledpwm_set_intensity(LED_RED, 0.0);
 			fault_print = 0;
 		}
 
-		if (mcpwm_get_state() == MC_STATE_DETECTING) {
+		if (mcpwm_get_state() == MC_STATE_DETECTING)
+		{
 			//--->commands_send_rotor_pos(mcpwm_get_detect_pos());
 		}
 
@@ -194,44 +164,6 @@ static msg_t periodic_thread(void *arg) {
 	return 0;
 }
 
-static msg_t sample_send_thread(void *arg) {
-	(void)arg;
-
-	chRegSetThreadName("Main sample");
-
-	sample_send_tp = chThdSelf();
-
-	for(;;) {
-		chEvtWaitAny((eventmask_t) 1);
-
-		for (int i = 0;i < sample_len;i++) {
-			uint8_t buffer[20];
-			int index = 0;
-
-			buffer[index++] = curr0_samples[i] >> 8;
-			buffer[index++] = curr0_samples[i];
-			buffer[index++] = curr1_samples[i] >> 8;
-			buffer[index++] = curr1_samples[i];
-			buffer[index++] = ph1_samples[i] >> 8;
-			buffer[index++] = ph1_samples[i];
-			buffer[index++] = ph2_samples[i] >> 8;
-			buffer[index++] = ph2_samples[i];
-			buffer[index++] = ph3_samples[i] >> 8;
-			buffer[index++] = ph3_samples[i];
-			buffer[index++] = vzero_samples[i] >> 8;
-			buffer[index++] = vzero_samples[i];
-			buffer[index++] = status_samples[i];
-			buffer[index++] = curr_fir_samples[i] >> 8;
-			buffer[index++] = curr_fir_samples[i];
-			buffer[index++] = f_sw_samples[i] >> 8;
-			buffer[index++] = f_sw_samples[i];
-
-			commands_send_samples(buffer, index);
-		}
-	}
-
-	return 0;
-}
 
 static msg_t timer_thread(void *arg) {
 	(void)arg;
@@ -246,53 +178,8 @@ static msg_t timer_thread(void *arg) {
 	return 0;
 }
 
-/*
- * Called every time new ADC values are available. Note that
- * the ADC is initialized from mcpwm.c
- */
-void main_dma_adc_handler(void) {
-	//ledpwm_update_pwm();
 
 
-	//		main_last_adc_duration = mcpwm_get_last_adc_isr_duration();
-
-}
-
-float main_get_last_adc_isr_duration(void) {
-	return main_last_adc_duration;
-}
-
-void main_sample_print_data(bool at_start, uint16_t len, uint8_t decimation) {
-
-
-}
-
-
-
-static volatile short dacDataA = 0;
-void test_dac_loop()
-{
-	while(1){
-		static debugCnt=0;
-		//chThdSleepMilliseconds( 500);
-		//chThdSleepMilliseconds( 20);
-		// 12bit
-		spi_dac_write_A( dacDataA);
-		spi_dac_write_B( dacDataA++);
-
-		if(2048<dacDataA)dacDataA=0;
-
-		//chThdSleepMilliseconds( 20);
-		//spi_dac_write_A( 0x7FF);
-		//spi_dac_write_B( 0x7FF);
-
-		//chThdSleepMilliseconds( 500);
-		//chThdSleepMilliseconds( 20);
-		//spi_dac_write_A( 0xFFF);
-		//spi_dac_write_B( 0x000);
-		// debug_print_uart( "2-debugCnt=%d \r\n",  debugCnt++);
-	}
-}
 
 
 int bldc_init(void)
@@ -307,8 +194,6 @@ int bldc_init(void)
 
 	//jsyoon 2015.12.14
 	spi_dac_hw_init();
-
-	ledpwm_init();
 
 
 	mc_configuration mcconf;
@@ -329,10 +214,6 @@ int bldc_init(void)
 	comm_can_init();
 #endif
 
-#if WS2811_ENABLE
-	ws2811_init();
-	led_external_init();
-#endif
 
 #if ENCODER_ENABLE
 	encoder_init();
@@ -378,7 +259,6 @@ int bldc_start(void)
 	//-- 스레드 생성
 	//
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
-	chThdCreateStatic(sample_send_thread_wa, sizeof(sample_send_thread_wa), NORMALPRIO - 1, sample_send_thread, NULL);
 	chThdCreateStatic(timer_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, timer_thread, NULL);
 
 	chThdCreateStatic(uart_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, uart_process_thread, NULL);

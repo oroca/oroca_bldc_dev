@@ -27,7 +27,6 @@
 #include "hal.h"
 #include "main.h"
 #include "stm32f4xx_conf.h"
-#include "servo.h"
 #include "buffer.h"
 #include "usb_uart.h"
 #include "terminal.h"

@@ -30,7 +30,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <stdarg.h>
 
 #include "ch.h"
 #include "hal.h"
@@ -40,9 +40,7 @@
 
 
 #include "mcpwm.h"
-#include "ledpwm.h"
 #include "comm_usb.h"
-#include "ledpwm.h"
 #include "terminal.h"
 #include "hw.h"
 #include "app.h"
@@ -50,12 +48,10 @@
 #include "commands.h"
 #include "timeout.h"
 #include "comm_can.h"
-#include "ws2811.h"
-#include "led_external.h"
 #include "encoder.h"
+#include "spi_dac.h"
 
 //jsyoon
-#include<stdarg.h>
 #include "chprintf.h"
 #include "memstreams.h"
 
@@ -64,17 +60,5 @@ int bldc_init(void);
 int bldc_start(void);
 
 
-/*
-//jsyoon 2015.12.14
-void spi_dac_hw_init(void);
-void spi_dac_write_A( short data);
-void spi_dac_write_B( short data);
-void spi_dac_write_AB( short data);
 
-
-// Function prototypes
-void main_dma_adc_handler(void);
-float main_get_last_adc_isr_duration(void);
-void main_sample_print_data(bool at_start, uint16_t len, uint8_t decimation);
-*/
 #endif /* MAIN_H_ */

@@ -37,11 +37,11 @@
 
 #define IS_DRV_FAULT()			(!palReadPad(GPIOB, 12))
 
-#define LED_GREEN_ON()				palSetPad(GPIOB, 6)
-#define LED_GREEN_OFF()				palClearPad(GPIOB, 6)
+#define LED_GREEN_ON()			palSetPad(GPIOB, 6)
+#define LED_GREEN_OFF()			palClearPad(GPIOB, 6)
 
-#define LED_RED_ON()				palSetPad(GPIOB, 7)
-#define LED_RED_OFF()				palClearPad(GPIOB, 7)
+#define LED_RED_ON()			palSetPad(GPIOB, 7)
+#define LED_RED_OFF()			palClearPad(GPIOB, 7)
 
 /*
  * ADC Vector

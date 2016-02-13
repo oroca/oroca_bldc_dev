@@ -21,13 +21,12 @@
 #include "stm32f4xx_conf.h"
 #include "main.h"
 #include "mcpwm.h"
-#include "servo.h"
 #include "hw.h"
 
 CH_IRQ_HANDLER(TIM7_IRQHandler) {
 	CH_IRQ_PROLOGUE();
 	TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
-	servo_irq();
+
 	CH_IRQ_EPILOGUE();
 }
 

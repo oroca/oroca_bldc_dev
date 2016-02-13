@@ -32,7 +32,6 @@
 #include "timeout.h"
 #include <string.h>
 #include <math.h>
-#include "led_external.h"
 #include "datatypes.h"
 #include "comm_can.h"
 
