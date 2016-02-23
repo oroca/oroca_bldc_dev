@@ -246,7 +246,7 @@ static msg_t uart_process_thread(void *arg) {
 }
 
 
-float qVelRef = 0.0f;
+float qVelRef = 0.01f;
 float dbg_fTheta;
 float dbg_fMea;
 uint16_t dbg_AccumTheta;
@@ -278,15 +278,15 @@ int bldc_start(void)
 		if( Ch == 'q' )
 		{
 			Ch = 0;
-			qVelRef += 0.001;
-			debug_print_usb("Enter q : %f\r\n", qVelRef);
+			qVelRef += 0.01;
+			//debug_print_usb("Enter q : %f\r\n", qVelRef);
 
 		}
 		if( Ch == 'a' )
 		{
 			Ch = 0;
-			qVelRef -= 0.001;
-			debug_print_usb("Enter a : %f\r\n", qVelRef);
+			qVelRef -= 0.01;
+			//debug_print_usb("Enter a : %f\r\n", qVelRef);
 		}
 
 		//debug_print_usb("8 %f 0\r\n", dbg_fTheta );
