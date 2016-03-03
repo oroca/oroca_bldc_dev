@@ -32,11 +32,9 @@
 #include <string.h>
 #include "main.h"
 #include "mcpwm.h"
-#include "digital_filter.h"
 #include "utils.h"
 #include "hw.h"
-#include "terminal.h"
-#include "encoder.h"
+
 
 #include <errno.h>
 #include <unistd.h>

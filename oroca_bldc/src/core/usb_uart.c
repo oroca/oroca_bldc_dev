@@ -2,7 +2,7 @@
 #include "hal.h"
 
 #include "usb_uart.h"
-#include "usbdescriptor.h"
+#include "usb_desc.h"
 /*
  * Don't ask me, I have no idea what is done here...
  * I think most things are either self explanatory, well documented or not to be touched

@@ -104,8 +104,7 @@ build/obj/comm_usb.o: src/core/comm_usb.c \
  lib/ChibiOS_2.6.6/os/hal/platforms/STM32/OTGv1/stm32_otg.h \
  lib/ChibiOS_2.6.6/os/hal/include/mmc_spi.h \
  lib/ChibiOS_2.6.6/os/hal/include/serial_usb.h src/core/comm_usb.h \
- src/core/conf_general.h src/core/datatypes.h src/core/packet.h \
- src/core/usb_uart.h src/core/commands.h
+ src/core/conf_general.h src/core/datatypes.h src/core/usb_uart.h
 
 lib/ChibiOS_2.6.6/os/kernel/include/ch.h:
 
@@ -327,8 +326,4 @@ src/core/conf_general.h:
 
 src/core/datatypes.h:
 
-src/core/packet.h:
-
 src/core/usb_uart.h:
-
-src/core/commands.h:

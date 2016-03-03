@@ -41,15 +41,7 @@
 
 #include "mcpwm.h"
 #include "comm_usb.h"
-#include "terminal.h"
 #include "hw.h"
-#include "app.h"
-#include "packet.h"
-#include "commands.h"
-#include "timeout.h"
-#include "comm_can.h"
-#include "encoder.h"
-#include "spi_dac.h"
 
 //jsyoon
 #include "chprintf.h"

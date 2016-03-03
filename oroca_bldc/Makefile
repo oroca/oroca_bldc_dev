@@ -86,8 +86,7 @@ include $(CHIBIOS)/os/hal/hal.mk
 include $(CHIBIOS)/os/ports/GCC/ARMCMx/STM32F4xx/port.mk
 include $(CHIBIOS)/os/kernel/kernel.mk
 include lib/hwconf/hwconf.mk
-include lib/app/applications.mk
-include lib/nrf/nrf.mk
+
 
 # Define linker script file here
 LDSCRIPT= ld_eeprom_emu.ld
@@ -109,25 +108,13 @@ CSRC = main.c \
        $(BLDCSRC)/mcpwm.c \
        $(CORESRC)/usb_uart.c \
        $(CORESRC)/irq_handlers.c \
-       $(CORESRC)/buffer.c \
        $(CORESRC)/comm_usb.c \
-       $(CORESRC)/crc.c \
-       $(CORESRC)/digital_filter.c \
        $(CORESRC)/servo_dec.c \
        $(CORESRC)/utils.c \
-       $(CORESRC)/packet.c \
-       $(CORESRC)/terminal.c \
        $(CORESRC)/conf_general.c \
        $(CORESRC)/eeprom.c \
-       $(CORESRC)/commands.c \
-       $(CORESRC)/timeout.c \
-       $(CORESRC)/comm_can.c \
-       $(CORESRC)/encoder.c \
-       $(CORESRC)/flash_helper.c \
-       $(CORESRC)/spi_dac.c \
-       $(HWSRC) \
-       $(APPSRC) \
-       $(NRFSRC)
+       $(HWSRC) 
+
        
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.

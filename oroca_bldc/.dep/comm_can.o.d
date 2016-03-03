@@ -116,10 +116,9 @@ build/obj/comm_can.o: src/core/comm_can.c \
  lib/ChibiOS_2.6.6/os/hal/platforms/STM32/OTGv1/usb_lld.h \
  lib/ChibiOS_2.6.6/os/hal/platforms/STM32/OTGv1/stm32_otg.h \
  lib/ChibiOS_2.6.6/os/hal/include/mmc_spi.h \
- lib/ChibiOS_2.6.6/os/hal/include/serial_usb.h src/core/buffer.h \
- src/bldc/mcpwm.h src/core/conf_general.h src/core/datatypes.h \
- src/core/timeout.h src/core/commands.h lib/app/app.h src/core/crc.h \
- src/core/packet.h
+ lib/ChibiOS_2.6.6/os/hal/include/serial_usb.h src/bldc/mcpwm.h \
+ src/core/conf_general.h src/core/datatypes.h src/core/timeout.h \
+ lib/app/app.h src/core/crc.h src/core/packet.h
 
 /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/string.h:
 
@@ -365,8 +364,6 @@ lib/ChibiOS_2.6.6/os/hal/include/mmc_spi.h:
 
 lib/ChibiOS_2.6.6/os/hal/include/serial_usb.h:
 
-src/core/buffer.h:
-
 src/bldc/mcpwm.h:
 
 src/core/conf_general.h:
@@ -374,8 +371,6 @@ src/core/conf_general.h:
 src/core/datatypes.h:
 
 src/core/timeout.h:
-
-src/core/commands.h:
 
 lib/app/app.h:
 

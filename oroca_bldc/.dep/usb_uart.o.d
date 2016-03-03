@@ -104,7 +104,7 @@ build/obj/usb_uart.o: src/core/usb_uart.c \
  lib/ChibiOS_2.6.6/os/hal/platforms/STM32/OTGv1/stm32_otg.h \
  lib/ChibiOS_2.6.6/os/hal/include/mmc_spi.h \
  lib/ChibiOS_2.6.6/os/hal/include/serial_usb.h src/core/usb_uart.h \
- src/core/usbdescriptor.h
+ src/core/usb_desc.h
 
 lib/ChibiOS_2.6.6/os/kernel/include/ch.h:
 
@@ -322,4 +322,4 @@ lib/ChibiOS_2.6.6/os/hal/include/serial_usb.h:
 
 src/core/usb_uart.h:
 
-src/core/usbdescriptor.h:
+src/core/usb_desc.h:

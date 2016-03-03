@@ -25,9 +25,8 @@
 #include "ch.h"
 #include "hal.h"
 #include "comm_usb.h"
-#include "packet.h"
 #include "usb_uart.h"
-#include "commands.h"
+
 
 // Settings
 #define PACKET_HANDLER				0

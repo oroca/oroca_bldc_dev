@@ -37,7 +37,7 @@ build/obj/nrf_driver.o: lib/nrf/nrf_driver.c lib/nrf/nrf_driver.h \
  lib/ChibiOS_2.6.6/os/kernel/include/chstreams.h \
  lib/ChibiOS_2.6.6/os/kernel/include/chfiles.h \
  lib/ChibiOS_2.6.6/os/kernel/include/chdebug.h lib/app/app.h \
- src/core/buffer.h src/core/commands.h
+ src/core/commands.h
 
 lib/nrf/nrf_driver.h:
 
@@ -124,7 +124,5 @@ lib/ChibiOS_2.6.6/os/kernel/include/chfiles.h:
 lib/ChibiOS_2.6.6/os/kernel/include/chdebug.h:
 
 lib/app/app.h:
-
-src/core/buffer.h:
 
 src/core/commands.h:

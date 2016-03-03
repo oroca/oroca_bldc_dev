@@ -100,7 +100,6 @@ uint8_t USB_Uart_Getch( void )
 
 
 static WORKING_AREA(periodic_thread_wa, 1024);
-static WORKING_AREA(timer_thread_wa, 128);
 static WORKING_AREA(uart_thread_wa, 128);
 
 
@@ -129,7 +128,7 @@ static msg_t periodic_thread(void *arg) {
 			if (!fault_print && AUTO_PRINT_FAULTS)
 			{
 				fault_print = 1;
-				commands_printf("%s\n", mcpwm_fault_to_string(mcpwm_get_fault()));
+				//commands_printf("%s\n", mcpwm_fault_to_string(mcpwm_get_fault()));
 			}
 
 			for (int i = 0;i < (int)fault;i++)
@@ -165,20 +164,6 @@ static msg_t periodic_thread(void *arg) {
 }
 
 
-static msg_t timer_thread(void *arg) {
-	(void)arg;
-
-	chRegSetThreadName("msec_timer");
-
-	for(;;) {
-		packet_timerfunc();
-		chThdSleepMilliseconds(1);
-	}
-
-	return 0;
-}
-
-
 
 
 
@@ -192,32 +177,16 @@ int bldc_init(void)
 	conf_general_init();
 	hw_init_gpio();
 
-	//jsyoon 2015.12.14
-	spi_dac_hw_init();
-
 
 	mc_configuration mcconf;
 	conf_general_read_mc_configuration(&mcconf);
 	mcpwm_init(&mcconf);
 
-	commands_init();
 	comm_usb_init();
 
 	app_configuration appconf;
 	conf_general_read_app_configuration(&appconf);
-	app_init(&appconf);
 
-	timeout_init();
-	timeout_configure(appconf.timeout_msec, appconf.timeout_brake_current);
-
-#if CAN_ENABLE
-	comm_can_init();
-#endif
-
-
-#if ENCODER_ENABLE
-	encoder_init();
-#endif
 
 
 	return 0;
@@ -259,9 +228,7 @@ int bldc_start(void)
 	//-- 스레드 생성
 	//
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
-	chThdCreateStatic(timer_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, timer_thread, NULL);
-
-	chThdCreateStatic(uart_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, uart_process_thread, NULL);
+	chThdCreateStatic(uart_thread_wa, sizeof(uart_thread_wa), NORMALPRIO, uart_process_thread, NULL);
 
 
 
