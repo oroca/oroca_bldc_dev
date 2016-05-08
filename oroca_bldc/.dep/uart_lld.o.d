@@ -1,7 +1,7 @@
 build/obj/uart_lld.o: \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32/USARTv1/uart_lld.c \
- lib/ChibiOS_2.6.6/os/kernel/include/ch.h src/core/chconf.h \
- lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chtypes.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/USARTv1/uart_lld.c \
+ lib/ChibiOS_3.0.2/os/hal/include/hal.h \
+ lib/ChibiOS_3.0.2/os/hal/osal/rt/osal.h \
  /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h \
  /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
  /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/stdint.h \
@@ -10,107 +10,89 @@ build/obj/uart_lld.o: \
  /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_intsup.h \
  /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_stdint.h \
  /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chlists.h \
- lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chcore.h \
- lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/STM32F4xx/cmparams.h \
- lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chcore_v7m.h \
- lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/nvic.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chsys.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chvt.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chschd.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chsem.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chbsem.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chmtx.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chcond.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chevents.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chmsg.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chmboxes.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chmemcore.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chheap.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chmempools.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chthreads.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chdynamic.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chregistry.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chinline.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chqueues.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chstreams.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chfiles.h \
- lib/ChibiOS_2.6.6/os/kernel/include/chdebug.h \
- lib/ChibiOS_2.6.6/os/hal/include/hal.h \
- lib/ChibiOS_2.6.6/boards/ST_STM32F4_DISCOVERY/board.h src/core/halconf.h \
- src/core/mcuconf.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/hal_lld.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32/stm32.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/stm32f4xx.h \
- lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cm4.h \
- lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cmInstr.h \
- lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cmFunc.h \
- lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cm4_simd.h \
- src/core/stm32f4xx_conf.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_adc.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_crc.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_cryp.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_dac.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_dbgmcu.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_dcmi.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_dma.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_exti.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_flash.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_fsmc.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_hash.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4_gpio_af.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_i2c.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_iwdg.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_pwr.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_rcc.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_rng.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_rtc.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_sdio.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_spi.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_syscfg.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_tim.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_usart.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_wwdg.h \
- lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/misc.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/stm32_isr.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/stm32_dma.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/stm32_rcc.h \
- lib/ChibiOS_2.6.6/os/hal/include/io_channel.h \
- lib/ChibiOS_2.6.6/os/hal/include/io_block.h \
- lib/ChibiOS_2.6.6/os/hal/include/mmcsd.h \
- lib/ChibiOS_2.6.6/os/hal/include/tm.h \
- lib/ChibiOS_2.6.6/os/hal/include/pal.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32/GPIOv2/pal_lld.h \
- lib/ChibiOS_2.6.6/os/hal/include/adc.h \
- lib/ChibiOS_2.6.6/os/hal/include/can.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32/can_lld.h \
- lib/ChibiOS_2.6.6/os/hal/include/ext.h \
- lib/ChibiOS_2.6.6/os/hal/include/gpt.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32/TIMv1/gpt_lld.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32/TIMv1/stm32_tim.h \
- lib/ChibiOS_2.6.6/os/hal/include/i2c.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32/I2Cv1/i2c_lld.h \
- lib/ChibiOS_2.6.6/os/hal/include/icu.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32/TIMv1/icu_lld.h \
- lib/ChibiOS_2.6.6/os/hal/include/mac.h \
- lib/ChibiOS_2.6.6/os/hal/include/pwm.h \
- lib/ChibiOS_2.6.6/os/hal/include/rtc.h \
- lib/ChibiOS_2.6.6/os/hal/include/serial.h \
- lib/ChibiOS_2.6.6/os/hal/include/sdc.h \
- lib/ChibiOS_2.6.6/os/hal/include/spi.h \
- lib/ChibiOS_2.6.6/os/hal/include/uart.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32/USARTv1/uart_lld.h \
- lib/ChibiOS_2.6.6/os/hal/include/usb.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32/OTGv1/usb_lld.h \
- lib/ChibiOS_2.6.6/os/hal/platforms/STM32/OTGv1/stm32_otg.h \
- lib/ChibiOS_2.6.6/os/hal/include/mmc_spi.h \
- lib/ChibiOS_2.6.6/os/hal/include/serial_usb.h
+ lib/ChibiOS_3.0.2/os/rt/include/ch.h \
+ lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h chconf.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chlicense.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chsystypes.h \
+ lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore.h \
+ lib/ChibiOS_3.0.2/os/common/ports/ARMCMx/devices/STM32F4xx/cmparams.h \
+ lib/ChibiOS_3.0.2/os/hal/boards/ST_STM32F4_DISCOVERY/board.h \
+ lib/ChibiOS_3.0.2/os/ext/CMSIS/ST/stm32f4xx.h \
+ lib/ChibiOS_3.0.2/os/ext/CMSIS/ST/stm32f407xx.h \
+ lib/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cm4.h \
+ lib/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmInstr.h \
+ lib/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmFunc.h \
+ lib/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cm4_simd.h \
+ lib/ChibiOS_3.0.2/os/ext/CMSIS/ST/system_stm32f4xx.h \
+ lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore_v7m.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chdebug.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chtm.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chstats.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chschd.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chsys.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chvt.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chthreads.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chregistry.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chsem.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chbsem.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chmtx.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chcond.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chevents.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chmsg.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chmboxes.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chmemcore.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chheap.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chmempools.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chdynamic.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chqueues.h \
+ lib/ChibiOS_3.0.2/os/rt/include/chstreams.h halconf.h mcuconf.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/hal_lld.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/common/ARMCMx/nvic.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/stm32_isr.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/stm32_dma.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/stm32_rcc.h \
+ lib/ChibiOS_3.0.2/os/hal/include/hal_streams.h \
+ lib/ChibiOS_3.0.2/os/hal/include/hal_channels.h \
+ lib/ChibiOS_3.0.2/os/hal/include/hal_files.h \
+ lib/ChibiOS_3.0.2/os/hal/include/hal_ioblock.h \
+ lib/ChibiOS_3.0.2/os/hal/include/hal_mmcsd.h \
+ lib/ChibiOS_3.0.2/os/hal/include/hal_queues.h \
+ lib/ChibiOS_3.0.2/os/hal/include/pal.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/GPIOv2/pal_lld.h \
+ lib/ChibiOS_3.0.2/os/hal/include/adc.h \
+ lib/ChibiOS_3.0.2/os/hal/include/can.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/can_lld.h \
+ lib/ChibiOS_3.0.2/os/hal/include/dac.h \
+ lib/ChibiOS_3.0.2/os/hal/include/ext.h \
+ lib/ChibiOS_3.0.2/os/hal/include/gpt.h \
+ lib/ChibiOS_3.0.2/os/hal/include/i2c.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/I2Cv1/i2c_lld.h \
+ lib/ChibiOS_3.0.2/os/hal/include/i2s.h \
+ lib/ChibiOS_3.0.2/os/hal/include/icu.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/TIMv1/icu_lld.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/TIMv1/stm32_tim.h \
+ lib/ChibiOS_3.0.2/os/hal/include/mac.h \
+ lib/ChibiOS_3.0.2/os/hal/include/mii.h \
+ lib/ChibiOS_3.0.2/os/hal/include/pwm.h \
+ lib/ChibiOS_3.0.2/os/hal/include/rtc.h \
+ lib/ChibiOS_3.0.2/os/hal/include/serial.h \
+ lib/ChibiOS_3.0.2/os/hal/include/sdc.h \
+ lib/ChibiOS_3.0.2/os/hal/include/spi.h \
+ lib/ChibiOS_3.0.2/os/hal/include/uart.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h \
+ lib/ChibiOS_3.0.2/os/hal/include/usb.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/OTGv1/usb_lld.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/OTGv1/stm32_otg.h \
+ lib/ChibiOS_3.0.2/os/hal/include/st.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/TIMv1/st_lld.h mcuconf.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
+ lib/ChibiOS_3.0.2/os/hal/include/mmc_spi.h \
+ lib/ChibiOS_3.0.2/os/hal/include/serial_usb.h
 
-lib/ChibiOS_2.6.6/os/kernel/include/ch.h:
+lib/ChibiOS_3.0.2/os/hal/include/hal.h:
 
-src/core/chconf.h:
-
-lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chtypes.h:
+lib/ChibiOS_3.0.2/os/hal/osal/rt/osal.h:
 
 /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h:
 
@@ -128,194 +110,168 @@ lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chtypes.h:
 
 /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chlists.h:
+lib/ChibiOS_3.0.2/os/rt/include/ch.h:
 
-lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chcore.h:
+lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h:
 
-lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/STM32F4xx/cmparams.h:
+chconf.h:
 
-lib/ChibiOS_2.6.6/os/ports/GCC/ARMCMx/chcore_v7m.h:
+lib/ChibiOS_3.0.2/os/rt/include/chlicense.h:
 
-lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/nvic.h:
+lib/ChibiOS_3.0.2/os/rt/include/chsystypes.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chsys.h:
+lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chvt.h:
+lib/ChibiOS_3.0.2/os/common/ports/ARMCMx/devices/STM32F4xx/cmparams.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chschd.h:
+lib/ChibiOS_3.0.2/os/hal/boards/ST_STM32F4_DISCOVERY/board.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chsem.h:
+lib/ChibiOS_3.0.2/os/ext/CMSIS/ST/stm32f4xx.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chbsem.h:
+lib/ChibiOS_3.0.2/os/ext/CMSIS/ST/stm32f407xx.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chmtx.h:
+lib/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cm4.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chcond.h:
+lib/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmInstr.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chevents.h:
+lib/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmFunc.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chmsg.h:
+lib/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cm4_simd.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chmboxes.h:
+lib/ChibiOS_3.0.2/os/ext/CMSIS/ST/system_stm32f4xx.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chmemcore.h:
+lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore_v7m.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chheap.h:
+lib/ChibiOS_3.0.2/os/rt/include/chdebug.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chmempools.h:
+lib/ChibiOS_3.0.2/os/rt/include/chtm.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chthreads.h:
+lib/ChibiOS_3.0.2/os/rt/include/chstats.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chdynamic.h:
+lib/ChibiOS_3.0.2/os/rt/include/chschd.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chregistry.h:
+lib/ChibiOS_3.0.2/os/rt/include/chsys.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chinline.h:
+lib/ChibiOS_3.0.2/os/rt/include/chvt.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chqueues.h:
+lib/ChibiOS_3.0.2/os/rt/include/chthreads.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chstreams.h:
+lib/ChibiOS_3.0.2/os/rt/include/chregistry.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chfiles.h:
+lib/ChibiOS_3.0.2/os/rt/include/chsem.h:
 
-lib/ChibiOS_2.6.6/os/kernel/include/chdebug.h:
+lib/ChibiOS_3.0.2/os/rt/include/chbsem.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/hal.h:
+lib/ChibiOS_3.0.2/os/rt/include/chmtx.h:
 
-lib/ChibiOS_2.6.6/boards/ST_STM32F4_DISCOVERY/board.h:
+lib/ChibiOS_3.0.2/os/rt/include/chcond.h:
 
-src/core/halconf.h:
+lib/ChibiOS_3.0.2/os/rt/include/chevents.h:
 
-src/core/mcuconf.h:
+lib/ChibiOS_3.0.2/os/rt/include/chmsg.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/hal_lld.h:
+lib/ChibiOS_3.0.2/os/rt/include/chmboxes.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32/stm32.h:
+lib/ChibiOS_3.0.2/os/rt/include/chmemcore.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/stm32f4xx.h:
+lib/ChibiOS_3.0.2/os/rt/include/chheap.h:
 
-lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cm4.h:
+lib/ChibiOS_3.0.2/os/rt/include/chmempools.h:
 
-lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cmInstr.h:
+lib/ChibiOS_3.0.2/os/rt/include/chdynamic.h:
 
-lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cmFunc.h:
+lib/ChibiOS_3.0.2/os/rt/include/chqueues.h:
 
-lib/ChibiOS_2.6.6/os/ports/common/ARMCMx/CMSIS/include/core_cm4_simd.h:
+lib/ChibiOS_3.0.2/os/rt/include/chstreams.h:
 
-src/core/stm32f4xx_conf.h:
+halconf.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_adc.h:
+mcuconf.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_crc.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/hal_lld.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_cryp.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/stm32_registry.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_dac.h:
+lib/ChibiOS_3.0.2/os/hal/ports/common/ARMCMx/nvic.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_dbgmcu.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/stm32_isr.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_dcmi.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/stm32_dma.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_dma.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/stm32_rcc.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_exti.h:
+lib/ChibiOS_3.0.2/os/hal/include/hal_streams.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_flash.h:
+lib/ChibiOS_3.0.2/os/hal/include/hal_channels.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_fsmc.h:
+lib/ChibiOS_3.0.2/os/hal/include/hal_files.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_hash.h:
+lib/ChibiOS_3.0.2/os/hal/include/hal_ioblock.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4_gpio_af.h:
+lib/ChibiOS_3.0.2/os/hal/include/hal_mmcsd.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_i2c.h:
+lib/ChibiOS_3.0.2/os/hal/include/hal_queues.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_iwdg.h:
+lib/ChibiOS_3.0.2/os/hal/include/pal.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_pwr.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/GPIOv2/pal_lld.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_rcc.h:
+lib/ChibiOS_3.0.2/os/hal/include/adc.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_rng.h:
+lib/ChibiOS_3.0.2/os/hal/include/can.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_rtc.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/can_lld.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_sdio.h:
+lib/ChibiOS_3.0.2/os/hal/include/dac.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_spi.h:
+lib/ChibiOS_3.0.2/os/hal/include/ext.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_syscfg.h:
+lib/ChibiOS_3.0.2/os/hal/include/gpt.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_tim.h:
+lib/ChibiOS_3.0.2/os/hal/include/i2c.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_usart.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/I2Cv1/i2c_lld.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/stm32f4xx_wwdg.h:
+lib/ChibiOS_3.0.2/os/hal/include/i2s.h:
 
-lib/ChibiOS_2.6.6/ext/stdperiph_stm32f4/inc/misc.h:
+lib/ChibiOS_3.0.2/os/hal/include/icu.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/stm32_isr.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/TIMv1/icu_lld.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/stm32_dma.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/TIMv1/stm32_tim.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32F4xx/stm32_rcc.h:
+lib/ChibiOS_3.0.2/os/hal/include/mac.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/io_channel.h:
+lib/ChibiOS_3.0.2/os/hal/include/mii.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/io_block.h:
+lib/ChibiOS_3.0.2/os/hal/include/pwm.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/mmcsd.h:
+lib/ChibiOS_3.0.2/os/hal/include/rtc.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/tm.h:
+lib/ChibiOS_3.0.2/os/hal/include/serial.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/pal.h:
+lib/ChibiOS_3.0.2/os/hal/include/sdc.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32/GPIOv2/pal_lld.h:
+lib/ChibiOS_3.0.2/os/hal/include/spi.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/adc.h:
+lib/ChibiOS_3.0.2/os/hal/include/uart.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/can.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32/can_lld.h:
+lib/ChibiOS_3.0.2/os/hal/include/usb.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/ext.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/OTGv1/usb_lld.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/gpt.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/OTGv1/stm32_otg.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32/TIMv1/gpt_lld.h:
+lib/ChibiOS_3.0.2/os/hal/include/st.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32/TIMv1/stm32_tim.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/TIMv1/st_lld.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/i2c.h:
+mcuconf.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32/I2Cv1/i2c_lld.h:
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/stm32_registry.h:
 
-lib/ChibiOS_2.6.6/os/hal/include/icu.h:
+lib/ChibiOS_3.0.2/os/hal/include/mmc_spi.h:
 
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32/TIMv1/icu_lld.h:
-
-lib/ChibiOS_2.6.6/os/hal/include/mac.h:
-
-lib/ChibiOS_2.6.6/os/hal/include/pwm.h:
-
-lib/ChibiOS_2.6.6/os/hal/include/rtc.h:
-
-lib/ChibiOS_2.6.6/os/hal/include/serial.h:
-
-lib/ChibiOS_2.6.6/os/hal/include/sdc.h:
-
-lib/ChibiOS_2.6.6/os/hal/include/spi.h:
-
-lib/ChibiOS_2.6.6/os/hal/include/uart.h:
-
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32/USARTv1/uart_lld.h:
-
-lib/ChibiOS_2.6.6/os/hal/include/usb.h:
-
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32/OTGv1/usb_lld.h:
-
-lib/ChibiOS_2.6.6/os/hal/platforms/STM32/OTGv1/stm32_otg.h:
-
-lib/ChibiOS_2.6.6/os/hal/include/mmc_spi.h:
-
-lib/ChibiOS_2.6.6/os/hal/include/serial_usb.h:
+lib/ChibiOS_3.0.2/os/hal/include/serial_usb.h:

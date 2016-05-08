@@ -280,6 +280,11 @@ extern  uint16_t ADC_Value[];
 extern   int SpeedReference;
 //extern  unsigned int  switching_frequency_now;
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Functions
 bool SetupParm(void);
 
@@ -337,5 +342,9 @@ void mcpwm_set_configuration(mc_configuration *configuration);
 void mcpwm_adc_inj_int_handler(void);
 void mcpwm_adc_int_handler(void *p, uint32_t flags);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MC_PWM_H_ */

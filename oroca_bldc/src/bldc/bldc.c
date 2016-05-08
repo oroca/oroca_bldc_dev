@@ -25,54 +25,6 @@
 
 
 
-//int debug_print_usb( const char *fmt, ...);
-
-int debug_print_usb( const char *fmt, ...){
-	extern SerialUSBDriver SDU1;
-
-#define DEBUG_USB_BUFFER_MAX	1024
-	static char debug_usb_buff[DEBUG_USB_BUFFER_MAX];
-
-	int     ret=0;
-	char *str = debug_usb_buff;
-	size_t size =  sizeof(debug_usb_buff);
-
-
-	va_list ap;
-	MemoryStream ms;
-	BaseSequentialStream *chp;
-
-	/* Memory stream object to be used as a string writer.*/
-	msObjectInit(&ms, (uint8_t *)str, size, 0);
-
-	/* Performing the print operation using the common code.*/
-	chp = (BaseSequentialStream *)&ms;
-	va_start(ap, fmt);
-	chvprintf(chp, fmt, ap);
-	va_end(ap);
-
-	/* Final zero and size return.*/
-	chSequentialStreamPut(chp, 0);
-	ret =  ms.eos - 1;
-
-
-	//#define sdAsynchronousWrite(sdp, b, n)   chOQWriteTimeout(&(sdp)->oqueue, b, n, TIME_IMMEDIATE)
-	//sdAsynchronousWrite( &SDU1,  debug_usb_buff, ret );
-	chOQWriteTimeout( &(SDU1.oqueue), debug_usb_buff, ret , TIME_IMMEDIATE);
-
-	return ret;
-}
-
-uint8_t USB_Uart_Getch( void )
-{
-	uint8_t buffer[128];
-	int len;
-
-
-	len = chSequentialStreamRead(&SDU1, (uint8_t*) buffer, 1);
-
-	return buffer[0];
-}
 
 /*
  * Timers used:
@@ -99,8 +51,8 @@ uint8_t USB_Uart_Getch( void )
 
 
 
-static WORKING_AREA(periodic_thread_wa, 1024);
-static WORKING_AREA(uart_thread_wa, 128);
+static THD_WORKING_AREA(periodic_thread_wa, 1024);
+static THD_WORKING_AREA(uart_thread_wa, 128);
 
 
 
@@ -206,7 +158,7 @@ static msg_t uart_process_thread(void *arg) {
 
 		chThdSleepMilliseconds(1);
 
-		Ch = USB_Uart_Getch();
+		Ch = usb_uart_getch();
 
 		}
 
@@ -258,7 +210,7 @@ int bldc_start(void)
 
 		//debug_print_usb("8 %f 0\r\n", dbg_fTheta );
 		//debug_print_usb("%d\r\n", dbg_AccumTheta );
-		debug_print_usb("500 %f %f 0\r\n", qVelRef*10000, dbg_fMea*10000 );
+		usb_uart_printf("500 %f %f 0\r\n", qVelRef*10000, dbg_fMea*10000 );
 	}
 }
 

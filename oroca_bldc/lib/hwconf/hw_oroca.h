@@ -121,10 +121,11 @@
 #define HW_UART_RX_PIN		11
 
 // ICU Peripheral for servo decoding
+#define HW_ICU_DEV			ICUD3
 #define HW_ICU_CHANNEL		ICU_CHANNEL_2
 #define HW_ICU_GPIO_AF		GPIO_AF_TIM3
-#define HW_ICU_GPIO		GPIOD
-#define HW_ICU_PIN			2
+#define HW_ICU_GPIO			GPIOB
+#define HW_ICU_PIN			5
 
 // I2C Peripheral
 #define HW_I2C_DEV			I2CD2

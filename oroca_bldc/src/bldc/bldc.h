@@ -48,9 +48,16 @@
 #include "memstreams.h"
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int bldc_init(void);
 int bldc_start(void);
 
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif /* MAIN_H_ */

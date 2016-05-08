@@ -25,7 +25,6 @@
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
-#include "stm32f4xx_dac.h"
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
@@ -278,7 +277,7 @@ void CalculateParkAngle(void);
 void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
 
 // Threads
-static WORKING_AREA(SEQUENCE_thread_wa, 2048);
+static THD_WORKING_AREA(SEQUENCE_thread_wa, 2048);
 static msg_t SEQUENCE_thread(void *arg);
 //static WORKING_AREA(rpm_thread_wa, 1024);
 //static msg_t rpm_thread(void *arg);

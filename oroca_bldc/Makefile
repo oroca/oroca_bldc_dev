@@ -7,6 +7,7 @@
 ifeq ($(USE_OPT),)
   USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99
   USE_OPT += -DBOARD_OTG_NOVBUSSENS
+  USE_OPT += -fsingle-precision-constant -Wdouble-promotion
 endif
 
 # C specific options here (added to USE_OPT).
@@ -16,12 +17,22 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -fno-rtti
+  USE_CPPOPT = -fno-rtti -fno-exceptions
 endif
 
 # Enable this if you want the linker to remove unused code and data
 ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes
+endif
+
+# Linker extra options here.
+ifeq ($(USE_LDOPT),)
+  USE_LDOPT = 
+endif
+
+# Enable this if you want link time optimizations (LTO)
+ifeq ($(USE_LTO),)
+  USE_LTO = no
 endif
 
 # If enabled, this option allows to compile the application in THUMB mode.
@@ -34,6 +45,12 @@ ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = yes
 endif
 
+# If enabled, this option makes the build process faster by not compiling
+# modules not used in the current configuration.
+ifeq ($(USE_SMART_BUILD),)
+  USE_SMART_BUILD = yes
+endif
+
 #
 # Build global options
 ##############################################################################
@@ -41,6 +58,18 @@ endif
 ##############################################################################
 # Architecture or project specific options
 #
+
+# Stack size to be allocated to the Cortex-M process stack. This stack is
+# the stack used by the main() thread.
+ifeq ($(USE_PROCESS_STACKSIZE),)
+  USE_PROCESS_STACKSIZE = 0x400
+endif
+
+# Stack size to the allocated to the Cortex-M main/exceptions stack. This
+# stack is used for processing interrupts and exceptions.
+ifeq ($(USE_EXCEPTIONS_STACKSIZE),)
+  USE_EXCEPTIONS_STACKSIZE = 0x400
+endif
 
 # Enables the use of FPU on Cortex-M4 (no, softfp, hard).
 ifeq ($(USE_FPU),)
@@ -50,14 +79,6 @@ endif
 # Enable this if you really want to use the STM FWLib.
 ifeq ($(USE_FWLIB),)
   USE_FWLIB = yes
-endif
-
-# CMSIS DSP library
-# Note the the includes in
-# os/ports/common/ARMCMx/CMSIS
-# have to be replaced with the proper versions in order for this to work
-ifeq ($(USE_CMSIS),)
-  USE_DSPLIB = no
 endif
 
 #
@@ -79,12 +100,17 @@ BLDCINC = src/bldc
 PROJECT = oroca_bldc
 
 # Imported source files and paths
-CHIBIOS = lib/ChibiOS_2.6.6
-include $(CHIBIOS)/boards/ST_STM32F4_DISCOVERY/board.mk
-include $(CHIBIOS)/os/hal/platforms/STM32F4xx/platform.mk
+CHIBIOS = lib/ChibiOS_3.0.2
+# Startup files.
+include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
+# HAL-OSAL files (optional).
 include $(CHIBIOS)/os/hal/hal.mk
-include $(CHIBIOS)/os/ports/GCC/ARMCMx/STM32F4xx/port.mk
-include $(CHIBIOS)/os/kernel/kernel.mk
+include $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
+include $(CHIBIOS)/os/hal/boards/ST_STM32F4_DISCOVERY/board.mk
+include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+# RTOS files (optional).
+include $(CHIBIOS)/os/rt/rt.mk
+include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 include lib/hwconf/hwconf.mk
 
 
@@ -95,14 +121,14 @@ LDSCRIPT= ld_eeprom_emu.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC = main.c \
-       $(PORTSRC) \
+CSRC = $(STARTUPSRC) \
        $(KERNSRC) \
+       $(PORTSRC) \
+       $(OSALSRC) \
        $(HALSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
-       $(CHIBIOS)/os/various/chprintf.c \
-       $(CHIBIOS)/os/various/memstreams.c \
+       $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
        $(CHIBIOS)/os/various/syscalls.c \
        $(BLDCSRC)/bldc.c \
        $(BLDCSRC)/mcpwm.c \
@@ -113,12 +139,14 @@ CSRC = main.c \
        $(CORESRC)/utils.c \
        $(CORESRC)/conf_general.c \
        $(CORESRC)/eeprom.c \
+       $(CORESRC)/flash_helper.c \
        $(HWSRC) 
 
        
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC =
+CPPSRC = main.cpp
+
 
 # C sources to be compiled in ARM mode regardless of the global setting.
 # NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
@@ -141,11 +169,12 @@ TCSRC =
 TCPPSRC =
 
 # List ASM source files here
-ASMSRC = $(PORTASM)
+ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 
-INCDIR = $(PORTINC) $(KERNINC) \
+INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) \
          $(CHIBIOS)/os/various \
+         $(CHIBIOS)/os/hal/lib/streams \
          $(LIBDIR)/mcconf \
          $(HWINC) \
          $(APPINC) \
@@ -171,8 +200,8 @@ CPPC = $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.
-LD   = $(TRGT)gcc
-#LD   = $(TRGT)g++
+#LD   = $(TRGT)gcc
+LD   = $(TRGT)g++
 CP   = $(TRGT)objcopy
 AS   = $(TRGT)gcc -x assembler-with-cpp
 OD   = $(TRGT)objdump
@@ -251,14 +280,8 @@ ifeq ($(USE_FWLIB),yes)
   USE_OPT += -DUSE_STDPERIPH_DRIVER
 endif
 
-ifeq ($(USE_DSPLIB),yes)
-  include $(CHIBIOS)/ext/DSP_Lib/dsplib.mk
-  CSRC += $(DSPSRC)
-  ASMXSRC += $(DSPASM)
-  USE_OPT += -D__FPU_PRESENT -D__FPU_USED -DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING
-endif
 
-include $(CHIBIOS)/os/ports/GCC/ARMCMx/rules.mk
+
 
 # Print size
 all:
@@ -275,3 +298,7 @@ upload: build/$(PROJECT).bin
 
 debug-start:
 	openocd -f stm32-bv_openocd.cfg
+
+
+RULESPATH = $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC
+include $(RULESPATH)/rules.mk
