@@ -34,17 +34,13 @@
 #include "utils.h"
 #include "hw.h"
 
-
 #include <errno.h>
 #include <unistd.h>
 
 //jsyoon
 #include <stdarg.h>
 extern int debug_print_usb( const char *fmt, ...);
-extern float qVelRef;
-extern float dbg_fTheta;
-extern float dbg_fMea;
-extern uint16_t dbg_AccumTheta;
+
 
 // Structs
 union{
@@ -64,14 +60,6 @@ union{
             }bit;
         	WORD Word;
  } uGF;
-
-struct {
-
-	unsigned int LockTime;
-
-	unsigned long EndSpeed;
-
-} MotorParm;
 
 typedef struct {
 	float	qKa;	
@@ -111,7 +99,7 @@ typedef struct {
 typedef SMC *SMC_handle;
 
 typedef struct {
-    float    qdSum;          // 1.31 format
+    float   qdSum;          // 1.31 format
     float   qKp;
     float   qKi;
     float   qKc;
@@ -181,99 +169,77 @@ typedef struct {
 
 
 
-static volatile mc_fault_code fault_now;
-static volatile bool dccal_done;
+	static volatile mc_fault_code fault_now;
+	static volatile bool dccal_done;
 
 
-// Private variables
-int count = 0; // delay for ramping the reference velocity 
-int VelReq = 0; 
-
-unsigned long Startup_Ramp = 0;	/* Start up ramp in open loop. This variable
-								is incremented in CalculateParkAngle()
-								subroutine, and it is assigned to 
-								ParkParm.qAngle as follows:
-								ParkParm.qAngle += (int)(Startup_Ramp >> 16);*/
-
-unsigned int Startup_Lock = 0;	/* This is a counter that is incremented in
-								CalculateParkAngle() every time it is called. 
-								Once this counter has a value of LOCK_TIME, 
-								then theta will start increasing moving the 
-								motor in open loop. */
+	// Private variables
+	int count = 0; // delay for ramping the reference velocity
+	int VelReq = 0;
 
 
+	static volatile tMeasCurrParm MeasCurrParm;
+	SMC smc1 = SMC_DEFAULTS;
 
-static volatile tMeasCurrParm MeasCurrParm;
-SMC smc1 = SMC_DEFAULTS;
+	// Global variables
+	uint16_t ADC_Value[HW_ADC_CHANNELS];
 
-// Global variables
-uint16_t ADC_Value[HW_ADC_CHANNELS];
+	tParkParm ParkParm;
 
-tParkParm ParkParm;
+	tPIParm     PIParmD;	// Structure definition for Flux component of current, or Id
+	tPIParm     PIParmQ;	// Structure definition for Torque component of current, or Iq
+	tPIParm     PIParmW;	// Structure definition for Speed, or Omega
+	tPIParm     PIParmPLL;
 
-  tPIParm     PIParmD;	// Structure definition for Flux component of current, or Id
-  tPIParm     PIParmQ;	// Structure definition for Torque component of current, or Iq
-  tPIParm     PIParmW;	// Structure definition for Speed, or Omega
-  tPIParm     PIParmPLL;
+	tCtrlParm CtrlParm;
+	tSVGenParm SVGenParm;
+	tFdWeakParm FdWeakParm;
 
-  tCtrlParm CtrlParm;
-  tSVGenParm SVGenParm;
-  tFdWeakParm FdWeakParm;
+	int SpeedReference = 0;
+	unsigned int  switching_frequency_now = PWMFREQUENCY;
 
-  int SpeedReference = 0;
-  unsigned int  switching_frequency_now = PWMFREQUENCY;
+	// Speed Calculation Variables
 
-  // Speed Calculation Variables
+	float AccumTheta = 0;	// Accumulates delta theta over a number of times
+	WORD AccumThetaCnt = 0;	// Counter used to calculate motor speed. Is incremented
+							// in SMC_Position_Estimation() subroutine, and accumulates
+							// delta Theta. After N number of accumulations, Omega is
+							// calculated. This N is diIrpPerCalc which is defined in
+							// UserParms.h.
 
-  WORD iADCisrCnt = 0;	// This Counter is used as a timeout for polling the push buttons
-  						// in main() subroutine. It will be reset to zero when it matches
-  						// dButPolLoopCnt defined in UserParms.h
-  float PrevTheta = 0;	// Previous theta which is then substracted from Theta to get
-  						// delta theta. This delta will be accumulated in AccumTheta, and
-  						// after a number of accumulations Omega is calculated.
-  float AccumTheta = 0;	// Accumulates delta theta over a number of times
-  WORD AccumThetaCnt = 0;	// Counter used to calculate motor speed. Is incremented
-  						// in SMC_Position_Estimation() subroutine, and accumulates
-  						// delta Theta. After N number of accumulations, Omega is
-  						// calculated. This N is diIrpPerCalc which is defined in
-  						// UserParms.h.
+	// Vd and Vq vector limitation variables
 
-  // Vd and Vq vector limitation variables
+	static volatile float qVdSquared = 0;	// This variable is used to know what is left from the VqVd vector
+							// in order to have maximum output PWM without saturation. This is
+							// done before executing Iq control loop at the end of DoControl()
 
-  static volatile float qVdSquared = 0;	// This variable is used to know what is left from the VqVd vector
-  						// in order to have maximum output PWM without saturation. This is
-  						// done before executing Iq control loop at the end of DoControl()
+	static volatile float DCbus = 0;		// DC Bus measured continuously and stored in this variable
+							// while motor is running. Will be compared with TargetDCbus
+							// and Vd and Vq will be compensated depending on difference
+							// between DCbus and TargetDCbus
 
-  static volatile float DCbus = 0;		// DC Bus measured continuously and stored in this variable
-  						// while motor is running. Will be compared with TargetDCbus
-  						// and Vd and Vq will be compensated depending on difference
-  						// between DCbus and TargetDCbus
+	static volatile float TargetDCbus = 0;// DC Bus is measured before running motor and stored in this
+							// variable. Any variation on DC bus will be compared to this value
+							// and compensated linearly.
 
-  static volatile float TargetDCbus = 0;// DC Bus is measured before running motor and stored in this
-  						// variable. Any variation on DC bus will be compared to this value
-  						// and compensated linearly.
-
-  static volatile float Theta_error = 0;// This value is used to transition from open loop to closed looop.
-  						// At the end of open loop ramp, there is a difference between
-  						// forced angle and estimated angle. This difference is stored in
-  						// Theta_error, and added to estimated theta (smc1.Theta) so the
-  						// effective angle used for commutating the motor is the same at
-  						// the end of open loop, and at the begining of closed loop.
-  						// This Theta_error is then substracted from estimated theta
-  						// gradually in increments of 0.05 degrees until the error is less
-  						// than 0.05 degrees.
+	static volatile float Theta_error = 0;// This value is used to transition from open loop to closed looop.
+							// At the end of open loop ramp, there is a difference between
+							// forced angle and estimated angle. This difference is stored in
+							// Theta_error, and added to estimated theta (smc1.Theta) so the
+							// effective angle used for commutating the motor is the same at
+							// the end of open loop, and at the begining of closed loop.
+							// This Theta_error is then substracted from estimated theta
+							// gradually in increments of 0.05 degrees until the error is less
+							// than 0.05 degrees.
 
 // Private functions
 static void do_dc_cal(void);
-void SMC_Position_Estimation (SMC *s);
 void SMC_HallSensor_Estimation (SMC *s);
 
-void SMCInit(SMC *s);
 void CalcPI( tPIParm *pParm);
 void DoControl( void );
 void InitPI( tPIParm *pParm);
 void SetupControlParameters(void);
-void CalculateParkAngle(void);
 void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
 
 // Threads
@@ -547,17 +513,8 @@ void mcpwm_init(mc_configuration *configuration) {
 
 //---------------------------------------------------------------------------
 
-	SMCInit(&smc1);
+
 	SetupControlParameters();
-	FWInit();
-
-
-
-#if 0 //pbhp 151001
-	Start_Flag = 1;
-	Seq = SEQ_NoReady;
-	Flag_First_Run = 1;
-#endif
 
 
 	uGF.Word = 0;                   // clear flags
@@ -612,7 +569,7 @@ void mcpwm_adc_inj_int_handler(void)
 
 
 #if 0 //pbhp 151001
-	// 占십깍옙 占쏙옙占쏙옙 체크
+	// �ʱ� ���� üũ
 	if(Init_Charge_cnt_EN) 	Init_Charge_cnt++;
 	else 					Init_Charge_cnt=0;
 #endif
@@ -655,10 +612,7 @@ void mcpwm_adc_inj_int_handler(void)
 		
 
 		// Calculate commutation angle using estimator
-		//CalculateParkAngle();
 		ParkParm.qAngle = smc1.Theta;
-
-
 
 		//ParkParm.qAngle = (float)IN[2];
 		//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
@@ -668,6 +622,7 @@ void mcpwm_adc_inj_int_handler(void)
 		{
 			AccumThetaCnt = 0;
 		}
+
 
 		// Calculate qId,qIq from qSin,qCos,qIa,qIb
 		ClarkePark();
@@ -684,7 +639,7 @@ void mcpwm_adc_inj_int_handler(void)
 		//ParkParm.qAngle -= 0.002f;
 		//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
 
-		///ParkParm.qAngle += 0.002f;
+		//ParkParm.qAngle += 0.002f;
 		//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
 
 
@@ -700,10 +655,6 @@ void mcpwm_adc_inj_int_handler(void)
 		LED_RED_OFF();
 		//DISABLE_GATE();
 
-		// chcbaram
-		dbg_fTheta = smc1.Theta;
-		dbg_fMea   = smc1.Omega;
-		dbg_AccumTheta = AccumThetaCnt;
 			
 		} 
 
@@ -730,46 +681,15 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags) {
 
 
 	// Check for faults that should stop the motor
-	const float input_voltage = GET_INPUT_VOLTAGE();
-	static float wrong_voltage_iterations = 0;
-
-
-	
-#if 0 //pbhp 151001
-	if (input_voltage < conf.l_min_vin ||input_voltage > conf.l_max_vin) 
-	{
-		wrong_voltage_iterations++;
-
-		if ((wrong_voltage_iterations >= 8)) 
-		{
-			fault_stop(input_voltage < conf.l_min_vin ?FAULT_CODE_UNDER_VOLTAGE : FAULT_CODE_OVER_VOLTAGE);
-		}
-	}
-	else 
-	{
-		wrong_voltage_iterations = 0;
-	}
-#endif
 
 }
-
-
-
-// Sequence Definition
-#define	SEQ_NoReady	 0	// 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占� 占실댐옙 DC build up 占싱뤄옙占쏙옙占쏙옙占� 占쏙옙 占쏙옙占쏙옙
-#define SEQ_Wait	 1	// 占시쏙옙占쏙옙 Ready 占쏙옙占쏙옙占싱몌옙 Run Signal 占쏙옙占� 占쏙옙占쏙옙 占쏙옙
-#define	SEQ_Normal	 2	// Run 占쏙옙호 占싸곤옙 占쏙옙 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
-#define	SEQ_Fault	 3	// 占시쏙옙占쏙옙 占쏙옙트 占쏙옙占쏙옙
-#define	SEQ_Retrial	 4	// Fault Reset 占쏙옙 占쏙옙占쏙옙 占쏙옙占� 확占쏙옙 占쏙옙占�
-#define SEQ_F_R_Read 5	// Fault Record Read
-#define	SEQ_SYS_INIT 6	// System Initialize Sequence 
 
 
 int Seq = 0;
 int Fault_seq = 0;
 int Init_Charge_cnt_EN = 0;
 long Init_Charge_cnt = 0.;
-unsigned int Init_Charge_Time = 3000;	// 3占쏙옙
+unsigned int Init_Charge_Time = 3000;	// 3��
 
 //int Retry_cnt_En = 0;
 //long Retry_cnt = 0;
@@ -796,19 +716,19 @@ static msg_t SEQUENCE_thread(void *arg)
 
 		switch(Seq)
 		{
-		// 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占� 占실댐옙 Run占쏙옙호 占싸곤옙 占쏙옙 占시쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙 占쏙옙占�
+		// �ý��� ���� ������ ��� �Ǵ� Run��ȣ �ΰ� �� �ý��� ������ �� ���
 			case SEQ_NoReady:							//	" 0 "
 				stop_pwm_hw();
-				//	占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 占시곤옙 占썽레占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占싹뤄옙 占쏙옙호 占쌩삼옙
+				//	���� ���� �� �ð� �鷹�� ������ ������ �Ϸ� ��ȣ �߻�
 				Init_Charge_cnt_EN=1;
-				if(Init_Charge_cnt >= (float)Init_Charge_Time * 1e-3 / LOOPTIMEINSEC)		// 占십깍옙 占쏙옙占쏙옙 占시곤옙 3占쏙옙
+				if(Init_Charge_cnt >= (float)Init_Charge_Time * 1e-3 / LOOPTIMEINSEC)		// �ʱ� ���� �ð� 3��
 				{
 					nDC_CONTACT_CLEAR;
 					Flag.Fault_Cntl.bit.UV_Check_En = 1;
-					if(Init_Charge_cnt >= ((float)Init_Charge_Time + 100.) * 1e-3 / LOOPTIMEINSEC)	// 占십깍옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 3.1占쏙옙 占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙환
+					if(Init_Charge_cnt >= ((float)Init_Charge_Time + 100.) * 1e-3 / LOOPTIMEINSEC)	// �ʱ� ������ ���� �� 3.1�� �� ������ ��ȯ
 					{
-						// 占쏙옙占쏙옙 占십깍옙 占쏙옙占쏙옙 회占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙臼占� 占쌕뤄옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占싼억옙 占쏙옙占쏙옙 占십곤옙
-						// 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 확占쏙옙 占쏙옙 占싼어가占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 占쏙옙
+						// ���� �ʱ� ���� ȸ�� ������ ����Ͽ� �ٷ� ���� ���� �Ѿ� ���� �ʰ�
+						// ���� ������ Ȯ�� �� �Ѿ���� ���� �� ��
 						Seq = SEQ_Wait;
 						Init_Charge_cnt_EN=0;
 					}
@@ -818,7 +738,7 @@ static msg_t SEQUENCE_thread(void *arg)
 			break;
 
 
-		// 占시쏙옙占쏙옙 Ready 占쏙옙占쏙옙占싱몌옙 Run Signal 占쏙옙占� 占쏙옙占쏙옙 占쏙옙
+		// �ý��� Ready �����̸� Run Signal ��� ���� ��
 			case SEQ_Wait:						//	" 1 "
 					if(( FaultReg1[1] )||( FaultReg2[1] )) Fault_seq = SEQ_Wait, Seq=SEQ_Fault;
 					else
@@ -833,13 +753,13 @@ static msg_t SEQUENCE_thread(void *arg)
 					State_Index = STATE_STOP;
 			break;
 
-		// Run 占쏙옙호 占싸곤옙 占쏙옙 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
+		// Run ��ȣ �ΰ� �� �ý��� ���� ����
 			case SEQ_Normal:							//	" 2 "
 				if(( FaultReg1[1] )||( FaultReg2[1] )) Fault_seq = SEQ_Normal, Seq=SEQ_Fault;
 				else
 				{
 					State_Index = STATE_RUNNING;
-					// Run_Time_Delay_time 占쏙옙 Machine_state 1占쏙옙 占싫댐옙
+					// Run_Time_Delay_time �� Machine_state 1�� �ȴ�
 	/*				if (Machine_state == RUNN)
 					{
 	//					Flag.Monitoring.bit.
@@ -864,16 +784,16 @@ static msg_t SEQUENCE_thread(void *arg)
 				State_Index = STATE_FAULT;
 				Run_Stop_Status = 0;
 				stop_pwm_hw(); // Converter Off
-				// 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙트 占쏙옙占쏙옙 占쏙옙환 占쏙옙占쏙옙 표占쏙옙
+				// ���� �������� ��Ʈ ���� ��ȯ ���� ǥ��
 			
 				if((!FaultReg1[1])&&(!FaultReg2[1])) Seq=SEQ_Retrial;
 
 				if ((( FaultReg1[1] ) || ( FaultReg2[1] ))
 					 && (( FaultReg1[1] > FaultReg1[0] ) || ( FaultReg2[1] > FaultReg2[0] )))
 				{
-					// 占쏙옙占쏙옙 占쏙옙占� 占쏙옙占시듸옙 占쏙옙트占쏙옙 占쏙옙占쌔쇽옙 占쏙옙占쏙옙 占식띰옙占신몌옙占쏙옙占� 占십깍옙화
+					// ���� ��� ���õ� ��Ʈ�� ���ؼ� ���� �Ķ��Ÿ���� �ʱ�ȭ
 					Fault_count++;
-					Word_Write_data(2379, Fault_count);		// Fault 횟占쏙옙占쏙옙 EEPROM占쏙옙 占쏙옙占쏙옙 占쌔억옙 占싼댐옙.
+					Word_Write_data(2379, Fault_count);		// Fault Ƚ���� EEPROM�� ���� �ؾ� �Ѵ�.
 					Flag.Fault_Cntl.bit.Rec_Complete = 0;
 					Flag.Fault_Cntl.bit.Rst_Complete = 0;
 	//				if (!FAULT_RECORD_COMPLETE)	Fault_Recording( Fault_count );
@@ -934,87 +854,24 @@ static msg_t SEQUENCE_thread(void *arg)
 
 bool SetupParm(void)
 {
+	// ============= ADC - Measure Current & Pot ======================
 
-    // Setup required parameters
- 
-// ============= Open Loop ======================
-	// Motor End Speed Calculation
-	// MotorParm.EndSpeed = ENDSPEEDOPENLOOP * POLEPAIRS * LOOPTIMEINSEC * 65536 * 65536 / 60.0;
-	// Then, * 65536 which is a right shift done in "void CalculateParkAngle(void)"
-	// ParkParm.qAngle += (int)(Startup_Ramp >> 16);
-	MotorParm.EndSpeed = ENDSPEEDOPENLOOP * POLEPAIRS * LOOPTIMEINSEC * 65536 * 65536 / 60.0;
-	MotorParm.LockTime = LOCKTIME;
+	MeasCurrParm.qKa    = DQKA;
+	MeasCurrParm.qKb    = DQKB;
 
-// ============= ADC - Measure Current & Pot ======================
-
-    MeasCurrParm.qKa    = DQKA;    
-    MeasCurrParm.qKb    = DQKB;   
-
-    // Initial Current offsets
+	// Initial Current offsets
 	InitMeasCompCurr( curr0_offset, curr1_offset ); 
 
 	// Target DC Bus, without sign.
 	TargetDCbus = GET_INPUT_VOLTAGE();
 
-// ============= SVGen ===============
-    // Set PWM period to Loop Time 
-    SVGenParm.iPWMPeriod = LOOPINTCY;      
+	// ============= SVGen ===============
+	// Set PWM period to Loop Time
+	SVGenParm.iPWMPeriod = LOOPINTCY;
 
-
-    return False;
+	return False;
 }
-void CalculateParkAngle(void)
-{
-	smc1.Ialpha = ParkParm.qIalpha;
-	smc1.Ibeta = ParkParm.qIbeta;
-	smc1.Valpha = ParkParm.qValpha;
-	smc1.Vbeta = ParkParm.qVbeta;
 
-	SMC_Position_Estimation(&smc1);
-
-	if(uGF.bit.OpenLoop)	
-	{
-		if (Startup_Lock < MotorParm.LockTime)
-			Startup_Lock += 1;	// This variable is incremented until
-								// lock time expires, them the open loop
-								// ramp begins
-		else if (Startup_Ramp < MotorParm.EndSpeed)
-			// Ramp starts, and increases linearly until EndSpeed is reached.
-			// After ramp, estimated theta is used to commutate motor.
-			Startup_Ramp += DELTA_STARTUP_RAMP;
-		else
-		{
-			// This section enables closed loop, right after open loop ramp.
-			uGF.bit.ChangeMode = 1;
-			uGF.bit.OpenLoop = 0;
-			// Difference between force angle and estimated theta is saved,
-			// so a soft transition is made when entering closed loop.
-			Theta_error = ParkParm.qAngle - smc1.Theta;
-		}
-		ParkParm.qAngle += (int)(Startup_Ramp >> 16);
-	}
-	else
-	{
-		// This value is used to transition from open loop to closed looop. 
-		// At the end of open loop ramp, there is a difference between 
-		// forced angle and estimated angle. This difference is stored in 
-		// Theta_error, and added to estimated theta (smc1.Theta) so the 
-		// effective angle used for commutating the motor is the same at 
-		// the end of open loop, and at the begining of closed loop. 
-		// This Theta_error is then substracted from estimated theta 
-		// gradually in increments of 0.05 degrees until the error is less
-		// than 0.05 degrees.  0.05/180=0.0002777
-		ParkParm.qAngle = smc1.Theta + Theta_error;
-		if (fabsf(Theta_error) > 0.0002777)
-		{
-			if (Theta_error < 0)
-				Theta_error += 0.00027777;
-			else
-				Theta_error -= 0.00027777;
-		}
-	}
-	return;
-}
 void ClarkePark(void)
 {
 	ParkParm.qIalpha = ParkParm.qIa;
@@ -1034,204 +891,36 @@ void DoControl( void )
 	{
 
 		if( uGF.bit.OpenLoop )
-			{
-			// OPENLOOP:	force rotating angle, and control Iq and Id
-			//				Also limits Vs vector to ensure maximum PWM duty
-			//				cycle and no saturation
-	
-			// This If statement is executed only the first time we enter open loop,
-			// everytime we run the motor
-			if( uGF.bit.ChangeMode )
-			{
-				// just changed to openloop
-				uGF.bit.ChangeMode = 0;
-				// synchronize angles
-	
-				// VqRef & VdRef not used
-				CtrlParm.qVqRef = 0;
-				CtrlParm.qVdRef = 0;
-				CtrlParm.qVelRef = 0;
-				Startup_Lock = 0;
-				Startup_Ramp = 0;
-				// Initialize SMC
-				smc1.Valpha = 0;
-				smc1.Ealpha = 0;
-				smc1.EalphaFinal = 0;
-				smc1.Zalpha = 0;
-				smc1.EstIalpha = 0;
-				smc1.Vbeta = 0;
-				smc1.Ebeta = 0;
-				smc1.EbetaFinal = 0;
-				smc1.Zbeta = 0;
-				smc1.EstIbeta = 0;
-				smc1.Ialpha = 0;
-				smc1.IalphaError = 0;
-				smc1.Ibeta = 0;
-				smc1.IbetaError = 0;
-				smc1.Theta = 0;
-				smc1.Omega = 0;
-			}
-	
-			// Enter initial torque demand in Amps using REFINAMPS() macro.
-			// Maximum Value for reference is defined by shunt resistor value and 
-			// differential amplifier gain. Use this equation to calculate 
-			// maximum torque in Amperes:
-			// 
-			// Max REFINAMPS = (VDD/2)/(RSHUNT*DIFFAMPGAIN)
-			//
-			// For example:
-			//
-			// RSHUNT = 0.005
-			// VDD = 3.3
-			// DIFFAMPGAIN = 75
-			//
-			// Maximum torque reference in Amps is:
-			//
-			// (3.3/2)/(.005*75) = 4.4 Amperes, or REFINAMPS(4.4)
-			//
-			// If motor requires more torque than Maximum torque to startup, user
-			// needs to change either shunt resistors installed on the board,
-			// or differential amplifier gain.
-	
-			CtrlParm.qVqRef = REFINAMPS(INITIALTORQUE);
-	
-			if(AccumThetaCnt == 0)
-			{
-				PIParmW.qInMeas = smc1.Omega;
-			}
-	
-			// PI control for D
-			PIParmD.qInMeas = ParkParm.qId;
-			PIParmD.qInRef	= CtrlParm.qVdRef;
-			CalcPI(&PIParmD);
-			ParkParm.qVd	= PIParmD.qOut;
-	
-			// Vector limitation
-			// Vd is not limited
-			// Vq is limited so the vector Vs is less than a maximum of 95%.
-			// The 5% left is needed to be able to measure current through
-			// shunt resistors.
-			// Vs = SQRT(Vd^2 + Vq^2) < 0.95
-			// Vq = SQRT(0.95^2 - Vd^2)
-			qVdSquared = PIParmD.qOut * PIParmD.qOut;
-			PIParmQ.qOutMax = sqrtf((0.95*0.95) - qVdSquared);
-			PIParmQ.qOutMin = -PIParmQ.qOutMax;
-	
-			// PI control for Q
-			PIParmQ.qInMeas = ParkParm.qIq;
-			PIParmQ.qInRef	= CtrlParm.qVqRef;
-			CalcPI(&PIParmQ);
-			ParkParm.qVq	= PIParmQ.qOut;
-			
+		{
+
 		}
-	
 		else
 		// Closed Loop Vector Control
 		{
-			// Pressing one of the push buttons, speed reference (or torque reference
-			// if enabled) will be doubled. This is done to test transient response
-			// of the controllers
-			/*if( ++count == SPEEDDELAY )
-			{
-				VelReq = (SpeedReference* DQK) + ((OMEGA10 + OMEGA1)/2.0);
-	
-				if (CtrlParm.qVelRef <= VelReq)
-				{
-					 CtrlParm.qVelRef += SPEEDDELAY; 
-				}
-				else 
-				{
-					CtrlParm.qVelRef -= SPEEDDELAY;
-				}
-				
-				count = 0;
-			}*/
-			
-			// When it first transition from open to closed loop, this If statement is
-			// executed
-			if( uGF.bit.ChangeMode )
-			{
-				// just changed from openloop
-				uGF.bit.ChangeMode = 0;
-				// An initial value is set for the speed controller accumulation.
-				//
-				// The first time the speed controller is executed, we want the output
-				// to be the same as it was the last time open loop was executed. So,
-				// last time open loop was executed, torque refefernce was constant,
-				// and set to CtrlParm.qVqRef.
-				//
-				// First time in closed loop, CtrlParm.qVqRef = PIParmW.qdSum >> 16
-				// assuming the error is zero at time zero. This is why we set 
-				// PIParmW.qdSum = (long)CtrlParm.qVqRef << 16.
-				PIParmW.qdSum = CtrlParm.qVqRef ;
-				Startup_Lock = 0;
-				Startup_Ramp = 0;
-					//velocity reference ramp begins at minimum speed
-				CtrlParm.qVelRef = OMEGA0;
-			
-			}  
-	
-			// Check to see if new velocity information is available by comparing
-			// the number of interrupts per velocity calculation against the
-			// number of velocity count samples taken.	If new velocity info
-			// is available, calculate the new velocity value and execute
-			// the speed control loop.
-	
 			if(AccumThetaCnt == 0)
 			{
-				// oroca
 				// Execute the velocity control loop
 				PIParmW.qInMeas = smc1.Omega;
-				//PIParmW.qInRef	=  0.01f;//CtrlParm.qVelRef;
-				PIParmW.qInRef	=  qVelRef;
+				PIParmW.qInRef	=  -0.01f;//CtrlParm.qVelRef;
 				CalcPI(&PIParmW);
 				CtrlParm.qVqRef = PIParmW.qOut;
 			}
-			 
-			// If the application is running in torque mode, the velocity
-			// control loop is bypassed.  The velocity reference value, read
-			// from the potentiometer, is used directly as the torque 
-			// reference, VqRef. This feature is enabled automatically only if
-			// #define TORQUEMODE is defined in UserParms.h. If this is not
-			// defined, uGF.bit.EnTorqueMod bit can be set in debug mode to enable
-			// torque mode as well.
-	
+
 			if (uGF.bit.EnTorqueMod)
 				CtrlParm.qVqRef = CtrlParm.qVelRef;
-	
-			// Get Id reference from Field Weakening table. If Field weakening
-			// is not needed or user does not want to enable this feature, 
-			// let NOMINALSPEEDINRPM be equal to FIELDWEAKSPEEDRPM in
-			// UserParms.h
-			CtrlParm.qVdRef = FieldWeakening(fabsf(CtrlParm.qVelRef));
+
+			//CtrlParm.qVdRef = FieldWeakening(fabsf(CtrlParm.qVelRef));
 	
 			// PI control for D
 			PIParmD.qInMeas = ParkParm.qId;
 			PIParmD.qInRef	= 0.0f;//CtrlParm.qVdRef;
 			CalcPI(&PIParmD);
 	
-			// If voltage ripple compensation flag is set, adjust the output
-			// of the D controller depending on measured DC Bus voltage. This 
-			// feature is enabled automatically only if #define ENVOLTRIPPLE is 
-			// defined in UserParms.h. If this is not defined, uGF.bit.EnVoltRipCo
-			// bit can be set in debug mode to enable voltage ripple compensation.
-			//
-			// NOTE:
-			//
-			// If Input power supply has switching frequency noise, for example if a
-			// switch mode power supply is used, Voltage Ripple Compensation is not
-			// recommended, since it will generate spikes on Vd and Vq, which can
-			// potentially make the controllers unstable.
 			if(uGF.bit.EnVoltRipCo)
 				ParkParm.qVd = VoltRippleComp(PIParmD.qOut);
 			else
 				ParkParm.qVd = PIParmD.qOut;
-	
-			// Vector limitation
-			// Vd is not limited
-			// Vq is limited so the vector Vs is less than a maximum of 95%. 
-			// Vs = SQRT(Vd^2 + Vq^2) < 0.95
-			// Vq = SQRT(0.95^2 - Vd^2)
+
 			qVdSquared = ParkParm.qVd * ParkParm.qVd;
 			PIParmQ.qOutMax = sqrtf((0.95*0.95) - qVdSquared);
 			PIParmQ.qOutMin = -PIParmQ.qOutMax;
@@ -1281,34 +970,34 @@ void CalcPI( tPIParm *pParm)
 void SetupControlParameters(void)
 {
 
-// ============= PI D Term ===============      
-    PIParmD.qKp = DKP;       
-    PIParmD.qKi = DKI;              
-    PIParmD.qKc = DKC;       
-    PIParmD.qOutMax = DOUTMAX;
-    PIParmD.qOutMin = -PIParmD.qOutMax;
+	// ============= PI D Term ===============
+	PIParmD.qKp = DKP;
+	PIParmD.qKi = DKI;
+	PIParmD.qKc = DKC;
+	PIParmD.qOutMax = DOUTMAX;
+	PIParmD.qOutMin = -PIParmD.qOutMax;
 
-    InitPI(&PIParmD);
+	InitPI(&PIParmD);
 
-// ============= PI Q Term ===============
-    PIParmQ.qKp = QKP;    
-    PIParmQ.qKi = QKI;
-    PIParmQ.qKc = QKC;
-    PIParmQ.qOutMax = QOUTMAX;
-    PIParmQ.qOutMin = -PIParmQ.qOutMax;
+	// ============= PI Q Term ===============
+	PIParmQ.qKp = QKP;
+	PIParmQ.qKi = QKI;
+	PIParmQ.qKc = QKC;
+	PIParmQ.qOutMax = QOUTMAX;
+	PIParmQ.qOutMin = -PIParmQ.qOutMax;
 
-    InitPI(&PIParmQ);
+	InitPI(&PIParmQ);
 
-// ============= PI W Term ===============
-    PIParmW.qKp = WKP;       
-    PIParmW.qKi = WKI;       
-    PIParmW.qKc = WKC;       
-    PIParmW.qOutMax = WOUTMAX;   
-    PIParmW.qOutMin = -PIParmW.qOutMax;
+	// ============= PI W Term ===============
+	PIParmW.qKp = WKP;
+	PIParmW.qKi = WKI;
+	PIParmW.qKc = WKC;
+	PIParmW.qOutMax = WOUTMAX;
+	PIParmW.qOutMin = -PIParmW.qOutMax;
 
-    InitPI(&PIParmW);
+	InitPI(&PIParmW);
 
-// ============= PI PLL Term ===============
+	// ============= PI PLL Term ===============
 	PIParmPLL.qKp = WKP;		 
 	PIParmPLL.qKi = WKI;		 
 	PIParmPLL.qKc = WKC;		 
@@ -1317,14 +1006,6 @@ void SetupControlParameters(void)
 
 	InitPI(&PIParmPLL);
 
-	
-	return;
-}
-void DebounceDelay(void)
-{
-	long i;
-	for (i = 0;i < 100000;i++)
-		;
 	return;
 }
 
@@ -1514,41 +1195,6 @@ void CalcSVGen( void )
 
 }
 
-void SMCInit(SMC *s)
-{
-	//				  R * Ts
-	// Fsmopos = 1 - --------
-	//					L
-	//			  Ts
-	// Gsmopos = ----
-	//			  L
-	// Ts = Sampling Period. If sampling at PWM, Ts = 50 us
-	// R = Phase Resistance. If not provided by motor datasheet,
-	//	   measure phase to phase resistance with multimeter, and
-	//	   divide over two to get phase resistance. If 4 Ohms are
-	//	   measured from phase to phase, then R = 2 Ohms
-	// L = Phase inductance. If not provided by motor datasheet,
-	//	   measure phase to phase inductance with multimeter, and
-	//	   divide over two to get phase inductance. If 2 mH are
-	//	   measured from phase to phase, then L = 1 mH
-
-	if ((PHASERES * LOOPTIMEINSEC) > PHASEIND)
-		s->Fsmopos = 0.0;
-	else
-		s->Fsmopos = (1 - PHASERES * LOOPTIMEINSEC / PHASEIND);
-
-	if (LOOPTIMEINSEC > PHASEIND)
-		s->Gsmopos = 0.99999;
-	else
-		s->Gsmopos = LOOPTIMEINSEC / PHASEIND;
-
-	s->Kslide = SMCGAIN;
-	s->MaxSMCError = MAXLINEARSMC;
-	s->FiltOmCoef = (OMEGA0 * PI / IRP_PERCALC); // Cutoff frequency for omega filter
-											 // is minimum omega, or OMEGA0
-	return;
-}
-
 
 /********************************PLL loop **********************************/	
 #define Fsamp           16000
@@ -1653,30 +1299,27 @@ void SMC_HallSensor_Estimation (SMC *s)
 	//Digital_PI_controller(Hall_PIout, Hall_SinCos, Hall_CosSin, Hall_Err0, 10, 1, 1, Tsamp);
 
 	float err, tmp_kp, tmp_kpi; 									
-	tmp_kp = 1.0f;										
-	tmp_kpi = (1.0f + 1.0f * Tsamp); 							
+	tmp_kp = 1.0f;
+	tmp_kpi = (1.0f + 1.0f * Tsamp);
 	err = Hall_SinCos - Hall_CosSin; 											
 	Hall_PIout += ((tmp_kpi * err) - (tmp_kp * Hall_Err0)); 					
 	Hall_PIout = Bound_limit(Hall_PIout, 10.0f);						
 	Hall_Err0= err;									
 	
 	Theta += Hall_PIout ;
-	Theta + 0.5;
 	if((2.0f * PI) < Theta) Theta = Theta - (2.0f * PI);
 	else if(Theta < 0.0f) Theta = (2.0f * PI) + Theta;
 
-	smc1.Theta= Theta + 1.3f;
+	s->Theta= Theta + 0.3f;
 
-	if((2.0f * PI) < smc1.Theta) smc1.Theta = smc1.Theta - (2.0f * PI);
-	else if(smc1.Theta < 0.0f) smc1.Theta = (2.0f * PI) + smc1.Theta;
+	if((2.0f * PI) < s->Theta) s->Theta = s->Theta - (2.0f * PI);
+	else if(s->Theta < 0.0f) s->Theta = (2.0f * PI) + s->Theta;
 
-	smc1.Omega = Hall_PIout;
+	s->Omega = Hall_PIout;
 	//Futi   = Hall_PIout / (2.* PI) *Fsamp;
 
 
-
-
-#if 0
+#if 0 //  pll locked loop
 	/************************* Phase lead(90 degree) ***************************/
 	HallPLLlead  = -0.931727141f * HallPLLlead1 + 0.931727141f * HallPLLA - HallPLLA1;//all pass filter
 
@@ -1709,8 +1352,8 @@ void SMC_HallSensor_Estimation (SMC *s)
 	Futi   = Wpll / (2.*3.141592654);
 #endif
 
-	//spi_dac_write_A((HallPLLA+ 1.0f) * 2000.0f);
-	//spi_dac_write_B((HallPLLB+ 1.0f) * 2048.0f);
+	//spi_dac_write_A((HallPLLA+ 1.0f) * 200.0f);
+	//spi_dac_write_B((HallPLLB+ 1.0f) * 200.0f);
 
 	//spi_dac_write_A((costh + 1.0f) * 2000.0f);
 	//spi_dac_write_B((sinth + 1.0f) * 2047.0f);
@@ -1725,225 +1368,13 @@ void SMC_HallSensor_Estimation (SMC *s)
 
 
 	//spi_dac_write_A( (ParkParm.qAngle * 200.0f) );
-	//spi_dac_write_B( (ThetaCal * 200.0f) );
+	//spi_dac_write_B( (smc1.Theta * 200.0f) );
 
 
 	//s->Omega = Wpll;
 	//s->Theta =Theta;
 
 	//DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
-}
-
-void SMC_Position_Estimation (SMC *s)
-{
-	// Sliding mode current observer
-	
-	s->EstIalpha = s->Gsmopos * s->Valpha - s->Gsmopos * s->Ealpha	- s->Gsmopos * s->Zalpha	 + s->Fsmopos * s->EstIalpha;
-	s->EstIbeta = s->Gsmopos * s->Vbeta - s->Gsmopos * s->Ebeta - s->Gsmopos * s->Zbeta + s->Fsmopos * s->EstIbeta;
-
-	s->IalphaError = s->EstIalpha - s->Ialpha;
-	s->IbetaError = s->EstIbeta - s->Ibeta;
-		
-	// Sliding control calculator
-
-	if (fabsf(s->IalphaError) < s->MaxSMCError)
-	{
-		// s->Zalpha = (s->Kslide * s->IalphaError) / s->MaxSMCError
-		// If we are in the linear range of the slide mode controller,
-		// then correction factor Zalpha will be proportional to the
-		// error (Ialpha - EstIalpha) and slide mode gain, Kslide.
-		s->Zalpha = (s->Kslide * s->IalphaError) / s->MaxSMCError;
-	}
-	else if (s->IalphaError > 0)
-		s->Zalpha = s->Kslide;
-	else
-		s->Zalpha = -s->Kslide;
-
-	if (fabsf(s->IbetaError) < s->MaxSMCError)
-	{
-		// s->Zbeta = (s->Kslide * s->IbetaError) / s->MaxSMCError
-		// If we are in the linear range of the slide mode controller,
-		// then correction factor Zbeta will be proportional to the
-		// error (Ibeta - EstIbeta) and slide mode gain, Kslide.
-		s->Zbeta = (s->Kslide * s->IbetaError) / s->MaxSMCError;
-	}
-	else if (s->IbetaError > 0)
-		s->Zbeta = s->Kslide;
-	else
-		s->Zbeta = -s->Kslide;
-	
-		
-	// Sliding control filter -> back EMF calculator
-	 s->Ealpha = s->Ealpha + s->Kslf * s->Zalpha - s->Kslf * s->Ealpha;
-	 s->Ebeta = s->Ebeta + s->Kslf * s->Zbeta - s->Kslf * s->Ebeta;
-	 s->EalphaFinal = s->EalphaFinal + s->KslfFinal * s->Ealpha  - s->KslfFinal * s->EalphaFinal;
-	 s->EbetaFinal = s->EbetaFinal + s->KslfFinal * s->Ebeta - s->KslfFinal * s->EbetaFinal;
-	
-		
-	// Rotor angle calculator -> Theta = atan(-EalphaFinal,EbetaFinal)
-
-	s->Theta = atan2f(-s->EalphaFinal,s->EbetaFinal);
-		
-	AccumTheta += s->Theta - PrevTheta;
-	PrevTheta = s->Theta;
-	
-	AccumThetaCnt++;
-	if (AccumThetaCnt == IRP_PERCALC)
-	{
-		s->Omega = AccumTheta;
-		AccumThetaCnt = 0;
-		AccumTheta = 0;
-	}
-	//					  Q15(Omega) * 60
-	// Speed RPMs = -----------------------------
-	//				 SpeedLoopTime * Motor Poles
-	// For example:
-	//	  Omega = 0.5
-	//	  SpeedLoopTime = 0.001
-	//	  Motor Poles (pole pairs * 2) = 10
-	// Then:
-	//	  Speed in RPMs is 3,000 RPMs
-
-	// s->OmegaFltred = s->OmegaFltred + FilterCoeff * s->Omega   - FilterCoeff * s->OmegaFltred
-
-	 s->OmegaFltred = s->OmegaFltred + s->FiltOmCoef * s->Omega - s->FiltOmCoef * s->OmegaFltred;
-		
-
-	// Adaptive filter coefficients calculation
-	// Cutoff frequency is defined as 2*_PI*electrical RPS
-	//
-	//		Wc = 2*_PI*Fc.
-	//		Kslf = Tpwm*2*_PI*Fc
-	//
-	// Fc is the cutoff frequency of our filter. We want the cutoff frequency
-	// be the frequency of the drive currents and voltages of the motor, which
-	// is the electrical revolutions per second, or eRPS.
-	//
-	//		Fc = eRPS = RPM * Pole Pairs / 60
-	//
-	// Kslf is then calculated based on user parameters as follows:
-	// First of all, we have the following equation for RPMS:
-	//
-	//		RPM = (Q15(Omega) * 60) / (SpeedLoopTime * Motor Poles)
-	//		Let us use: Motor Poles = Pole Pairs * 2
-	//		eRPS = RPM * Pole Pairs / 60), or
-	//		eRPS = (Q15(Omega) * 60 * Pole Pairs) / (SpeedLoopTime * Pole Pairs * 2 * 60)
-	//	Simplifying eRPS
-	//		eRPS = Q15(Omega) / (SpeedLoopTime * 2)
-	//	Using this equation to calculate Kslf
-	//		Kslf = Tpwm*2*_PI*Q15(Omega) / (SpeedLoopTime * 2)
-	//	Using diIrpPerCalc = SpeedLoopTime / Tpwm
-	//		Kslf = Tpwm*2*Q15(Omega)*_PI / (diIrpPerCalc * Tpwm * 2)
-	//	Simplifying:
-	//		Kslf = Q15(Omega)*_PI/diIrpPerCalc
-	//
-	// We use a second filter to get a cleaner signal, with the same coefficient
-	//
-	//		Kslf = KslfFinal = Q15(Omega)*_PI/diIrpPerCalc
-	//
-	// What this allows us at the end is a fixed phase delay for theta compensation
-	// in all speed range, since cutoff frequency is changing as the motor speeds up.
-	// 
-	// Phase delay: Since cutoff frequency is the same as the input frequency, we can
-	// define phase delay as being constant of -45 DEG per filter. This is because
-	// the equation to calculate phase shift of this low pass filter is 
-	// arctan(Fin/Fc), and Fin/Fc = 1 since they are equal, hence arctan(1) = 45 DEG.
-	// A total of -90 DEG after the two filters implemented (Kslf and KslfFinal).
-	
-	s->Kslf = s->KslfFinal = s->OmegaFltred * (PI / IRP_PERCALC);
-		
-	// Since filter coefficients are dynamic, we need to make sure we have a minimum
-	// so we define the lowest operation speed as the lowest filter coefficient
-
-	if (s->Kslf < (OMEGA0 * PI / IRP_PERCALC))
-	{
-		s->Kslf = (OMEGA0 * PI / IRP_PERCALC);
-		s->KslfFinal = (OMEGA0 * PI / IRP_PERCALC);
-	}
-	s->ThetaOffset = CONSTANT_PHASE_SHIFT;
-	s->Theta = s->Theta + s->ThetaOffset;
-
-	return;
-}
-
-void FWInit(void)
-{
-	/* initialize magnetizing curve values */
-	FdWeakParm.qFwOnSpeed = OMEGANOMINAL;
-	FdWeakParm.qFwCurve[0]	= dqKFw0;
-	FdWeakParm.qFwCurve[1]	= dqKFw1;
-	FdWeakParm.qFwCurve[2]	= dqKFw2;
-	FdWeakParm.qFwCurve[3]	= dqKFw3;
-	FdWeakParm.qFwCurve[4]	= dqKFw4;
-	FdWeakParm.qFwCurve[5]	= dqKFw5;
-	FdWeakParm.qFwCurve[6]	= dqKFw6;
-	FdWeakParm.qFwCurve[7]	= dqKFw7;
-	FdWeakParm.qFwCurve[8]	= dqKFw8;
-	FdWeakParm.qFwCurve[9]	= dqKFw9;
-	FdWeakParm.qFwCurve[10]	= dqKFw10;
-	FdWeakParm.qFwCurve[11]	= dqKFw11;
-	FdWeakParm.qFwCurve[12]	= dqKFw12;
-	FdWeakParm.qFwCurve[13]	= dqKFw13;
-	FdWeakParm.qFwCurve[14]	= dqKFw14;
-	FdWeakParm.qFwCurve[15]	= dqKFw15;
-	return;
-}
-float FieldWeakening(float qMotorSpeed)
-{
-    /* if the speed is less than one for activating the FW */
-	if (qMotorSpeed <= FdWeakParm.qFwOnSpeed)
-	{
-		/* set Idref as first value in magnetizing curve */
-		FdWeakParm.qIdRef = FdWeakParm.qFwCurve[0];
-	} 
-	else
-	{
-		// Index in FW-Table. The result is left shifted 11 times because
-		// we have a field weakening table of 16 (4 bits) values, and the result
-		// of the division is 15 bits (16 bits, with no sign). So
-		// Result (15 bits) >> 11 -> Index (4 bits).
-		FdWeakParm.qFWPercentage = (qMotorSpeed-FdWeakParm.qFwOnSpeed)/ (OMEGAFIELDWK-OMEGANOMINAL+1);
-		FdWeakParm.qIndex = FdWeakParm.qFWPercentage;
-
-		// Interpolation betwen two results from the Table. First mask 11 bits,
-		// then left shift 4 times to get 15 bits again.
-		//------->FdWeakParm.qInterpolPortion = (FdWeakParm.qFWPercentage & 0x07FF) << 4;
-
-		//------->FdWeakParm.qIdRef = FdWeakParm.qFwCurve[FdWeakParm.qIndex] - (FdWeakParm.qFwCurve[FdWeakParm.qIndex] - FdWeakParm.qFwCurve[FdWeakParm.qIndex+1] ) /FdWeakParm.qInterpolPortion);
-
-	}
-
-	return FdWeakParm.qIdRef;
-}
-
-static void fault_stop(mc_fault_code fault) {
-	if (dccal_done && fault_now == FAULT_CODE_NONE) {
-		// Sent to terminal fault logger so that all faults and their conditions
-		// can be printed for debugging.
-		chSysLock();
-		volatile int t1_cnt = TIM1->CNT;
-		volatile int t8_cnt = TIM8->CNT;
-		chSysUnlock();
-
-#if 0 //pbhp 151001
-		fault_data fdata;
-		fdata.fault = fault;
-		fdata.current = mcpwm_get_tot_current();
-		fdata.current_filtered = mcpwm_get_tot_current_filtered();
-		fdata.voltage = GET_INPUT_VOLTAGE();
-		fdata.duty = dutycycle_now;
-		fdata.rpm = mcpwm_get_rpm();
-		fdata.tacho = mcpwm_get_tachometer_value(false);
-		fdata.tim_pwm_cnt = t1_cnt;
-		fdata.tim_samp_cnt = t8_cnt;
-		fdata.comm_step = comm_step;
-		fdata.temperature = NTC_TEMP(ADC_IND_TEMP_MOS1);
-		terminal_add_fault_data(&fdata);
-#endif
-	}
-
-	stop_pwm_hw();
-	fault_now = fault;
 }
 
 
@@ -1964,78 +1395,4 @@ void stop_pwm_hw(void) {
 }
 
 
-/**
- * Get the motor current. The sign of this value will
- * represent whether the motor is drawing (positive) or generating
- * (negative) current.
- *
- * @return
- * The motor current.
- */
- static volatile float last_current_sample;
-float mcpwm_get_tot_current(void) {
-	return last_current_sample * (V_REG / 4095.0) / (CURRENT_SHUNT_RES * CURRENT_AMP_GAIN);
-}
 
-/**
- * Get the FIR-filtered motor current. The sign of this value will
- * represent whether the motor is drawing (positive) or generating
- * (negative) current.
- *
- * @return
- * The filtered motor current.
- */
- static volatile float last_current_sample_filtered;
- static volatile float mcpwm_get_tot_current_filtered(void) {
-	return last_current_sample_filtered * (V_REG / 4095.0) / (CURRENT_SHUNT_RES * CURRENT_AMP_GAIN);
-}
-
-
-/**
- * Calculate the current RPM of the motor. This is a signed value and the sign
- * depends on the direction the motor is rotating in. Note that this value has
- * to be divided by half the number of motor poles.
- *
- * @return
- * The RPM value.
- */
- static volatile float rpm_now;
-static volatile int direction;
-float mcpwm_get_rpm(void) {
-	return direction ? rpm_now : -rpm_now;
-}
-
-mc_state mcpwm_get_state(void) {
-	return 0;
-}
-
-mc_fault_code mcpwm_get_fault(void) {
-	return fault_now;
-}
-
-const char* mcpwm_fault_to_string(mc_fault_code fault) {
-	switch (fault) {
-	case FAULT_CODE_NONE: return "FAULT_CODE_NONE"; break;
-	case FAULT_CODE_OVER_VOLTAGE: return "FAULT_CODE_OVER_VOLTAGE"; break;
-	case FAULT_CODE_UNDER_VOLTAGE: return "FAULT_CODE_UNDER_VOLTAGE"; break;
-	case FAULT_CODE_DRV8302: return "FAULT_CODE_DRV8302"; break;
-	case FAULT_CODE_ABS_OVER_CURRENT: return "FAULT_CODE_ABS_OVER_CURRENT"; break;
-	case FAULT_CODE_OVER_TEMP_FET: return "FAULT_CODE_OVER_TEMP_FET"; break;
-	case FAULT_CODE_OVER_TEMP_MOTOR: return "FAULT_CODE_OVER_TEMP_MOTOR"; break;
-	default: return "FAULT_UNKNOWN"; break;
-	}
-}
-mc_rpm_dep_struct mcpwm_get_rpm_dep(void) {
-	mc_rpm_dep_struct temp;
-
-	return temp;
-}
-
-static volatile mc_configuration conf;
-const volatile mc_configuration* mcpwm_get_configuration(void) {
-	return &conf;
-}
-void mcpwm_set_configuration(mc_configuration *configuration) {
-	// Stop everything first to be safe
-
-}

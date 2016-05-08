@@ -152,8 +152,8 @@ typedef unsigned char  BYTE;
 #define     QOUTMAX    0.99999
 
 //*** Velocity Control Loop Coefficients *****
-#define     WKP        2.0  // 2.0
-#define     WKI        0.01 // 0.01
+#define     WKP       2.0
+#define     WKI        0.01
 #define     WKC        0.99999
 #define     WOUTMAX    0.95
 
@@ -215,58 +215,6 @@ typedef unsigned char  BYTE;
 // Number of control loops that must execute before the button routine is executed.
 #define	BUTPOLLOOPCNT	(unsigned int)(BUTPOLLOOPTIME/LOOPTIMEINSEC)
 
-// This pre-processor condition will generate an error if maximum speed is out of
-// range on Q15 when calculating Omega.
-#if (FIELDWEAKSPEEDRPM < NOMINALSPEEDINRPM)
-	#error FIELDWEAKSPEEDRPM must be greater than NOMINALSPEEDINRPM for field weakening.
-	#error if application does not require Field Weakening, set FIELDWEAKSPEEDRPM value
-	#error equal to NOMINALSPEEDINRPM
-#else
-	#if ((FIELDWEAKSPEEDRPM*POLEPAIRS*2/(60*SPEEDLOOPFREQ)) >= 1)
-		#error FIELDWEAKSPEEDRPM will generate an Omega value greater than 1 which is the
-		#error maximum in Q15 format. Reduce FIELDWEAKSPEEDRPM value, or increase speed
-		#error control loop frequency, SPEEDLOOPFREQ
-	#endif
-#endif
-
-
-// Define this in RPMs
-
-#define SPEED0 MINSPEEDINRPM
-#define SPEED1 (SPEED0 + (int)((FIELDWEAKSPEEDRPM - MINSPEEDINRPM) / 10.0))
-#define SPEED2 (SPEED1 + (int)((FIELDWEAKSPEEDRPM - MINSPEEDINRPM) / 10.0))
-#define SPEED3 (SPEED2 + (int)((FIELDWEAKSPEEDRPM - MINSPEEDINRPM) / 10.0))
-#define SPEED4 (SPEED3 + (int)((FIELDWEAKSPEEDRPM - MINSPEEDINRPM) / 10.0))
-#define SPEED5 (SPEED4 + (int)((FIELDWEAKSPEEDRPM - MINSPEEDINRPM) / 10.0))
-#define SPEED6 (SPEED5 + (int)((FIELDWEAKSPEEDRPM - MINSPEEDINRPM) / 10.0))
-#define SPEED7 (SPEED6 + (int)((FIELDWEAKSPEEDRPM - MINSPEEDINRPM) / 10.0))
-#define SPEED8 (SPEED7 + (int)((FIELDWEAKSPEEDRPM - MINSPEEDINRPM) / 10.0))
-#define SPEED9 (SPEED8 + (int)((FIELDWEAKSPEEDRPM - MINSPEEDINRPM) / 10.0))
-#define SPEED10 (FIELDWEAKSPEEDRPM)
-
-// Define this in Degrees, from 0 to 360
-
-#define THETA_AT_ALL_SPEED 90
-
-#define OMEGA0 (float)(SPEED0 * LOOPTIMEINSEC *              IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-#define OMEGA1 (float)(SPEED1 * LOOPTIMEINSEC *              IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-#define OMEGA2 (float)(SPEED2 * LOOPTIMEINSEC *              IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-#define OMEGA3 (float)(SPEED3 * LOOPTIMEINSEC *              IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-#define OMEGA4 (float)(SPEED4 * LOOPTIMEINSEC *              IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-#define OMEGA5 (float)(SPEED5 * LOOPTIMEINSEC *              IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-#define OMEGA6 (float)(SPEED6 * LOOPTIMEINSEC *              IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-#define OMEGA7 (float)(SPEED7 * LOOPTIMEINSEC *              IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-#define OMEGA8 (float)(SPEED8 * LOOPTIMEINSEC *              IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-#define OMEGA9 (float)(SPEED9 * LOOPTIMEINSEC *              IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-#define OMEGA10 (float)(SPEED10 * LOOPTIMEINSEC *          IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-
-
-#define OMEGANOMINAL	(float)(NOMINALSPEEDINRPM * LOOPTIMEINSEC *            		IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-#define OMEGAFIELDWK	(float)(FIELDWEAKSPEEDRPM * LOOPTIMEINSEC *               		IRP_PERCALC * POLEPAIRS * 2.0 / 60.0)
-
-#define THETA_ALL (float)(THETA_AT_ALL_SPEED * 180.0 / 32768.0)
-#define CONSTANT_PHASE_SHIFT (THETA_ALL)
-
 
 #define		PI				3.14159265358979f
 #define		SQRT2			1.414213562f
@@ -310,15 +258,8 @@ const char* mcpwm_fault_to_string(mc_fault_code fault);
 //------------------------------------------------------------------------------------------------------------------------------------
 //smc(sliding mode control )
 
-//void SMCInit(SMC_handle);
-//void SMC_Position_Estimation(SMC_handle);
-
 //------------------------------------------------------------------------------------------------------------------------------------
 //CalcRef.s 
-
-
-
-bool InitMotorParm(void);
 
 
 void FWInit (void);
@@ -341,7 +282,6 @@ void mcpwm_set_configuration(mc_configuration *configuration);
 // Interrupt handlers
 void mcpwm_adc_inj_int_handler(void);
 void mcpwm_adc_int_handler(void *p, uint32_t flags);
-
 
 #ifdef __cplusplus
 }
