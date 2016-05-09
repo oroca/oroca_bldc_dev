@@ -1,14 +1,14 @@
 build/obj/utils.o: src/core/utils.c src/core/utils.h \
  lib/ChibiOS_3.0.2/os/rt/include/ch.h \
  lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/stdint.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/_default_types.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/features.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_intsup.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_stdint.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stddef.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdint.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\stdint.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\_default_types.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\features.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_intsup.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_stdint.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdbool.h \
  chconf.h lib/ChibiOS_3.0.2/os/rt/include/chlicense.h \
  lib/ChibiOS_3.0.2/os/rt/include/chsystypes.h \
  lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore.h \
@@ -88,16 +88,16 @@ build/obj/utils.o: src/core/utils.c src/core/utils.h \
  lib/ChibiOS_3.0.2/os/hal/ports/STM32/STM32F4xx/stm32_registry.h \
  lib/ChibiOS_3.0.2/os/hal/include/mmc_spi.h \
  lib/ChibiOS_3.0.2/os/hal/include/serial_usb.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/math.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/reent.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/_ansi.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/newlib.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/config.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/ieeefp.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_types.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/_types.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/lock.h \
- /Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/_ansi.h
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\math.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\reent.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\_ansi.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\newlib.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\config.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\ieeefp.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_types.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\_types.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\lock.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\_ansi.h
 
 src/core/utils.h:
 
@@ -105,21 +105,21 @@ lib/ChibiOS_3.0.2/os/rt/include/ch.h:
 
 lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stddef.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdint.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/stdint.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\stdint.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/_default_types.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\_default_types.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/features.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\features.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_intsup.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_intsup.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_stdint.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_stdint.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdbool.h:
 
 chconf.h:
 
@@ -287,22 +287,22 @@ lib/ChibiOS_3.0.2/os/hal/include/mmc_spi.h:
 
 lib/ChibiOS_3.0.2/os/hal/include/serial_usb.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/math.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\math.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/reent.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\reent.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/_ansi.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\_ansi.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/newlib.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\newlib.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/config.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\config.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/ieeefp.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\ieeefp.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/_types.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_types.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/machine/_types.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\_types.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/sys/lock.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\lock.h:
 
-/Users/imac/Downloads/gcc-arm-none-eabi-4_9-2015q2/arm-none-eabi/include/_ansi.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\_ansi.h:
