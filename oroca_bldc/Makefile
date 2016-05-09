@@ -284,10 +284,10 @@ endif
 
 
 # Print size
-all:
+show_size:
 	$(SIZE) build/$(PROJECT).elf
 
-build/$(PROJECT).bin: build/$(PROJECT).elf 
+build/$(PROJECT).bin: build/$(PROJECT).elf show_size
 	$(BIN) build/$(PROJECT).elf build/$(PROJECT).bin
 
 # Program
