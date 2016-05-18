@@ -348,6 +348,15 @@ int usb_uart_printf( const char *fmt, ...)
 }
 
 
+int usb_uart_write( uint8_t *p_data, uint32_t len )
+{
+	int ret = 0;
+
+	ret = chSequentialStreamWrite(&SDU1, p_data, len);
+
+	return ret;
+}
+
 uint8_t usb_uart_getch( void )
 {
 	uint8_t buffer[128];

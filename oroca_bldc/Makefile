@@ -96,6 +96,14 @@ COREINC = src/core
 BLDCSRC = src/bldc
 BLDCINC = src/bldc
 
+
+MAVINC  = lib/mavlink
+MAVINC += lib/mavlink/common
+MAVINC += lib/mavlink/oroca_bldc
+
+
+
+
 # Define project name here
 PROJECT = oroca_bldc
 
@@ -180,7 +188,8 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(APPINC) \
          $(NRFINC) \
          $(COREINC) \
-         $(BLDCINC)
+         $(BLDCINC)	\
+         $(MAVINC)
 
 #
 # Project, sources and paths

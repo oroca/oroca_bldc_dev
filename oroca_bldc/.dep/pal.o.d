@@ -1,14 +1,13 @@
 build/obj/pal.o: lib/ChibiOS_3.0.2/os/hal/src/pal.c \
  lib/ChibiOS_3.0.2/os/hal/include/hal.h \
  lib/ChibiOS_3.0.2/os/hal/osal/rt/osal.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stddef.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\_default_types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\features.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_intsup.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdbool.h \
+ /Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h \
+ /Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/stdint.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_default_types.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/features.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_intsup.h \
+ /Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h \
  lib/ChibiOS_3.0.2/os/rt/include/ch.h \
  lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h chconf.h \
  lib/ChibiOS_3.0.2/os/rt/include/chlicense.h \
@@ -93,21 +92,19 @@ lib/ChibiOS_3.0.2/os/hal/include/hal.h:
 
 lib/ChibiOS_3.0.2/os/hal/osal/rt/osal.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stddef.h:
+/Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdint.h:
+/Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\stdint.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/stdint.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\_default_types.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_default_types.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\features.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/features.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_intsup.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_intsup.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_stdint.h:
-
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdbool.h:
+/Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h:
 
 lib/ChibiOS_3.0.2/os/rt/include/ch.h:
 

@@ -1,38 +1,35 @@
 build/obj/syscalls.o: lib/ChibiOS_3.0.2/os/various/syscalls.c \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\stdlib.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\ieeefp.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\_ansi.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\newlib.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\config.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\features.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stddef.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\reent.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\_ansi.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\_types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\_default_types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\lock.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\cdefs.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\stdlib.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\alloca.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\errno.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\errno.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\string.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\string.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\stat.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\time.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\time.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\timespec.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_timespec.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/stdlib.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/ieeefp.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/_ansi.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/newlib.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/config.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/features.h \
+ /Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/reent.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/_ansi.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_types.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_types.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_default_types.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/lock.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/cdefs.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/stdlib.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/alloca.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/errno.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/errno.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/string.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/string.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/stat.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/time.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/time.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/types.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/types.h \
  lib/ChibiOS_3.0.2/os/rt/include/ch.h \
  lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_intsup.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdbool.h \
+ /Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/stdint.h \
+ /Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_intsup.h \
+ /Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h \
  chconf.h lib/ChibiOS_3.0.2/os/rt/include/chlicense.h \
  lib/ChibiOS_3.0.2/os/rt/include/chsystypes.h \
  lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore.h \
@@ -68,73 +65,67 @@ build/obj/syscalls.o: lib/ChibiOS_3.0.2/os/various/syscalls.c \
  lib/ChibiOS_3.0.2/os/rt/include/chqueues.h \
  lib/ChibiOS_3.0.2/os/rt/include/chstreams.h
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\stdlib.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/stdlib.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\ieeefp.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/ieeefp.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\_ansi.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/_ansi.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\newlib.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/newlib.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\config.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/config.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\features.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/features.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stddef.h:
+/Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\reent.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/reent.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\_ansi.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/_ansi.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_types.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_types.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\_types.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_types.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\_default_types.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/_default_types.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\lock.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/lock.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\cdefs.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/cdefs.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\stdlib.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/stdlib.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\alloca.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/alloca.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\errno.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/errno.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\errno.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/errno.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\string.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/string.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\string.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/string.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\stat.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/stat.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\time.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/time.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\time.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/time.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\types.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/types.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_stdint.h:
-
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\machine\types.h:
-
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\timespec.h:
-
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_timespec.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/machine/types.h:
 
 lib/ChibiOS_3.0.2/os/rt/include/ch.h:
 
 lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdint.h:
+/Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\stdint.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/stdint.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\arm-none-eabi\include\sys\_intsup.h:
+/Users/Baram/gcc-arm-none-eabi/arm-none-eabi/include/sys/_intsup.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\4.9\ 2015q3\lib\gcc\arm-none-eabi\4.9.3\include\stdbool.h:
+/Users/Baram/gcc-arm-none-eabi/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h:
 
 chconf.h:
 
