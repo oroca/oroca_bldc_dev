@@ -37,10 +37,6 @@
 #include <errno.h>
 #include <unistd.h>
 
-//jsyoon
-#include <stdarg.h>
-extern int debug_print_usb( const char *fmt, ...);
-
 
 // Structs
 union{
@@ -49,14 +45,13 @@ union{
 		unsigned RunMotor:1;	// If motor is running, or stopped.
 		unsigned EnTorqueMod:1;	// This bit enables Torque mode when running closed loop
 		unsigned EnVoltRipCo:1;	// Bit that enables Voltage Ripple Compensation
-		unsigned Btn1Pressed:1;	// Button 1 has been pressed.
 		unsigned ChangeMode:1;	// This flag indicates that a transition from open to closed
 								// loop, or closed to open loop has happened. This
 								// causes DoControl subroutine to initialize some variables
 								// before executing open or closed loop for the first time
 		unsigned ChangeSpeed:1;	// This flag indicates a step command in speed reference.
 								// This is mainly used to analyze step response
-		unsigned    :9;
+		unsigned    :10;
             }bit;
         	WORD Word;
  } uGF;
@@ -168,74 +163,128 @@ typedef struct {
 
 
 
+//==============================================================
+//define
+#define Digital_PI_controller(out, ref, in, err0, limit, kp, ki, tsample)   \
+		{						                                            \
+			float err, tmp_kp, tmp_kpi;                                     \
+			tmp_kp = (float)(kp);                                           \
+			tmp_kpi = (float)(kp + ki*tsample);                             \
+			err = ref - in;					                                \
+			out += ((tmp_kpi * err) - (tmp_kp * err0));	                    \
+			out = Bound_limit(out, limit);                                  \
+			err0 = err;                                                     \
+		}
+#define Bound_limit(in,lim)	((in > (lim)) ? (lim) : ((in < -(lim)) ? -(lim) : in))
+#define Bound_min_max(in, min, max)	((in > (max)) ? (max) : ((in < (min)) ? (min) : in))
 
-	static volatile mc_fault_code fault_now;
-	static volatile bool dccal_done;
+#define Low_pass_filter(out, in, in_old, alpha)     \
+		{												\
+			float tmp;									\
+			tmp = alpha*(in + in_old - (out*2)); \
+			out += tmp; 								\
+			in_old = in;								\
+		}
 
 
-	// Private variables
-	int count = 0; // delay for ramping the reference velocity
-	int VelReq = 0;
+static volatile mc_fault_code fault_now;
+static volatile bool dccal_done;
 
 
-	static volatile tMeasCurrParm MeasCurrParm;
-	SMC smc1 = SMC_DEFAULTS;
+// Private variables
+int count = 0; // delay for ramping the reference velocity
+int VelReq = 0;
 
-	// Global variables
-	uint16_t ADC_Value[HW_ADC_CHANNELS];
 
-	tParkParm ParkParm;
+static volatile tMeasCurrParm MeasCurrParm;
+SMC smc1 = SMC_DEFAULTS;
 
-	tPIParm     PIParmD;	// Structure definition for Flux component of current, or Id
-	tPIParm     PIParmQ;	// Structure definition for Torque component of current, or Iq
-	tPIParm     PIParmW;	// Structure definition for Speed, or Omega
-	tPIParm     PIParmPLL;
+// Global variables
+uint16_t ADC_Value[HW_ADC_CHANNELS];
 
-	tCtrlParm CtrlParm;
-	tSVGenParm SVGenParm;
-	tFdWeakParm FdWeakParm;
+tParkParm ParkParm;
 
-	int SpeedReference = 0;
-	unsigned int  switching_frequency_now = PWMFREQUENCY;
+tPIParm     PIParmD;	// Structure definition for Flux component of current, or Id
+tPIParm     PIParmQ;	// Structure definition for Torque component of current, or Iq
+tPIParm     PIParmW;	// Structure definition for Speed, or Omega
+tPIParm     PIParmPLL;
 
-	// Speed Calculation Variables
+tCtrlParm CtrlParm;
+tSVGenParm SVGenParm;
+tFdWeakParm FdWeakParm;
 
-	float AccumTheta = 0;	// Accumulates delta theta over a number of times
-	WORD AccumThetaCnt = 0;	// Counter used to calculate motor speed. Is incremented
-							// in SMC_Position_Estimation() subroutine, and accumulates
-							// delta Theta. After N number of accumulations, Omega is
-							// calculated. This N is diIrpPerCalc which is defined in
-							// UserParms.h.
+int SpeedReference = 0;
+unsigned int  switching_frequency_now = PWMFREQUENCY;
 
-	// Vd and Vq vector limitation variables
+// Speed Calculation Variables
 
-	static volatile float qVdSquared = 0;	// This variable is used to know what is left from the VqVd vector
-							// in order to have maximum output PWM without saturation. This is
-							// done before executing Iq control loop at the end of DoControl()
+float AccumTheta = 0;	// Accumulates delta theta over a number of times
+WORD AccumThetaCnt = 0;	// Counter used to calculate motor speed. Is incremented
+						// in SMC_Position_Estimation() subroutine, and accumulates
+						// delta Theta. After N number of accumulations, Omega is
+						// calculated. This N is diIrpPerCalc which is defined in
+						// UserParms.h.
 
-	static volatile float DCbus = 0;		// DC Bus measured continuously and stored in this variable
-							// while motor is running. Will be compared with TargetDCbus
-							// and Vd and Vq will be compensated depending on difference
-							// between DCbus and TargetDCbus
+// Vd and Vq vector limitation variables
 
-	static volatile float TargetDCbus = 0;// DC Bus is measured before running motor and stored in this
-							// variable. Any variation on DC bus will be compared to this value
-							// and compensated linearly.
+static volatile float qVdSquared = 0;	// This variable is used to know what is left from the VqVd vector
+						// in order to have maximum output PWM without saturation. This is
+						// done before executing Iq control loop at the end of DoControl()
 
-	static volatile float Theta_error = 0;// This value is used to transition from open loop to closed looop.
-							// At the end of open loop ramp, there is a difference between
-							// forced angle and estimated angle. This difference is stored in
-							// Theta_error, and added to estimated theta (smc1.Theta) so the
-							// effective angle used for commutating the motor is the same at
-							// the end of open loop, and at the begining of closed loop.
-							// This Theta_error is then substracted from estimated theta
-							// gradually in increments of 0.05 degrees until the error is less
-							// than 0.05 degrees.
+static volatile float DCbus = 0;		// DC Bus measured continuously and stored in this variable
+						// while motor is running. Will be compared with TargetDCbus
+						// and Vd and Vq will be compensated depending on difference
+						// between DCbus and TargetDCbus
+
+static volatile float TargetDCbus = 0;// DC Bus is measured before running motor and stored in this
+						// variable. Any variation on DC bus will be compared to this value
+						// and compensated linearly.
+
+static volatile float Theta_error = 0;// This value is used to transition from open loop to closed looop.
+						// At the end of open loop ramp, there is a difference between
+						// forced angle and estimated angle. This difference is stored in
+						// Theta_error, and added to estimated theta (smc1.Theta) so the
+						// effective angle used for commutating the motor is the same at
+						// the end of open loop, and at the begining of closed loop.
+						// This Theta_error is then substracted from estimated theta
+						// gradually in increments of 0.05 degrees until the error is less
+						// than 0.05 degrees.
 
 // Private functions
+
+bool SetupParm(void);
+
+void MeasCompCurr( int curr1, int curr2 );
+void InitMeasCompCurr( short Offset_a, short Offset_b );
+
+//void InitPI( tPIParm *pParm);
+//void CalcPI( tPIParm *pParm);
+
+void SinCos(void);      // Calculate qSin,qCos from iAngle
+void ClarkePark(void);  // Calculate qId,qIq from qCos,qSin,qIa,qIb
+void InvPark(void);     // Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
+void FWInit (void);
+float FieldWeakening(float qMotorSpeed);
+
+void CalcRefVec( void );
+void CalcSVGen( void );
+void CorrectPhase( void );
+void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
+
+float VoltRippleComp(float Vdq);
+
+mc_rpm_dep_struct mcpwm_get_rpm_dep(void);
+const volatile mc_configuration* mcpwm_get_configuration(void);
+void mcpwm_set_configuration(mc_configuration *configuration);
+
+
+// Interrupt handlers
+void mcpwm_adc_inj_int_handler(void);
+void mcpwm_adc_int_handler(void *p, uint32_t flags);
+
+
 static void do_dc_cal(void);
 void SMC_HallSensor_Estimation (SMC *s);
-
 void CalcPI( tPIParm *pParm);
 void DoControl( void );
 void InitPI( tPIParm *pParm);
@@ -247,6 +296,8 @@ static THD_WORKING_AREA(SEQUENCE_thread_wa, 2048);
 static msg_t SEQUENCE_thread(void *arg);
 //static WORKING_AREA(rpm_thread_wa, 1024);
 //static msg_t rpm_thread(void *arg);
+
+
 
 void mcpwm_init(mc_configuration *configuration) {
 	utils_sys_lock_cnt();
@@ -513,9 +564,7 @@ void mcpwm_init(mc_configuration *configuration) {
 
 //---------------------------------------------------------------------------
 
-
 	SetupControlParameters();
-
 
 	uGF.Word = 0;                   // clear flags
 	#ifdef TORQUEMODE
@@ -530,12 +579,14 @@ void mcpwm_init(mc_configuration *configuration) {
 
 }
 
+
 static volatile int curr0_sum;
 static volatile int curr1_sum;
 static volatile int curr_start_samples;
 static volatile int curr0_offset;
 static volatile int curr1_offset;
-static void do_dc_cal(void) {
+static void do_dc_cal(void)
+{
 	DCCAL_ON();
 	while(IS_DRV_FAULT()){};
 	chThdSleepMilliseconds(1000);
@@ -550,11 +601,6 @@ static void do_dc_cal(void) {
 }
 
 
-int fputc(int ch, FILE *f)
-{
-    return(ITM_SendChar(ch));
-}
-
 void mcpwm_adc_inj_int_handler(void) 
 {
 	TIM12->CNT = 0;
@@ -566,33 +612,6 @@ void mcpwm_adc_inj_int_handler(void)
 	curr1_sum += curr1;
 	curr_start_samples++;
 
-
-
-#if 0 //pbhp 151001
-	// �ʱ� ���� üũ
-	if(Init_Charge_cnt_EN) 	Init_Charge_cnt++;
-	else 					Init_Charge_cnt=0;
-#endif
-
-	// jsyoon TEST
-	/*
-	static int led=0;
-	static int led_cnt=0;
-
-	led_cnt++;
-
-	//if( led_cnt > 200)
-	if( led_cnt > 2)
-	{
-		led_cnt =0;
-		_LED_on_off( led);
-		led= ~led;
-		//debug_print_usb( " Debug Test \r\n");
-		debug_print_usb( " Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test Debug Test 12345 \r\n");
-	}
-	*/
-	//debug_print_usb( "iT ");
-	
 	SMC_HallSensor_Estimation (&smc1);
 
 	//spi_dac_write_A( dacDataA++);
@@ -601,7 +620,7 @@ void mcpwm_adc_inj_int_handler(void)
 	
 	if( uGF.bit.RunMotor )
 	{
-	ENABLE_GATE();
+		ENABLE_GATE();
 		LED_RED_ON();
 
 		// Calculate qIa,qIb
@@ -656,12 +675,14 @@ void mcpwm_adc_inj_int_handler(void)
 		//DISABLE_GATE();
 
 			
-		} 
+	}
+	else
+	{
+		DISABLE_GATE();
+	}
 
 	
 }
-
-
 
 
 /*
@@ -689,7 +710,7 @@ int Seq = 0;
 int Fault_seq = 0;
 int Init_Charge_cnt_EN = 0;
 long Init_Charge_cnt = 0.;
-unsigned int Init_Charge_Time = 3000;	// 3��
+unsigned int Init_Charge_Time = 3000;	// 3占쏙옙
 
 //int Retry_cnt_En = 0;
 //long Retry_cnt = 0;
@@ -716,19 +737,19 @@ static msg_t SEQUENCE_thread(void *arg)
 
 		switch(Seq)
 		{
-		// �ý��� ���� ������ ��� �Ǵ� Run��ȣ �ΰ� �� �ý��� ������ �� ���
+		// 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占?占실댐옙 Run占쏙옙호 占싸곤옙 占쏙옙 占시쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙 占쏙옙占?
 			case SEQ_NoReady:							//	" 0 "
 				stop_pwm_hw();
-				//	���� ���� �� �ð� �鷹�� ������ ������ �Ϸ� ��ȣ �߻�
+				//	占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 占시곤옙 占썽레占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占싹뤄옙 占쏙옙호 占쌩삼옙
 				Init_Charge_cnt_EN=1;
-				if(Init_Charge_cnt >= (float)Init_Charge_Time * 1e-3 / LOOPTIMEINSEC)		// �ʱ� ���� �ð� 3��
+				if(Init_Charge_cnt >= (float)Init_Charge_Time * 1e-3 / LOOPTIMEINSEC)		// 占십깍옙 占쏙옙占쏙옙 占시곤옙 3占쏙옙
 				{
 					nDC_CONTACT_CLEAR;
 					Flag.Fault_Cntl.bit.UV_Check_En = 1;
-					if(Init_Charge_cnt >= ((float)Init_Charge_Time + 100.) * 1e-3 / LOOPTIMEINSEC)	// �ʱ� ������ ���� �� 3.1�� �� ������ ��ȯ
+					if(Init_Charge_cnt >= ((float)Init_Charge_Time + 100.) * 1e-3 / LOOPTIMEINSEC)	// 占십깍옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 3.1占쏙옙 占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙환
 					{
-						// ���� �ʱ� ���� ȸ�� ������ ����Ͽ� �ٷ� ���� ���� �Ѿ� ���� �ʰ�
-						// ���� ������ Ȯ�� �� �Ѿ���� ���� �� ��
+						// 占쏙옙占쏙옙 占십깍옙 占쏙옙占쏙옙 회占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙臼占?占쌕뤄옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占싼억옙 占쏙옙占쏙옙 占십곤옙
+						// 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 확占쏙옙 占쏙옙 占싼어가占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 占쏙옙
 						Seq = SEQ_Wait;
 						Init_Charge_cnt_EN=0;
 					}
@@ -738,7 +759,7 @@ static msg_t SEQUENCE_thread(void *arg)
 			break;
 
 
-		// �ý��� Ready �����̸� Run Signal ��� ���� ��
+		// 占시쏙옙占쏙옙 Ready 占쏙옙占쏙옙占싱몌옙 Run Signal 占쏙옙占?占쏙옙占쏙옙 占쏙옙
 			case SEQ_Wait:						//	" 1 "
 					if(( FaultReg1[1] )||( FaultReg2[1] )) Fault_seq = SEQ_Wait, Seq=SEQ_Fault;
 					else
@@ -753,13 +774,13 @@ static msg_t SEQUENCE_thread(void *arg)
 					State_Index = STATE_STOP;
 			break;
 
-		// Run ��ȣ �ΰ� �� �ý��� ���� ����
+		// Run 占쏙옙호 占싸곤옙 占쏙옙 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
 			case SEQ_Normal:							//	" 2 "
 				if(( FaultReg1[1] )||( FaultReg2[1] )) Fault_seq = SEQ_Normal, Seq=SEQ_Fault;
 				else
 				{
 					State_Index = STATE_RUNNING;
-					// Run_Time_Delay_time �� Machine_state 1�� �ȴ�
+					// Run_Time_Delay_time 占쏙옙 Machine_state 1占쏙옙 占싫댐옙
 	/*				if (Machine_state == RUNN)
 					{
 	//					Flag.Monitoring.bit.
@@ -784,16 +805,16 @@ static msg_t SEQUENCE_thread(void *arg)
 				State_Index = STATE_FAULT;
 				Run_Stop_Status = 0;
 				stop_pwm_hw(); // Converter Off
-				// ���� �������� ��Ʈ ���� ��ȯ ���� ǥ��
+				// 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙트 占쏙옙占쏙옙 占쏙옙환 占쏙옙占쏙옙 표占쏙옙
 			
 				if((!FaultReg1[1])&&(!FaultReg2[1])) Seq=SEQ_Retrial;
 
 				if ((( FaultReg1[1] ) || ( FaultReg2[1] ))
 					 && (( FaultReg1[1] > FaultReg1[0] ) || ( FaultReg2[1] > FaultReg2[0] )))
 				{
-					// ���� ��� ���õ� ��Ʈ�� ���ؼ� ���� �Ķ��Ÿ���� �ʱ�ȭ
+					// 占쏙옙占쏙옙 占쏙옙占?占쏙옙占시듸옙 占쏙옙트占쏙옙 占쏙옙占쌔쇽옙 占쏙옙占쏙옙 占식띰옙占신몌옙占쏙옙占?占십깍옙화
 					Fault_count++;
-					Word_Write_data(2379, Fault_count);		// Fault Ƚ���� EEPROM�� ���� �ؾ� �Ѵ�.
+					Word_Write_data(2379, Fault_count);		// Fault 횟占쏙옙占쏙옙 EEPROM占쏙옙 占쏙옙占쏙옙 占쌔억옙 占싼댐옙.
 					Flag.Fault_Cntl.bit.Rec_Complete = 0;
 					Flag.Fault_Cntl.bit.Rst_Complete = 0;
 	//				if (!FAULT_RECORD_COMPLETE)	Fault_Recording( Fault_count );
@@ -869,6 +890,8 @@ bool SetupParm(void)
 	// Set PWM period to Loop Time
 	SVGenParm.iPWMPeriod = LOOPINTCY;
 
+
+
 	return False;
 }
 
@@ -901,7 +924,7 @@ void DoControl( void )
 			{
 				// Execute the velocity control loop
 				PIParmW.qInMeas = smc1.Omega;
-				PIParmW.qInRef	=  -0.01f;//CtrlParm.qVelRef;
+				PIParmW.qInRef	= CtrlParm.qVelRef;
 				CalcPI(&PIParmW);
 				CtrlParm.qVqRef = PIParmW.qOut;
 			}
@@ -913,7 +936,7 @@ void DoControl( void )
 	
 			// PI control for D
 			PIParmD.qInMeas = ParkParm.qId;
-			PIParmD.qInRef	= 0.0f;//CtrlParm.qVdRef;
+			PIParmD.qInRef	= CtrlParm.qVdRef;
 			CalcPI(&PIParmD);
 	
 			if(uGF.bit.EnVoltRipCo)
@@ -944,6 +967,7 @@ void DoControl( void )
 			}
 		}
 	}
+
 void InitPI( tPIParm *pParm)
 {
 	pParm->qdSum=0;
@@ -1231,27 +1255,6 @@ static volatile float Hall_KB = 0.0;
 static volatile float Hall_PIout = 0.0;
 static volatile float Hall_Err0 = 0.0;
 
-#define Digital_PI_controller(out, ref, in, err0, limit, kp, ki, tsample)   \
-		{						                                            \
-			float err, tmp_kp, tmp_kpi;                                     \
-			tmp_kp = (float)(kp);                                           \
-			tmp_kpi = (float)(kp + ki*tsample);                             \
-			err = ref - in;					                                \
-			out += ((tmp_kpi * err) - (tmp_kp * err0));	                    \
-			out = Bound_limit(out, limit);                                  \
-			err0 = err;                                                     \
-		}
-#define Bound_limit(in,lim)	((in > (lim)) ? (lim) : ((in < -(lim)) ? -(lim) : in))
-#define Bound_min_max(in, min, max)	((in > (max)) ? (max) : ((in < (min)) ? (min) : in))
-
-#define Low_pass_filter(out, in, in_old, alpha)     \
-		{												\
-			float tmp;									\
-			tmp = alpha*(in + in_old - (out*2)); \
-			out += tmp; 								\
-			in_old = in;								\
-		}	
-
 
 float HallPLLA	 = 0.0f;			// inverter output voltage
 float HallPLLA1 	= 0.0f;
@@ -1396,3 +1399,38 @@ void stop_pwm_hw(void) {
 
 
 
+
+//=====================================================================
+//API
+//float mcpwm_get_rpm(void);
+//mc_state mcpwm_get_state(void);
+//mc_fault_code mcpwm_get_fault(void);
+//const char* mcpwm_fault_to_string(mc_fault_code fault);
+
+int fputc(int ch, FILE *f)
+{
+    return(ITM_SendChar(ch));
+}
+
+void mcpwm_Set_RunStop(bool run_stop)
+{
+	if(run_stop)	uGF.bit.RunMotor = 1;
+	else uGF.bit.RunMotor = 0;
+
+	return;
+}
+
+WORD mcpwm_Get_Control(void)
+{
+	return uGF.Word;
+}
+
+void mcpwm_Set_Velocity(float Velocity)
+{
+	CtrlParm.qVelRef = Velocity;
+	return;
+}
+tCtrlParm mcpwm_Get_CtrlParm(void)
+{
+	return CtrlParm;
+}
