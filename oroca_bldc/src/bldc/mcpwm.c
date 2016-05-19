@@ -924,7 +924,7 @@ void DoControl( void )
 			{
 				// Execute the velocity control loop
 				PIParmW.qInMeas = smc1.Omega;
-				PIParmW.qInRef	= CtrlParm.qVelRef;
+				PIParmW.qInRef	= 0.01f;//CtrlParm.qVelRef;
 				CalcPI(&PIParmW);
 				CtrlParm.qVqRef = PIParmW.qOut;
 			}
