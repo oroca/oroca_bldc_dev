@@ -1,2 +1,3 @@
-# oroca_bldc_dev
-Qt PC program
+# oroca_bldc_dev r2
+BLDC Driver Development Version for OROCA BLDC
+
