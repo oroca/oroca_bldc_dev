@@ -1,2 +1,2 @@
-# oroca_bldc_dev r1
+# oroca_bldc_dev
 BLDC Driver Development Version for OROCA BLDC
