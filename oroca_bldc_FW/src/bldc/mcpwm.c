@@ -240,15 +240,6 @@ static volatile float TargetDCbus = 0;// DC Bus is measured before running motor
 						// variable. Any variation on DC bus will be compared to this value
 						// and compensated linearly.
 
-static volatile float Theta_error = 0;// This value is used to transition from open loop to closed looop.
-						// At the end of open loop ramp, there is a difference between
-						// forced angle and estimated angle. This difference is stored in
-						// Theta_error, and added to estimated theta (smc1.Theta) so the
-						// effective angle used for commutating the motor is the same at
-						// the end of open loop, and at the begining of closed loop.
-						// This Theta_error is then substracted from estimated theta
-						// gradually in increments of 0.05 degrees until the error is less
-						// than 0.05 degrees.
 
 // Private functions
 
@@ -293,10 +284,6 @@ void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty
 
 // Threads
 static THD_WORKING_AREA(SEQUENCE_thread_wa, 2048);
-static msg_t SEQUENCE_thread(void *arg);
-//static WORKING_AREA(rpm_thread_wa, 1024);
-//static msg_t rpm_thread(void *arg);
-
 
 
 void mcpwm_init(mc_configuration *configuration) {
@@ -552,7 +539,6 @@ void mcpwm_init(mc_configuration *configuration) {
 	TIM_Cmd(TIM12, ENABLE);
 
 	// Start threads
-	chThdCreateStatic(SEQUENCE_thread_wa, sizeof(SEQUENCE_thread_wa), NORMALPRIO, SEQUENCE_thread, NULL);
 	////chThdCreateStatic(rpm_thread_wa, sizeof(rpm_thread_wa), NORMALPRIO, rpm_thread, NULL);
 
 	// WWDG configuration
@@ -704,173 +690,6 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags) {
 	// Check for faults that should stop the motor
 
 }
-
-
-int Seq = 0;
-int Fault_seq = 0;
-int Init_Charge_cnt_EN = 0;
-long Init_Charge_cnt = 0.;
-unsigned int Init_Charge_Time = 3000;	// 3占쏙옙
-
-//int Retry_cnt_En = 0;
-//long Retry_cnt = 0;
-//int Retry_Time_set = 0;
-//int DRIVE_ENABLE = 0;
-
-unsigned int Drive_Status = 0;
-unsigned int State_Index = 0;
-
-
-static msg_t SEQUENCE_thread(void *arg) 
-{
-	(void)arg;
-
-	chRegSetThreadName("mcpwm timer");
-#if 0 //pbhp 151001
-		fault_now = Flag.Fault1.all;
-
-		if( fault_now)
-		{
-			Fault_seq = Seq;
-			Seq=SEQ_Fault;
-		}
-
-		switch(Seq)
-		{
-		// 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占?占실댐옙 Run占쏙옙호 占싸곤옙 占쏙옙 占시쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙 占쏙옙占?
-			case SEQ_NoReady:							//	" 0 "
-				stop_pwm_hw();
-				//	占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 占시곤옙 占썽레占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占싹뤄옙 占쏙옙호 占쌩삼옙
-				Init_Charge_cnt_EN=1;
-				if(Init_Charge_cnt >= (float)Init_Charge_Time * 1e-3 / LOOPTIMEINSEC)		// 占십깍옙 占쏙옙占쏙옙 占시곤옙 3占쏙옙
-				{
-					nDC_CONTACT_CLEAR;
-					Flag.Fault_Cntl.bit.UV_Check_En = 1;
-					if(Init_Charge_cnt >= ((float)Init_Charge_Time + 100.) * 1e-3 / LOOPTIMEINSEC)	// 占십깍옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 3.1占쏙옙 占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙환
-					{
-						// 占쏙옙占쏙옙 占십깍옙 占쏙옙占쏙옙 회占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙臼占?占쌕뤄옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占싼억옙 占쏙옙占쏙옙 占십곤옙
-						// 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 확占쏙옙 占쏙옙 占싼어가占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙 占쏙옙
-						Seq = SEQ_Wait;
-						Init_Charge_cnt_EN=0;
-					}
-				}
-	//			Seq = SEQ_Wait;
-				Green_LED_off;
-			break;
-
-
-		// 占시쏙옙占쏙옙 Ready 占쏙옙占쏙옙占싱몌옙 Run Signal 占쏙옙占?占쏙옙占쏙옙 占쏙옙
-			case SEQ_Wait:						//	" 1 "
-					if(( FaultReg1[1] )||( FaultReg2[1] )) Fault_seq = SEQ_Wait, Seq=SEQ_Fault;
-					else
-					{
-						State_Index = STATE_READY;
-						Run_Stop_Status = 0;
-						Run_Stop_Operation();
-						if(DRIVE_ENABLE==RUNN)	Seq=SEQ_Normal;
-						else					Drive_Off();
-					}
-					Red_LED_off;
-					State_Index = STATE_STOP;
-			break;
-
-		// Run 占쏙옙호 占싸곤옙 占쏙옙 占시쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
-			case SEQ_Normal:							//	" 2 "
-				if(( FaultReg1[1] )||( FaultReg2[1] )) Fault_seq = SEQ_Normal, Seq=SEQ_Fault;
-				else
-				{
-					State_Index = STATE_RUNNING;
-					// Run_Time_Delay_time 占쏙옙 Machine_state 1占쏙옙 占싫댐옙
-	/*				if (Machine_state == RUNN)
-					{
-	//					Flag.Monitoring.bit.
-					}
-	*/
-					Run_Stop_Operation();
-					if(DRIVE_ENABLE==RUNN)	Drive_On();
-					else
-					{
-						if((Position_Flag)||(Start_Flag))	Seq=SEQ_Wait;
-						else 								Wrpm_ref_set = 0.0;
-					}
-				}
-				Red_LED_off;
-				Green_LED_on;
-			break;
-
-
-		// System Fault
-			case SEQ_Fault:							//	" 3 "
-
-				State_Index = STATE_FAULT;
-				Run_Stop_Status = 0;
-				stop_pwm_hw(); // Converter Off
-				// 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙트 占쏙옙占쏙옙 占쏙옙환 占쏙옙占쏙옙 표占쏙옙
-			
-				if((!FaultReg1[1])&&(!FaultReg2[1])) Seq=SEQ_Retrial;
-
-				if ((( FaultReg1[1] ) || ( FaultReg2[1] ))
-					 && (( FaultReg1[1] > FaultReg1[0] ) || ( FaultReg2[1] > FaultReg2[0] )))
-				{
-					// 占쏙옙占쏙옙 占쏙옙占?占쏙옙占시듸옙 占쏙옙트占쏙옙 占쏙옙占쌔쇽옙 占쏙옙占쏙옙 占식띰옙占신몌옙占쏙옙占?占십깍옙화
-					Fault_count++;
-					Word_Write_data(2379, Fault_count);		// Fault 횟占쏙옙占쏙옙 EEPROM占쏙옙 占쏙옙占쏙옙 占쌔억옙 占싼댐옙.
-					Flag.Fault_Cntl.bit.Rec_Complete = 0;
-					Flag.Fault_Cntl.bit.Rst_Complete = 0;
-	//				if (!FAULT_RECORD_COMPLETE)	Fault_Recording( Fault_count );
-					Fault_Recording( Fault_count );
-				}
-
-				if ((!Flag.Fault_Cntl.bit.Rst_Complete)&&((Flag.DI.bit.FAULT_RESET == 1)||(Flag.Fault_Cntl.bit.Reset == 1)))
-				{
-					FaultReg1= 0;
-
-					OL_TimeOver_Count = 0;
-					MaxCon_Curr_Count = 0;
-					OverVoltCount = 0;
-					UnderVoltCount = 0;
-					Flag.Fault_Cntl.bit.Reset = 0;
-					Flag.Fault1.all=0;
-					Flag.Fault2.all=0;
-					Flag.Fault3.all=0;
-					Seq = SEQ_Retrial;
-					Flag.Fault_Cntl.bit.Rst_Complete = 1;
-				}
-
-				FaultReg1[0] = FaultReg1[1];
-				FaultReg2[0] = FaultReg2[1];
-
-				Red_LED_on;
-				Green_LED_off;
-
-			break;
-
-
-		//  Retrial for Operation
-			case SEQ_Retrial:							//	" 4 "
-				{
-					State_Index = STATE_STOP;
-					Retry_cnt_En = 1;
-					if( Retry_cnt >= Retry_Time_set)
-					{
-						Retry_cnt_En = 0;
-						Seq = SEQ_Wait;
-					}
-				}
-			break;
-			default: Seq=SEQ_NoReady;
-		}
-	//	asm("   nop");					//END_SEQ:
-
-
-#endif //pbhp 151001
-
-	chThdSleepMilliseconds(1);
-
-	return 0;
-}
-
-//==========================================================================================================
 
 
 bool SetupParm(void)
@@ -1280,26 +1099,12 @@ void SMC_HallSensor_Estimation (SMC *s)
 
 	HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
 	HallPLLB = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
-	
-	//if(HallPLLA > Hall_KA )Hall_KA = HallPLLA;
-	//if(HallPLLB > Hall_KB )Hall_KB = HallPLLB;
-	
-	//HallPLLA = HallPLLA / Hall_KA;
-	//HallPLLB = HallPLLB / Hall_KB;
 
- 	//Low_pass_filter(HallPLLA_filtered, HallPLLA, HallPLLA_old, alpha);
-	//Low_pass_filter(HallPLLA_filtered, HallPLLA, HallPLLA_old, alpha);
-	
 	costh = cosf(Theta);
 	sinth = sinf(Theta);
-
-	//Hall_SinCos = HallPLLA_filtered * costh;
-	//Hall_CosSin = HallPLLB_filtered * sinth;
 	
 	Hall_SinCos = HallPLLA * costh;
 	Hall_CosSin = HallPLLB * sinth;
-	
-	//Digital_PI_controller(Hall_PIout, Hall_SinCos, Hall_CosSin, Hall_Err0, 10, 1, 1, Tsamp);
 
 	float err, tmp_kp, tmp_kpi; 									
 	tmp_kp = 1.0f;
@@ -1320,40 +1125,6 @@ void SMC_HallSensor_Estimation (SMC *s)
 
 	s->Omega = Hall_PIout;
 	//Futi   = Hall_PIout / (2.* PI) *Fsamp;
-
-
-#if 0 //  pll locked loop
-	/************************* Phase lead(90 degree) ***************************/
-	HallPLLlead  = -0.931727141f * HallPLLlead1 + 0.931727141f * HallPLLA - HallPLLA1;//all pass filter
-
-	HallPLLA2 = HallPLLA1;
-	HallPLLA1 = HallPLLA;
-
-	HallPLLlead2 = HallPLLlead1;
-	HallPLLlead1 = HallPLLlead;
-
-
-	/***************************************************************************/
-	/*********************************  PLL  ***********************************/
-	costh  = cosf(Theta);
-	sinth  = sinf(Theta );
-	HallPLLqe    = costh * HallPLLA - sinth * (HallPLLlead);    
-	HallPLLde    = sinth * HallPLLA + costh * (HallPLLlead);
-	
-	HallPLLdef   = -AMd * HallPLLdef1 + BMd * HallPLLde + BMd * HallPLLde1;
-	HallPLLde1   = HallPLLde;
-	HallPLLdef1  = HallPLLdef;
-
-	Wpllp  = -HallPLLdef * Kpll;  // modify by LEE Y J  0.428
-	Wplli  = Wplli - HallPLLdef * Tsamp * Ipll;   //28.83
-
-	Wpll   = Wpllp + Wplli + (2. * 3.141592654 * 60.0);
-	Theta += (Wpll) * Tsamp ;
-	Wpll1  = Wpll;
-	if(Theta  >= 3.141592654 * 3.141592654) Theta =0.0;
-
-	Futi   = Wpll / (2.*3.141592654);
-#endif
 
 	//spi_dac_write_A((HallPLLA+ 1.0f) * 200.0f);
 	//spi_dac_write_B((HallPLLB+ 1.0f) * 200.0f);
@@ -1402,10 +1173,6 @@ void stop_pwm_hw(void) {
 
 //=====================================================================
 //API
-//float mcpwm_get_rpm(void);
-//mc_state mcpwm_get_state(void);
-//mc_fault_code mcpwm_get_fault(void);
-//const char* mcpwm_fault_to_string(mc_fault_code fault);
 
 int fputc(int ch, FILE *f)
 {
