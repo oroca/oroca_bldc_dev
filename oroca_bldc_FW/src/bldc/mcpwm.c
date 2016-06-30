@@ -563,6 +563,8 @@ void mcpwm_init(mc_configuration *configuration) {
 
 	uGF.bit.RunMotor = 1;
 
+	spi_dac_hw_init();
+
 }
 
 
@@ -617,7 +619,7 @@ void mcpwm_adc_inj_int_handler(void)
 		
 
 		// Calculate commutation angle using estimator
-		ParkParm.qAngle = smc1.Theta;
+//====	//ParkParm.qAngle = smc1.Theta;
 
 		//ParkParm.qAngle = (float)IN[2];
 		//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
@@ -633,20 +635,20 @@ void mcpwm_adc_inj_int_handler(void)
 		ClarkePark();
 
 		// Calculate control values
-		DoControl();
+		//DoControl();
 
-
-		//ParkParm.qVd =0.5f;
-		//ParkParm.qVq = 0.0f;
+//======
+		ParkParm.qVd =0.5f;
+		ParkParm.qVq = 0.0f;
 
 		//ParkParm.qAngle = 0.0f;
 
 		//ParkParm.qAngle -= 0.002f;
 		//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
 
-		//ParkParm.qAngle += 0.002f;
-		//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
-
+		ParkParm.qAngle += 0.002f;
+		if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
+//=======
 
 		// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
 		InvPark();
@@ -1075,9 +1077,19 @@ static volatile float Hall_PIout = 0.0;
 static volatile float Hall_Err0 = 0.0;
 
 
-float HallPLLA	 = 0.0f;			// inverter output voltage
+float HallPLLA	 = 0.0f;	
 float HallPLLA1 	= 0.0f;
 float HallPLLB	   = 0.0f;
+
+float HallPLLA_cos3th	 = 0.0f;
+float HallPLLA_sin3th	 = 0.0f;
+float HallPLLB_sin3th	   = 0.0f;
+float HallPLLB_cos3th	   = 0.0f;
+
+float HallPLLA_cos3th_Integral = 0.0f;
+float HallPLLA_sin3th_Integral = 0.0f;
+float HallPLLB_sin3th_Integral  = 0.0f;
+float HallPLLB_cos3th_Integral = 0.0f;
 
 float HallPLLA_old = 0.0f;
 float HallPLLB_old = 0.0f;
@@ -1088,11 +1100,104 @@ float HallPLLB_filtered = 0.0f;
 float Hall_SinCos;
 float Hall_CosSin;
 
+float Gamma = 1.0f;
+
 float costh;
 float sinth;
 
+float Asin3th = 0.0f;
+float Acos3th = 0.0f;
+float Bsin3th= 0.0f;
+float Bcos3th= 0.0f;
+float ANF_PLLA= 0.0f;
+float ANF_PLLB= 0.0f;
+
+float cos3th;
+float sin3th;
+
+#if 1
+void SMC_HallSensor_Estimation (SMC *s)
+{
+
+	HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
+	HallPLLB = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
+
+	cos3th = cosf(3.0f * Theta);
+	sin3th = sinf(3.0f * Theta);
+
+	HallPLLA_sin3th = HallPLLA * sin3th * Gamma;
+	HallPLLA_cos3th = HallPLLA * cos3th * Gamma;
+	
+	HallPLLB_cos3th = HallPLLB* cos3th * Gamma;
+	HallPLLB_sin3th = HallPLLB * sin3th * Gamma;
+
+	HallPLLA_cos3th_Integral += HallPLLA_cos3th;
+	HallPLLA_sin3th_Integral += HallPLLA_sin3th;
+	
+	HallPLLB_sin3th_Integral += HallPLLB_sin3th;
+	HallPLLB_cos3th_Integral += HallPLLB_cos3th;
+
+	Asin3th= HallPLLA_sin3th_Integral * sin3th;
+	Acos3th= HallPLLA_cos3th_Integral * cos3th;
+
+	Bsin3th= HallPLLB_sin3th_Integral * sin3th;
+	Bcos3th= HallPLLB_cos3th_Integral * cos3th;
+
+	ANF_PLLA = HallPLLA - Asin3th - Acos3th;
+	ANF_PLLB = HallPLLB - Bsin3th - Bcos3th;
+	
+	costh = cosf(Theta);
+	sinth = sinf(Theta);
+	
+	Hall_SinCos = ANF_PLLA * costh;
+	Hall_CosSin = ANF_PLLB * sinth;
+
+	float err, tmp_kp, tmp_kpi; 									
+	tmp_kp = 1.0f;
+	tmp_kpi = (1.0f + 1.0f * Tsamp);
+	err = Hall_SinCos - Hall_CosSin; 											
+	Hall_PIout += ((tmp_kpi * err) - (tmp_kp * Hall_Err0)); 					
+	Hall_PIout = Bound_limit(Hall_PIout, 10.0f);						
+	Hall_Err0= err;									
+	
+	Theta += Hall_PIout ;
+	if((2.0f * PI) < Theta) Theta = Theta - (2.0f * PI);
+	else if(Theta < 0.0f) Theta = (2.0f * PI) + Theta;
+
+	s->Theta= Theta + 0.3f;
+
+	if((2.0f * PI) < s->Theta) s->Theta = s->Theta - (2.0f * PI);
+	else if(s->Theta < 0.0f) s->Theta = (2.0f * PI) + s->Theta;
+
+	s->Omega = Hall_PIout;
+	//Futi   = Hall_PIout / (2.* PI) *Fsamp;
+
+	//spi_dac_write_A((HallPLLA+ 1.0f) * 200.0f);
+	//spi_dac_write_B((HallPLLB+ 1.0f) * 200.0f);
+
+	//spi_dac_write_A((costh + 1.0f) * 2000.0f);
+	//spi_dac_write_B((sinth + 1.0f) * 2047.0f);
+
+	//spi_dac_write_A( (Hall_SinCos+ 1.0f) * 2048.0f);
+	//spi_dac_write_B( (Hall_CosSin+ 1.0f) * 2048.0f);
+
+	//spi_dac_write_A( (Hall_err+ 1.0f) * 2048.0f);
+	spi_dac_write_B( (Theta * 200.0f) );
+
+	//spi_dac_write_B( Hall_PIout * 100.0f);
 
 
+	//spi_dac_write_A( (ParkParm.qAngle * 200.0f) );
+	//spi_dac_write_B( (smc1.Theta * 200.0f) );
+
+
+	//s->Omega = Wpll;
+	//s->Theta =Theta;
+
+	//DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
+}
+
+#else
 void SMC_HallSensor_Estimation (SMC *s)
 {
 
@@ -1151,6 +1256,7 @@ void SMC_HallSensor_Estimation (SMC *s)
 	//DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
 }
 
+#endif
 
 void stop_pwm_hw(void) {
 	TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_ForcedAction_InActive);

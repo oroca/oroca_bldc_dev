@@ -29,6 +29,12 @@
 #include "datatypes.h"
 #include <stdbool.h>
 
+void spi_dac_hw_init(void);
+void spi_dac_write_A( short data);
+void spi_dac_write_B( short data);
+void spi_dac_write_AB( short data);
+
+
 //Defines
 typedef unsigned short WORD;
 //typedef signed int SFRAC16;

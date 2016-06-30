@@ -137,9 +137,11 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+       $(CHIBIOS)/os/hal/lib/ports/STM32/LLD/TIMv1/gpt_lld.c \
        $(CHIBIOS)/os/various/syscalls.c \
        $(BLDCSRC)/bldc.c \
        $(BLDCSRC)/mcpwm.c \
+       $(BLDCSRC)/spi_dac.c \
        $(CORESRC)/usb_uart.c \
        $(CORESRC)/irq_handlers.c \
        $(CORESRC)/comm_usb.c \
@@ -183,6 +185,7 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) \
          $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/hal/lib/streams \
+         $(CHIBIOS)/os/hal/lib/ports/STM32/LLD/TIMv1 \
          $(LIBDIR)/mcconf \
          $(HWINC) \
          $(APPINC) \
