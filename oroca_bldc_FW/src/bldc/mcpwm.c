@@ -241,33 +241,6 @@ static volatile float TargetDCbus = 0;// DC Bus is measured before running motor
 						// and compensated linearly.
 
 
-// Private functions
-
-bool SetupParm(void);
-
-void MeasCompCurr( int curr1, int curr2 );
-void InitMeasCompCurr( short Offset_a, short Offset_b );
-
-//void InitPI( tPIParm *pParm);
-//void CalcPI( tPIParm *pParm);
-
-void SinCos(void);      // Calculate qSin,qCos from iAngle
-void ClarkePark(void);  // Calculate qId,qIq from qCos,qSin,qIa,qIb
-void InvPark(void);     // Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
-void FWInit (void);
-float FieldWeakening(float qMotorSpeed);
-
-void CalcRefVec( void );
-void CalcSVGen( void );
-void CorrectPhase( void );
-void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
-
-float VoltRippleComp(float Vdq);
-
-mc_rpm_dep_struct mcpwm_get_rpm_dep(void);
-const volatile mc_configuration* mcpwm_get_configuration(void);
-void mcpwm_set_configuration(mc_configuration *configuration);
-
 
 // Interrupt handlers
 void mcpwm_adc_inj_int_handler(void);
@@ -280,7 +253,6 @@ void CalcPI( tPIParm *pParm);
 void DoControl( void );
 void InitPI( tPIParm *pParm);
 void SetupControlParameters(void);
-void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
 
 // Threads
 static THD_WORKING_AREA(SEQUENCE_thread_wa, 2048);
@@ -549,7 +521,7 @@ void mcpwm_init(mc_configuration *configuration) {
 
 
 //---------------------------------------------------------------------------
-
+	SetupParm();
 	SetupControlParameters();
 
 	uGF.Word = 0;                   // clear flags
