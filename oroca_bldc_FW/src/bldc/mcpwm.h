@@ -55,65 +55,10 @@ typedef unsigned char  BYTE;
 #define SMC_DEFAULTS {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 
 
-//************** Start-Up Parameters **************
-
-#define LOCKTIMEINSEC  0.25		// Initial rotor lock time in seconds
-								// Make sure LOCKTIMEINSEC*(1.0/LOOPTIMEINSEC)
-								// is less than 65535.
-#define OPENLOOPTIMEINSEC 5.0	// Open loop time in seconds. This is the time that
-								// will take from stand still to closed loop.
-								// Optimized to overcome the brake inertia.
-								// (Magtrol AHB-3 brake inertia = 6.89 kg x cm2).
-#define INITIALTORQUE	1		// Initial Torque demand in Amps.
-								// Enter initial torque demand in Amps using REFINAMPS() 
-								// macro. Maximum Value for reference is defined by 
-								// shunt resistor value and differential amplifier gain.
-								// Use this equation to calculate maximum torque in 
-								// Amperes:
-								// 
-								// Max REFINAMPS = (VDD/2)/(RSHUNT*DIFFAMPGAIN)
-								//
-								// For example:
-								//
-								// RSHUNT = 0.005
-								// VDD = 3.3
-								// DIFFAMPGAIN = 75
-								//
-								// Maximum torque reference in Amps is:
-								//
-								// (3.3/2)/(.005*75) = 4.4 Amperes, or REFINAMPS(4.4)
-#define ENDSPEEDOPENLOOP MINSPEEDINRPM
-
-//************** Motor Parameters **************
-
-// Values used to test Bejing Eletechnic Motor "Dia 80-252140-220" at 320VDC input. Motor datasheet at www.eletechnic.com
-#define POLEPAIRS      12      // Number of pole pairs
-#define PHASERES		((float)0.15)	// Phase resistance in Ohms.
-#define PHASEIND		((float)0.0006)// Phase inductance in Henrys.
-#define NOMINALSPEEDINRPM 1000	// Make sure NOMINALSPEEDINRPM generates a MAXOMEGA < 1.0
-		//50Hz   				// Use this formula:
-								// MAXOMEGA = NOMINALSPEEDINRPM*SPEEDLOOPTIME*POLEPAIRS*2/60
-								// If MAXOMEGA > 1.0, reduce NOMINALSPEEDINRPM or execute
-								// speed loop faster by reducing SpeedLoopTime.
-								// Maximum position of POT will set a reference of 
-								// NOMINALSPEEDINRPM.
-#define MINSPEEDINRPM	10	// Minimum speed in RPM. Closed loop will operate at this
-		//8.47Hz						// speed. Open loop will transition to closed loop at
-								// this minimum speed. Minimum POT position (CCW) will set
-								// a speed reference of MINSPEEDINRPM
-#define FIELDWEAKSPEEDRPM 1000	// Make sure FIELDWEAKSPEEDRPM generates a MAXOMEGA < 1.0
-								// Use this formula:
-								// MAXOMEGA = FIELDWEAKSPEEDRPM*SPEEDLOOPTIME*POLEPAIRS*2/60
-								// If MAXOMEGA > 1.0, reduce FIELDWEAKSPEEDRPM or execute
-								// speed loop faster by reducing SpeedLoopTime.
-								// Maximum position of POT will set a reference of 
-								// FIELDWEAKSPEEDRPM.
 
 //************** PWM and Control Timing Parameters **********
 
 #define PWMFREQUENCY	16000		// PWM Frequency in Hertz
-#define DEADTIMESEC		0.000002f	// Deadtime in seconds
-#define BUTPOLLOOPTIME	0.100f		// Button polling loop period in sec
 #define SPEEDLOOPFREQ	1000		// Speed loop Frequency in Hertz. This value must
 									// be an integer to avoid pre-compiler error
 									// Use this value to test low speed motor
@@ -132,12 +77,7 @@ typedef unsigned char  BYTE;
 //************** Hardware Parameters ****************
 
 #define RSHUNT			0.001f		// Value in Ohms of shunt resistors used.
-#define DIFFAMPGAIN		10		// Gain of differential amplifier.
 #define VDD				3.3f		// VDD voltage, only used to convert torque
-								// reference from Amps to internal variables
-
-#define SPEEDDELAY  1000 * LOOPTIMEINSEC;	// Delay for the speed ramp.
-					  // Necessary for the PI control to work properly at high speeds.
 
 //*************** Optional Modes **************
 //#define TORQUEMODE
@@ -163,50 +103,9 @@ typedef unsigned char  BYTE;
 #define     WKC        0.99999
 #define     WOUTMAX    0.95
 
-//************** ADC Scaling **************
-// Scaling constants: Determined by calibration or hardware design. 
-#define     DQK        (OMEGA10 - OMEGA1)/2.0	// POT Scaling
+
 #define     DQKA       0.0008058608f	// Current feedback software gain : adc*(1/resol)*(AVDD/AmpGAIN)*(1/R) 
 #define     DQKB       0.0008058608f	// Current feedback software gain : adc*(1/4096)*(3.3/10)*(1/0.001)
-
-//************** Field Weakening **************
-// Enter flux demand Amperes using REFINAMPS() macro. Maximum Value for
-// reference is defined by shunt resistor value and differential amplifier gain.
-// Use this equation to calculate maximum torque in Amperes:
-// 
-// Max REFINAMPS = (VDD/2)/(RSHUNT*DIFFAMPGAIN)
-//
-// For example:
-//
-// RSHUNT = 0.005
-// VDD = 3.3
-// DIFFAMPGAIN = 75
-//
-// Maximum torque reference in Amps is:
-//
-// (3.3/2)/(.005*75) = 4.4 Amperes, or REFINAMPS(4.4)
-//
-// in order to have field weakening, this reference value should be negative,
-// so maximum value in this example is -4.4, or REFINAMPS(-4.4)
-
-//****Values for Field weakening used to test Sander Motor at 160VDC input****
-// For other motors, FW was not used to reach the rated speed
-#define     dqKFw0  REFINAMPS(0)
-#define     dqKFw1  REFINAMPS(-0.320)
-#define     dqKFw2  REFINAMPS(-0.325)
-#define     dqKFw3  REFINAMPS(-0.330)
-#define     dqKFw4  REFINAMPS(-0.335)
-#define     dqKFw5  REFINAMPS(-0.340)
-#define     dqKFw6  REFINAMPS(-0.345)
-#define     dqKFw7  REFINAMPS(-0.350)
-#define     dqKFw8  REFINAMPS(-0.355)
-#define     dqKFw9  REFINAMPS(-0.360)
-#define     dqKFw10  REFINAMPS(-0.365)
-#define     dqKFw11  REFINAMPS(-0.370)
-#define     dqKFw12  REFINAMPS(-0.375)
-#define     dqKFw13  REFINAMPS(-0.380)
-#define     dqKFw14  REFINAMPS(-0.385)
-#define     dqKFw15  REFINAMPS(-0.390)
 
 //************** Derived Parameters ****************
 
@@ -215,11 +114,6 @@ typedef unsigned char  BYTE;
 #define IRP_PERCALC (unsigned int)(SPEEDLOOPTIME/LOOPTIMEINSEC)	// PWM loops per velocity calculation
 #define SPEEDLOOPTIME (float)(1.0/SPEEDLOOPFREQ) // Speed Control Period
 #define LOOPINTCY	 TIM1->ARR
-#define LOCKTIME	(unsigned int)(LOCKTIMEINSEC*(1.0/LOOPTIMEINSEC))
-// Time it takes to ramp from zero to MINSPEEDINRPM. Time represented in seconds
-#define DELTA_STARTUP_RAMP	(unsigned int)(MINSPEEDINRPM*POLEPAIRS*LOOPTIMEINSEC* LOOPTIMEINSEC*65536*65536/(60*OPENLOOPTIMEINSEC))
-// Number of control loops that must execute before the button routine is executed.
-#define	BUTPOLLOOPCNT	(unsigned int)(BUTPOLLOOPTIME/LOOPTIMEINSEC)
 
 
 #define		PI				3.14159265358979f
@@ -227,12 +121,11 @@ typedef unsigned char  BYTE;
 #define		SQRT3			1.732050808f
 #define		INV_SQRT3		(float)(1./SQRT3)
 
-#define REFINAMPS(Amperes_Value) (	Amperes_Value*DQKA*RSHUNT*DIFFAMPGAIN/(VDD/2))
-
 // External variables
 extern  uint16_t ADC_Value[];
 extern   int SpeedReference;
 //extern  unsigned int  switching_frequency_now;
+
 
 
 #ifdef __cplusplus
@@ -260,16 +153,13 @@ mc_state mcpwm_get_state(void);
 mc_fault_code mcpwm_get_fault(void);
 const char* mcpwm_fault_to_string(mc_fault_code fault);
 
-
-//------------------------------------------------------------------------------------------------------------------------------------
-//smc(sliding mode control )
-
-//------------------------------------------------------------------------------------------------------------------------------------
-//CalcRef.s 
-
-
-void FWInit (void);
 float FieldWeakening(float qMotorSpeed);
+
+
+
+
+
+
 
 
 

@@ -86,20 +86,12 @@ int bldc_init(void)
 
 	chThdSleepMilliseconds(1000);
 
-	conf_general_init();
 	hw_init_gpio();
 
-
 	mc_configuration mcconf;
-	conf_general_read_mc_configuration(&mcconf);
 	mcpwm_init(&mcconf);
 
 	comm_usb_init();
-
-	app_configuration appconf;
-	conf_general_read_app_configuration(&appconf);
-
-
 
 	return 0;
 }

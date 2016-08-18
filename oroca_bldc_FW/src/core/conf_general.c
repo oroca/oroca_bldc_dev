@@ -4,7 +4,7 @@
  *  Created on: 14 sep 2014
  *      Author: benjamin
  */
-
+#if 0
 #include "conf_general.h"
 #include "ch.h"
 #include "eeprom.h"
@@ -361,7 +361,7 @@ bool conf_general_detect_motor_param(float current, float min_rpm, float low_dut
 		float *int_limit, float *bemf_coupling_k) {
 
 	int ok_steps = 0;
-#if 0
+
 	mc_configuration mcconf_old = *mcpwm_get_configuration();
 	mc_configuration mcconf = *mcpwm_get_configuration();
 
@@ -449,6 +449,7 @@ bool conf_general_detect_motor_param(float current, float min_rpm, float low_dut
 
 	// Restore settings
 	mcpwm_set_configuration(&mcconf_old);
-#endif
+
 	return ok_steps == 5 ? true : false;
 }
+#endif

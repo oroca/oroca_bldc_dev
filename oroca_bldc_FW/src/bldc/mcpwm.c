@@ -243,8 +243,8 @@ static volatile float TargetDCbus = 0;// DC Bus is measured before running motor
 
 
 // Interrupt handlers
-void mcpwm_adc_inj_int_handler(void);
-void mcpwm_adc_int_handler(void *p, uint32_t flags);
+//void mcpwm_adc_inj_int_handler(void);
+//void mcpwm_adc_int_handler(void *p, uint32_t flags);
 
 
 static void do_dc_cal(void);
@@ -607,19 +607,19 @@ void mcpwm_adc_inj_int_handler(void)
 		ClarkePark();
 
 		// Calculate control values
-		//DoControl();
+		DoControl();
 
 //======
-		ParkParm.qVd =0.5f;
-		ParkParm.qVq = 0.0f;
+		//ParkParm.qVd =0.5f;
+		//ParkParm.qVq = 0.0f;
 
 		//ParkParm.qAngle = 0.0f;
 
 		//ParkParm.qAngle -= 0.002f;
 		//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
 
-		ParkParm.qAngle += 0.002f;
-		if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
+		//ParkParm.qAngle += 0.002f;
+		//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
 //=======
 
 		// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
