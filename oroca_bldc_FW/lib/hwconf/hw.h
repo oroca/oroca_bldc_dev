@@ -25,7 +25,11 @@
 #ifndef HW_H_
 #define HW_H_
 
-#include "conf_general.h"
+
+//#include "conf_general.h"
+
+
+
 
 #ifdef HW_VERSION_40
 #include "hw_40.h"

@@ -25,8 +25,8 @@
 #ifndef MCPWM_H_
 #define MCPWM_H_
 
-#include "conf_general.h"
-#include "datatypes.h"
+//#include "conf_general.h"
+//#include "datatypes.h"
 #include <stdbool.h>
 
 void spi_dac_hw_init(void);
@@ -34,6 +34,7 @@ void spi_dac_write_A( short data);
 void spi_dac_write_B( short data);
 void spi_dac_write_AB( short data);
 
+#define SYSTEM_CORE_CLOCK		168000000
 
 //Defines
 typedef unsigned short WORD;
@@ -147,20 +148,10 @@ void InvPark(void);     // Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
 
 
 
-void mcpwm_init(mc_configuration *configuration);
+void mcpwm_init(void);
 float mcpwm_get_rpm(void);
-mc_state mcpwm_get_state(void);
-mc_fault_code mcpwm_get_fault(void);
-const char* mcpwm_fault_to_string(mc_fault_code fault);
 
 float FieldWeakening(float qMotorSpeed);
-
-
-
-
-
-
-
 
 
 void CalcRefVec( void );
@@ -169,10 +160,6 @@ void CorrectPhase( void );
 void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
 
 float VoltRippleComp(float Vdq);
-
-mc_rpm_dep_struct mcpwm_get_rpm_dep(void); 
-const volatile mc_configuration* mcpwm_get_configuration(void);
-void mcpwm_set_configuration(mc_configuration *configuration);
 
 
 // Interrupt handlers

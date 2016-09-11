@@ -36,12 +36,15 @@
 #include "hal.h"
 #include "stm32f4xx_conf.h"
 
-#include "conf_general.h"
+//#include "conf_general.h"
+#define HW_VERSION_OROCA
+#define MCCONF_OUTRUNNER2
 
 
+
+#include "hw.h"
 #include "mcpwm.h"
 #include "comm_usb.h"
-#include "hw.h"
 
 //jsyoon
 #include "chprintf.h"

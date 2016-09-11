@@ -97,9 +97,9 @@ BLDCSRC = src/bldc
 BLDCINC = src/bldc
 
 
-MAVINC  = lib/mavlink
-MAVINC += lib/mavlink/common
-MAVINC += lib/mavlink/oroca_bldc
+#MAVINC  = lib/mavlink
+#MAVINC += lib/mavlink/common
+#MAVINC += lib/mavlink/oroca_bldc
 
 
 
@@ -119,7 +119,6 @@ include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
-include lib/hwconf/hwconf.mk
 
 
 # Define linker script file here
@@ -144,11 +143,12 @@ CSRC = $(STARTUPSRC) \
        $(CORESRC)/usb_uart.c \
        $(CORESRC)/irq_handlers.c \
        $(CORESRC)/comm_usb.c \
-       $(CORESRC)/servo_dec.c \
+       #$(CORESRC)/servo_dec.c \
        $(CORESRC)/utils.c \
-       $(CORESRC)/conf_general.c \
+       #$(CORESRC)/conf_general.c \
        $(CORESRC)/eeprom.c \
-       $(CORESRC)/flash_helper.c \
+       $(CORESRC)/flash_helper.c\
+	   $(LIBSRC)/hwconf/hw_oroca.c 
        $(HWSRC) 
 
        
@@ -185,7 +185,8 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/hal/lib/streams \
          $(CHIBIOS)/os/hal/lib/ports/STM32/LLD/TIMv1 \
-         $(LIBDIR)/mcconf \
+         #$(LIBDIR)/mcconf \
+		 $(LIBDIR)/hwconf \
          $(HWINC) \
          $(APPINC) \
          $(NRFINC) \

@@ -25,7 +25,7 @@
 #ifndef COMM_USB_H_
 #define COMM_USB_H_
 
-#include "conf_general.h"
+//#include "conf_general.h"
 
 // Functions
 void comm_usb_init(void);

@@ -187,7 +187,6 @@ typedef struct {
 		}
 
 
-static volatile mc_fault_code fault_now;
 static volatile bool dccal_done;
 
 
@@ -258,7 +257,7 @@ void SetupControlParameters(void);
 static THD_WORKING_AREA(SEQUENCE_thread_wa, 2048);
 
 
-void mcpwm_init(mc_configuration *configuration) {
+void mcpwm_init(void) {
 	utils_sys_lock_cnt();
 
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
@@ -267,7 +266,6 @@ void mcpwm_init(mc_configuration *configuration) {
 	NVIC_InitTypeDef NVIC_InitStructure;
 
 	// Initialize variables
-	fault_now = FAULT_CODE_NONE;
 	dccal_done = false;
 
 	TIM_DeInit(TIM1);
@@ -1087,7 +1085,7 @@ float ANF_PLLB= 0.0f;
 float cos3th;
 float sin3th;
 
-#if 1
+#if 0
 void SMC_HallSensor_Estimation (SMC *s)
 {
 
@@ -1244,38 +1242,4 @@ void stop_pwm_hw(void) {
 	TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Disable);
 
 	TIM_GenerateEvent(TIM1, TIM_EventSource_COM);
-}
-
-
-
-
-//=====================================================================
-//API
-
-int fputc(int ch, FILE *f)
-{
-    return(ITM_SendChar(ch));
-}
-
-void mcpwm_Set_RunStop(bool run_stop)
-{
-	if(run_stop)	uGF.bit.RunMotor = 1;
-	else uGF.bit.RunMotor = 0;
-
-	return;
-}
-
-WORD mcpwm_Get_Control(void)
-{
-	return uGF.Word;
-}
-
-void mcpwm_Set_Velocity(float Velocity)
-{
-	CtrlParm.qVelRef = Velocity;
-	return;
-}
-tCtrlParm mcpwm_Get_CtrlParm(void)
-{
-	return CtrlParm;
 }
