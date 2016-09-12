@@ -17,11 +17,14 @@
 /*
 	OROCA BLDC PROJECT.
 */
-#include "bldc.h"
+#include "ch.h"
+#include "hal.h"
+#include "stm32f4xx_conf.h"
+
 #include "hw.h"
+#include "bldc.h"
 #include "usb_uart.h"
 //#include "../../mavlink/oroca_bldc/mavlink.h"
-
 
 
 /*
@@ -55,7 +58,7 @@ static msg_t periodic_thread(void *arg) {
 
 	chRegSetThreadName("Main periodic");
 
-	int fault_print = 0;
+	//int fault_print = 0;
 
 	for(;;)
 	{
@@ -114,18 +117,11 @@ uint16_t dbg_AccumTheta;
 
 int bldc_start(void)
 {
-
-
-
 	//-- 스레드 생성
-	//
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
 	chThdCreateStatic(uart_thread_wa, sizeof(uart_thread_wa), NORMALPRIO, uart_process_thread, NULL);
 
-
-
 	//-- IDLE
-	//
 	for(;;)
 	{
 		//palSetPad(GPIOA, 7);

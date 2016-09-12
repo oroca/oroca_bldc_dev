@@ -143,14 +143,13 @@ CSRC = $(STARTUPSRC) \
        $(CORESRC)/usb_uart.c \
        $(CORESRC)/irq_handlers.c \
        $(CORESRC)/comm_usb.c \
-       #$(CORESRC)/servo_dec.c \
        $(CORESRC)/utils.c \
-       #$(CORESRC)/conf_general.c \
-       $(CORESRC)/eeprom.c \
-       $(CORESRC)/flash_helper.c\
 	   $(LIBSRC)/hwconf/hw_oroca.c 
        $(HWSRC) 
-
+#$(CORESRC)/eeprom.c \       
+#$(CORESRC)/flash_helper.c\
+#$(CORESRC)/servo_dec.c \
+#$(CORESRC)/conf_general.c \
        
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -185,7 +184,6 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/hal/lib/streams \
          $(CHIBIOS)/os/hal/lib/ports/STM32/LLD/TIMv1 \
-         #$(LIBDIR)/mcconf \
 		 $(LIBDIR)/hwconf \
          $(HWINC) \
          $(APPINC) \
@@ -193,7 +191,7 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(COREINC) \
          $(BLDCINC)	\
          $(MAVINC)
-
+ 		#$(LIBDIR)/mcconf \
 #
 # Project, sources and paths
 ##############################################################################

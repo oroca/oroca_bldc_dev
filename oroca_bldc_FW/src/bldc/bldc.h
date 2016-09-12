@@ -37,7 +37,7 @@
 #include "stm32f4xx_conf.h"
 
 //#include "conf_general.h"
-#define HW_VERSION_OROCA
+
 #define MCCONF_OUTRUNNER2
 
 

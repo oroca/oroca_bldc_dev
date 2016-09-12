@@ -28,6 +28,7 @@
 
 //#include "conf_general.h"
 
+#define HW_VERSION_OROCA
 
 
 

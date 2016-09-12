@@ -29,6 +29,14 @@
 //#include "datatypes.h"
 #include <stdbool.h>
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 void spi_dac_hw_init(void);
 void spi_dac_write_A( short data);
 void spi_dac_write_B( short data);
@@ -41,6 +49,113 @@ typedef unsigned short WORD;
 //typedef signed int SFRAC16;
 typedef unsigned char  BYTE;
 //typedef unsigned char  BOOL;
+
+// Structs
+typedef struct {
+	float	qKa;	
+	short	Offseta;
+
+	float	qKb;   
+	short	Offsetb;
+} tMeasCurrParm;
+
+
+typedef struct {
+		float  Valpha;   		// Input: Stationary alfa-axis stator voltage
+		float  Ealpha;   		// Variable: Stationary alfa-axis back EMF
+		float  EalphaFinal;	// Variable: Filtered EMF for Angle calculation
+		float  Zalpha;      	// Output: Stationary alfa-axis sliding control
+		float  Gsmopos;    	// Parameter: Motor dependent control gain
+		float  EstIalpha;   	// Variable: Estimated stationary alfa-axis stator current
+		float  Fsmopos;    	// Parameter: Motor dependent plant matrix
+		float  Vbeta;   		// Input: Stationary beta-axis stator voltage
+		float  Ebeta;  		// Variable: Stationary beta-axis back EMF
+		float  EbetaFinal;	// Variable: Filtered EMF for Angle calculation
+		float  Zbeta;      	// Output: Stationary beta-axis sliding control
+		float  EstIbeta;    	// Variable: Estimated stationary beta-axis stator current
+		float  Ialpha;  		// Input: Stationary alfa-axis stator current
+		float  IalphaError; 	// Variable: Stationary alfa-axis current error
+		float  Kslide;     	// Parameter: Sliding control gain
+		float  MaxSMCError;  	// Parameter: Maximum current error for linear SMC
+		float  Ibeta;  		// Input: Stationary beta-axis stator current
+		float  IbetaError;  	// Variable: Stationary beta-axis current error
+		float  Kslf;       	// Parameter: Sliding control filter gain
+		float  KslfFinal;    	// Parameter: BEMF Filter for angle calculation
+		float  FiltOmCoef;   	// Parameter: Filter Coef for Omega filtered calc
+		float  ThetaOffset;	// Output: Offset used to compensate rotor angle
+		float  Theta;			// Output: Compensated rotor angle
+		float  Omega;     	// Output: Rotor speed
+		float  OmegaFltred;  	// Output: Filtered Rotor speed for speed PI
+} SMC;
+
+typedef struct {
+    float   qdSum;          // 1.31 format
+    float   qKp;
+    float   qKi;
+    float   qKc;
+    float   qOutMax;
+    float   qOutMin;
+    float   qInRef; 
+    float   qInMeas;
+    float   qOut;
+    } tPIParm;
+
+
+typedef struct {
+    float   qAngle;
+    float   qSin;
+    float   qCos;
+    float   qIa;
+    float   qIb;
+    float   qIalpha;
+    float   qIbeta;
+    float   qId;
+    float   qIq;
+    float   qVd;
+    float   qVq;
+    float   qValpha;
+    float   qVbeta;
+    float   qV1;
+    float   qV2;
+    float   qV3;
+    } tParkParm;
+
+typedef struct {
+    float   qVelRef;    // Reference velocity
+    float   qVdRef;     // Vd flux reference value
+    float   qVqRef;     // Vq torque reference value
+    } tCtrlParm;
+
+//------------------  C API for FdWeak routine ---------------------
+
+typedef struct {
+	float	qK1;            // < Nominal speed value
+	float	qIdRef;
+	float	qFwOnSpeed;
+	float	qFwActiv;
+	int	qIndex;
+	float	qFWPercentage;
+	float	qInterpolPortion;
+	float		qFwCurve[16];	// Curve for magnetizing current
+    } tFdWeakParm;
+
+//------------------  C API for SVGen routine ---------------------
+
+typedef struct {
+	unsigned int   iPWMPeriod;
+
+	float   qVr1;
+	float   qVr2;
+	float   qVr3;
+
+	float T1;
+	float T2;
+
+	unsigned int Ta;
+	unsigned int Tb;
+	unsigned int Tc;
+
+    } tSVGenParm;
 
 #define False  0
 #define True   1
@@ -63,17 +178,6 @@ typedef unsigned char  BYTE;
 #define SPEEDLOOPFREQ	1000		// Speed loop Frequency in Hertz. This value must
 									// be an integer to avoid pre-compiler error
 									// Use this value to test low speed motor
-
-//************** Slide Mode Controller Parameters **********
-
-#define SMCGAIN			0.85f		// Slide Mode Controller Gain (0.0 to 0.9999)
-#define MAXLINEARSMC    0.005f		// If measured current - estimated current
-								// is less than MAXLINEARSMC, the slide mode
-								// Controller will have a linear behavior
-								// instead of ON/OFF. Value from (0.0 to 0.9999)
-#define FILTERDELAY		90		// Phase delay of two low pass filters for
-								// theta estimation. Value in Degrees from
-								// from 0 to 359.
 
 //************** Hardware Parameters ****************
 
@@ -124,14 +228,33 @@ typedef unsigned char  BYTE;
 
 // External variables
 extern  uint16_t ADC_Value[];
-extern   int SpeedReference;
-//extern  unsigned int  switching_frequency_now;
+extern  unsigned int  switching_frequency_now;
 
 
+//==============================================================
+//define
+#define Digital_PI_controller(out, ref, in, err0, limit, kp, ki, tsample)   \
+		{						                                            \
+			float err, tmp_kp, tmp_kpi;                                     \
+			tmp_kp = (float)(kp);                                           \
+			tmp_kpi = (float)(kp + ki*tsample);                             \
+			err = ref - in;					                                \
+			out += ((tmp_kpi * err) - (tmp_kp * err0));	                    \
+			out = Bound_limit(out, limit);                                  \
+			err0 = err;                                                     \
+		}
+#define Bound_limit(in,lim)	((in > (lim)) ? (lim) : ((in < -(lim)) ? -(lim) : in))
+#define Bound_min_max(in, min, max)	((in > (max)) ? (max) : ((in < (min)) ? (min) : in))
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define Low_pass_filter(out, in, in_old, alpha)     \
+		{												\
+			float tmp;									\
+			tmp = alpha*(in + in_old - (out*2)); \
+			out += tmp; 								\
+			in_old = in;								\
+		}
+
+
 
 // Functions
 bool SetupParm(void);
@@ -162,8 +285,17 @@ void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty
 float VoltRippleComp(float Vdq);
 
 
+
+void do_dc_cal(void);
+void SMC_HallSensor_Estimation (SMC *s);
+void CalcPI( tPIParm *pParm);
+void DoControl( void );
+void InitPI( tPIParm *pParm);
+void SetupControlParameters(void);
+
+
+
 // Interrupt handlers
-void mcpwm_adc_inj_int_handler(void);
 void mcpwm_adc_int_handler(void *p, uint32_t flags);
 
 #ifdef __cplusplus

@@ -38,7 +38,8 @@
 #include <unistd.h>
 
 
-// Structs
+
+
 union{
         struct {
 		unsigned OpenLoop:1;	// Indicates if motor is running in open or closed loop
@@ -56,151 +57,8 @@ union{
         	WORD Word;
  } uGF;
 
-typedef struct {
-	float	qKa;	
-	short	Offseta;
-
-	float	qKb;   
-	short	Offsetb;
-} tMeasCurrParm;
-
-typedef struct {
-		float  Valpha;   		// Input: Stationary alfa-axis stator voltage
-		float  Ealpha;   		// Variable: Stationary alfa-axis back EMF
-		float  EalphaFinal;	// Variable: Filtered EMF for Angle calculation
-		float  Zalpha;      	// Output: Stationary alfa-axis sliding control
-		float  Gsmopos;    	// Parameter: Motor dependent control gain
-		float  EstIalpha;   	// Variable: Estimated stationary alfa-axis stator current
-		float  Fsmopos;    	// Parameter: Motor dependent plant matrix
-		float  Vbeta;   		// Input: Stationary beta-axis stator voltage
-		float  Ebeta;  		// Variable: Stationary beta-axis back EMF
-		float  EbetaFinal;	// Variable: Filtered EMF for Angle calculation
-		float  Zbeta;      	// Output: Stationary beta-axis sliding control
-		float  EstIbeta;    	// Variable: Estimated stationary beta-axis stator current
-		float  Ialpha;  		// Input: Stationary alfa-axis stator current
-		float  IalphaError; 	// Variable: Stationary alfa-axis current error
-		float  Kslide;     	// Parameter: Sliding control gain
-		float  MaxSMCError;  	// Parameter: Maximum current error for linear SMC
-		float  Ibeta;  		// Input: Stationary beta-axis stator current
-		float  IbetaError;  	// Variable: Stationary beta-axis current error
-		float  Kslf;       	// Parameter: Sliding control filter gain
-		float  KslfFinal;    	// Parameter: BEMF Filter for angle calculation
-		float  FiltOmCoef;   	// Parameter: Filter Coef for Omega filtered calc
-		float  ThetaOffset;	// Output: Offset used to compensate rotor angle
-		float  Theta;			// Output: Compensated rotor angle
-		float  Omega;     	// Output: Rotor speed
-		float  OmegaFltred;  	// Output: Filtered Rotor speed for speed PI
-} SMC;
 typedef SMC *SMC_handle;
-
-typedef struct {
-    float   qdSum;          // 1.31 format
-    float   qKp;
-    float   qKi;
-    float   qKc;
-    float   qOutMax;
-    float   qOutMin;
-    float   qInRef; 
-    float   qInMeas;
-    float   qOut;
-    } tPIParm;
-
-typedef struct {
-    float   qAngle;
-    float   qSin;
-    float   qCos;
-    float   qIa;
-    float   qIb;
-    float   qIalpha;
-    float   qIbeta;
-    float   qId;
-    float   qIq;
-    float   qVd;
-    float   qVq;
-    float   qValpha;
-    float   qVbeta;
-    float   qV1;
-    float   qV2;
-    float   qV3;
-    } tParkParm;
-
-typedef struct {
-    float   qVelRef;    // Reference velocity
-    float   qVdRef;     // Vd flux reference value
-    float   qVqRef;     // Vq torque reference value
-    } tCtrlParm;
-
-//------------------  C API for FdWeak routine ---------------------
-
-typedef struct {
-	float	qK1;            // < Nominal speed value
-	float	qIdRef;
-	float	qFwOnSpeed;
-	float	qFwActiv;
-	int	qIndex;
-	float	qFWPercentage;
-	float	qInterpolPortion;
-	float		qFwCurve[16];	// Curve for magnetizing current
-    } tFdWeakParm;
-
-//------------------  C API for SVGen routine ---------------------
-
-typedef struct {
-	unsigned int   iPWMPeriod;
-
-	float   qVr1;
-	float   qVr2;
-	float   qVr3;
-
-	float T1;
-	float T2;
-
-	unsigned int Ta;
-	unsigned int Tb;
-	unsigned int Tc;
-
-    } tSVGenParm;
-
-
-
-//==============================================================
-//define
-#define Digital_PI_controller(out, ref, in, err0, limit, kp, ki, tsample)   \
-		{						                                            \
-			float err, tmp_kp, tmp_kpi;                                     \
-			tmp_kp = (float)(kp);                                           \
-			tmp_kpi = (float)(kp + ki*tsample);                             \
-			err = ref - in;					                                \
-			out += ((tmp_kpi * err) - (tmp_kp * err0));	                    \
-			out = Bound_limit(out, limit);                                  \
-			err0 = err;                                                     \
-		}
-#define Bound_limit(in,lim)	((in > (lim)) ? (lim) : ((in < -(lim)) ? -(lim) : in))
-#define Bound_min_max(in, min, max)	((in > (max)) ? (max) : ((in < (min)) ? (min) : in))
-
-#define Low_pass_filter(out, in, in_old, alpha)     \
-		{												\
-			float tmp;									\
-			tmp = alpha*(in + in_old - (out*2)); \
-			out += tmp; 								\
-			in_old = in;								\
-		}
-
-
-static volatile bool dccal_done;
-
-
-// Private variables
-int count = 0; // delay for ramping the reference velocity
-int VelReq = 0;
-
-
-static volatile tMeasCurrParm MeasCurrParm;
 SMC smc1 = SMC_DEFAULTS;
-
-// Global variables
-uint16_t ADC_Value[HW_ADC_CHANNELS];
-
 tParkParm ParkParm;
 
 tPIParm     PIParmD;	// Structure definition for Flux component of current, or Id
@@ -211,8 +69,15 @@ tPIParm     PIParmPLL;
 tCtrlParm CtrlParm;
 tSVGenParm SVGenParm;
 tFdWeakParm FdWeakParm;
+static volatile tMeasCurrParm MeasCurrParm;
 
-int SpeedReference = 0;
+static volatile bool dccal_done;
+
+int VelReq = 0;
+
+// Global variables
+uint16_t ADC_Value[HW_ADC_CHANNELS];
+
 unsigned int  switching_frequency_now = PWMFREQUENCY;
 
 // Speed Calculation Variables
@@ -239,19 +104,6 @@ static volatile float TargetDCbus = 0;// DC Bus is measured before running motor
 						// variable. Any variation on DC bus will be compared to this value
 						// and compensated linearly.
 
-
-
-// Interrupt handlers
-//void mcpwm_adc_inj_int_handler(void);
-//void mcpwm_adc_int_handler(void *p, uint32_t flags);
-
-
-static void do_dc_cal(void);
-void SMC_HallSensor_Estimation (SMC *s);
-void CalcPI( tPIParm *pParm);
-void DoControl( void );
-void InitPI( tPIParm *pParm);
-void SetupControlParameters(void);
 
 // Threads
 static THD_WORKING_AREA(SEQUENCE_thread_wa, 2048);
@@ -374,8 +226,6 @@ void mcpwm_init(void) {
 	ADC_InitStructure.ADC_NbrOfConversion = HW_ADC_NBR_CONV;
 
 	ADC_Init(ADC1, &ADC_InitStructure);
-	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
-	ADC_InitStructure.ADC_ExternalTrigConv = 0;
 	ADC_Init(ADC2, &ADC_InitStructure);
 	ADC_Init(ADC3, &ADC_InitStructure);
 
@@ -384,29 +234,9 @@ void mcpwm_init(void) {
 	// Enable DMA request after last transfer (Multi-ADC mode)
 	ADC_MultiModeDMARequestAfterLastTransferCmd(ENABLE);
 
-	// Injected channels for current measurement at end of cycle
-	ADC_ExternalTrigInjectedConvConfig(ADC1, ADC_ExternalTrigInjecConv_T8_CC2);
-	ADC_ExternalTrigInjectedConvConfig(ADC2, ADC_ExternalTrigInjecConv_T8_CC3);
-	ADC_ExternalTrigInjectedConvEdgeConfig(ADC1, ADC_ExternalTrigInjecConvEdge_Falling);
-	ADC_ExternalTrigInjectedConvEdgeConfig(ADC2, ADC_ExternalTrigInjecConvEdge_Falling);
-	ADC_InjectedSequencerLengthConfig(ADC1, 1);
-	ADC_InjectedSequencerLengthConfig(ADC2, 1);
-
-	// Interrupt
-	ADC_ITConfig(ADC1, ADC_IT_JEOC, ENABLE);
-	NVIC_InitStructure.NVIC_IRQChannel = ADC_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
-
-	// Enable ADC1
+	// Enable ADC
 	ADC_Cmd(ADC1, ENABLE);
-
-	// Enable ADC2
 	ADC_Cmd(ADC2, ENABLE);
-
-	// Enable ADC3
 	ADC_Cmd(ADC3, ENABLE);
 
 	// ------------- Timer8 for ADC sampling ------------- //
@@ -543,7 +373,7 @@ static volatile int curr1_sum;
 static volatile int curr_start_samples;
 static volatile int curr0_offset;
 static volatile int curr1_offset;
-static void do_dc_cal(void)
+void do_dc_cal(void)
 {
 	DCCAL_ON();
 	while(IS_DRV_FAULT()){};
@@ -558,7 +388,7 @@ static void do_dc_cal(void)
 	dccal_done = true;
 }
 
-
+/*
 void mcpwm_adc_inj_int_handler(void) 
 {
 	TIM12->CNT = 0;
@@ -589,7 +419,7 @@ void mcpwm_adc_inj_int_handler(void)
 		
 
 		// Calculate commutation angle using estimator
-//====	//ParkParm.qAngle = smc1.Theta;
+//=====   ParkParm.qAngle = smc1.Theta;
 
 		//ParkParm.qAngle = (float)IN[2];
 		//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
@@ -608,16 +438,16 @@ void mcpwm_adc_inj_int_handler(void)
 		DoControl();
 
 //======
-		//ParkParm.qVd =0.5f;
-		//ParkParm.qVq = 0.0f;
+		ParkParm.qVd =0.5f;
+		ParkParm.qVq = 0.0f;
 
 		//ParkParm.qAngle = 0.0f;
 
 		//ParkParm.qAngle -= 0.002f;
 		//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
 
-		//ParkParm.qAngle += 0.002f;
-		//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
+		ParkParm.qAngle += 0.002f;
+		if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
 //=======
 
 		// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
@@ -641,7 +471,7 @@ void mcpwm_adc_inj_int_handler(void)
 
 	
 }
-
+*/
 
 /*
  * New ADC samples ready. Do commutation!
@@ -656,10 +486,76 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags) {
 
 
 	// Reset the watchdog
-	WWDG_SetCounter(100);
+	
 
 
 	// Check for faults that should stop the motor
+	uGF.bit.RunMotor = 1;
+	if( uGF.bit.RunMotor )
+		{
+			ENABLE_GATE();
+			LED_RED_ON();
+	
+			// Calculate qIa,qIb
+			//MeasCompCurr(curr0,curr1);
+	
+	
+			//debug_print_usb( "%f,%d,%d\r\n",ParkParm.qAngle ,curr0,curr1);
+			
+	
+			// Calculate commutation angle using estimator
+	//=====   ParkParm.qAngle = smc1.Theta;
+	
+			//ParkParm.qAngle = (float)IN[2];
+			//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
+	
+			AccumThetaCnt++;
+			if (AccumThetaCnt == IRP_PERCALC)
+			{
+				AccumThetaCnt = 0;
+			}
+	
+	
+			// Calculate qId,qIq from qSin,qCos,qIa,qIb
+			ClarkePark();
+	
+			// Calculate control values
+			DoControl();
+	
+	//======
+			ParkParm.qVd =0.5f;
+			ParkParm.qVq = 0.0f;
+	
+			//ParkParm.qAngle = 0.0f;
+	
+			//ParkParm.qAngle -= 0.002f;
+			//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
+	
+			ParkParm.qAngle += 0.002f;
+			if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
+	//=======
+	
+			// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
+			InvPark();
+	
+			// Calculate Vr1,Vr2,Vr3 from qValpha, qVbeta
+			CalcRefVec();
+	
+			// Calculate and set PWM duty cycles from Vr1,Vr2,Vr3
+			CalcSVGen();
+	
+			LED_RED_OFF();
+			//DISABLE_GATE();
+	
+				
+		}
+		else
+		{
+			DISABLE_GATE();
+		}
+
+
+	WWDG_SetCounter(100);
 
 }
 
@@ -754,7 +650,7 @@ void DoControl( void )
 			// Limit, if motor is stalled, stop motor commutation
 			if (smc1.OmegaFltred < 0)
 			{
-				uGF.bit.RunMotor = 0;
+//				uGF.bit.RunMotor = 0;
 			}
 		}
 	}
@@ -1152,7 +1048,7 @@ void SMC_HallSensor_Estimation (SMC *s)
 	//spi_dac_write_B( (Hall_CosSin+ 1.0f) * 2048.0f);
 
 	//spi_dac_write_A( (Hall_err+ 1.0f) * 2048.0f);
-	spi_dac_write_B( (Theta * 200.0f) );
+	//spi_dac_write_B( (Theta * 200.0f) );
 
 	//spi_dac_write_B( Hall_PIout * 100.0f);
 
