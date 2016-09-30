@@ -388,90 +388,6 @@ void do_dc_cal(void)
 	dccal_done = true;
 }
 
-/*
-void mcpwm_adc_inj_int_handler(void) 
-{
-	TIM12->CNT = 0;
-
-	int curr0 = ADC_GetInjectedConversionValue(ADC1, ADC_InjectedChannel_1);
-	int curr1 = ADC_GetInjectedConversionValue(ADC2, ADC_InjectedChannel_1);
-
-	curr0_sum += curr0;
-	curr1_sum += curr1;
-	curr_start_samples++;
-
-	SMC_HallSensor_Estimation (&smc1);
-
-	//spi_dac_write_A( dacDataA++);
-	//spi_dac_write_B( dacDataB--);
-
-	
-	if( uGF.bit.RunMotor )
-	{
-		ENABLE_GATE();
-		LED_RED_ON();
-
-		// Calculate qIa,qIb
-		MeasCompCurr(curr0,curr1);
-
-
-		//debug_print_usb( "%f,%d,%d\r\n",ParkParm.qAngle ,curr0,curr1);
-		
-
-		// Calculate commutation angle using estimator
-//=====   ParkParm.qAngle = smc1.Theta;
-
-		//ParkParm.qAngle = (float)IN[2];
-		//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
-
-		AccumThetaCnt++;
-		if (AccumThetaCnt == IRP_PERCALC)
-		{
-			AccumThetaCnt = 0;
-		}
-
-
-		// Calculate qId,qIq from qSin,qCos,qIa,qIb
-		ClarkePark();
-
-		// Calculate control values
-		DoControl();
-
-//======
-		ParkParm.qVd =0.5f;
-		ParkParm.qVq = 0.0f;
-
-		//ParkParm.qAngle = 0.0f;
-
-		//ParkParm.qAngle -= 0.002f;
-		//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
-
-		ParkParm.qAngle += 0.002f;
-		if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
-//=======
-
-		// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
-		InvPark();
-
-		// Calculate Vr1,Vr2,Vr3 from qValpha, qVbeta
-		CalcRefVec();
-
-		// Calculate and set PWM duty cycles from Vr1,Vr2,Vr3
-		CalcSVGen();
-
-		LED_RED_OFF();
-		//DISABLE_GATE();
-
-			
-	}
-	else
-	{
-		DISABLE_GATE();
-	}
-
-	
-}
-*/
 
 /*
  * New ADC samples ready. Do commutation!
@@ -485,7 +401,7 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags) {
 	LED_GREEN_OFF();
 
 
-	// Reset the watchdog
+	
 	
 
 
@@ -497,14 +413,20 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags) {
 			LED_RED_ON();
 	
 			// Calculate qIa,qIb
-			//MeasCompCurr(curr0,curr1);
-	
+			 int CorrADC1, CorrADC2;
+
+			 CorrADC1 = ADC_Value[ADC_IND_CURR1] - MeasCurrParm.Offseta;
+			 CorrADC2 = ADC_Value[ADC_IND_CURR2] - MeasCurrParm.Offsetb;
+			// ADC_curr_norm_value[2] = -(ADC_curr_norm_value[0] + ADC_curr_norm_value[1]);
+
+			 ParkParm.qIa = MeasCurrParm.qKa * (float)CorrADC1;
+			 ParkParm.qIb = MeasCurrParm.qKb * (float)CorrADC2;	
 	
 			//debug_print_usb( "%f,%d,%d\r\n",ParkParm.qAngle ,curr0,curr1);
 			
 	
 			// Calculate commutation angle using estimator
-	//=====   ParkParm.qAngle = smc1.Theta;
+			//=====   ParkParm.qAngle = smc1.Theta;
 	
 			//ParkParm.qAngle = (float)IN[2];
 			//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
@@ -517,12 +439,19 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags) {
 	
 	
 			// Calculate qId,qIq from qSin,qCos,qIa,qIb
-			ClarkePark();
+			ParkParm.qIalpha = ParkParm.qIa;
+			ParkParm.qIbeta = ParkParm.qIa*INV_SQRT3 + 2*ParkParm.qIb*INV_SQRT3;
+			// Ialpha and Ibeta have been calculated. Now do rotation.
+			// Get qSin, qCos from ParkParm structure
+
+			ParkParm.qId =  ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
+			ParkParm.qIq = -ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
 	
 			// Calculate control values
 			DoControl();
 	
-	//======
+	//=============================================================================
+	//for open loop test
 			ParkParm.qVd =0.5f;
 			ParkParm.qVq = 0.0f;
 	
@@ -533,15 +462,18 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags) {
 	
 			ParkParm.qAngle += 0.002f;
 			if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
-	//=======
+	//==============================================================================
 	
 			// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
-			InvPark();
+			ParkParm.qValpha =  ParkParm.qVd*cosf(ParkParm.qAngle) - ParkParm.qVq*sinf(ParkParm.qAngle);
+			ParkParm.qVbeta  =  ParkParm.qVd*sinf(ParkParm.qAngle) + ParkParm.qVq*cosf(ParkParm.qAngle);
 	
 			// Calculate Vr1,Vr2,Vr3 from qValpha, qVbeta
-			CalcRefVec();
-	
-			// Calculate and set PWM duty cycles from Vr1,Vr2,Vr3
+			SVGenParm.qVr1 = ParkParm.qVbeta;
+			SVGenParm.qVr2 = (-ParkParm.qVbeta + SQRT3 * ParkParm.qValpha)/2;
+			SVGenParm.qVr3 = (-ParkParm.qVbeta	- SQRT3 * ParkParm.qValpha)/2;
+
+
 			CalcSVGen();
 	
 			LED_RED_OFF();
@@ -554,7 +486,7 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags) {
 			DISABLE_GATE();
 		}
 
-
+	// Reset the watchdog
 	WWDG_SetCounter(100);
 
 }
@@ -582,78 +514,59 @@ bool SetupParm(void)
 	return False;
 }
 
-void ClarkePark(void)
-{
-	ParkParm.qIalpha = ParkParm.qIa;
-	ParkParm.qIbeta = ParkParm.qIa*INV_SQRT3 + 2*ParkParm.qIb*INV_SQRT3;
-	// Ialpha and Ibeta have been calculated. Now do rotation.
-	// Get qSin, qCos from ParkParm structure
 
-	ParkParm.qId =  ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
-	ParkParm.qIq = -ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
-
-	return;
-}
 //---------------------------------------------------------------------
 // Executes one PI itteration for each of the three loops Id,Iq,Speed,
 
 void DoControl( void )
+{
+	if(AccumThetaCnt == 0)
 	{
-
-		if( uGF.bit.OpenLoop )
-		{
-
-		}
-		else
-		// Closed Loop Vector Control
-		{
-			if(AccumThetaCnt == 0)
-			{
-				// Execute the velocity control loop
-				PIParmW.qInMeas = smc1.Omega;
-				PIParmW.qInRef	= 0.01f;//CtrlParm.qVelRef;
-				CalcPI(&PIParmW);
-				CtrlParm.qVqRef = PIParmW.qOut;
-			}
-
-			if (uGF.bit.EnTorqueMod)
-				CtrlParm.qVqRef = CtrlParm.qVelRef;
-
-			//CtrlParm.qVdRef = FieldWeakening(fabsf(CtrlParm.qVelRef));
-	
-			// PI control for D
-			PIParmD.qInMeas = ParkParm.qId;
-			PIParmD.qInRef	= CtrlParm.qVdRef;
-			CalcPI(&PIParmD);
-	
-			if(uGF.bit.EnVoltRipCo)
-				ParkParm.qVd = VoltRippleComp(PIParmD.qOut);
-			else
-				ParkParm.qVd = PIParmD.qOut;
-
-			qVdSquared = ParkParm.qVd * ParkParm.qVd;
-			PIParmQ.qOutMax = sqrtf((0.95*0.95) - qVdSquared);
-			PIParmQ.qOutMin = -PIParmQ.qOutMax;
-	
-			// PI control for Q
-			PIParmQ.qInMeas = ParkParm.qIq;
-			PIParmQ.qInRef	= CtrlParm.qVqRef;
-			CalcPI(&PIParmQ);
-	
-			// If voltage ripple compensation flag is set, adjust the output
-			// of the Q controller depending on measured DC Bus voltage
-			if(uGF.bit.EnVoltRipCo)
-				ParkParm.qVq = VoltRippleComp(PIParmQ.qOut);
-			else
-				ParkParm.qVq = PIParmQ.qOut;
-	
-			// Limit, if motor is stalled, stop motor commutation
-			if (smc1.OmegaFltred < 0)
-			{
-//				uGF.bit.RunMotor = 0;
-			}
-		}
+		// Execute the velocity control loop
+		PIParmW.qInMeas = smc1.Omega;
+		PIParmW.qInRef	= 0.01f;//CtrlParm.qVelRef;
+		CalcPI(&PIParmW);
+		CtrlParm.qVqRef = PIParmW.qOut;
 	}
+
+	if (uGF.bit.EnTorqueMod)
+		CtrlParm.qVqRef = CtrlParm.qVelRef;
+
+	//CtrlParm.qVdRef = FieldWeakening(fabsf(CtrlParm.qVelRef));
+
+	// PI control for D
+	PIParmD.qInMeas = ParkParm.qId;
+	PIParmD.qInRef	= CtrlParm.qVdRef;
+	CalcPI(&PIParmD);
+
+	if(uGF.bit.EnVoltRipCo)
+		ParkParm.qVd = VoltRippleComp(PIParmD.qOut);
+	else
+		ParkParm.qVd = PIParmD.qOut;
+
+	qVdSquared = ParkParm.qVd * ParkParm.qVd;
+	PIParmQ.qOutMax = sqrtf((0.95*0.95) - qVdSquared);
+	PIParmQ.qOutMin = -PIParmQ.qOutMax;
+
+	// PI control for Q
+	PIParmQ.qInMeas = ParkParm.qIq;
+	PIParmQ.qInRef	= CtrlParm.qVqRef;
+	CalcPI(&PIParmQ);
+
+	// If voltage ripple compensation flag is set, adjust the output
+	// of the Q controller depending on measured DC Bus voltage
+	if(uGF.bit.EnVoltRipCo)
+		ParkParm.qVq = VoltRippleComp(PIParmQ.qOut);
+	else
+		ParkParm.qVq = PIParmQ.qOut;
+
+	// Limit, if motor is stalled, stop motor commutation
+	if (smc1.OmegaFltred < 0)
+	{
+//				uGF.bit.RunMotor = 0;
+	}
+
+}
 
 void InitPI( tPIParm *pParm)
 {
@@ -758,43 +671,15 @@ float VoltRippleComp(float Vdq)
 
 	return CompVdq;
 }
-void MeasCompCurr( int curr1, int curr2 )
-{
-	 int CorrADC1, CorrADC2;
 
-	 CorrADC1 = curr1 - MeasCurrParm.Offseta;
-	 CorrADC2 = curr2 - MeasCurrParm.Offsetb;
-	// ADC_curr_norm_value[2] = -(ADC_curr_norm_value[0] + ADC_curr_norm_value[1]);
-
-	 ParkParm.qIa = MeasCurrParm.qKa * (float)CorrADC1;
-	 ParkParm.qIb = MeasCurrParm.qKb * (float)CorrADC2;
-
-	 return;
-}
 void InitMeasCompCurr( short Offset_a, short Offset_b )
 {
 	MeasCurrParm.Offseta = Offset_a;
 	MeasCurrParm.Offsetb = Offset_b;
 	return;
 }
-void InvPark(void)
-{
-	ParkParm.qValpha =  ParkParm.qVd*cosf(ParkParm.qAngle) - ParkParm.qVq*sinf(ParkParm.qAngle);
-	ParkParm.qVbeta  =  ParkParm.qVd*sinf(ParkParm.qAngle) + ParkParm.qVq*cosf(ParkParm.qAngle);
-	return;
-}
-void CalcRefVec(void)
-{
-     //SVGenParm.qVr1 =ParkParm.qValpha;
-     //SVGenParm.qVr2 = (-ParkParm.qValpha + SQRT3 * ParkParm.qVbeta)/2;
-     //SVGenParm.qVr3 = (-ParkParm.qValpha  - SQRT3 * ParkParm.qVbeta)/2;
 
-    SVGenParm.qVr1 =ParkParm.qVbeta;
-    SVGenParm.qVr2 = (-ParkParm.qVbeta + SQRT3 * ParkParm.qValpha)/2;
-    SVGenParm.qVr3 = (-ParkParm.qVbeta  - SQRT3 * ParkParm.qValpha)/2;
 
-     return;
-}
 void CalcTimes(void)
 {
 	SVGenParm.iPWMPeriod = LOOPINTCY;	  

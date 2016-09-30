@@ -84,7 +84,7 @@ int bldc_init(void)
 
 	mcpwm_init();
 
-	comm_usb_init();
+	//comm_usb_init();
 
 	return 0;
 }

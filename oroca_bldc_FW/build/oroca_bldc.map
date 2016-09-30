@@ -1083,14 +1083,8 @@ Discarded input sections
  .text.SetupParm
                 0x00000000       0x6c build/obj/mcpwm.o
  .text.InitPI   0x00000000        0x8 build/obj/mcpwm.o
- .text.DoControl
-                0x00000000       0x14 build/obj/mcpwm.o
- .text.MeasCompCurr
-                0x00000000       0x48 build/obj/mcpwm.o
  .text.InitMeasCompCurr
                 0x00000000        0xc build/obj/mcpwm.o
- .text.CalcRefVec
-                0x00000000       0x48 build/obj/mcpwm.o
  .text.SMC_HallSensor_Estimation
                 0x00000000      0x194 build/obj/mcpwm.o
  .text.stop_pwm_hw
@@ -2955,43 +2949,37 @@ destructors     0x0800c000        0x0
                 0x0800fc00       0x78 build/obj/mcpwm.o
                 0x0800fc00                do_dc_cal
  *fill*         0x0800fc78        0x8 
- .text.ClarkePark
-                0x0800fc80       0x68 build/obj/mcpwm.o
-                0x0800fc80                ClarkePark
- *fill*         0x0800fce8        0x8 
- .text.CalcPI   0x0800fcf0       0x60 build/obj/mcpwm.o
-                0x0800fcf0                CalcPI
+ .text.CalcPI   0x0800fc80       0x60 build/obj/mcpwm.o
+                0x0800fc80                CalcPI
  .text.SetupControlParameters
-                0x0800fd50       0x8c build/obj/mcpwm.o
-                0x0800fd50                SetupControlParameters
- *fill*         0x0800fddc        0x4 
+                0x0800fce0       0x8c build/obj/mcpwm.o
+                0x0800fce0                SetupControlParameters
+ *fill*         0x0800fd6c        0x4 
  .text.mcpwm_init
-                0x0800fde0      0x440 build/obj/mcpwm.o
-                0x0800fde0                mcpwm_init
+                0x0800fd70      0x440 build/obj/mcpwm.o
+                0x0800fd70                mcpwm_init
  .text.VoltRippleComp
-                0x08010220       0x5c build/obj/mcpwm.o
-                0x08010220                VoltRippleComp
- *fill*         0x0801027c        0x4 
- .text.DoControl.part.1
-                0x08010280       0xf0 build/obj/mcpwm.o
- .text.InvPark  0x08010370       0x4c build/obj/mcpwm.o
-                0x08010370                InvPark
- *fill*         0x080103bc        0x4 
+                0x080101b0       0x5c build/obj/mcpwm.o
+                0x080101b0                VoltRippleComp
+ *fill*         0x0801020c        0x4 
+ .text.DoControl
+                0x08010210       0xf0 build/obj/mcpwm.o
+                0x08010210                DoControl
  .text.CalcTimes
-                0x080103c0       0x6c build/obj/mcpwm.o
-                0x080103c0                CalcTimes
- *fill*         0x0801042c        0x4 
+                0x08010300       0x6c build/obj/mcpwm.o
+                0x08010300                CalcTimes
+ *fill*         0x0801036c        0x4 
  .text.update_timer_Duty
-                0x08010430       0x4c build/obj/mcpwm.o
-                0x08010430                update_timer_Duty
- *fill*         0x0801047c        0x4 
+                0x08010370       0x4c build/obj/mcpwm.o
+                0x08010370                update_timer_Duty
+ *fill*         0x080103bc        0x4 
  .text.CalcSVGen
-                0x08010480      0x100 build/obj/mcpwm.o
-                0x08010480                CalcSVGen
+                0x080103c0      0x100 build/obj/mcpwm.o
+                0x080103c0                CalcSVGen
  .text.mcpwm_adc_int_handler
-                0x08010580       0xf8 build/obj/mcpwm.o
-                0x08010580                mcpwm_adc_int_handler
- *fill*         0x08010678        0x8 
+                0x080104c0      0x1bc build/obj/mcpwm.o
+                0x080104c0                mcpwm_adc_int_handler
+ *fill*         0x0801067c        0x4 
  .text.gpt_cb   0x08010680        0x4 build/obj/spi_dac.o
  *fill*         0x08010684        0xc 
  .text.initGPT  0x08010690       0x24 build/obj/spi_dac.o
@@ -3451,14 +3439,14 @@ destructors     0x0800c000        0x0
  .bss.ADC_Value
                 0x20001a64       0x18 build/obj/mcpwm.o
                 0x20001a64                ADC_Value
- .bss.CtrlParm  0x20001a7c        0xc build/obj/mcpwm.o
-                0x20001a7c                CtrlParm
- .bss.PIParmD   0x20001a88       0x24 build/obj/mcpwm.o
-                0x20001a88                PIParmD
+ .bss.PIParmD   0x20001a7c       0x24 build/obj/mcpwm.o
+                0x20001a7c                PIParmD
+ .bss.PIParmW   0x20001aa0       0x24 build/obj/mcpwm.o
+                0x20001aa0                PIParmW
  .bss.curr1_sum
-                0x20001aac        0x4 build/obj/mcpwm.o
- .bss.PIParmW   0x20001ab0       0x24 build/obj/mcpwm.o
-                0x20001ab0                PIParmW
+                0x20001ac4        0x4 build/obj/mcpwm.o
+ .bss.CtrlParm  0x20001ac8        0xc build/obj/mcpwm.o
+                0x20001ac8                CtrlParm
  .bss.PIParmQ   0x20001ad4       0x24 build/obj/mcpwm.o
                 0x20001ad4                PIParmQ
  .bss.uGF       0x20001af8        0x4 build/obj/mcpwm.o
@@ -3776,7 +3764,7 @@ OUTPUT(build/oroca_bldc.elf elf32-littlearm)
  .comment       0x0000006e       0x6f build/obj/stm32f4xx_wwdg.o
  .comment       0x0000006e       0x6f build/obj/main.o
 
-.debug_info     0x00000000    0x35553
+.debug_info     0x00000000    0x354a0
  .debug_info    0x00000000       0xc2 build/obj/crt1.o
  .debug_info    0x000000c2      0x1e7 build/obj/vectors.o
  .debug_info    0x000002a9     0x17a5 build/obj/chsys.o
@@ -3813,22 +3801,22 @@ OUTPUT(build/oroca_bldc.elf elf32-littlearm)
  .debug_info    0x00024853     0x1372 build/obj/uart_lld.o
  .debug_info    0x00025bc5      0x86d build/obj/board.o
  .debug_info    0x00026432      0x9e4 build/obj/bldc.o
- .debug_info    0x00026e16     0x288a build/obj/mcpwm.o
- .debug_info    0x000296a0     0x1068 build/obj/spi_dac.o
- .debug_info    0x0002a708     0x1c77 build/obj/usb_uart.o
- .debug_info    0x0002c37f      0x93b build/obj/irq_handlers.o
- .debug_info    0x0002ccba     0x16ea build/obj/comm_usb.o
- .debug_info    0x0002e3a4      0xb03 build/obj/utils.o
- .debug_info    0x0002eea7     0x150c build/obj/hw_oroca.o
- .debug_info    0x000303b3      0xc69 build/obj/stm32f4xx_adc.o
- .debug_info    0x0003101c      0x6fd build/obj/stm32f4xx_dma.o
- .debug_info    0x00031719      0x300 build/obj/stm32f4xx_exti.o
- .debug_info    0x00031a19      0xc19 build/obj/stm32f4xx_rcc.o
- .debug_info    0x00032632     0x23cb build/obj/stm32f4xx_tim.o
- .debug_info    0x000349fd      0x294 build/obj/stm32f4xx_wwdg.o
- .debug_info    0x00034c91      0x8c2 build/obj/main.o
+ .debug_info    0x00026e16     0x27d7 build/obj/mcpwm.o
+ .debug_info    0x000295ed     0x1068 build/obj/spi_dac.o
+ .debug_info    0x0002a655     0x1c77 build/obj/usb_uart.o
+ .debug_info    0x0002c2cc      0x93b build/obj/irq_handlers.o
+ .debug_info    0x0002cc07     0x16ea build/obj/comm_usb.o
+ .debug_info    0x0002e2f1      0xb03 build/obj/utils.o
+ .debug_info    0x0002edf4     0x150c build/obj/hw_oroca.o
+ .debug_info    0x00030300      0xc69 build/obj/stm32f4xx_adc.o
+ .debug_info    0x00030f69      0x6fd build/obj/stm32f4xx_dma.o
+ .debug_info    0x00031666      0x300 build/obj/stm32f4xx_exti.o
+ .debug_info    0x00031966      0xc19 build/obj/stm32f4xx_rcc.o
+ .debug_info    0x0003257f     0x23cb build/obj/stm32f4xx_tim.o
+ .debug_info    0x0003494a      0x294 build/obj/stm32f4xx_wwdg.o
+ .debug_info    0x00034bde      0x8c2 build/obj/main.o
 
-.debug_abbrev   0x00000000     0x895a
+.debug_abbrev   0x00000000     0x894b
  .debug_abbrev  0x00000000       0x8b build/obj/crt1.o
  .debug_abbrev  0x0000008b       0xca build/obj/vectors.o
  .debug_abbrev  0x00000155      0x4e4 build/obj/chsys.o
@@ -3865,22 +3853,22 @@ OUTPUT(build/oroca_bldc.elf elf32-littlearm)
  .debug_abbrev  0x00005fdf      0x3ef build/obj/uart_lld.o
  .debug_abbrev  0x000063ce      0x18b build/obj/board.o
  .debug_abbrev  0x00006559      0x268 build/obj/bldc.o
- .debug_abbrev  0x000067c1      0x437 build/obj/mcpwm.o
- .debug_abbrev  0x00006bf8      0x331 build/obj/spi_dac.o
- .debug_abbrev  0x00006f29      0x3eb build/obj/usb_uart.o
- .debug_abbrev  0x00007314      0x1d5 build/obj/irq_handlers.o
- .debug_abbrev  0x000074e9      0x25e build/obj/comm_usb.o
- .debug_abbrev  0x00007747      0x2a4 build/obj/utils.o
- .debug_abbrev  0x000079eb      0x225 build/obj/hw_oroca.o
- .debug_abbrev  0x00007c10      0x1a0 build/obj/stm32f4xx_adc.o
- .debug_abbrev  0x00007db0      0x177 build/obj/stm32f4xx_dma.o
- .debug_abbrev  0x00007f27      0x1a1 build/obj/stm32f4xx_exti.o
- .debug_abbrev  0x000080c8      0x270 build/obj/stm32f4xx_rcc.o
- .debug_abbrev  0x00008338      0x272 build/obj/stm32f4xx_tim.o
- .debug_abbrev  0x000085aa      0x173 build/obj/stm32f4xx_wwdg.o
- .debug_abbrev  0x0000871d      0x23d build/obj/main.o
+ .debug_abbrev  0x000067c1      0x428 build/obj/mcpwm.o
+ .debug_abbrev  0x00006be9      0x331 build/obj/spi_dac.o
+ .debug_abbrev  0x00006f1a      0x3eb build/obj/usb_uart.o
+ .debug_abbrev  0x00007305      0x1d5 build/obj/irq_handlers.o
+ .debug_abbrev  0x000074da      0x25e build/obj/comm_usb.o
+ .debug_abbrev  0x00007738      0x2a4 build/obj/utils.o
+ .debug_abbrev  0x000079dc      0x225 build/obj/hw_oroca.o
+ .debug_abbrev  0x00007c01      0x1a0 build/obj/stm32f4xx_adc.o
+ .debug_abbrev  0x00007da1      0x177 build/obj/stm32f4xx_dma.o
+ .debug_abbrev  0x00007f18      0x1a1 build/obj/stm32f4xx_exti.o
+ .debug_abbrev  0x000080b9      0x270 build/obj/stm32f4xx_rcc.o
+ .debug_abbrev  0x00008329      0x272 build/obj/stm32f4xx_tim.o
+ .debug_abbrev  0x0000859b      0x173 build/obj/stm32f4xx_wwdg.o
+ .debug_abbrev  0x0000870e      0x23d build/obj/main.o
 
-.debug_aranges  0x00000000     0x1630
+.debug_aranges  0x00000000     0x1608
  .debug_aranges
                 0x00000000       0x28 build/obj/crt1.o
  .debug_aranges
@@ -3954,35 +3942,35 @@ OUTPUT(build/oroca_bldc.elf elf32-littlearm)
  .debug_aranges
                 0x00000cb0       0x38 build/obj/bldc.o
  .debug_aranges
-                0x00000ce8       0xb8 build/obj/mcpwm.o
+                0x00000ce8       0x90 build/obj/mcpwm.o
  .debug_aranges
-                0x00000da0       0x70 build/obj/spi_dac.o
+                0x00000d78       0x70 build/obj/spi_dac.o
  .debug_aranges
-                0x00000e10       0x50 build/obj/usb_uart.o
+                0x00000de8       0x50 build/obj/usb_uart.o
  .debug_aranges
-                0x00000e60       0x28 build/obj/irq_handlers.o
+                0x00000e38       0x28 build/obj/irq_handlers.o
  .debug_aranges
-                0x00000e88       0x20 build/obj/comm_usb.o
+                0x00000e60       0x20 build/obj/comm_usb.o
  .debug_aranges
-                0x00000ea8       0x60 build/obj/utils.o
+                0x00000e80       0x60 build/obj/utils.o
  .debug_aranges
-                0x00000f08       0x40 build/obj/hw_oroca.o
+                0x00000ee0       0x40 build/obj/hw_oroca.o
  .debug_aranges
-                0x00000f48      0x148 build/obj/stm32f4xx_adc.o
+                0x00000f20      0x148 build/obj/stm32f4xx_adc.o
  .debug_aranges
-                0x00001090       0xa8 build/obj/stm32f4xx_dma.o
+                0x00001068       0xa8 build/obj/stm32f4xx_dma.o
  .debug_aranges
-                0x00001138       0x48 build/obj/stm32f4xx_exti.o
+                0x00001110       0x48 build/obj/stm32f4xx_exti.o
  .debug_aranges
-                0x00001180      0x160 build/obj/stm32f4xx_rcc.o
+                0x00001158      0x160 build/obj/stm32f4xx_rcc.o
  .debug_aranges
-                0x000012e0      0x2c8 build/obj/stm32f4xx_tim.o
+                0x000012b8      0x2c8 build/obj/stm32f4xx_tim.o
  .debug_aranges
-                0x000015a8       0x58 build/obj/stm32f4xx_wwdg.o
+                0x00001580       0x58 build/obj/stm32f4xx_wwdg.o
  .debug_aranges
-                0x00001600       0x30 build/obj/main.o
+                0x000015d8       0x30 build/obj/main.o
 
-.debug_ranges   0x00000000     0x2450
+.debug_ranges   0x00000000     0x2428
  .debug_ranges  0x00000000       0x18 build/obj/crt1.o
  .debug_ranges  0x00000018       0x10 build/obj/vectors.o
  .debug_ranges  0x00000028      0x148 build/obj/chsys.o
@@ -4019,22 +4007,22 @@ OUTPUT(build/oroca_bldc.elf elf32-littlearm)
  .debug_ranges  0x00001928      0x118 build/obj/uart_lld.o
  .debug_ranges  0x00001a40       0x18 build/obj/board.o
  .debug_ranges  0x00001a58       0x28 build/obj/bldc.o
- .debug_ranges  0x00001a80       0xf0 build/obj/mcpwm.o
- .debug_ranges  0x00001b70       0xa0 build/obj/spi_dac.o
- .debug_ranges  0x00001c10       0x40 build/obj/usb_uart.o
- .debug_ranges  0x00001c50       0x18 build/obj/irq_handlers.o
- .debug_ranges  0x00001c68       0x10 build/obj/comm_usb.o
- .debug_ranges  0x00001c78       0x68 build/obj/utils.o
- .debug_ranges  0x00001ce0       0x48 build/obj/hw_oroca.o
- .debug_ranges  0x00001d28      0x138 build/obj/stm32f4xx_adc.o
- .debug_ranges  0x00001e60       0x98 build/obj/stm32f4xx_dma.o
- .debug_ranges  0x00001ef8       0x38 build/obj/stm32f4xx_exti.o
- .debug_ranges  0x00001f30      0x170 build/obj/stm32f4xx_rcc.o
- .debug_ranges  0x000020a0      0x348 build/obj/stm32f4xx_tim.o
- .debug_ranges  0x000023e8       0x48 build/obj/stm32f4xx_wwdg.o
- .debug_ranges  0x00002430       0x20 build/obj/main.o
+ .debug_ranges  0x00001a80       0xc8 build/obj/mcpwm.o
+ .debug_ranges  0x00001b48       0xa0 build/obj/spi_dac.o
+ .debug_ranges  0x00001be8       0x40 build/obj/usb_uart.o
+ .debug_ranges  0x00001c28       0x18 build/obj/irq_handlers.o
+ .debug_ranges  0x00001c40       0x10 build/obj/comm_usb.o
+ .debug_ranges  0x00001c50       0x68 build/obj/utils.o
+ .debug_ranges  0x00001cb8       0x48 build/obj/hw_oroca.o
+ .debug_ranges  0x00001d00      0x138 build/obj/stm32f4xx_adc.o
+ .debug_ranges  0x00001e38       0x98 build/obj/stm32f4xx_dma.o
+ .debug_ranges  0x00001ed0       0x38 build/obj/stm32f4xx_exti.o
+ .debug_ranges  0x00001f08      0x170 build/obj/stm32f4xx_rcc.o
+ .debug_ranges  0x00002078      0x348 build/obj/stm32f4xx_tim.o
+ .debug_ranges  0x000023c0       0x48 build/obj/stm32f4xx_wwdg.o
+ .debug_ranges  0x00002408       0x20 build/obj/main.o
 
-.debug_line     0x00000000     0xe30d
+.debug_line     0x00000000     0xe2c3
  .debug_line    0x00000000      0x17e build/obj/crt1.o
  .debug_line    0x0000017e      0x171 build/obj/vectors.o
  .debug_line    0x000002ef      0x4cb build/obj/chsys.o
@@ -4070,23 +4058,23 @@ OUTPUT(build/oroca_bldc.elf elf32-littlearm)
  .debug_line    0x00008e61      0x2f4 build/obj/st_lld.o
  .debug_line    0x00009155      0x6fc build/obj/uart_lld.o
  .debug_line    0x00009851      0x33d build/obj/board.o
- .debug_line    0x00009b8e      0x363 build/obj/bldc.o
- .debug_line    0x00009ef1      0x960 build/obj/mcpwm.o
- .debug_line    0x0000a851      0x4e5 build/obj/spi_dac.o
- .debug_line    0x0000ad36      0x467 build/obj/usb_uart.o
- .debug_line    0x0000b19d      0x2d0 build/obj/irq_handlers.o
- .debug_line    0x0000b46d      0x33d build/obj/comm_usb.o
- .debug_line    0x0000b7aa      0x3d2 build/obj/utils.o
- .debug_line    0x0000bb7c      0x4f5 build/obj/hw_oroca.o
- .debug_line    0x0000c071      0x577 build/obj/stm32f4xx_adc.o
- .debug_line    0x0000c5e8      0x412 build/obj/stm32f4xx_dma.o
- .debug_line    0x0000c9fa      0x276 build/obj/stm32f4xx_exti.o
- .debug_line    0x0000cc70      0x556 build/obj/stm32f4xx_rcc.o
- .debug_line    0x0000d1c6      0xbe9 build/obj/stm32f4xx_tim.o
- .debug_line    0x0000ddaf      0x275 build/obj/stm32f4xx_wwdg.o
- .debug_line    0x0000e024      0x2e9 build/obj/main.o
+ .debug_line    0x00009b8e      0x361 build/obj/bldc.o
+ .debug_line    0x00009eef      0x918 build/obj/mcpwm.o
+ .debug_line    0x0000a807      0x4e5 build/obj/spi_dac.o
+ .debug_line    0x0000acec      0x467 build/obj/usb_uart.o
+ .debug_line    0x0000b153      0x2d0 build/obj/irq_handlers.o
+ .debug_line    0x0000b423      0x33d build/obj/comm_usb.o
+ .debug_line    0x0000b760      0x3d2 build/obj/utils.o
+ .debug_line    0x0000bb32      0x4f5 build/obj/hw_oroca.o
+ .debug_line    0x0000c027      0x577 build/obj/stm32f4xx_adc.o
+ .debug_line    0x0000c59e      0x412 build/obj/stm32f4xx_dma.o
+ .debug_line    0x0000c9b0      0x276 build/obj/stm32f4xx_exti.o
+ .debug_line    0x0000cc26      0x556 build/obj/stm32f4xx_rcc.o
+ .debug_line    0x0000d17c      0xbe9 build/obj/stm32f4xx_tim.o
+ .debug_line    0x0000dd65      0x275 build/obj/stm32f4xx_wwdg.o
+ .debug_line    0x0000dfda      0x2e9 build/obj/main.o
 
-.debug_str      0x00000000     0x6c47
+.debug_str      0x00000000     0x6c1d
  .debug_str     0x00000000      0x211 build/obj/crt1.o
                                 0x24d (size before relaxing)
  .debug_str     0x00000211      0x16e build/obj/vectors.o
@@ -4159,36 +4147,36 @@ OUTPUT(build/oroca_bldc.elf elf32-littlearm)
                                 0x680 (size before relaxing)
  .debug_str     0x000041be       0xc1 build/obj/bldc.o
                                 0x6b7 (size before relaxing)
- .debug_str     0x0000427f      0xe24 build/obj/mcpwm.o
-                               0x1593 (size before relaxing)
- .debug_str     0x000050a3       0xfa build/obj/spi_dac.o
+ .debug_str     0x0000427f      0xdfa build/obj/mcpwm.o
+                               0x155c (size before relaxing)
+ .debug_str     0x00005079       0xfa build/obj/spi_dac.o
                                 0x842 (size before relaxing)
- .debug_str     0x0000519d      0x1c3 build/obj/usb_uart.o
+ .debug_str     0x00005173      0x1c3 build/obj/usb_uart.o
                                0x1051 (size before relaxing)
- .debug_str     0x00005360       0x69 build/obj/irq_handlers.o
+ .debug_str     0x00005336       0x69 build/obj/irq_handlers.o
                                 0x674 (size before relaxing)
- .debug_str     0x000053c9       0x91 build/obj/comm_usb.o
+ .debug_str     0x0000539f       0x91 build/obj/comm_usb.o
                                 0xe57 (size before relaxing)
- .debug_str     0x0000545a       0xdc build/obj/utils.o
+ .debug_str     0x00005430       0xdc build/obj/utils.o
                                 0x707 (size before relaxing)
- .debug_str     0x00005536       0x6d build/obj/hw_oroca.o
+ .debug_str     0x0000550c       0x6d build/obj/hw_oroca.o
                                 0x926 (size before relaxing)
- .debug_str     0x000055a3      0x48c build/obj/stm32f4xx_adc.o
+ .debug_str     0x00005579      0x48c build/obj/stm32f4xx_adc.o
                                 0x8da (size before relaxing)
- .debug_str     0x00005a2f      0x206 build/obj/stm32f4xx_dma.o
+ .debug_str     0x00005a05      0x206 build/obj/stm32f4xx_dma.o
                                 0x5f3 (size before relaxing)
- .debug_str     0x00005c35      0x176 build/obj/stm32f4xx_exti.o
+ .debug_str     0x00005c0b      0x176 build/obj/stm32f4xx_exti.o
                                 0x3e9 (size before relaxing)
- .debug_str     0x00005dab      0x489 build/obj/stm32f4xx_rcc.o
+ .debug_str     0x00005d81      0x489 build/obj/stm32f4xx_rcc.o
                                 0x894 (size before relaxing)
- .debug_str     0x00006234      0x7b7 build/obj/stm32f4xx_tim.o
+ .debug_str     0x0000620a      0x7b7 build/obj/stm32f4xx_tim.o
                                 0xe07 (size before relaxing)
- .debug_str     0x000069eb       0x95 build/obj/stm32f4xx_wwdg.o
+ .debug_str     0x000069c1       0x95 build/obj/stm32f4xx_wwdg.o
                                 0x34d (size before relaxing)
- .debug_str     0x00006a80      0x1c7 build/obj/main.o
+ .debug_str     0x00006a56      0x1c7 build/obj/main.o
                                 0x6a6 (size before relaxing)
 
-.debug_frame    0x00000000     0x3f58
+.debug_frame    0x00000000     0x3edc
  .debug_frame   0x00000000       0x50 build/obj/crt1.o
  .debug_frame   0x00000050       0x20 build/obj/vectors.o
  .debug_frame   0x00000070       0xfc build/obj/chsys.o
@@ -4225,36 +4213,36 @@ OUTPUT(build/oroca_bldc.elf elf32-littlearm)
  .debug_frame   0x000021fc      0x1d4 build/obj/uart_lld.o
  .debug_frame   0x000023d0       0x30 build/obj/board.o
  .debug_frame   0x00002400       0x74 build/obj/bldc.o
- .debug_frame   0x00002474      0x320 build/obj/mcpwm.o
- .debug_frame   0x00002794      0x10c build/obj/spi_dac.o
- .debug_frame   0x000028a0      0x100 build/obj/usb_uart.o
- .debug_frame   0x000029a0       0x50 build/obj/irq_handlers.o
- .debug_frame   0x000029f0       0x30 build/obj/comm_usb.o
- .debug_frame   0x00002a20       0xec build/obj/utils.o
- .debug_frame   0x00002b0c       0xfc build/obj/hw_oroca.o
- .debug_frame   0x00002c08      0x308 build/obj/stm32f4xx_adc.o
- .debug_frame   0x00002f10      0x1c4 build/obj/stm32f4xx_dma.o
- .debug_frame   0x000030d4       0xc4 build/obj/stm32f4xx_exti.o
- .debug_frame   0x00003198      0x2b8 build/obj/stm32f4xx_rcc.o
- .debug_frame   0x00003450      0x764 build/obj/stm32f4xx_tim.o
- .debug_frame   0x00003bb4       0xa8 build/obj/stm32f4xx_wwdg.o
- .debug_frame   0x00003c5c       0x4c build/obj/main.o
- .debug_frame   0x00003ca8       0x34 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_cos.o)
- .debug_frame   0x00003cdc       0x34 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_sin.o)
- .debug_frame   0x00003d10       0x50 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-wf_sqrt.o)
- .debug_frame   0x00003d60       0x3c c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-ef_rem_pio2.o)
- .debug_frame   0x00003d9c       0x3c c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-ef_sqrt.o)
- .debug_frame   0x00003dd8       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-kf_cos.o)
- .debug_frame   0x00003df8       0x5c c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-kf_rem_pio2.o)
- .debug_frame   0x00003e54       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-kf_sin.o)
- .debug_frame   0x00003e74       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-s_matherr.o)
- .debug_frame   0x00003e94       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_fabs.o)
- .debug_frame   0x00003eb4       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_floor.o)
- .debug_frame   0x00003ed4       0x44 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_scalbn.o)
- .debug_frame   0x00003f18       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_copysign.o)
- .debug_frame   0x00003f38       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libg.a(lib_a-errno.o)
+ .debug_frame   0x00002474      0x2a4 build/obj/mcpwm.o
+ .debug_frame   0x00002718      0x10c build/obj/spi_dac.o
+ .debug_frame   0x00002824      0x100 build/obj/usb_uart.o
+ .debug_frame   0x00002924       0x50 build/obj/irq_handlers.o
+ .debug_frame   0x00002974       0x30 build/obj/comm_usb.o
+ .debug_frame   0x000029a4       0xec build/obj/utils.o
+ .debug_frame   0x00002a90       0xfc build/obj/hw_oroca.o
+ .debug_frame   0x00002b8c      0x308 build/obj/stm32f4xx_adc.o
+ .debug_frame   0x00002e94      0x1c4 build/obj/stm32f4xx_dma.o
+ .debug_frame   0x00003058       0xc4 build/obj/stm32f4xx_exti.o
+ .debug_frame   0x0000311c      0x2b8 build/obj/stm32f4xx_rcc.o
+ .debug_frame   0x000033d4      0x764 build/obj/stm32f4xx_tim.o
+ .debug_frame   0x00003b38       0xa8 build/obj/stm32f4xx_wwdg.o
+ .debug_frame   0x00003be0       0x4c build/obj/main.o
+ .debug_frame   0x00003c2c       0x34 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_cos.o)
+ .debug_frame   0x00003c60       0x34 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_sin.o)
+ .debug_frame   0x00003c94       0x50 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-wf_sqrt.o)
+ .debug_frame   0x00003ce4       0x3c c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-ef_rem_pio2.o)
+ .debug_frame   0x00003d20       0x3c c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-ef_sqrt.o)
+ .debug_frame   0x00003d5c       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-kf_cos.o)
+ .debug_frame   0x00003d7c       0x5c c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-kf_rem_pio2.o)
+ .debug_frame   0x00003dd8       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-kf_sin.o)
+ .debug_frame   0x00003df8       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-s_matherr.o)
+ .debug_frame   0x00003e18       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_fabs.o)
+ .debug_frame   0x00003e38       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_floor.o)
+ .debug_frame   0x00003e58       0x44 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_scalbn.o)
+ .debug_frame   0x00003e9c       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libm.a(lib_a-sf_copysign.o)
+ .debug_frame   0x00003ebc       0x20 c:/program files (x86)/gnu tools arm embedded/5.4 2016q2/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7e-m/fpu\libg.a(lib_a-errno.o)
 
-.debug_loc      0x00000000     0xd455
+.debug_loc      0x00000000     0xd402
  .debug_loc     0x00000000      0x339 build/obj/chsys.o
  .debug_loc     0x00000339       0x9f build/obj/chvt.o
  .debug_loc     0x000003d8      0x3dc build/obj/chschd.o
@@ -4286,17 +4274,17 @@ OUTPUT(build/oroca_bldc.elf elf32-littlearm)
  .debug_loc     0x00008817       0x29 build/obj/st_lld.o
  .debug_loc     0x00008840      0x3e4 build/obj/uart_lld.o
  .debug_loc     0x00008c24       0x21 build/obj/bldc.o
- .debug_loc     0x00008c45      0x32e build/obj/mcpwm.o
- .debug_loc     0x00008f73      0x1b1 build/obj/spi_dac.o
- .debug_loc     0x00009124      0x1b9 build/obj/usb_uart.o
- .debug_loc     0x000092dd      0x2ca build/obj/utils.o
- .debug_loc     0x000095a7       0x41 build/obj/hw_oroca.o
- .debug_loc     0x000095e8      0x9b8 build/obj/stm32f4xx_adc.o
- .debug_loc     0x00009fa0      0x424 build/obj/stm32f4xx_dma.o
- .debug_loc     0x0000a3c4      0x12d build/obj/stm32f4xx_exti.o
- .debug_loc     0x0000a4f1      0x9cc build/obj/stm32f4xx_rcc.o
- .debug_loc     0x0000aebd     0x24c7 build/obj/stm32f4xx_tim.o
- .debug_loc     0x0000d384       0xd1 build/obj/stm32f4xx_wwdg.o
+ .debug_loc     0x00008c45      0x2db build/obj/mcpwm.o
+ .debug_loc     0x00008f20      0x1b1 build/obj/spi_dac.o
+ .debug_loc     0x000090d1      0x1b9 build/obj/usb_uart.o
+ .debug_loc     0x0000928a      0x2ca build/obj/utils.o
+ .debug_loc     0x00009554       0x41 build/obj/hw_oroca.o
+ .debug_loc     0x00009595      0x9b8 build/obj/stm32f4xx_adc.o
+ .debug_loc     0x00009f4d      0x424 build/obj/stm32f4xx_dma.o
+ .debug_loc     0x0000a371      0x12d build/obj/stm32f4xx_exti.o
+ .debug_loc     0x0000a49e      0x9cc build/obj/stm32f4xx_rcc.o
+ .debug_loc     0x0000ae6a     0x24c7 build/obj/stm32f4xx_tim.o
+ .debug_loc     0x0000d331       0xd1 build/obj/stm32f4xx_wwdg.o
 
 Cross Reference Table
 
@@ -4356,11 +4344,9 @@ Bsin3th                                           build/obj/mcpwm.o
 BusFault_Handler                                  build/obj/vectors.o
 CAND1                                             build/obj/can_lld.o
 CalcPI                                            build/obj/mcpwm.o
-CalcRefVec                                        build/obj/mcpwm.o
 CalcSVGen                                         build/obj/mcpwm.o
 CalcTimes                                         build/obj/mcpwm.o
 Ch                                                build/obj/bldc.o
-ClarkePark                                        build/obj/mcpwm.o
 CtrlParm                                          build/obj/mcpwm.o
 DMA_ClearFlag                                     build/obj/stm32f4xx_dma.o
 DMA_ClearITPendingBit                             build/obj/stm32f4xx_dma.o
@@ -4471,10 +4457,8 @@ I2CD2                                             build/obj/i2c_lld.o
 ICUD3                                             build/obj/icu_lld.o
 InitMeasCompCurr                                  build/obj/mcpwm.o
 InitPI                                            build/obj/mcpwm.o
-InvPark                                           build/obj/mcpwm.o
 Ipll                                              build/obj/mcpwm.o
 Kpll                                              build/obj/mcpwm.o
-MeasCompCurr                                      build/obj/mcpwm.o
 MemManage_Handler                                 build/obj/vectors.o
 NMI_Handler                                       build/obj/vectors.o
 NVIC_Init                                         build/obj/misc.o

@@ -259,15 +259,10 @@ extern  unsigned int  switching_frequency_now;
 // Functions
 bool SetupParm(void);
 
-void MeasCompCurr( int curr1, int curr2 );
 void InitMeasCompCurr( short Offset_a, short Offset_b );
 
-//void InitPI( tPIParm *pParm);
-//void CalcPI( tPIParm *pParm);
-
 void SinCos(void);      // Calculate qSin,qCos from iAngle
-void ClarkePark(void);  // Calculate qId,qIq from qCos,qSin,qIa,qIb
-void InvPark(void);     // Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
+
 
 
 
@@ -278,7 +273,6 @@ float FieldWeakening(float qMotorSpeed);
 
 
 void CalcRefVec( void );
-void CalcSVGen( void );
 void CorrectPhase( void );
 void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
 
