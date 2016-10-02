@@ -86,13 +86,21 @@ int bldc_init(void)
 
 	//comm_usb_init();
 
+	//uartInit();
+	//uartStart(&UARTD3,&uart_cfg_1);
+
+	 Uart3_print_init();
+
+
+
 	return 0;
 }
 
 
 uint8_t Ch;
 
-static msg_t uart_process_thread(void *arg) {
+static msg_t uart_process_thread(void *arg)
+{
 	(void)arg;
 
 	chRegSetThreadName("uart rx process");

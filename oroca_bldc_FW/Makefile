@@ -135,11 +135,13 @@ CSRC = $(STARTUPSRC) \
        $(HALSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
-       $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+	   $(CHIBIOS)/os/hal/ports/stm32/lld/usartv1/Serial_lld.c\
+	   $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
        $(CHIBIOS)/os/various/syscalls.c \
        $(BLDCSRC)/bldc.c \
        $(BLDCSRC)/mcpwm.c \
        $(BLDCSRC)/spi_dac.c \
+	   $(CORESRC)/uart3_print.c \
        $(CORESRC)/usb_uart.c \
        $(CORESRC)/irq_handlers.c \
        $(CORESRC)/comm_usb.c \
@@ -184,6 +186,7 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/hal/lib/streams \
          $(CHIBIOS)/os/hal/lib/ports/STM32/LLD/TIMv1 \
+		 $(CHIBIOS)/os/hal/lib/ports/STM32/LLD/USARTv1 \
 		 $(LIBDIR)/hwconf \
          $(HWINC) \
          $(APPINC) \
@@ -289,11 +292,6 @@ ifeq ($(USE_FWLIB),yes)
   INCDIR += $(STM32INC)
   USE_OPT += -DUSE_STDPERIPH_DRIVER
 endif
-
-
-
-
-
 
 build/$(PROJECT).bin: build/$(PROJECT).elf show_size
 	$(BIN) build/$(PROJECT).elf build/$(PROJECT).bin
