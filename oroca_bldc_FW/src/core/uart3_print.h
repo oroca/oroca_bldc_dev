@@ -6,12 +6,12 @@
 #ifndef __UART3_PRINT_H__
 #define __UART3_PRINT_H__
 
-static void Uart3_print_init(void);
-static void Uart3_SendString(SerialDriver *sdp, const char *string);  /* for example 3 */
-static void Uart3_print(char *p);
-static void Uart3_println(char *p);
-static void Uart3_printn(uint32_t n);
-static void Uart3_printf(BaseSequentialStream * chp,const char * fmt,...);
+void Uart3_print_init(void);
+void Uart3_SendString(SerialDriver *sdp, const char *string);  /* for example 3 */
+void Uart3_print(char *p);
+void Uart3_println(char *p);
+void Uart3_printn(uint32_t n);
+void Uart3_printf(BaseSequentialStream * chp,const char * fmt,...);
 
 
 #endif

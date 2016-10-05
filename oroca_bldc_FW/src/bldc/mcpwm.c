@@ -25,17 +25,19 @@
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
+#include "hw.h"
+
+#include "main.h"
+#include "mcpwm.h"
+#include "utils.h"
+#include "uart3_print.h"
+
+#include <errno.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#include "main.h"
-#include "mcpwm.h"
-#include "utils.h"
-#include "hw.h"
-
-#include <errno.h>
-#include <unistd.h>
 
 
 
@@ -297,7 +299,6 @@ void mcpwm_init(void) {
 	// TIM2 enable counter
 	TIM_Cmd(TIM2, ENABLE);
 
-
 	// ADC sampling locations
 	//stop_pwm_hw();
 	utils_sys_lock_cnt();
@@ -316,12 +317,13 @@ void mcpwm_init(void) {
 
 	utils_sys_unlock_cnt();
 
-
 	// Calibrate current offset
 	ENABLE_GATE();
 	DCCAL_OFF();
 	GAIN_FULLDN();
 	do_dc_cal();
+	Uart3_printf(&SD3, (uint8_t *)"5-1\r\n");
+	// Enable transfer complete interrupt
 
 
 	// Various time measurements
@@ -338,9 +340,6 @@ void mcpwm_init(void) {
 	// TIM3 enable counter
 	TIM_Cmd(TIM12, ENABLE);
 
-	// Start threads
-	////chThdCreateStatic(rpm_thread_wa, sizeof(rpm_thread_wa), NORMALPRIO, rpm_thread, NULL);
-
 	// WWDG configuration
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, ENABLE);
 	WWDG_SetPrescaler(WWDG_Prescaler_1);
@@ -348,9 +347,16 @@ void mcpwm_init(void) {
 	WWDG_Enable(100);
 
 
-//---------------------------------------------------------------------------
+//--------------------------------------------------
+//main ctrl setup
+
 	SetupParm();
 	SetupControlParameters();
+
+
+	//dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_int_handler,(void *)0);
+	//DMA_ITConfig(DMA2_Stream4, DMA_IT_TC, ENABLE);
+
 
 	uGF.Word = 0;                   // clear flags
 	#ifdef TORQUEMODE
@@ -363,8 +369,8 @@ void mcpwm_init(void) {
 
 	uGF.bit.RunMotor = 1;
 
-	spi_dac_hw_init();
-
+	
+//
 }
 
 
@@ -386,23 +392,43 @@ void do_dc_cal(void)
 	curr1_offset = curr1_sum / curr_start_samples;
 	DCCAL_OFF();
 	dccal_done = true;
+
+	Uart3_printf(&SD3, (uint8_t *)"curr0_offset : %u\r\n",curr0_offset);
+	Uart3_printf(&SD3, (uint8_t *)"curr1_offset : %u\r\n",curr1_offset);
+}
+
+
+void mcpwm_adc_int_prehandler(void *p, uint32_t flags) 
+{
+	(void)p;
+	(void)flags;
+	LED_RED_ON();
+
+	curr_start_samples++;
+	curr0_sum += ADC_Value[ADC_IND_CURR1] ;
+	curr1_sum += ADC_Value[ADC_IND_CURR2] ;
+
+	LED_RED_OFF();
+
+	// Reset the watchdog
+	WWDG_SetCounter(100);	
 }
 
 
 /*
  * New ADC samples ready. Do commutation!
  */
-void mcpwm_adc_int_handler(void *p, uint32_t flags) {
+void mcpwm_adc_int_handler(void *p, uint32_t flags) 
+{
 	(void)p;
 	(void)flags;
 
 	TIM12->CNT = 0;
-	LED_GREEN_ON();
-	LED_GREEN_OFF();
 
+	curr_start_samples++;
+	curr0_sum += ADC_Value[ADC_IND_CURR1] ;
+	curr1_sum += ADC_Value[ADC_IND_CURR2] ;
 
-	
-	
 
 
 	// Check for faults that should stop the motor

@@ -79,10 +79,10 @@ build/obj/i2s_lld.o: \
  lib/ChibiOS_3.0.2/os/hal/include/pwm.h \
  lib/ChibiOS_3.0.2/os/hal/include/rtc.h \
  lib/ChibiOS_3.0.2/os/hal/include/serial.h \
+ lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/USARTv1/serial_lld.h \
  lib/ChibiOS_3.0.2/os/hal/include/sdc.h \
  lib/ChibiOS_3.0.2/os/hal/include/spi.h \
  lib/ChibiOS_3.0.2/os/hal/include/uart.h \
- lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h \
  lib/ChibiOS_3.0.2/os/hal/include/usb.h \
  lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/OTGv1/usb_lld.h \
  lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/OTGv1/stm32_otg.h \
@@ -256,13 +256,13 @@ lib/ChibiOS_3.0.2/os/hal/include/rtc.h:
 
 lib/ChibiOS_3.0.2/os/hal/include/serial.h:
 
+lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/USARTv1/serial_lld.h:
+
 lib/ChibiOS_3.0.2/os/hal/include/sdc.h:
 
 lib/ChibiOS_3.0.2/os/hal/include/spi.h:
 
 lib/ChibiOS_3.0.2/os/hal/include/uart.h:
-
-lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/USARTv1/uart_lld.h:
 
 lib/ChibiOS_3.0.2/os/hal/include/usb.h:
 

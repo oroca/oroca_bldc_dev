@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Copyright 2012-2015 Benjamin Vedder	benjamin@vedder.se
 
 	This program is free software: you can redistribute it and/or modify
@@ -23,8 +23,14 @@
 
 #include "hw.h"
 #include "bldc.h"
-#include "usb_uart.h"
+#include "uart3_print.h"
 //#include "../../mavlink/oroca_bldc/mavlink.h"
+
+#include <math.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
+
 
 
 /*
@@ -58,18 +64,18 @@ static msg_t periodic_thread(void *arg) {
 
 	chRegSetThreadName("Main periodic");
 
-	//int fault_print = 0;
+	Uart3_printf(&SD3, (uint8_t *)"periodic_thread\r\n");
 
 	for(;;)
 	{
-
-		chThdSleepMilliseconds(10);
+		LED_GREEN_ON();
+		chThdSleepMilliseconds(500);
+		LED_GREEN_OFF();
+		chThdSleepMilliseconds(500);
 	}
 
 	return 0;
 }
-
-
 
 
 
@@ -82,34 +88,32 @@ int bldc_init(void)
 
 	hw_init_gpio();
 
+	Uart3_print_init();
+	Uart3_printf(&SD3, (uint8_t *)"oroca_bldc\r\n");
+
+	spi_dac_hw_init();
+	spi_dac_write_A( 100) ;
+
 	mcpwm_init();
-
-	//comm_usb_init();
-
-	//uartInit();
-	//uartStart(&UARTD3,&uart_cfg_1);
-
-	 Uart3_print_init();
-
-
 
 	return 0;
 }
 
 
-uint8_t Ch;
-
-static msg_t uart_process_thread(void *arg)
-{
+static msg_t uart_process_thread(void *arg) {
 	(void)arg;
 
 	chRegSetThreadName("uart rx process");
+
+	Uart3_printf(&SD3, (uint8_t *)"uart_process_thread\r\n");
 
 	//process_tp = chThdSelf();
 
 	for(;;)
 	{
-		//chThdSleepMilliseconds(1);
+		
+
+		chThdSleepMilliseconds(1000);/*Wait for an arbitrary time*/
 
 	}
 
@@ -129,12 +133,11 @@ int bldc_start(void)
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
 	chThdCreateStatic(uart_thread_wa, sizeof(uart_thread_wa), NORMALPRIO, uart_process_thread, NULL);
 
-	//-- IDLE
+	Uart3_printf(&SD3, (uint8_t *)"bldc_start\r\n");
+
+
 	for(;;)
 	{
-		//palSetPad(GPIOA, 7);
-		chThdSleepMilliseconds(1);
-		//palClearPad(GPIOA, 7);
 
 		//Ch = usb_uart_getch();
 
@@ -152,11 +155,8 @@ int bldc_start(void)
 			qVelRef -= 0.01;
 			//debug_print_usb("Enter a : %f\r\n", qVelRef);
 		}
-
-		//debug_print_usb("8 %f 0\r\n", dbg_fTheta );
-		//debug_print_usb("%d\r\n", dbg_AccumTheta );
-		usb_uart_printf("500 %f %f 0\r\n", qVelRef*10000, dbg_fMea*10000 );
 		*/
+
 	}
 }
 

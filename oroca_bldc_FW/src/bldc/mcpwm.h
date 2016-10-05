@@ -290,6 +290,7 @@ void SetupControlParameters(void);
 
 
 // Interrupt handlers
+void mcpwm_adc_int_prehandler(void *p, uint32_t flags) ;
 void mcpwm_adc_int_handler(void *p, uint32_t flags);
 
 #ifdef __cplusplus

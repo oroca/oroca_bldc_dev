@@ -3,9 +3,7 @@
 #include "hal.h"
 #include "stm32f4xx_conf.h"
 
-int debug_print_uart( const char *fmt, ...);
-
-
+#include "uart3_print.h"
 
 // pin 
 /*
@@ -20,10 +18,6 @@ PB5  ==> SPI_MOSI , AF5, SPI1_MOSI
 
 #define GPIOB_PIN3_SCK              3
 #define GPIOB_PIN5_MOSI             5
-
-
-
-
 
 
 static void gpt_cb(GPTDriver *gptp) {
@@ -136,7 +130,7 @@ void SPI_Init_for_DAC_7612(SPI_TypeDef* SPIx)
 
 	SPIx->CR1 = tmpreg;
 
-	//debug_print_uart( "CR1=%X,%X \r\n",  SPIx->CR1, tmpreg  );
+	Uart3_printf( &SD3,"CR1=%X,%X \r\n",  SPIx->CR1, tmpreg  );
 
 
 	SPIx->CR2  = SPI_CR2_SSOE; // 하드웨어 NSS 출력
@@ -161,9 +155,9 @@ static void _spi_dac_write( short data)
 	SPI_TypeDef* SPIx = SPI1;
 
 
-	//debug_print_uart( "CR1=%X \r\n",  SPIx->CR1 );
-	//debug_print_uart( "CR2=%X \r\n",  SPIx->CR2 );
-	//debug_print_uart( "SR=%X \r\n",  SPIx->SR );
+	Uart3_printf(&SD3, "CR1=%X \r\n",  SPIx->CR1 );
+	//Uart3_printf(&SD3, "CR2=%X \r\n",  SPIx->CR2 );
+	//Uart3_printf(&SD3, "SR=%X \r\n",  SPIx->SR );
 
 	
 	while( (SPIx->SR & SPI_SR_TXE) == 0); // 이전에 미 전송 있으면 대기

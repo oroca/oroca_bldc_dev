@@ -135,24 +135,24 @@ CSRC = $(STARTUPSRC) \
        $(HALSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
-	   $(CHIBIOS)/os/hal/ports/stm32/lld/usartv1/Serial_lld.c\
-	   $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
        $(CHIBIOS)/os/various/syscalls.c \
+       $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
+       $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
        $(BLDCSRC)/bldc.c \
        $(BLDCSRC)/mcpwm.c \
        $(BLDCSRC)/spi_dac.c \
-	   $(CORESRC)/uart3_print.c \
-       $(CORESRC)/usb_uart.c \
+       $(CORESRC)/uart3_print.c\
        $(CORESRC)/irq_handlers.c \
-       $(CORESRC)/comm_usb.c \
-       $(CORESRC)/utils.c \
-	   $(LIBSRC)/hwconf/hw_oroca.c 
-       $(HWSRC) 
+       $(CORESRC)/utils.c	\
+       $(LIBSRC)/hwconf/hw_oroca.c
+#$(HWSRC) $(CORESRC)/usb_uart.c \
 #$(CORESRC)/eeprom.c \       
 #$(CORESRC)/flash_helper.c\
 #$(CORESRC)/servo_dec.c \
 #$(CORESRC)/conf_general.c \
-       
+#$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+#$(CORESRC)/usb_uart.c \
+#$(CORESRC)/comm_usb.c \     
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = main.cpp
@@ -184,9 +184,8 @@ ASMSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) \
          $(CHIBIOS)/os/various \
-         $(CHIBIOS)/os/hal/lib/streams \
          $(CHIBIOS)/os/hal/lib/ports/STM32/LLD/TIMv1 \
-		 $(CHIBIOS)/os/hal/lib/ports/STM32/LLD/USARTv1 \
+         $(CHIBIOS)/os/hal/lib/streams \
 		 $(LIBDIR)/hwconf \
          $(HWINC) \
          $(APPINC) \
@@ -195,7 +194,6 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(BLDCINC)	\
          $(MAVINC)
  		#$(LIBDIR)/mcconf \
-#
 # Project, sources and paths
 ##############################################################################
 
@@ -292,6 +290,11 @@ ifeq ($(USE_FWLIB),yes)
   INCDIR += $(STM32INC)
   USE_OPT += -DUSE_STDPERIPH_DRIVER
 endif
+
+
+
+
+
 
 build/$(PROJECT).bin: build/$(PROJECT).elf show_size
 	$(BIN) build/$(PROJECT).elf build/$(PROJECT).bin

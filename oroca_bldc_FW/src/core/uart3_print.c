@@ -11,6 +11,9 @@
 
 #include "chprintf.h"
 
+#include "uart3_print.h"
+
+
 #define USART_CR1_9BIT_WORD     (1 << 12)   /* CR1 9 bit word */
 #define USART_CR1_PARITY_SET    (1 << 10)   /* CR1 parity bit enable */
 #define USART_CR1_EVEN_PARITY   (0 << 9)    /* CR1 even parity */
@@ -24,7 +27,7 @@ static SerialConfig sd3cfg = {
     0
 };
 
-static void Uart3_print_init(void)
+ void Uart3_print_init(void)
 {
 
     /*
@@ -41,18 +44,18 @@ static void Uart3_print_init(void)
 
 
 
-static void Uart3_print(char *p) 
+ void Uart3_print(char *p)
 {
     while (*p) chSequentialStreamPut(&SD3, *p++);
 }
 
-static void Uart3_println(char *p) 
+ void Uart3_println(char *p)
 {
     while (*p) chSequentialStreamPut(&SD3, *p++);
     chSequentialStreamWrite(&SD3, (uint8_t *)"\r\n", 2);
 }
 
-static void Uart3_printn(uint32_t n) 
+ void Uart3_printn(uint32_t n)
 {
     char buf[16], *p;
 
@@ -66,17 +69,17 @@ static void Uart3_printn(uint32_t n)
     }
 }
 
-static void Uart3_SendString(SerialDriver *sdp, const char *string)
+ void Uart3_SendString(SerialDriver *sdp, const char *string)
 {
     uint8_t i;
     for (i=0; string[i]!='\0'; i++)
         sdPut(sdp, string[i]);
 }
 
-static void Uart3_printf(BaseSequentialStream * chp,const char * fmt,...)
+ void Uart3_printf(BaseSequentialStream * chp,const char * fmt,...)
 {
 	//chprintf((BaseSequentialStream *)&SD3, "Example: %d\r\n", 2);
-	chprintf(chp,fmt,...)
+	chprintf(chp,fmt);
 }
 
 //example cod
@@ -118,17 +121,17 @@ int main(void) {
 
 
 //second example
-static UARTConfig uartcfg = {
-   NULL,                    /* End of Transmission buffer callback               */
-   NULL,                    /* Physical end of transmission callback             */
-   NULL,                    /* Receive buffer filled callback                    */
-   NULL,                   /* Char received while out of the UART_RECEIVE state */
-   NULL,                    /* Receive error callback                            */
-   115200,                     /* Baudrate                                          */
-   0,                       /* cr1 register values                               */
-   0,                       /* cr2 register values                               */
-   0                        /* cr3 register values                               */
-};
+//static UARTConfig uartcfg = {
+//   NULL,                    /* End of Transmission buffer callback               */
+//   NULL,                    /* Physical end of transmission callback             */
+//   NULL,                    /* Receive buffer filled callback                    */
+//   NULL,                   /* Char received while out of the UART_RECEIVE state */
+//   NULL,                    /* Receive error callback                            */
+//   115200,                     /* Baudrate                                          */
+//   0,                       /* cr1 register values                               */
+//   0,                       /* cr2 register values                               */
+//   0                        /* cr3 register values                               */
+//};
 
 /* PD5 == USART2 TX PIN ;	PD == USART2 RX PIN */
  //--palSetPadMode(GPIOD, 5 , PAL_MODE_ALTERNATE(7));

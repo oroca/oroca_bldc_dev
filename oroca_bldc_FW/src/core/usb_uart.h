@@ -8,7 +8,7 @@
 #ifndef USB_UART_H_INCLUDED
 #define USB_UART_H_INCLUDED
 
-extern SerialUSBDriver SDU1;
+//extern SerialUSBDriver SDU1;
 
 void usb_uart_init(void);
 int usb_uart_isActive(void);

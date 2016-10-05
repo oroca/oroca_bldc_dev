@@ -47,8 +47,8 @@
 #include "comm_usb.h"
 
 //jsyoon
-#include "chprintf.h"
-#include "memstreams.h"
+//#include "chprintf.h"
+//#include "memstreams.h"
 
 
 #ifdef __cplusplus
