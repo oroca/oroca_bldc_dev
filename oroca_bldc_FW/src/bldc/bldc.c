@@ -23,6 +23,7 @@
 
 #include "hw.h"
 #include "bldc.h"
+#include "Mcpwm.h"
 #include "uart3_print.h"
 //#include "../../mavlink/oroca_bldc/mavlink.h"
 
@@ -111,9 +112,20 @@ static msg_t uart_process_thread(void *arg) {
 
 	for(;;)
 	{
-		
+		//Uart3_printf(&SD3,  "%f,%f\r\n",ParkParm.qIa,ParkParm.qIb);
+		//Uart3_printf(&SD3,  "%d  ,  %d,   %d\r\n",ParkParm*100.qAngle,ADC_Value[ADC_IND_CURR1],ADC_Value[ADC_IND_CURR2]);
 
-		chThdSleepMilliseconds(1000);/*Wait for an arbitrary time*/
+		Uart3_printf(&SD3,  "%f   ",ParkParm.qAngle);
+		//Uart3_printf(&SD3,  "%u  ",ADC_Value[ADC_IND_CURR1]);
+		//Uart3_printf(&SD3,  "%u \r\n ",ADC_Value[ADC_IND_CURR2]);
+
+		Uart3_printf(&SD3,  "%f   ",ParkParm.qIalpha);
+		Uart3_printf(&SD3,  "%f   ",ParkParm.qIbeta);
+
+
+		Uart3_printf(&SD3,  "%f   ",ParkParm.qId);
+		Uart3_printf(&SD3,  "%f   \r\n ",ParkParm.qIq);
+		chThdSleepMilliseconds(1);/*Wait for an arbitrary time*/
 
 	}
 

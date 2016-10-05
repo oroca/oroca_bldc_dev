@@ -307,7 +307,7 @@ void mcpwm_init(void) {
 	TIM1->CR1 |= TIM_CR1_UDIS;
 	TIM8->CR1 |= TIM_CR1_UDIS;
 
-	TIM8->CCR1 = 500;//for vdc
+	TIM8->CCR1 = TIM1->ARR;//for vdc
 	TIM8->CCR2 = TIM1->ARR;//for Ib
 	TIM8->CCR3 = TIM1->ARR;//for Ia
 
@@ -429,7 +429,7 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags)
 	curr0_sum += ADC_Value[ADC_IND_CURR1] ;
 	curr1_sum += ADC_Value[ADC_IND_CURR2] ;
 
-
+	SMC_HallSensor_Estimation (&smc1);
 
 	// Check for faults that should stop the motor
 	uGF.bit.RunMotor = 1;
@@ -448,11 +448,10 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags)
 			 ParkParm.qIa = MeasCurrParm.qKa * (float)CorrADC1;
 			 ParkParm.qIb = MeasCurrParm.qKb * (float)CorrADC2;	
 	
-			//debug_print_usb( "%f,%d,%d\r\n",ParkParm.qAngle ,curr0,curr1);
-			
-	
+			//Uart3_printf(&SD3,  "%f,%d,%d\r\n",ParkParm.qAngle ,ParkParm.qIa,CorrADC2);
+
 			// Calculate commutation angle using estimator
-			//=====   ParkParm.qAngle = smc1.Theta;
+			ParkParm.qAngle = smc1.Theta;
 	
 			//ParkParm.qAngle = (float)IN[2];
 			//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
@@ -470,24 +469,24 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags)
 			// Ialpha and Ibeta have been calculated. Now do rotation.
 			// Get qSin, qCos from ParkParm structure
 
-			ParkParm.qId =  ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
-			ParkParm.qIq = -ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
+			ParkParm.qId = -ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
+			ParkParm.qIq = ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
 	
 			// Calculate control values
 			DoControl();
 	
 	//=============================================================================
 	//for open loop test
-			ParkParm.qVd =0.5f;
-			ParkParm.qVq = 0.0f;
+			//ParkParm.qVd =0.5f;
+			//ParkParm.qVq = 0.0f;
 	
 			//ParkParm.qAngle = 0.0f;
 	
 			//ParkParm.qAngle -= 0.002f;
 			//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
 	
-			ParkParm.qAngle += 0.002f;
-			if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
+			//ParkParm.qAngle += 0.002f;
+			//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
 	//==============================================================================
 	
 			// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
@@ -550,7 +549,7 @@ void DoControl( void )
 	{
 		// Execute the velocity control loop
 		PIParmW.qInMeas = smc1.Omega;
-		PIParmW.qInRef	= 0.01f;//CtrlParm.qVelRef;
+		PIParmW.qInRef	= 0.1f;//CtrlParm.qVelRef;
 		CalcPI(&PIParmW);
 		CtrlParm.qVqRef = PIParmW.qOut;
 	}
@@ -562,7 +561,8 @@ void DoControl( void )
 
 	// PI control for D
 	PIParmD.qInMeas = ParkParm.qId;
-	PIParmD.qInRef	= CtrlParm.qVdRef;
+	//PIParmD.qInRef	= CtrlParm.qVdRef;
+	PIParmD.qInRef	= 0.0f;
 	CalcPI(&PIParmD);
 
 	if(uGF.bit.EnVoltRipCo)
@@ -648,10 +648,10 @@ void SetupControlParameters(void)
 	InitPI(&PIParmW);
 
 	// ============= PI PLL Term ===============
-	PIParmPLL.qKp = WKP;		 
-	PIParmPLL.qKi = WKI;		 
-	PIParmPLL.qKc = WKC;		 
-	PIParmPLL.qOutMax = WOUTMAX;	 
+	PIParmPLL.qKp = PLLKP;		 
+	PIParmPLL.qKi = PLLKI;		 
+	PIParmPLL.qKc = PLLKC;		 
+	PIParmPLL.qOutMax = PLLOUTMAX;	 
 	PIParmPLL.qOutMin = -PIParmPLL.qOutMax;
 
 	InitPI(&PIParmPLL);

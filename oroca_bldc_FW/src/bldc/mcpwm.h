@@ -203,11 +203,16 @@ typedef struct {
 #define     QOUTMAX    0.99999
 
 //*** Velocity Control Loop Coefficients *****
-#define     WKP       2.0
-#define     WKI        0.01
+#define     WKP       12.0
+#define     WKI        2.0
 #define     WKC        0.99999
 #define     WOUTMAX    0.95
 
+
+#define     PLLKP       2.0
+#define     PLLKI        0.01
+#define     PLLKC        0.99999
+#define     PLLOUTMAX    0.95
 
 #define     DQKA       0.0008058608f	// Current feedback software gain : adc*(1/resol)*(AVDD/AmpGAIN)*(1/R) 
 #define     DQKB       0.0008058608f	// Current feedback software gain : adc*(1/4096)*(3.3/10)*(1/0.001)
@@ -254,6 +259,8 @@ extern  unsigned int  switching_frequency_now;
 			in_old = in;								\
 		}
 
+
+extern tParkParm ParkParm;
 
 
 // Functions
