@@ -141,6 +141,7 @@ CSRC = $(STARTUPSRC) \
        $(BLDCSRC)/bldc.c \
        $(BLDCSRC)/mcpwm.c \
        $(BLDCSRC)/spi_dac.c \
+       $(CORESRC)/servo_dec.c \
        $(CORESRC)/uart3_print.c\
        $(CORESRC)/irq_handlers.c \
        $(CORESRC)/utils.c	\
