@@ -26,6 +26,7 @@
 #define SERVO_DEC_H_
 
 #include <stdint.h>
+#include <chtypes.h>
 
 // Functions
 void servodec_init(void (*d_func)(void));

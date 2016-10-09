@@ -124,8 +124,8 @@
 #define HW_ICU_DEV			ICUD3
 #define HW_ICU_CHANNEL		ICU_CHANNEL_2
 #define HW_ICU_GPIO_AF		GPIO_AF_TIM3
-#define HW_ICU_GPIO			GPIOB
-#define HW_ICU_PIN			5
+#define HW_ICU_GPIO		GPIOC
+#define HW_ICU_PIN			9
 
 // I2C Peripheral
 #define HW_I2C_DEV			I2CD2
