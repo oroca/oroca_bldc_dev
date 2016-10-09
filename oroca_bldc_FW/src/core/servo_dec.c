@@ -28,6 +28,9 @@
 #include "hal.h"
 #include "hw.h"
 
+#include <chthreads.h>
+#include <Chvt.h>
+
 /*
  * Settings
  */
@@ -59,7 +62,7 @@ static float middle_of_3(float a, float b, float c) {
 }
 
 static void icuwidthcb(ICUDriver *icup) {
-	last_len_received[0] = ((float)icuGetWidth(icup) / ((float)TIMER_FREQ / 1000.0));
+	last_len_received[0] = ((float)icuGetWidthX(icup) / ((float)TIMER_FREQ / 1000.0));
 	float len = last_len_received[0] - pulse_start;
 	const float len_set = (pulse_end - pulse_start);
 
@@ -87,7 +90,7 @@ static void icuwidthcb(ICUDriver *icup) {
 			servo_pos[0] = (len * 2.0 - len_set) / len_set;
 		}
 
-		last_update_time = chTimeNow();
+		last_update_time = chVTGetSystemTime();
 
 		if (done_func) {
 			done_func();
@@ -119,7 +122,7 @@ static ICUConfig icucfg = {
 void servodec_init(void (*d_func)(void)) {
 	icuStart(&ICUD3, &icucfg);
 	palSetPadMode(HW_ICU_GPIO, HW_ICU_PIN, PAL_MODE_ALTERNATE(HW_ICU_GPIO_AF));
-	icuEnable(&ICUD3);
+	icuStartCapture(&ICUD3);
 
 	for (int i = 0;i < SERVO_NUM;i++) {
 		servo_pos[i] = 0.0;

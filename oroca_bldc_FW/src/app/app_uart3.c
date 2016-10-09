@@ -22,7 +22,7 @@
  *      Author: benjamin
  */
 
-#include "app_ppm.h"
+#include "app.h"
 
 #include "ch.h"
 #include "hal.h"
@@ -31,10 +31,8 @@
 #include "mcpwm.h"
 #include "timeout.h"
 #include "utils.h"
-//#include "comm_can.h"
+#include "comm_can.h"
 #include <math.h>
-#include <chthreads.h>
-#include <Chvt.h>
 
 // Settings
 #define MAX_CAN_AGE						0.1
@@ -42,9 +40,9 @@
 
 // Threads
 static msg_t ppm_thread(void *arg);
-static THD_WORKING_AREA(ppm_thread_wa, 1024);
-static thread_t*ppm_tp; 
-virtual_timer_t vt; 
+static WORKING_AREA(ppm_thread_wa, 1024);
+static Thread *ppm_tp;
+VirtualTimer vt;
 
 // Private functions
 static void servodec_func(void);
@@ -75,24 +73,24 @@ void app_ppm_start(void) {
 }
 
 static void servodec_func(void) {
-	chSysLockFromISR();
+	chSysLockFromIsr();
 	timeout_reset();
 	chEvtSignalI(ppm_tp, (eventmask_t) 1);
-	chSysUnlockFromISR();
+	chSysUnlockFromIsr();
 }
 
 static void update(void *p) {
-	chSysLockFromISR();
+	chSysLockFromIsr();
 	chVTSetI(&vt, MS2ST(2), update, p);
 	chEvtSignalI(ppm_tp, (eventmask_t) 1);
-	chSysUnlockFromISR();
+	chSysUnlockFromIsr();
 }
 
 static msg_t ppm_thread(void *arg) {
 	(void)arg;
 
 	chRegSetThreadName("APP_PPM");
-	ppm_tp = chThdGetSelfX();
+	ppm_tp = chThdSelf();
 
 	servodec_set_pulse_options(config.pulse_start, config.pulse_end, config.median_filter);
 	servodec_init(servodec_func);

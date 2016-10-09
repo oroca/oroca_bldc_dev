@@ -38,15 +38,17 @@ cTest test;
 ---------------------------------------------------------------------------*/
 int main(void)
 {
+//=================================
+// hardware setup
 	main_init();
 
 	test.print();
 
-	//-- BLDC 시작
-	//
+//=================================
+//chibios process start
 	bldc_start();
 
-
+	app_ppm_start();
 	return 0;
 }
 

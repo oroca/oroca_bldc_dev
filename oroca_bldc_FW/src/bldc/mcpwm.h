@@ -294,7 +294,7 @@ void DoControl( void );
 void InitPI( tPIParm *pParm);
 void SetupControlParameters(void);
 
-
+void CalcSVGen( void );
 
 // Interrupt handlers
 void mcpwm_adc_int_prehandler(void *p, uint32_t flags) ;

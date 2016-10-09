@@ -1,9 +1,9 @@
-APPSRC =	applications/app.c \
-			applications/app_ppm.c \
-			applications/app_adc.c \
-			applications/app_sten.c \
-			applications/app_gurgalof.c \
-			applications/app_uartcomm.c \
-			applications/app_nunchuk.c
+APPSRC =	/app_ppm.c 
+#			/app.c \		
+#			/app_adc.c \
+#			/app_sten.c \
+#			/app_gurgalof.c \
+#			/app_uartcomm.c \
+#			/app_nunchuk.c
 
-APPINC = applications
+APPINC = app

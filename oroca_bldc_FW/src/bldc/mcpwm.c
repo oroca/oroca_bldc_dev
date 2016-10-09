@@ -743,6 +743,7 @@ void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty
 
 	utils_sys_unlock_cnt();
 }
+
 void CalcSVGen( void )
 { 
 	if( SVGenParm.qVr1 >= 0 )

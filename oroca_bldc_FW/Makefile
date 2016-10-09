@@ -95,7 +95,8 @@ CORESRC = src/core
 COREINC = src/core
 BLDCSRC = src/bldc
 BLDCINC = src/bldc
-
+APPSRC = src/app
+APPINC = src/app
 
 #MAVINC  = lib/mavlink
 #MAVINC += lib/mavlink/common
@@ -120,7 +121,6 @@ include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/rt/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 
-
 # Define linker script file here
 LDSCRIPT= ld_eeprom_emu.ld
 #LDSCRIPT= $(PORTLD)/STM32F407xG.ld
@@ -138,22 +138,18 @@ CSRC = $(STARTUPSRC) \
        $(CHIBIOS)/os/various/syscalls.c \
        $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+       $(LIBSRC)/hwconf/hw_oroca.c\
        $(BLDCSRC)/bldc.c \
        $(BLDCSRC)/mcpwm.c \
-       $(BLDCSRC)/spi_dac.c \
+       $(B LDCSRC)/spi_dac.c \
        $(CORESRC)/servo_dec.c \
        $(CORESRC)/uart3_print.c\
        $(CORESRC)/irq_handlers.c \
        $(CORESRC)/utils.c	\
-       $(LIBSRC)/hwconf/hw_oroca.c
-#$(HWSRC) $(CORESRC)/usb_uart.c \
-#$(CORESRC)/eeprom.c \       
-#$(CORESRC)/flash_helper.c\
-#$(CORESRC)/servo_dec.c \
-#$(CORESRC)/conf_general.c \
-#$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
-#$(CORESRC)/usb_uart.c \
-#$(CORESRC)/comm_usb.c \     
+       $(CORESRC)/timeout.c	\
+       $(APPSRC)/app_ppm.c
+       
+
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = main.cpp
@@ -189,10 +185,10 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(CHIBIOS)/os/hal/lib/streams \
 		 $(LIBDIR)/hwconf \
          $(HWINC) \
-         $(APPINC) \
          $(NRFINC) \
          $(COREINC) \
          $(BLDCINC)	\
+         $(APPINC)	\
          $(MAVINC)
  		#$(LIBDIR)/mcconf \
 # Project, sources and paths
