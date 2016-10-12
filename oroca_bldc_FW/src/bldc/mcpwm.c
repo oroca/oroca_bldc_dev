@@ -837,6 +837,7 @@ float HallPLLdef1      = 0.0;
 	
 static volatile float Theta	 	= 0.0;
 static volatile float ThetaCal	 	= 0.0;
+static volatile float trueTheta	 = 0.0;
 
 static volatile float Futi	 	= 0.0;
 float Wpll	 	= 0.0;
@@ -1007,7 +1008,13 @@ void SMC_HallSensor_Estimation (SMC *s)
 	else if(s->Theta < 0.0f) s->Theta = (2.0f * PI) + s->Theta;
 
 	s->Omega = Hall_PIout;
-	//Futi   = Hall_PIout / (2.* PI) *Fsamp;
+
+
+	trueTheta += Hall_PIout /6 ;
+	if((2.0f * PI) < trueTheta) trueTheta = trueTheta - (2.0f * PI);
+	else if(trueTheta < 0.0f) trueTheta = (2.0f * PI) + trueTheta;
+
+	Futi   = Hall_PIout / (2.* PI) *Fsamp;
 
 	//spi_dac_write_A((HallPLLA+ 1.0f) * 200.0f);
 	//spi_dac_write_B((HallPLLB+ 1.0f) * 200.0f);
