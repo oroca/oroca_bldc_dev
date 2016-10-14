@@ -12,6 +12,7 @@ void Uart3_print(char *p);
 void Uart3_println(char *p);
 void Uart3_printn(uint32_t n);
 void Uart3_printf(BaseSequentialStream * chp,const char * fmt,...);
+uint8_t Uart3_getch( void );
 
 
 #endif

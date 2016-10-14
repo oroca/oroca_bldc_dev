@@ -59,8 +59,8 @@ union{
         	WORD Word;
  } uGF;
 
-typedef SMC *SMC_handle;
-SMC smc1 = SMC_DEFAULTS;
+
+SMC smc1;
 tParkParm ParkParm;
 
 tPIParm     PIParmD;	// Structure definition for Flux component of current, or Id
@@ -549,7 +549,7 @@ void DoControl( void )
 	{
 		// Execute the velocity control loop
 		PIParmW.qInMeas = smc1.Omega;
-		PIParmW.qInRef	= 0.1f;//CtrlParm.qVelRef;
+		PIParmW.qInRef	= CtrlParm.qVelRef;
 		CalcPI(&PIParmW);
 		CtrlParm.qVqRef = PIParmW.qOut;
 	}
@@ -585,12 +585,6 @@ void DoControl( void )
 		ParkParm.qVq = VoltRippleComp(PIParmQ.qOut);
 	else
 		ParkParm.qVq = PIParmQ.qOut;
-
-	// Limit, if motor is stalled, stop motor commutation
-	if (smc1.OmegaFltred < 0)
-	{
-//				uGF.bit.RunMotor = 0;
-	}
 
 }
 
@@ -820,79 +814,6 @@ void CalcSVGen( void )
 
 
 /********************************PLL loop **********************************/	
-#define Fsamp           16000
-#define Tsamp           1./16000
-
-float HallPLLlead      = 0.0;
-float HallPLLlead1     = 0.0;
-float HallPLLlead2     = 0.0;
-float HallPLLqe        = 0.0;
-float HallPLLde        = 0.0;
-float HallPLLde1       = 0.0;
-float HallPLLdef       = 0.0;
-float HallPLLdef1      = 0.0;
-#define WMd      2.*3.141592654*180.
-#define AMd      (WMd-(2./Tsamp))/(WMd+(2./Tsamp))
-#define BMd      WMd/(WMd+(2./Tsamp))
-	
-static volatile float Theta	 	= 0.0;
-static volatile float ThetaCal	 	= 0.0;
-static volatile float trueTheta	 = 0.0;
-
-static volatile float Futi	 	= 0.0;
-float Wpll	 	= 0.0;
-float Wpll1	 	= 0.0;
-float Wpllp	 	= 0.0;
-float Wplli	 	= 0.0;
-
-float Kpll       = 0.428;
-float Ipll       = 28.83;
-
-
-static volatile float Hall_KA = 0.0;
-static volatile float Hall_KB = 0.0;
-
-static volatile float Hall_PIout = 0.0;
-static volatile float Hall_Err0 = 0.0;
-
-
-float HallPLLA	 = 0.0f;	
-float HallPLLA1 	= 0.0f;
-float HallPLLB	   = 0.0f;
-
-float HallPLLA_cos3th	 = 0.0f;
-float HallPLLA_sin3th	 = 0.0f;
-float HallPLLB_sin3th	   = 0.0f;
-float HallPLLB_cos3th	   = 0.0f;
-
-float HallPLLA_cos3th_Integral = 0.0f;
-float HallPLLA_sin3th_Integral = 0.0f;
-float HallPLLB_sin3th_Integral  = 0.0f;
-float HallPLLB_cos3th_Integral = 0.0f;
-
-float HallPLLA_old = 0.0f;
-float HallPLLB_old = 0.0f;
-
-float HallPLLA_filtered = 0.0f;
-float HallPLLB_filtered = 0.0f;
-
-float Hall_SinCos;
-float Hall_CosSin;
-
-float Gamma = 1.0f;
-
-float costh;
-float sinth;
-
-float Asin3th = 0.0f;
-float Acos3th = 0.0f;
-float Bsin3th= 0.0f;
-float Bcos3th= 0.0f;
-float ANF_PLLA= 0.0f;
-float ANF_PLLB= 0.0f;
-
-float cos3th;
-float sin3th;
 
 #if 0
 void SMC_HallSensor_Estimation (SMC *s)
@@ -981,40 +902,42 @@ void SMC_HallSensor_Estimation (SMC *s)
 {
 
 
-	HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
-	HallPLLB = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
+	s->HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
+	s->HallPLLB = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
 
-	costh = cosf(Theta);
-	sinth = sinf(Theta);
+	s->costh = cosf(s->Theta);
+	s->sinth = sinf(s->Theta);
 	
-	Hall_SinCos = HallPLLA * costh;
-	Hall_CosSin = HallPLLB * sinth;
+	s->Hall_SinCos = s->HallPLLA * s->costh;
+	s->Hall_CosSin = s->HallPLLB * s->sinth;
 
 	float err, tmp_kp, tmp_kpi; 									
 	tmp_kp = 1.0f;
-	tmp_kpi = (1.0f + 1.0f * Tsamp);
-	err = Hall_SinCos - Hall_CosSin; 											
-	Hall_PIout += ((tmp_kpi * err) - (tmp_kp * Hall_Err0)); 					
-	Hall_PIout = Bound_limit(Hall_PIout, 10.0f);						
-	Hall_Err0= err;									
+	tmp_kpi = (1.0f + 1.0f * PWMPEROID);
+	err = s->Hall_SinCos - s->Hall_CosSin; 											
+	s->Hall_PIout += ((tmp_kpi * err) - (tmp_kp * s->Hall_Err0)); 					
+	s->Hall_PIout = Bound_limit(s->Hall_PIout, 10.0f);						
+	s->Hall_Err0= err;									
 	
-	Theta += Hall_PIout ;
-	if((2.0f * PI) < Theta) Theta = Theta - (2.0f * PI);
-	else if(Theta < 0.0f) Theta = (2.0f * PI) + Theta;
-
-	s->Theta= Theta + 0.3f;
-
+	s->Theta += s->Hall_PIout ;
 	if((2.0f * PI) < s->Theta) s->Theta = s->Theta - (2.0f * PI);
 	else if(s->Theta < 0.0f) s->Theta = (2.0f * PI) + s->Theta;
 
-	s->Omega = Hall_PIout;
+	s->ThetaCal= s->Theta + 0.3f;
+
+	if((2.0f * PI) < s->ThetaCal) s->ThetaCal = s->ThetaCal - (2.0f * PI);
+	else if(s->ThetaCal < 0.0f) s->ThetaCal = (2.0f * PI) + s->ThetaCal;
+
+	s->Omega = s->Hall_PIout;
 
 
-	trueTheta += Hall_PIout /6 ;
-	if((2.0f * PI) < trueTheta) trueTheta = trueTheta - (2.0f * PI);
-	else if(trueTheta < 0.0f) trueTheta = (2.0f * PI) + trueTheta;
+	s->trueTheta += (s->Hall_PIout /7.0f) ;
+	if((2.0f * PI) < s->trueTheta) s->trueTheta = s->trueTheta - (2.0f * PI);
+	else if(s->trueTheta < 0.0f) s->trueTheta = (2.0f * PI) + s->trueTheta;
 
-	Futi   = Hall_PIout / (2.* PI) *Fsamp;
+	s->Futi   = s->Hall_PIout / (2.* PI) * PWMFREQUENCY;
+	s->rpm = 120.0f * s->Futi / 7.0f;
+	
 
 	//spi_dac_write_A((HallPLLA+ 1.0f) * 200.0f);
 	//spi_dac_write_B((HallPLLB+ 1.0f) * 200.0f);

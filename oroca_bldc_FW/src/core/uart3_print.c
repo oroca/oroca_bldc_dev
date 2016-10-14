@@ -82,6 +82,18 @@ static SerialConfig sd3cfg = {
 	chprintf(chp,fmt);
 }
 
+
+
+uint8_t Uart3_getch( void )
+{
+	uint8_t buffer[128];
+	int len;
+
+
+	len = chSequentialStreamRead(&SD3, (uint8_t*) buffer, 1);
+
+	return buffer[0];
+}
 //example cod
 #if 0
 int main(void) {

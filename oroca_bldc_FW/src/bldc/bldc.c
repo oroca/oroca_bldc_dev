@@ -104,6 +104,7 @@ int bldc_init(void)
 static msg_t uart_process_thread(void *arg) {
 	(void)arg;
 
+
 	chRegSetThreadName("uart rx process");
 
 	Uart3_printf(&SD3, (uint8_t *)"uart_process_thread\r\n");
@@ -115,17 +116,23 @@ static msg_t uart_process_thread(void *arg) {
 		//Uart3_printf(&SD3,  "%f,%f\r\n",ParkParm.qIa,ParkParm.qIb);
 		//Uart3_printf(&SD3,  "%d  ,  %d,   %d\r\n",ParkParm*100.qAngle,ADC_Value[ADC_IND_CURR1],ADC_Value[ADC_IND_CURR2]);
 
-		Uart3_printf(&SD3,  "%f   ",ParkParm.qAngle);
+		Uart3_printf(&SD3,  "%f   ",smc1.trueTheta);
+		Uart3_printf(&SD3,  "%f   ",smc1.Futi);
+		Uart3_printf(&SD3,  "%f   ",smc1.rpm);
 		//Uart3_printf(&SD3,  "%u  ",ADC_Value[ADC_IND_CURR1]);
 		//Uart3_printf(&SD3,  "%u \r\n ",ADC_Value[ADC_IND_CURR2]);
 
-		Uart3_printf(&SD3,  "%f   ",ParkParm.qIalpha);
-		Uart3_printf(&SD3,  "%f   ",ParkParm.qIbeta);
+		//Uart3_printf(&SD3,  "%f   ",ParkParm.qIalpha);
+		//Uart3_printf(&SD3,  "%f   ",ParkParm.qIbeta);
 
 
-		Uart3_printf(&SD3,  "%f   ",ParkParm.qId);
-		Uart3_printf(&SD3,  "%f   \r\n ",ParkParm.qIq);
+		//Uart3_printf(&SD3,  "%f   ",ParkParm.qId);
+		//Uart3_printf(&SD3,  "%f   \r\n ",ParkParm.qIq);
+		Uart3_printf(&SD3,  " \r\n ");
 		chThdSleepMilliseconds(1);/*Wait for an arbitrary time*/
+
+
+
 
 	}
 
@@ -141,6 +148,8 @@ uint16_t dbg_AccumTheta;
 
 int bldc_start(void)
 {
+	uint8_t Ch;
+
 	//-- 스레드 생성
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
 	chThdCreateStatic(uart_thread_wa, sizeof(uart_thread_wa), NORMALPRIO, uart_process_thread, NULL);
@@ -151,23 +160,21 @@ int bldc_start(void)
 	for(;;)
 	{
 
-		//Ch = usb_uart_getch();
+		Ch = Uart3_getch();
 
-		/*
 		if( Ch == 'q' )
 		{
 			Ch = 0;
-			qVelRef += 0.01;
+			CtrlParm.qVelRef += 0.0001;
 			//debug_print_usb("Enter q : %f\r\n", qVelRef);
 
 		}
 		if( Ch == 'a' )
 		{
 			Ch = 0;
-			qVelRef -= 0.01;
+			CtrlParm.qVelRef -= 0.0001;
 			//debug_print_usb("Enter a : %f\r\n", qVelRef);
 		}
-		*/
 
 	}
 }

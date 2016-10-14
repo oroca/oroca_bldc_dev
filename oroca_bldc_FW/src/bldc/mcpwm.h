@@ -61,31 +61,74 @@ typedef struct {
 
 
 typedef struct {
-		float  Valpha;   		// Input: Stationary alfa-axis stator voltage
-		float  Ealpha;   		// Variable: Stationary alfa-axis back EMF
-		float  EalphaFinal;	// Variable: Filtered EMF for Angle calculation
-		float  Zalpha;      	// Output: Stationary alfa-axis sliding control
-		float  Gsmopos;    	// Parameter: Motor dependent control gain
-		float  EstIalpha;   	// Variable: Estimated stationary alfa-axis stator current
-		float  Fsmopos;    	// Parameter: Motor dependent plant matrix
-		float  Vbeta;   		// Input: Stationary beta-axis stator voltage
-		float  Ebeta;  		// Variable: Stationary beta-axis back EMF
-		float  EbetaFinal;	// Variable: Filtered EMF for Angle calculation
-		float  Zbeta;      	// Output: Stationary beta-axis sliding control
-		float  EstIbeta;    	// Variable: Estimated stationary beta-axis stator current
-		float  Ialpha;  		// Input: Stationary alfa-axis stator current
-		float  IalphaError; 	// Variable: Stationary alfa-axis current error
-		float  Kslide;     	// Parameter: Sliding control gain
-		float  MaxSMCError;  	// Parameter: Maximum current error for linear SMC
-		float  Ibeta;  		// Input: Stationary beta-axis stator current
-		float  IbetaError;  	// Variable: Stationary beta-axis current error
-		float  Kslf;       	// Parameter: Sliding control filter gain
-		float  KslfFinal;    	// Parameter: BEMF Filter for angle calculation
-		float  FiltOmCoef;   	// Parameter: Filter Coef for Omega filtered calc
-		float  ThetaOffset;	// Output: Offset used to compensate rotor angle
-		float  Theta;			// Output: Compensated rotor angle
-		float  Omega;     	// Output: Rotor speed
-		float  OmegaFltred;  	// Output: Filtered Rotor speed for speed PI
+	float HallPLLlead  ;
+	float HallPLLlead1 ;
+	float HallPLLlead2 ;
+	float HallPLLqe    ;
+	float HallPLLde    ;
+	float HallPLLde1   ;
+	float HallPLLdef   ;
+	float HallPLLdef1  ;
+
+	float Wpll	 		;
+	float Wpll1	 		;
+	float Wpllp	 		;
+	float Wplli	 		;
+
+	float Kpll      	;	// = 0.428;
+	float Ipll       	;	//= 28.83;
+
+	float Hall_KA 		;	
+	float Hall_KB 		;	
+	
+	float Hall_PIout 	;	
+	float Hall_Err0 	;	
+
+	float HallPLLA	;	
+	float HallPLLA1 ;
+	float HallPLLB	;
+
+	float HallPLLA_cos3th;
+	float HallPLLA_sin3th;
+	float HallPLLB_sin3th;
+	float HallPLLB_cos3th;
+
+	float HallPLLA_cos3th_Integral;
+	float HallPLLA_sin3th_Integral;
+	float HallPLLB_sin3th_Integral;
+	float HallPLLB_cos3th_Integral;
+
+	float HallPLLA_old ;
+	float HallPLLB_old ;
+
+	float HallPLLA_filtered;
+	float HallPLLB_filtered;
+
+	float Hall_SinCos;
+	float Hall_CosSin;
+
+	float Gamma; //= 1.0f;
+
+	float costh;
+	float sinth;
+
+	float Asin3th	;// = 0.0f;
+	float Acos3th	;// = 0.0f;
+	float Bsin3th	;//= 0.0f;
+	float Bcos3th	;//= 0.0f;
+	float ANF_PLLA	;//= 0.0f;
+	float ANF_PLLB	;//= 0.0f;
+
+	float cos3th;
+	float sin3th;
+
+	float Theta	 	;
+	float ThetaCal	;
+	float trueTheta	;
+	float Futi	 	;
+	float Omega;     	// Output: Rotor speed
+	float rpm;     	// Output: Rotor speed
+
 } SMC;
 
 typedef struct {
@@ -168,13 +211,10 @@ typedef struct {
 #define MCPWM_RAMP_STEP_CURRENT_MAX		0.04	// Maximum ramping step (1000 times/sec) for the current control
 #define MCPWM_RAMP_STEP_RPM_LIMIT		0.0005	// Ramping step when limiting the RPM
 
-#define SMC_DEFAULTS {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-
-
-
 //************** PWM and Control Timing Parameters **********
 
 #define PWMFREQUENCY	16000		// PWM Frequency in Hertz
+#define PWMPEROID           1.0f/PWMFREQUENCY
 #define SPEEDLOOPFREQ	1000		// Speed loop Frequency in Hertz. This value must
 									// be an integer to avoid pre-compiler error
 									// Use this value to test low speed motor
@@ -231,6 +271,12 @@ typedef struct {
 #define		SQRT3			1.732050808f
 #define		INV_SQRT3		(float)(1./SQRT3)
 
+
+#define WMd      2.*3.141592654*180.
+#define AMd      (WMd-(2./PWMPEROID))/(WMd+(2./PWMPEROID))
+#define BMd      WMd/(WMd+(2./PWMPEROID))
+
+
 // External variables
 extern  uint16_t ADC_Value[];
 extern  unsigned int  switching_frequency_now;
@@ -259,8 +305,9 @@ extern  unsigned int  switching_frequency_now;
 			in_old = in;								\
 		}
 
-
+extern tCtrlParm CtrlParm;
 extern tParkParm ParkParm;
+extern SMC smc1;
 
 
 // Functions
