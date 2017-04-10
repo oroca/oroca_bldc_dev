@@ -141,19 +141,15 @@ void app_uartcomm_start(void) {
 	packet_init(send_packet, process_packet, PACKET_HANDLER);
 
 	uartStart(&HW_UART_DEV, &uart_cfg);
-	palSetPadMode(HW_UART_TX_PORT, HW_UART_TX_PIN, PAL_MODE_ALTERNATE(HW_UART_GPIO_AF) |
-			PAL_STM32_OSPEED_HIGHEST |
-			PAL_STM32_PUDR_PULLUP);
-	palSetPadMode(HW_UART_RX_PORT, HW_UART_RX_PIN, PAL_MODE_ALTERNATE(HW_UART_GPIO_AF) |
-			PAL_STM32_OSPEED_HIGHEST |
-			PAL_STM32_PUDR_PULLUP);
+	palSetPadMode(HW_UART_TX_PORT, HW_UART_TX_PIN, PAL_MODE_ALTERNATE(HW_UART_GPIO_AF) |PAL_STM32_OSPEED_HIGHEST |PAL_STM32_PUDR_PULLUP);
+	palSetPadMode(HW_UART_RX_PORT, HW_UART_RX_PIN, PAL_MODE_ALTERNATE(HW_UART_GPIO_AF) |PAL_STM32_OSPEED_HIGHEST |PAL_STM32_PUDR_PULLUP);
 
 	is_running = 1;
 
 	chThdCreateStatic(packet_process_thread_wa, sizeof(packet_process_thread_wa), NORMALPRIO, packet_process_thread, NULL);
 }
 
-void app_uartcomm_configure(uint32_t baudrate) {
+void app_uartcomm_init(uint32_t baudrate) {
 	uart_cfg.speed = baudrate;
 
 	if (is_running) {

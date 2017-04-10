@@ -65,13 +65,13 @@ static msg_t periodic_thread(void *arg) {
 
 	chRegSetThreadName("Main periodic");
 
-	Uart3_printf(&SD3, (uint8_t *)"periodic_thread\r\n");
+	//Uart3_printf(&SD3, (uint8_t *)"periodic_thread\r\n");
 
 	for(;;)
 	{
-		LED_GREEN_ON();
+		//LED_GREEN_ON();
 		chThdSleepMilliseconds(500);
-		LED_GREEN_OFF();
+		//LED_GREEN_OFF();
 		chThdSleepMilliseconds(500);
 	}
 
@@ -89,53 +89,15 @@ int bldc_init(void)
 
 	hw_init_gpio();
 
-	Uart3_print_init();
-	Uart3_printf(&SD3, (uint8_t *)"oroca_bldc\r\n");
+	//Uart3_print_init();
+	//Uart3_printf(&SD3, (uint8_t *)"oroca_bldc\r\n");
 
-	spi_dac_hw_init();
-	spi_dac_write_A( 100) ;
+	//spi_dac_hw_init();
+	//spi_dac_write_A( 100) ;
 
 	mcpwm_init();
 
-	return 0;
-}
-
-
-static msg_t uart_process_thread(void *arg) {
-	(void)arg;
-
-
-	chRegSetThreadName("uart rx process");
-
-	Uart3_printf(&SD3, (uint8_t *)"uart_process_thread\r\n");
-
-	//process_tp = chThdSelf();
-
-	for(;;)
-	{
-		//Uart3_printf(&SD3,  "%f,%f\r\n",ParkParm.qIa,ParkParm.qIb);
-		//Uart3_printf(&SD3,  "%d  ,  %d,   %d\r\n",ParkParm*100.qAngle,ADC_Value[ADC_IND_CURR1],ADC_Value[ADC_IND_CURR2]);
-
-		Uart3_printf(&SD3,  "%f   ",smc1.trueTheta);
-		Uart3_printf(&SD3,  "%f   ",smc1.Futi);
-		Uart3_printf(&SD3,  "%f   ",smc1.rpm);
-		//Uart3_printf(&SD3,  "%u  ",ADC_Value[ADC_IND_CURR1]);
-		//Uart3_printf(&SD3,  "%u \r\n ",ADC_Value[ADC_IND_CURR2]);
-
-		//Uart3_printf(&SD3,  "%f   ",ParkParm.qIalpha);
-		//Uart3_printf(&SD3,  "%f   ",ParkParm.qIbeta);
-
-
-		//Uart3_printf(&SD3,  "%f   ",ParkParm.qId);
-		//Uart3_printf(&SD3,  "%f   \r\n ",ParkParm.qIq);
-		Uart3_printf(&SD3,  " \r\n ");
-		chThdSleepMilliseconds(1);/*Wait for an arbitrary time*/
-
-
-
-
-	}
-
+	bldc_start();
 
 	return 0;
 }
@@ -152,30 +114,10 @@ int bldc_start(void)
 
 	//-- 스레드 생성
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
-	chThdCreateStatic(uart_thread_wa, sizeof(uart_thread_wa), NORMALPRIO, uart_process_thread, NULL);
-
-	Uart3_printf(&SD3, (uint8_t *)"bldc_start\r\n");
-
 
 	for(;;)
 	{
-
-		Ch = Uart3_getch();
-
-		if( Ch == 'q' )
-		{
-			Ch = 0;
-			CtrlParm.qVelRef += 0.0001;
-			//debug_print_usb("Enter q : %f\r\n", qVelRef);
-
-		}
-		if( Ch == 'a' )
-		{
-			Ch = 0;
-			CtrlParm.qVelRef -= 0.0001;
-			//debug_print_usb("Enter a : %f\r\n", qVelRef);
-		}
-
+		chThdSleepMilliseconds(1);/*Wait for an arbitrary time*/
 	}
 }
 

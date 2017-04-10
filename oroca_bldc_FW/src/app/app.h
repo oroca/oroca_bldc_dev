@@ -22,50 +22,33 @@
  *      Author: benjamin
  */
 
-#ifndef APP_PPM_H_
-#define APP_PPM_H_
+#ifndef APP_H_
+#define APP_H_
 
-#include <chtypes.h>
+#include "app_ppm.h"
 
-// PPM control types
+// Applications to use
 typedef enum {
-	PPM_CTRL_TYPE_NONE = 0,
-	PPM_CTRL_TYPE_CURRENT,
-	PPM_CTRL_TYPE_CURRENT_NOREV,
-	PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE,
-	PPM_CTRL_TYPE_DUTY,
-	PPM_CTRL_TYPE_DUTY_NOREV,
-	PPM_CTRL_TYPE_PID,
-	PPM_CTRL_TYPE_PID_NOREV
-} ppm_control_type;
+	APP_NONE = 0,
+	APP_PPM,
+	APP_ADC,
+	APP_UART,
+	APP_PPM_UART,
+	APP_ADC_UART,
+	APP_NUNCHUK,
+	APP_NRF,
+	APP_CUSTOM
+} app_use;
 
-typedef struct {
-	ppm_control_type ctrl_type;
-	float pid_max_erpm;
-	float hyst;
-	float pulse_start;
-	float pulse_end;
-	bool median_filter;
-	bool safe_start;
-	float rpm_lim_start;
-	float rpm_lim_end;
-	bool multi_esc;
-	bool tc;
-	float tc_max_diff;
-} ppm_config;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 // Standard apps
-void app_ppm_start(void);
-void app_ppm_init(void);
+void app_init(void);
 
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif /* APP_H_ */

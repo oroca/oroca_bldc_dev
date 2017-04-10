@@ -141,12 +141,13 @@ CSRC = $(STARTUPSRC) \
        $(LIBSRC)/hwconf/hw_oroca.c\
        $(BLDCSRC)/bldc.c \
        $(BLDCSRC)/mcpwm.c \
-       $(B LDCSRC)/spi_dac.c \
+       $(BLDCSRC)/spi_dac.c \
        $(CORESRC)/servo_dec.c \
        $(CORESRC)/uart3_print.c\
        $(CORESRC)/irq_handlers.c \
        $(CORESRC)/utils.c	\
        $(CORESRC)/timeout.c	\
+       $(APPSRC)/app.c \
        $(APPSRC)/app_ppm.c
        
 
@@ -287,9 +288,6 @@ ifeq ($(USE_FWLIB),yes)
   INCDIR += $(STM32INC)
   USE_OPT += -DUSE_STDPERIPH_DRIVER
 endif
-
-
-
 
 
 

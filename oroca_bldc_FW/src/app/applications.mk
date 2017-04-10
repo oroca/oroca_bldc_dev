@@ -1,5 +1,5 @@
-APPSRC =	/app_ppm.c 
-#			/app.c \		
+APPSRC =	/app_ppm.c \
+			/app.c 		
 #			/app_adc.c \
 #			/app_sten.c \
 #			/app_gurgalof.c \

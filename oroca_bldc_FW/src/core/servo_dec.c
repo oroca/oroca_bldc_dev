@@ -173,7 +173,7 @@ float servodec_get_servo(int servo_num) {
  * The amount of milliseconds that have passed since an update.
  */
 uint32_t servodec_get_time_since_update(void) {
-	return chTimeElapsedSince(last_update_time) / (CH_CFG_ST_FREQUENCY / 1000);
+	return chVTTimeElapsedSinceX(last_update_time) / (CH_CFG_ST_FREQUENCY / 1000);
 }
 
 /**

@@ -18,86 +18,33 @@
 /*
  * app.c
  *
- *  Created on: 18 apr 2014
- *      Author: benjamin
  */
 
 #include "app.h"
 #include "ch.h"
 #include "hal.h"
 #include "hw.h"
-#include "nrf_driver.h"
+//#include "nrf_driver.h"
 
 // Private variables
-static app_configuration appconf;
+app_use app_to_use = APP_PPM;
 
-void app_init(app_configuration *conf) {
-	app_set_configuration(conf);
+void app_init(void)
+{
+	switch (app_to_use)
+	{
+		case APP_PPM:
+			app_ppm_configure();
+			app_ppm_start();
+			break;
 
-	switch (appconf.app_to_use) {
-	case APP_PPM:
-		app_ppm_start();
-		break;
+		case APP_UART:
+			hw_stop_i2c();
+			//app_uartcomm_start();
+			break;
 
-	case APP_ADC:
-		app_adc_start();
-		break;
-
-	case APP_UART:
-		hw_stop_i2c();
-		app_uartcomm_start();
-		break;
-
-	case APP_PPM_UART:
-		hw_stop_i2c();
-		app_ppm_start();
-		app_uartcomm_start();
-		break;
-
-	case APP_ADC_UART:
-		hw_stop_i2c();
-		app_adc_start();
-		app_uartcomm_start();
-		break;
-
-	case APP_NUNCHUK:
-		app_nunchuk_start();
-		break;
-
-	case APP_NRF:
-		nrf_driver_init();
-		break;
-
-	case APP_CUSTOM:
-#ifdef USE_APP_STEN
-		hw_stop_i2c();
-		app_sten_init();
-#endif
-#ifdef USE_APP_GURGALOF
-		app_gurgalof_init();
-#endif
-		break;
-
-	default:
-		break;
+		default:
+			break;
 	}
 }
 
-const app_configuration* app_get_configuration(void) {
-	return &appconf;
-}
-
-/**
- * Reconfigure all apps. Note that this will not start apps that are not already running, that
- * should be done at boot. Some apps don't have any configuration options.
- *
- * @param conf
- * The new configuration to use.
- */
-void app_set_configuration(app_configuration *conf) {
-	appconf = *conf;
-	app_ppm_configure(&appconf.app_ppm_conf);
-	app_adc_configure(&appconf.app_adc_conf);
-	app_uartcomm_configure(appconf.app_uart_baudrate);
-	app_nunchuk_configure(&appconf.app_chuk_conf);
-}

@@ -4,9 +4,7 @@
 
 
 #include "bldc.h"
-
-#include "app_ppm.h"
-
+#include "app.h"
 
 
 #endif

@@ -8,12 +8,6 @@
 #include "main.h"
 
 
-
-//-- 내부함수
-//
-void main_init(void);
-
-
 class cTest
 {
 public:
@@ -40,29 +34,19 @@ int main(void)
 {
 //=================================
 // hardware setup
-	main_init();
+	
+	bldc_init();
 
 	test.print();
 
-//=================================
-//chibios process start
-	bldc_start();
+	app_init();
 
-	app_ppm_start();
+//=================================
+	for(;;)
+	{
+		chThdSleepMilliseconds(10);
+	}
+
 	return 0;
 }
 
-
-
-
-
-/*---------------------------------------------------------------------------
-     TITLE   : main_init
-     WORK    :
-     ARG     : void
-     RET     : void
----------------------------------------------------------------------------*/
-void main_init(void)
-{
-	bldc_init();
-}

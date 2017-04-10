@@ -238,7 +238,7 @@ typedef struct {
 
 //******** Q Control Loop Coefficients *******
 #define     QKP        0.05
-#define     QKI        0.1
+#define     QKI        0.01
 #define     QKC        0.99999
 #define     QOUTMAX    0.99999
 
