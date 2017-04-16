@@ -4,9 +4,20 @@
 
 
 */
+#include "ch.h"
+#include "hal.h"
+#include "stm32f4xx_conf.h"
+#include "hw.h"
 
 #include "main.h"
 
+#include "uart3_print.h"
+#include <errno.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
 
 class cTest
 {
@@ -37,9 +48,9 @@ int main(void)
 	
 	bldc_init();
 
-	test.print();
-
 	app_init();
+
+	test.print();
 
 //=================================
 	for(;;)

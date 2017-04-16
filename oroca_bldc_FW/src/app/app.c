@@ -19,18 +19,28 @@
  * app.c
  *
  */
-
-#include "app.h"
 #include "ch.h"
 #include "hal.h"
+#include "stm32f4xx_conf.h"
 #include "hw.h"
-//#include "nrf_driver.h"
+#include "app.h"
+
+#include "uart3_print.h"
+
+#include <errno.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+
 
 // Private variables
 app_use app_to_use = APP_PPM;
 
 void app_init(void)
 {
+	Uart3_printf(&SD3, (uint8_t *)"app_init.....\r\n");
 	switch (app_to_use)
 	{
 		case APP_PPM:

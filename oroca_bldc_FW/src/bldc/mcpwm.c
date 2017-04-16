@@ -27,7 +27,7 @@
 #include "stm32f4xx_conf.h"
 #include "hw.h"
 
-#include "main.h"
+//#include "main.h"
 #include "mcpwm.h"
 #include "utils.h"
 #include "uart3_print.h"
@@ -111,7 +111,10 @@ static volatile float TargetDCbus = 0;// DC Bus is measured before running motor
 static THD_WORKING_AREA(SEQUENCE_thread_wa, 2048);
 
 
-void mcpwm_init(void) {
+void mcpwm_init(void)
+{
+
+	Uart3_printf(&SD3, (uint8_t *)"mcpwm_init....\r\n");
 	utils_sys_lock_cnt();
 
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
@@ -322,7 +325,7 @@ void mcpwm_init(void) {
 	DCCAL_OFF();
 	GAIN_FULLDN();
 	do_dc_cal();
-	Uart3_printf(&SD3, (uint8_t *)"5-1\r\n");
+	//Uart3_printf(&SD3, (uint8_t *)"5-1\r\n");
 	// Enable transfer complete interrupt
 
 

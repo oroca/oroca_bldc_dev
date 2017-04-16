@@ -69,9 +69,9 @@ static msg_t periodic_thread(void *arg) {
 
 	for(;;)
 	{
-		//LED_GREEN_ON();
+		LED_GREEN_ON();
 		chThdSleepMilliseconds(500);
-		//LED_GREEN_OFF();
+		LED_GREEN_OFF();
 		chThdSleepMilliseconds(500);
 	}
 
@@ -89,8 +89,8 @@ int bldc_init(void)
 
 	hw_init_gpio();
 
-	//Uart3_print_init();
-	//Uart3_printf(&SD3, (uint8_t *)"oroca_bldc\r\n");
+	Uart3_print_init();
+	Uart3_printf(&SD3, (uint8_t *)"oroca_bldc\r\n");
 
 	//spi_dac_hw_init();
 	//spi_dac_write_A( 100) ;
@@ -115,9 +115,13 @@ int bldc_start(void)
 	//-- 스레드 생성
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
 
-	for(;;)
-	{
-		chThdSleepMilliseconds(1);/*Wait for an arbitrary time*/
-	}
+
+	CtrlParm.qVelRef=-0.01f;
+
+
+	//for(;;)
+	//{
+		chThdSleepMilliseconds(5000);/*Wait for an arbitrary time*/
+	//}
 }
 

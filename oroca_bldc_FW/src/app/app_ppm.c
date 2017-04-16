@@ -109,6 +109,9 @@ static msg_t ppm_thread(void *arg) {
 
 		float servo_val = servodec_get_servo(0);
 
+
+		Uart3_printf(&SD3, (uint8_t *)"servo : %f\r\n",servo_val);
+
 	}
 
 	return 0;
