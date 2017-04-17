@@ -107,10 +107,6 @@ static volatile float TargetDCbus = 0;// DC Bus is measured before running motor
 						// and compensated linearly.
 
 
-// Threads
-static THD_WORKING_AREA(SEQUENCE_thread_wa, 2048);
-
-
 void mcpwm_init(void)
 {
 
@@ -120,7 +116,7 @@ void mcpwm_init(void)
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 	TIM_OCInitTypeDef  TIM_OCInitStructure;
 	TIM_BDTRInitTypeDef TIM_BDTRInitStructure;
-	NVIC_InitTypeDef NVIC_InitStructure;
+	//NVIC_InitTypeDef NVIC_InitStructure;
 
 	// Initialize variables
 	dccal_done = false;

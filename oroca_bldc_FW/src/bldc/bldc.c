@@ -57,13 +57,12 @@
  *
  */
 
-static THD_WORKING_AREA(periodic_thread_wa, 1024);
-static THD_WORKING_AREA(uart_thread_wa, 128);
-
-static msg_t periodic_thread(void *arg) {
+static THD_WORKING_AREA(periodic_thread_wa, 128);
+static THD_FUNCTION(periodic_thread, arg) 
+{
 	(void)arg;
 
-	chRegSetThreadName("Main periodic");
+	chRegSetThreadName("BLDC periodic");
 
 	//Uart3_printf(&SD3, (uint8_t *)"periodic_thread\r\n");
 
@@ -74,8 +73,6 @@ static msg_t periodic_thread(void *arg) {
 		LED_GREEN_OFF();
 		chThdSleepMilliseconds(500);
 	}
-
-	return 0;
 }
 
 
@@ -97,6 +94,8 @@ int bldc_init(void)
 
 	mcpwm_init();
 
+	//chThdSleepMilliseconds(1000);
+
 	bldc_start();
 
 	return 0;
@@ -110,18 +109,11 @@ uint16_t dbg_AccumTheta;
 
 int bldc_start(void)
 {
-	uint8_t Ch;
-
-	//-- 스레드 생성
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
-
 
 	CtrlParm.qVelRef=-0.01f;
 
+	return 0;
 
-	//for(;;)
-	//{
-		chThdSleepMilliseconds(5000);/*Wait for an arbitrary time*/
-	//}
 }
 

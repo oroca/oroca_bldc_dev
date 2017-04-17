@@ -37,7 +37,7 @@ static volatile bool has_timeout;
 
 // Threads
 static THD_WORKING_AREA(timeout_thread_wa, 512);
-//static msg_t timeout_thread(void *arg);
+static THD_FUNCTION(timeout_thread, arg);
 
 
 void timeout_configure(systime_t timeout, float brake_current) {
@@ -57,7 +57,8 @@ systime_t timeout_get_timeout_msec(void) {
 	return timeout_msec;
 }
 
-static msg_t timeout_thread(void *arg) {
+static THD_FUNCTION(timeout_thread, arg)
+{
 	(void)arg;
 
 	chRegSetThreadName("Timeout");
@@ -74,7 +75,6 @@ static msg_t timeout_thread(void *arg) {
 		chThdSleepMilliseconds(10);
 	}
 
-	return 0;
 }
 
 void timeout_init(void) {

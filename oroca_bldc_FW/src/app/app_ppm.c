@@ -36,12 +36,15 @@
 #include <chthreads.h>
 #include <Chvt.h>
 
+#include "uart3_print.h"
+
+
 // Settings
 #define MAX_CAN_AGE						0.1
 #define MIN_PULSES_WITHOUT_POWER		50
 
 // Threads
-static msg_t ppm_thread(void *arg);
+static THD_FUNCTION(ppm_thread, arg);
 static THD_WORKING_AREA(ppm_thread_wa, 1024);
 static thread_t*ppm_tp; 
 virtual_timer_t vt; 
@@ -69,6 +72,9 @@ void app_ppm_configure(ppm_config *conf) {
 void app_ppm_start(void) {
 	chThdCreateStatic(ppm_thread_wa, sizeof(ppm_thread_wa), NORMALPRIO, ppm_thread, NULL);
 
+
+Uart3_printf(&SD3, (uint8_t *)"app_ppm_start.....\r\n");
+
 	chSysLock();
 	chVTSetI(&vt, MS2ST(1), update, NULL);
 	chSysUnlock();
@@ -88,8 +94,11 @@ static void update(void *p) {
 	chSysUnlockFromISR();
 }
 
-static msg_t ppm_thread(void *arg) {
+static THD_FUNCTION(ppm_thread, arg)
+{
 	(void)arg;
+
+	
 
 	chRegSetThreadName("APP_PPM");
 	ppm_tp = chThdGetSelfX();
@@ -102,17 +111,19 @@ static msg_t ppm_thread(void *arg) {
 
 		chEvtWaitAny((eventmask_t) 1);
 
-		if (timeout_has_timeout() || servodec_get_time_since_update() > timeout_get_timeout_msec()) {
-			pulses_without_power = 0;
-			continue;
-		}
+		//if (timeout_has_timeout() || servodec_get_time_since_update() > timeout_get_timeout_msec()) {
+		//	pulses_without_power = 0;
+		//	continue;
+	//	}
 
 		float servo_val = servodec_get_servo(0);
 
 
-		Uart3_printf(&SD3, (uint8_t *)"servo : %f\r\n",servo_val);
+		Uart3_printf(&SD3, (uint8_t *)"servo : %f\r\n",(float)servo_val);
+
+		chThdSleepMilliseconds(1000);
+
 
 	}
 
-	return 0;
 }

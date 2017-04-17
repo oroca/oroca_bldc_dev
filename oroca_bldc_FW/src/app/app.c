@@ -40,7 +40,7 @@ app_use app_to_use = APP_PPM;
 
 void app_init(void)
 {
-	Uart3_printf(&SD3, (uint8_t *)"app_init.....\r\n");
+	//Uart3_printf(&SD3, (uint8_t *)"app_init.....\r\n");
 	switch (app_to_use)
 	{
 		case APP_PPM:

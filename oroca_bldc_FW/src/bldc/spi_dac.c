@@ -27,12 +27,12 @@ static void gpt_cb(GPTDriver *gptp) {
 }
 
 
-//TIM5 ÀÌ¸é APB1, 42MHZ ¿¡ ¿¬°áµÇ ÀÖ³×!!!, 32bit ÀÌ¿ë
+//TIM5 ï¿½Ì¸ï¿½ APB1, 42MHZ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö³ï¿½!!!, 32bit ï¿½Ì¿ï¿½
 static const GPTConfig gpt_cfg = {
   1000000,    // 1MHz timer clock.
   //100000,    // 100KHz timer clock.
   //10000,    // 10KHz timer clock.
-  gpt_cb,   // Timer callback. ¹«Á¶°Ç ÀÖ¾î¾ß ÇÏ³×!!!
+  gpt_cb,   // Timer callback. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ ï¿½Ï³ï¿½!!!
   0
 };
 
@@ -44,7 +44,7 @@ void initGPT( void)
 	gptStartContinuous(&GPTD5, 0xFFFFFFFF);
 }
 
-// TIM2,TIM5 ¸¸ 32bit ÀÌ°í, ³ª¸ÓÁö´Â ¸ðµÎ , 16bit ÀÓ
+// TIM2,TIM5 ï¿½ï¿½ 32bit ï¿½Ì°ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ , 16bit ï¿½ï¿½
 uint32_t get_GPT_value( void)
 {
 	 //return GPTD7.tim->CNT;
@@ -94,7 +94,7 @@ void spi_hw_init_gpio(void) {
 
 	palSetPadMode(GPIOB, GPIOB_PIN3_SCK, PAL_MODE_ALTERNATE(GPIO_AF_SPI1) |PAL_STM32_OSPEED_HIGHEST |	PAL_STM32_PUDR_FLOATING);
 
-	// ¾ç¹æÇâ ¹öÆÛ ¶§¹®ÀÎÁö ½ÅÈ£°¡ ÀÌ»óÇÔ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½ï¿½
 	//palSetPadMode(GPIOB, GPIOB_PIN5_MOSI, PAL_MODE_ALTERNATE(GPIO_AF_SPI1) |PAL_STM32_OSPEED_HIGHEST |	PAL_STM32_PUDR_FLOATING);
 	palSetPadMode(GPIOB, GPIOB_PIN5_MOSI, PAL_MODE_ALTERNATE(GPIO_AF_SPI1) |PAL_STM32_OSPEED_HIGHEST |	PAL_STM32_PUDR_PULLUP);
 	//palSetPadMode(GPIOB, GPIOB_PIN5_MOSI, PAL_MODE_ALTERNATE(GPIO_AF_SPI1) |PAL_STM32_OSPEED_HIGHEST |	PAL_STM32_PUDR_PULLDOWN);
@@ -111,11 +111,11 @@ void SPI_Init_for_DAC_7612(SPI_TypeDef* SPIx)
 	uint16_t tmpreg = 0;
 	
 	// Transmit-only mode is similar to full-duplex mode (BIDIMODE=0, RXONLY=0): 
-	// RXNE ¸¦ ÀÌ¿ëÇØ¼­ LOADDACS ÇÉÀ» »ç¿ëÇÏ±â À§ÇØ¼­
+	// RXNE ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ø¼ï¿½ LOADDACS ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½
 
 	// CPOL = 1, CPHA =1
 	// 16-bit data frame format
-	// APB2 84 MHz ÃÖ´ë 20Mhz ÀÌ¹Ç·Î ÃÖ¼Ò 1/4 ´Â ÇØ¾ßÇÔ
+	// APB2 84 MHz ï¿½Ö´ï¿½ 20Mhz ï¿½Ì¹Ç·ï¿½ ï¿½Ö¼ï¿½ 1/4 ï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½ï¿½
 	// 001: fPCLK/4, 010: fPCLK/8, 011: fPCLK/16, 100: fPCLK/32
 
 	
@@ -133,7 +133,7 @@ void SPI_Init_for_DAC_7612(SPI_TypeDef* SPIx)
 	Uart3_printf( &SD3,"CR1=%X,%X \r\n",  SPIx->CR1, tmpreg  );
 
 
-	SPIx->CR2  = SPI_CR2_SSOE; // ÇÏµå¿þ¾î NSS Ãâ·Â
+	SPIx->CR2  = SPI_CR2_SSOE; // ï¿½Ïµï¿½ï¿½ï¿½ï¿½ NSS ï¿½ï¿½ï¿½
 
 
 	SPIx->CR1  |= SPI_CR1_SPE;
@@ -160,10 +160,10 @@ static void _spi_dac_write( short data)
 	//Uart3_printf(&SD3, "SR=%X \r\n",  SPIx->SR );
 
 	
-	while( (SPIx->SR & SPI_SR_TXE) == 0); // ÀÌÀü¿¡ ¹Ì Àü¼Û ÀÖÀ¸¸é ´ë±â
+	while( (SPIx->SR & SPI_SR_TXE) == 0); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
 
-	// ¾ç¹æÇâ ¹öÆÛ ¹æÇâ ¿µÇâ ÁÖ±â À§ÇØ¼­
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½
 	palClearPad( GPIOA, GPIOA_PIN15_SPI_NSS);
 	_udelay( 1);
 	palSetPad( GPIOA, GPIOA_PIN15_SPI_NSS);
@@ -175,8 +175,8 @@ static void _spi_dac_write( short data)
 
 	//palClearPad(GPIOA, GPIOA_PIN15_SPI_NSS); // CS LOW
 	//SPIx->DR = data;
-	//SPIx->DR = data | 0x8000; // ¾ç¹æÇâ ¹öÆÛ ¹æÇâ ¿µÇâ ÁÖ±â À§ÇØ¼­
-	SPIx->DR = data | 0x4000; // ¾ç¹æÇâ ¹öÆÛ ¹æÇâ ¿µÇâ ÁÖ±â À§ÇØ¼­
+	//SPIx->DR = data | 0x8000; // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½
+	SPIx->DR = data | 0x4000; // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½
 
 
 	
@@ -190,7 +190,7 @@ static void _spi_dac_write( short data)
 
 	
 	palClearPad(GPIOB, GPIOB_PIN4_LOADDACS);
-	// ÃÖ¼Ò 20ns ÇÊ¿äÇÔ
+	// ï¿½Ö¼ï¿½ 20ns ï¿½Ê¿ï¿½ï¿½ï¿½
 	_udelay( 1);
 	palSetPad(GPIOB, GPIOB_PIN4_LOADDACS);
 	
