@@ -32,7 +32,6 @@
 // Private variables
 static volatile systime_t timeout_msec;
 static volatile systime_t last_update_time;
-static volatile float timeout_brake_current;
 static volatile bool has_timeout;
 
 // Threads
@@ -40,9 +39,8 @@ static THD_WORKING_AREA(timeout_thread_wa, 512);
 static THD_FUNCTION(timeout_thread, arg);
 
 
-void timeout_configure(systime_t timeout, float brake_current) {
+void timeout_configure(systime_t timeout) {
 	timeout_msec = timeout;
-	timeout_brake_current = brake_current;
 }
 
 void timeout_reset(void) {
@@ -63,15 +61,17 @@ static THD_FUNCTION(timeout_thread, arg)
 
 	chRegSetThreadName("Timeout");
 
-	for(;;) {
-#if 0
-		if (timeout_msec != 0 && chTimeElapsedSince(last_update_time) > MS2ST(timeout_msec)) {
-			mcpwm_set_brake_current(timeout_brake_current);
+	for(;;) 
+	{
+		if (timeout_msec != 0 && chVTTimeElapsedSinceX(last_update_time) > MS2ST(timeout_msec)) 
+		{
 			has_timeout = true;
-		} else {
+		} 
+		else
+		{
 			has_timeout = false;
 		}
-#endif
+
 		chThdSleepMilliseconds(10);
 	}
 
@@ -80,7 +80,6 @@ static THD_FUNCTION(timeout_thread, arg)
 void timeout_init(void) {
 	timeout_msec = 1000;
 	last_update_time = 0;
-	timeout_brake_current = 0.0;
 	has_timeout = false;
 
 	chThdCreateStatic(timeout_thread_wa, sizeof(timeout_thread_wa), NORMALPRIO, timeout_thread, NULL);

@@ -111,10 +111,11 @@ static THD_FUNCTION(ppm_thread, arg)
 
 		chEvtWaitAny((eventmask_t) 1);
 
-		//if (timeout_has_timeout() || servodec_get_time_since_update() > timeout_get_timeout_msec()) {
-		//	pulses_without_power = 0;
-		//	continue;
-	//	}
+		if (timeout_has_timeout() || servodec_get_time_since_update() > timeout_get_timeout_msec()) 
+		{
+			pulses_without_power = 0;
+			continue;
+		}
 
 		float servo_val = servodec_get_servo(0);
 

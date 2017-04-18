@@ -8,6 +8,8 @@
 #include "hal.h"
 #include "stm32f4xx_conf.h"
 #include "hw.h"
+#include "timeout.h"
+
 
 #include "main.h"
 
@@ -49,6 +51,10 @@ int main(void)
 	bldc_init();
 
 	app_init();
+
+	timeout_init();
+	timeout_configure(1000);
+
 
 	test.print();
 
