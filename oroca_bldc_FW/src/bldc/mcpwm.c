@@ -1,5 +1,5 @@
 /*
-	Copyright 2012-2014 Benjamin Vedder	benjamin@vedder.se
+	Copyright 2012-2014 OROCA ESC Project 	www.oroca.org
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * mcpwm.c
  *
  *  Created on: 13 okt 2012
- *      Author: benjamin
+ *      Author: bakchajang
  */
 
 #include "ch.h"
@@ -401,13 +401,13 @@ void mcpwm_adc_int_prehandler(void *p, uint32_t flags)
 {
 	(void)p;
 	(void)flags;
-	LED_RED_ON();
+//	LED_RED_ON();
 
 	curr_start_samples++;
 	curr0_sum += ADC_Value[ADC_IND_CURR1] ;
 	curr1_sum += ADC_Value[ADC_IND_CURR2] ;
 
-	LED_RED_OFF();
+//	LED_RED_OFF();
 
 	// Reset the watchdog
 	WWDG_SetCounter(100);	
@@ -435,7 +435,7 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags)
 	if( uGF.bit.RunMotor )
 		{
 			ENABLE_GATE();
-			LED_RED_ON();
+//			LED_RED_ON();
 	
 			// Calculate qIa,qIb
 			 int CorrADC1, CorrADC2;
@@ -500,7 +500,7 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags)
 
 			CalcSVGen();
 	
-			LED_RED_OFF();
+//			LED_RED_OFF();
 			//DISABLE_GATE();
 	
 				

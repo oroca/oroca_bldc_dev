@@ -1,5 +1,5 @@
 /*
-	Copyright 2012-2014 Benjamin Vedder	benjamin@vedder.se
+	Copyright 2012-2014 OROCA ESC Project 	www.oroca.org
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * timeout.c
  *
  *  Created on: 20 sep 2014
- *      Author: benjamin
+ *      Author: bakchajang
  */
 
 #include "ch.h"

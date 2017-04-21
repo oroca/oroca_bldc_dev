@@ -1,5 +1,5 @@
 /*
-	Copyright 2012-2014 Benjamin Vedder	benjamin@vedder.se
+	Copyright 2012-2014 OROCA ESC Project 	www.oroca.org
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * hw_46.c
  *
  *  Created on: 22 nov 2014
- *      Author: benjamin
+ *      Author: bakchajang
  */
 
 #include "hw.h"
@@ -48,10 +48,10 @@ void hw_init_gpio(void) {
 
 	// LEDs
 	palSetPadMode(GPIOB, 6,	PAL_MODE_OUTPUT_PUSHPULL |	PAL_STM32_OSPEED_HIGHEST);
-	palSetPadMode(GPIOB, 7,	PAL_MODE_OUTPUT_PUSHPULL |	PAL_STM32_OSPEED_HIGHEST);
+//	palSetPadMode(GPIOB, 7,	PAL_MODE_OUTPUT_PUSHPULL |	PAL_STM32_OSPEED_HIGHEST);
 
 	palClearPad(GPIOB, 6);
-	palClearPad(GPIOB, 7);
+//	palClearPad(GPIOB, 7);
 
 	// GPIOC (ENABLE_GATE)
 	palSetPadMode(GPIOC, 6,PAL_MODE_OUTPUT_PUSHPULL |	PAL_STM32_OSPEED_HIGHEST);

@@ -1,5 +1,5 @@
 /*
-	Copyright 2012-2014 Benjamin Vedder	benjamin@vedder.se
+	Copyright 2012-2015 OROCA ESC Project 	www.oroca.org
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * servo_dec.c
  *
  *  Created on: 20 jan 2013
- *      Author: benjamin
+ *      Author: bakchajang
  */
 
 #include "servo_dec.h"
@@ -27,9 +27,9 @@
 #include "ch.h"
 #include "hal.h"
 #include "hw.h"
+#include "utils.h"
 
-#include <chthreads.h>
-#include <Chvt.h>
+#include "uart3_print.h"
 
 /*
  * Settings
@@ -40,47 +40,45 @@
 // Private variables
 static volatile systime_t last_update_time;
 static volatile float servo_pos[SERVO_NUM];
-static volatile float pulse_start = 1.0;
-static volatile float pulse_end = 2.0;
+static volatile float pulse_start = 1.0f;
+static volatile float pulse_end = 2.0f;
 static volatile float last_len_received[SERVO_NUM];
 static volatile bool use_median_filter = false;
 
 // Function pointers
 static void(*done_func)(void) = 0;
 
-static float middle_of_3(float a, float b, float c) {
-	float middle;
-
-	if ((a <= b) && (a <= c)) {
-		middle = (b <= c) ? b : c;
-	} else if ((b <= a) && (b <= c)) {
-		middle = (a <= c) ? a : c;
-	} else {
-		middle = (a <= b) ? a : b;
-	}
-	return middle;
-}
-
 static void icuwidthcb(ICUDriver *icup) {
-	last_len_received[0] = ((float)icuGetWidthX(icup) / ((float)TIMER_FREQ / 1000.0));
+
+	last_len_received[0] = ((float) icuGetWidthX(icup) / ((float)TIMER_FREQ / 1000.0f));
+	
 	float len = last_len_received[0] - pulse_start;
-	const float len_set = (pulse_end - pulse_start);
+	const float len_set = pulse_end - pulse_start;
+
+	//Uart3_printf(&SD3, (uint8_t *)"len_set:%f\r\n",len_set);
 
 	if (len > len_set) {
-		if (len < len_set * 1.2) {
+		if (len < (len_set * 1.2)) {
 			len = len_set;
 		} else {
 			// Too long pulse. Most likely something is wrong.
 			len = -1.0;
 		}
+	} else if (len < 0.0) {
+		if ((len + pulse_start) > (pulse_start * 0.8)) {
+			len = 0.0;
+		} else {
+			// Too short pulse. Most likely something is wrong.
+			len = -1.0;
+		}
 	}
 
-	if (len > 0.0) {
+	if (len >= 0.0) {
 		if (use_median_filter) {
 			float c = (len * 2.0 - len_set) / len_set;
 			static float c1 = 0.5;
 			static float c2 = 0.5;
-			float med = middle_of_3(c, c1, c2);
+			float med = utils_middle_of_3(c, c1, c2);
 
 			c2 = c1;
 			c1 = c;
@@ -120,9 +118,10 @@ static ICUConfig icucfg = {
  * decoded. Can be NULL.
  */
 void servodec_init(void (*d_func)(void)) {
-	icuStart(&ICUD3, &icucfg);
+	icuStart(&HW_ICU_DEV, &icucfg);
 	palSetPadMode(HW_ICU_GPIO, HW_ICU_PIN, PAL_MODE_ALTERNATE(HW_ICU_GPIO_AF));
-	icuStartCapture(&ICUD3);
+	icuStartCapture(&HW_ICU_DEV);
+	icuEnableNotifications(&HW_ICU_DEV);
 
 	for (int i = 0;i < SERVO_NUM;i++) {
 		servo_pos[i] = 0.0;

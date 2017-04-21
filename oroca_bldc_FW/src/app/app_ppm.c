@@ -1,5 +1,5 @@
 /*
-	Copyright 2012-2015 Benjamin Vedder	benjamin@vedder.se
+	Copyright 2012-2015 OROCA ESC Project 	www.oroca.org
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * app_ppm.c
  *
  *  Created on: 18 apr 2014
- *      Author: benjamin
+ *      Author: bakchajang
  */
 
 #include "app_ppm.h"
@@ -83,13 +83,16 @@ Uart3_printf(&SD3, (uint8_t *)"app_ppm_start.....\r\n");
 static void servodec_func(void) {
 	chSysLockFromISR();
 	timeout_reset();
+
 	chEvtSignalI(ppm_tp, (eventmask_t) 1);
 	chSysUnlockFromISR();
 }
 
+
 static void update(void *p) {
 	chSysLockFromISR();
 	chVTSetI(&vt, MS2ST(2), update, p);
+
 	chEvtSignalI(ppm_tp, (eventmask_t) 1);
 	chSysUnlockFromISR();
 }
@@ -103,7 +106,8 @@ static THD_FUNCTION(ppm_thread, arg)
 	chRegSetThreadName("APP_PPM");
 	ppm_tp = chThdGetSelfX();
 
-	servodec_set_pulse_options(config.pulse_start, config.pulse_end, config.median_filter);
+	//servodec_set_pulse_options(config.pulse_start, config.pulse_end, config.median_filter);
+	servodec_set_pulse_options(1.0f, 2.0f, false);
 	servodec_init(servodec_func);
 	is_running = true;
 
@@ -111,20 +115,18 @@ static THD_FUNCTION(ppm_thread, arg)
 
 		chEvtWaitAny((eventmask_t) 1);
 
-		if (timeout_has_timeout() || servodec_get_time_since_update() > timeout_get_timeout_msec()) 
-		{
-			pulses_without_power = 0;
-			continue;
-		}
+		//if (timeout_has_timeout() || servodec_get_time_since_update() > timeout_get_timeout_msec()) 
+		//{
+		//	pulses_without_power = 0;
+		//	continue;
+		//}
 
 		float servo_val = servodec_get_servo(0);
 
 
 		Uart3_printf(&SD3, (uint8_t *)"servo : %f\r\n",(float)servo_val);
 
-		chThdSleepMilliseconds(1000);
-
-
+		CtrlParm.qVelRef=servo_val/100.0f;
 	}
 
 }

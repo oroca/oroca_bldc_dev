@@ -1,5 +1,5 @@
 /*
-	Copyright 2012-2014 Benjamin Vedder	benjamin@vedder.se
+	Copyright 2012-2014 OROCA ESC Project 	www.oroca.org
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * timeout.h
  *
  *  Created on: 20 sep 2014
- *      Author: benjamin
+ *      Author: bakchajang
  */
 
 #ifndef TIMEOUT_H_
@@ -27,11 +27,21 @@
 
 #include "chtypes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 // Functions
 void timeout_init(void);
 void timeout_configure(systime_t timeout);
 void timeout_reset(void);
 bool timeout_has_timeout(void);
 systime_t timeout_get_timeout_msec(void);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif /* TIMEOUT_H_ */

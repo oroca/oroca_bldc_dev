@@ -1,5 +1,5 @@
 /*
-	Copyright 2012-2014 Benjamin Vedder	benjamin@vedder.se
+	Copyright 2012-2014 OROCA ESC Project 	www.oroca.org
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * hw_40.6
  *
  *  Created on: 22 nov 2014
- *      Author: benjamin
+ *      Author: bakchajang
  */
 
 #ifndef HW_OROCA_H_
@@ -40,8 +40,8 @@
 #define LED_GREEN_ON()			palSetPad(GPIOB, 6)
 #define LED_GREEN_OFF()			palClearPad(GPIOB, 6)
 
-#define LED_RED_ON()			palSetPad(GPIOB, 7)
-#define LED_RED_OFF()			palClearPad(GPIOB, 7)
+//#define LED_RED_ON()			palSetPad(GPIOB, 7)
+//#define LED_RED_OFF()			palClearPad(GPIOB, 7)
 
 /*
  * ADC Vector
@@ -121,11 +121,13 @@
 #define HW_UART_RX_PIN		11
 
 // ICU Peripheral for servo decoding
-#define HW_ICU_DEV			ICUD3
+#define HW_ICU_DEV			ICUD4
 #define HW_ICU_CHANNEL		ICU_CHANNEL_2
-#define HW_ICU_GPIO_AF		GPIO_AF_TIM3
-#define HW_ICU_GPIO		GPIOC
-#define HW_ICU_PIN			9
+#define HW_ICU_GPIO_AF		GPIO_AF_TIM4
+//#define HW_ICU_GPIO		GPIOC
+//#define HW_ICU_PIN			9
+#define HW_ICU_GPIO		GPIOB
+#define HW_ICU_PIN			7
 
 // I2C Peripheral
 #define HW_I2C_DEV			I2CD2

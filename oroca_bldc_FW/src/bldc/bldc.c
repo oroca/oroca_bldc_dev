@@ -1,5 +1,5 @@
 /*
-	Copyright 2012-2015 Benjamin Vedder	benjamin@vedder.se
+	Copyright 2012-2015 OROCA ESC Project 	www.oroca.org
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -111,7 +111,7 @@ int bldc_start(void)
 {
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
 
-	CtrlParm.qVelRef=-0.01f;
+	//CtrlParm.qVelRef=-0.01f;
 
 	return 0;
 

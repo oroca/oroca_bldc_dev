@@ -2,7 +2,7 @@
  * comm_usb_serial.h
  *
  *  Created on: 8 okt 2015
- *      Author: benjamin
+ *      Author: bakchajang
  */
 
 #ifndef USB_UART_H_INCLUDED
