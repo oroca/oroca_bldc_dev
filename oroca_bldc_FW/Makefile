@@ -147,6 +147,8 @@ CSRC = $(STARTUPSRC) \
        $(CORESRC)/irq_handlers.c \
        $(CORESRC)/utils.c	\
        $(CORESRC)/timeout.c	\
+	   $(CORESRC)/comm_can.c	\
+	   $(CORESRC)/buffer.c	\
        $(APPSRC)/app.c \
        $(APPSRC)/app_ppm.c
        

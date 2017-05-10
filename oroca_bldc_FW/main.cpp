@@ -10,10 +10,11 @@
 #include "hw.h"
 #include "timeout.h"
 
-
 #include "main.h"
-
 #include "uart3_print.h"
+
+#include "comm_can.h"
+
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -55,6 +56,7 @@ int main(void)
 	timeout_init();
 	timeout_configure(1000);
 
+	comm_can_init();
 
 	test.print();
 
