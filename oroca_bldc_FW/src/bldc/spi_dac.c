@@ -130,7 +130,7 @@ void SPI_Init_for_DAC_7612(SPI_TypeDef* SPIx)
 
 	SPIx->CR1 = tmpreg;
 
-	Uart3_printf( &SD3,"CR1=%X,%X \r\n",  SPIx->CR1, tmpreg  );
+	//Uart3_printf( &SD3,"CR1=%X,%X \r\n",  SPIx->CR1, tmpreg  );//170530  
 
 
 	SPIx->CR2  = SPI_CR2_SSOE; // �ϵ���� NSS ���
@@ -155,7 +155,7 @@ static void _spi_dac_write( short data)
 	SPI_TypeDef* SPIx = SPI1;
 
 
-	Uart3_printf(&SD3, "CR1=%X \r\n",  SPIx->CR1 );
+	//Uart3_printf(&SD3, "CR1=%X \r\n",  SPIx->CR1 );//170530 
 	//Uart3_printf(&SD3, "CR2=%X \r\n",  SPIx->CR2 );
 	//Uart3_printf(&SD3, "SR=%X \r\n",  SPIx->SR );
 

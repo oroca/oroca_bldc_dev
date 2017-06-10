@@ -73,7 +73,7 @@ void app_ppm_start(void) {
 	chThdCreateStatic(ppm_thread_wa, sizeof(ppm_thread_wa), NORMALPRIO, ppm_thread, NULL);
 
 
-Uart3_printf(&SD3, (uint8_t *)"app_ppm_start.....\r\n");
+	//Uart3_printf(&SD3, (uint8_t *)"app_ppm_start.....\r\n");  //170530  
 
 	chSysLock();
 	chVTSetI(&vt, MS2ST(1), update, NULL);
@@ -124,7 +124,7 @@ static THD_FUNCTION(ppm_thread, arg)
 		float servo_val = servodec_get_servo(0);
 
 
-		Uart3_printf(&SD3, (uint8_t *)"servo : %f\r\n",(float)servo_val);
+//		Uart3_printf(&SD3, (uint8_t *)"servo : %f\r\n",(float)servo_val);    //170530  
 
 		CtrlParm.qVelRef=servo_val/100.0f;
 	}

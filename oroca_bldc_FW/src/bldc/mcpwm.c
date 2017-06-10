@@ -110,7 +110,7 @@ static volatile float TargetDCbus = 0;// DC Bus is measured before running motor
 void mcpwm_init(void)
 {
 
-	Uart3_printf(&SD3, (uint8_t *)"mcpwm_init....\r\n");
+	//Uart3_printf(&SD3, (uint8_t *)"mcpwm_init....\r\n");//170530  
 	utils_sys_lock_cnt();
 
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
@@ -392,8 +392,8 @@ void do_dc_cal(void)
 	DCCAL_OFF();
 	dccal_done = true;
 
-	Uart3_printf(&SD3, (uint8_t *)"curr0_offset : %u\r\n",curr0_offset);
-	Uart3_printf(&SD3, (uint8_t *)"curr1_offset : %u\r\n",curr1_offset);
+	//Uart3_printf(&SD3, (uint8_t *)"curr0_offset : %u\r\n",curr0_offset);//170530  
+	//Uart3_printf(&SD3, (uint8_t *)"curr1_offset : %u\r\n",curr1_offset);//170530  
 }
 
 

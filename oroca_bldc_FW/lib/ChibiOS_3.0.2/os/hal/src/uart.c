@@ -336,3 +336,6 @@ size_t uartStopReceiveI(UARTDriver *uartp) {
 #endif /* HAL_USE_UART == TRUE */
 
 /** @} */
+
+
+

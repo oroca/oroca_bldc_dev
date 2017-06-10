@@ -64,7 +64,7 @@ static THD_FUNCTION(periodic_thread, arg)
 
 	chRegSetThreadName("BLDC periodic");
 
-	//Uart3_printf(&SD3, (uint8_t *)"periodic_thread\r\n");
+	//Uart3_printf(&SD3, (uint8_t *)"periodic_thread\r\n");//170530  
 
 	for(;;)
 	{
@@ -85,9 +85,6 @@ int bldc_init(void)
 	chThdSleepMilliseconds(1000);
 
 	hw_init_gpio();
-
-	Uart3_print_init();
-	Uart3_printf(&SD3, (uint8_t *)"oroca_bldc\r\n");
 
 	//spi_dac_hw_init();
 	//spi_dac_write_A( 100) ;

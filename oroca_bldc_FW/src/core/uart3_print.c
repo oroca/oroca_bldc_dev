@@ -82,6 +82,10 @@ static SerialConfig sd3cfg = {
 	chprintf(chp,fmt);
 }
 
+//void Uart3_write(BaseSequentialStream * chp, char *buf, uint8_t len)
+//{
+
+//}
 
 
 uint8_t Uart3_getch( void )
@@ -130,32 +134,4 @@ int main(void) {
 }
 #endif
 
-
-
-//second example
-//static UARTConfig uartcfg = {
-//   NULL,                    /* End of Transmission buffer callback               */
-//   NULL,                    /* Physical end of transmission callback             */
-//   NULL,                    /* Receive buffer filled callback                    */
-//   NULL,                   /* Char received while out of the UART_RECEIVE state */
-//   NULL,                    /* Receive error callback                            */
-//   115200,                     /* Baudrate                                          */
-//   0,                       /* cr1 register values                               */
-//   0,                       /* cr2 register values                               */
-//   0                        /* cr3 register values                               */
-//};
-
-/* PD5 == USART2 TX PIN ;	PD == USART2 RX PIN */
- //--palSetPadMode(GPIOD, 5 , PAL_MODE_ALTERNATE(7));
- //--palSetPadMode(GPIOD, 6 , PAL_MODE_ALTERNATE(7));
-
-
- /*   UART 2 Initialization and stuff */
- //-- uartStart(&UARTD2, &uartcfg);
-
- //while(1)
- //{
- //uartStartSend(&UARTD2,13,"Started\n");
- //chThdSleepMilliseconds(500);
- //}
 

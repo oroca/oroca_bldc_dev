@@ -149,6 +149,7 @@ CSRC = $(STARTUPSRC) \
        $(CORESRC)/timeout.c	\
 	   $(CORESRC)/comm_can.c	\
 	   $(CORESRC)/buffer.c	\
+	   $(CORESRC)/mavlink_proc.c	\
        $(APPSRC)/app.c \
        $(APPSRC)/app_ppm.c
        

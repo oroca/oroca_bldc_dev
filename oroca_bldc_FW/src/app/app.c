@@ -36,7 +36,7 @@
 
 
 // Private variables
-app_use app_to_use = APP_PPM;
+app_use app_to_use = APP_MAVLINK;
 
 void app_init(void)
 {
@@ -48,9 +48,13 @@ void app_init(void)
 			app_ppm_start();
 			break;
 
-		case APP_UART:
-			hw_stop_i2c();
-			//app_uartcomm_start();
+		case APP_MAVLINK:
+			Uart3_print_init();
+			//Uart3_printf(&SD3, (uint8_t *)"oroca_bldc\r\n");//170530	
+
+			mavlink_proc_configure();
+			mavlink_proc_start(); 
+
 			break;
 
 		default:

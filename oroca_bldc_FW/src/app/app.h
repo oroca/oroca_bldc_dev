@@ -31,13 +31,7 @@
 typedef enum {
 	APP_NONE = 0,
 	APP_PPM,
-	APP_ADC,
-	APP_UART,
-	APP_PPM_UART,
-	APP_ADC_UART,
-	APP_NUNCHUK,
-	APP_NRF,
-	APP_CUSTOM
+	APP_MAVLINK,
 } app_use;
 
 
