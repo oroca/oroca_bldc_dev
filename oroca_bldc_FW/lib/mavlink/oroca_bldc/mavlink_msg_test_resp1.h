@@ -2,26 +2,37 @@
 
 #define MAVLINK_MSG_ID_TEST_RESP1 221
 
-typedef struct __mavlink_test_resp1_t
+typedef struct MAVLINK_PACKED __mavlink_test_resp1_t
 {
  uint8_t status; /*< status 1*/
 } mavlink_test_resp1_t;
 
 #define MAVLINK_MSG_ID_TEST_RESP1_LEN 1
+#define MAVLINK_MSG_ID_TEST_RESP1_MIN_LEN 1
 #define MAVLINK_MSG_ID_221_LEN 1
+#define MAVLINK_MSG_ID_221_MIN_LEN 1
 
 #define MAVLINK_MSG_ID_TEST_RESP1_CRC 177
 #define MAVLINK_MSG_ID_221_CRC 177
 
 
 
+#if MAVLINK_COMMAND_24BIT
+#define MAVLINK_MESSAGE_INFO_TEST_RESP1 { \
+	221, \
+	"TEST_RESP1", \
+	1, \
+	{  { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_test_resp1_t, status) }, \
+         } \
+}
+#else
 #define MAVLINK_MESSAGE_INFO_TEST_RESP1 { \
 	"TEST_RESP1", \
 	1, \
 	{  { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_test_resp1_t, status) }, \
          } \
 }
-
+#endif
 
 /**
  * @brief Pack a test_resp1 message
@@ -48,11 +59,7 @@ static inline uint16_t mavlink_msg_test_resp1_pack(uint8_t system_id, uint8_t co
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_TEST_RESP1;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_TEST_RESP1_LEN);
-#endif
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_TEST_RESP1_MIN_LEN, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
 }
 
 /**
@@ -81,11 +88,7 @@ static inline uint16_t mavlink_msg_test_resp1_pack_chan(uint8_t system_id, uint8
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_TEST_RESP1;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_TEST_RESP1_LEN);
-#endif
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_TEST_RESP1_MIN_LEN, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
 }
 
 /**
@@ -129,20 +132,26 @@ static inline void mavlink_msg_test_resp1_send(mavlink_channel_t chan, uint8_t s
 	char buf[MAVLINK_MSG_ID_TEST_RESP1_LEN];
 	_mav_put_uint8_t(buf, 0, status);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, buf, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, buf, MAVLINK_MSG_ID_TEST_RESP1_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, buf, MAVLINK_MSG_ID_TEST_RESP1_MIN_LEN, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
 #else
 	mavlink_test_resp1_t packet;
 	packet.status = status;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, (const char *)&packet, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, (const char *)&packet, MAVLINK_MSG_ID_TEST_RESP1_LEN);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, (const char *)&packet, MAVLINK_MSG_ID_TEST_RESP1_MIN_LEN, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
 #endif
+}
+
+/**
+ * @brief Send a test_resp1 message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_test_resp1_send_struct(mavlink_channel_t chan, const mavlink_test_resp1_t* test_resp1)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_test_resp1_send(chan, test_resp1->status);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, (const char *)test_resp1, MAVLINK_MSG_ID_TEST_RESP1_MIN_LEN, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
 #endif
 }
 
@@ -160,20 +169,12 @@ static inline void mavlink_msg_test_resp1_send_buf(mavlink_message_t *msgbuf, ma
 	char *buf = (char *)msgbuf;
 	_mav_put_uint8_t(buf, 0, status);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, buf, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, buf, MAVLINK_MSG_ID_TEST_RESP1_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, buf, MAVLINK_MSG_ID_TEST_RESP1_MIN_LEN, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
 #else
 	mavlink_test_resp1_t *packet = (mavlink_test_resp1_t *)msgbuf;
 	packet->status = status;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, (const char *)packet, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, (const char *)packet, MAVLINK_MSG_ID_TEST_RESP1_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TEST_RESP1, (const char *)packet, MAVLINK_MSG_ID_TEST_RESP1_MIN_LEN, MAVLINK_MSG_ID_TEST_RESP1_LEN, MAVLINK_MSG_ID_TEST_RESP1_CRC);
 #endif
 }
 #endif
@@ -201,9 +202,11 @@ static inline uint8_t mavlink_msg_test_resp1_get_status(const mavlink_message_t*
  */
 static inline void mavlink_msg_test_resp1_decode(const mavlink_message_t* msg, mavlink_test_resp1_t* test_resp1)
 {
-#if MAVLINK_NEED_BYTE_SWAP
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	test_resp1->status = mavlink_msg_test_resp1_get_status(msg);
 #else
-	memcpy(test_resp1, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_TEST_RESP1_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_TEST_RESP1_LEN? msg->len : MAVLINK_MSG_ID_TEST_RESP1_LEN;
+        memset(test_resp1, 0, MAVLINK_MSG_ID_TEST_RESP1_LEN);
+	memcpy(test_resp1, _MAV_PAYLOAD(msg), len);
 #endif
 }
