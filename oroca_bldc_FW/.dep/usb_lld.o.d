@@ -1,29 +1,28 @@
 build/obj/usb_lld.o: \
  lib/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/OTGv1/usb_lld.c \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\string.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_ansi.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\newlib.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_newlib_version.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\config.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\ieeefp.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\features.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\reent.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_ansi.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stddef.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\_types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\_default_types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\lock.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\cdefs.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_locale.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\string.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\string.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_ansi.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\newlib.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_newlib_version.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\config.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\ieeefp.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\features.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\reent.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_ansi.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stddef.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_types.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\_types.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\_default_types.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\lock.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\cdefs.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\string.h \
  lib/ChibiOS_3.0.2/os/hal/include/hal.h \
  lib/ChibiOS_3.0.2/os/hal/osal/rt/osal.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_intsup.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stdbool.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stdint.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\stdint.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_intsup.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_stdint.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stdbool.h \
  lib/ChibiOS_3.0.2/os/rt/include/ch.h \
  lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h chconf.h \
  lib/ChibiOS_3.0.2/os/rt/include/chlicense.h \
@@ -105,53 +104,51 @@ build/obj/usb_lld.o: \
  lib/ChibiOS_3.0.2/os/hal/include/mmc_spi.h \
  lib/ChibiOS_3.0.2/os/hal/include/serial_usb.h
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\string.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\string.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_ansi.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_ansi.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\newlib.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\newlib.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_newlib_version.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_newlib_version.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\config.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\config.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\ieeefp.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\ieeefp.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\features.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\features.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\reent.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\reent.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_ansi.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_ansi.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stddef.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stddef.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_types.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_types.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\_types.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\_types.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\_default_types.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\_default_types.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\lock.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\lock.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\cdefs.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\cdefs.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_locale.h:
-
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\string.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\string.h:
 
 lib/ChibiOS_3.0.2/os/hal/include/hal.h:
 
 lib/ChibiOS_3.0.2/os/hal/osal/rt/osal.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stdint.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stdint.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\stdint.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\stdint.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_intsup.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_intsup.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_stdint.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_stdint.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stdbool.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stdbool.h:
 
 lib/ChibiOS_3.0.2/os/rt/include/ch.h:
 

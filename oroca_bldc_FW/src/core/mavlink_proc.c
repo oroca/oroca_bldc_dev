@@ -60,19 +60,12 @@ eventmask_t mavlink_events = 0;
 
 int mavlink_uart_send( uint8_t data )
 {
-    mavlink_message_t msg; // Mavlink �޼��� ����ü
-    uint8_t buf[1024];           // �޼����� ���ڵ��� ���� ������
+    mavlink_message_t msg; 
+    uint8_t buf[1024];     
 
-    // TEST_CMD �޼����� ���� �ڵ����� ������ �Լ�,
-    // ���� 1�� System ID  ==> ex)���� �޼����� ���� ����� �����Ҷ� ���.
-    // ���� 2�� ������Ʈ ID  ==> ex) �� ���峻�� ���� ������ ������ ���п����� ��� .
-    // ���� 4 ���ʹ� �޼��� ���ǽ� �ʵ� �׸� - cmd_1, arg1,arg2
-    mavlink_msg_test_cmd_pack( 9, 121, &msg, data ,92,93);
+    mavlink_msg_set_velocity_pack( 9, 121, &msg, data );
 
-    // ���� �Լ����ο��� ������ �������� �ϼ���, CRC ������
     int len = mavlink_msg_to_send_buffer(buf, &msg);
-
-   // �ø��� ��Ʈ�� ���� �����ʹ� buf, ���̴� len ������ ���� �ϸ� �ϼ���
 
     //usb_uart_write(buf, len);
     //uart3_write(buf, len);
@@ -83,20 +76,11 @@ bool mavlink_uart_recv( uint8_t ch )
 {
 	bool ret = false;
 
-	mavlink_message_t msg; // ���ú����� �����ص� �� ���� �Ǵµ� �Ƹ��� ���� �ڷᱸ���� static ���� ���� �Ǵ°� ���ƿ�.
-	mavlink_status_t status; // ���� ���ŵ� ������ �Ľ��� ���� ���ϰ�.
+	mavlink_message_t msg; 
+	mavlink_status_t status; 
 
 	if (mavlink_parse_char(MAVLINK_COMM_0, ch, &msg, &status) == MAVLINK_FRAMING_OK)
 	{
-		if( MAVLINK_MSG_ID_TEST_CMD == msg.msgid ) // �޼��� ID ��  TEST_CMD ��� �ؼ�
-		{
-			mavlink_test_cmd_t test_cmd;
-			mavlink_msg_test_cmd_decode( &msg, &test_cmd); // �޼��� ���ڵ�
-
-			//Serial.print("seq= ");
-			//Serial.println(test_cmd.arg1);
-			ret = true;
-		}
 
 		if( MAVLINK_MSG_ID_SET_VELOCITY == msg.msgid ) 
 		{

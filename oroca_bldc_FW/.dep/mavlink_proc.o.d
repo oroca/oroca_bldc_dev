@@ -1,15 +1,15 @@
 build/obj/mavlink_proc.o: src/core/mavlink_proc.c \
  lib/ChibiOS_3.0.2/os/rt/include/ch.h \
  lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stddef.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\_default_types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\features.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_newlib_version.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_intsup.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_stdint.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stdbool.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stddef.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stdint.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\stdint.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\_default_types.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\features.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_newlib_version.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_intsup.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_stdint.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stdbool.h \
  chconf.h lib/ChibiOS_3.0.2/os/rt/include/chlicense.h \
  lib/ChibiOS_3.0.2/os/rt/include/chsystypes.h \
  lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore.h \
@@ -101,35 +101,32 @@ build/obj/mavlink_proc.o: src/core/mavlink_proc.c \
  lib/ChibiOS_3.0.2/ext/stdperiph_stm32f4/inc/stm32f4xx_tim.h \
  lib/ChibiOS_3.0.2/ext/stdperiph_stm32f4/inc/stm32f4xx_wwdg.h \
  src/core/timeout.h src/core/utils.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\math.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\reent.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_ansi.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\newlib.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\config.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\ieeefp.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\_types.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\lock.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\cdefs.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_ansi.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\math.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\reent.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_ansi.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\newlib.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\config.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\ieeefp.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_types.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\_types.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\lock.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\cdefs.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_ansi.h \
  lib/ChibiOS_3.0.2/os/rt/include/chthreads.h \
  lib/ChibiOS_3.0.2/os/rt/include/Chvt.h src/core/uart3_print.h \
  src/core/../../lib/mavlink/oroca_bldc/mavlink.h \
  src/core/../../lib/mavlink/oroca_bldc/version.h \
  src/core/../../lib/mavlink/oroca_bldc/oroca_bldc.h \
  src/core/../../lib/mavlink/oroca_bldc/../protocol.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\string.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_locale.h \
- c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\string.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\string.h \
+ c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\string.h \
  src/core/../../lib/mavlink/oroca_bldc/../mavlink_types.h \
  src/core/../../lib/mavlink/oroca_bldc/../mavlink_helpers.h \
  src/core/../../lib/mavlink/oroca_bldc/../checksum.h \
  src/core/../../lib/mavlink/oroca_bldc/../mavlink_conversions.h \
- src/core/../../lib/mavlink/oroca_bldc/./mavlink_msg_test_cmd.h \
- src/core/../../lib/mavlink/oroca_bldc/./mavlink_msg_test_resp1.h \
  src/core/../../lib/mavlink/oroca_bldc/./mavlink_msg_set_velocity.h \
  src/core/../../lib/mavlink/oroca_bldc/../common/common.h \
- d:\git\oroca_bldc_dev\oroca_bldc_fw\lib\mavlink\protocol.h \
+ v:\git\oroca_bldc_dev\oroca_bldc_fw\lib\mavlink\protocol.h \
  src/core/../../lib/mavlink/oroca_bldc/../common/./mavlink_msg_heartbeat.h \
  src/core/../../lib/mavlink/oroca_bldc/../common/./mavlink_msg_sys_status.h \
  src/core/../../lib/mavlink/oroca_bldc/../common/./mavlink_msg_system_time.h \
@@ -266,23 +263,23 @@ lib/ChibiOS_3.0.2/os/rt/include/ch.h:
 
 lib/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stddef.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stddef.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stdint.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stdint.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\stdint.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\stdint.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\_default_types.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\_default_types.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\features.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\features.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_newlib_version.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_newlib_version.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_intsup.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_intsup.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_stdint.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_stdint.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\lib\gcc\arm-none-eabi\5.4.1\include\stdbool.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\lib\gcc\arm-none-eabi\5.3.1\include\stdbool.h:
 
 chconf.h:
 
@@ -478,27 +475,27 @@ src/core/timeout.h:
 
 src/core/utils.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\math.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\math.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\reent.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\reent.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_ansi.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_ansi.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\newlib.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\newlib.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\config.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\config.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\ieeefp.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\ieeefp.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_types.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\_types.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\machine\_types.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\machine\_types.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\lock.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\lock.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\cdefs.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\cdefs.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\_ansi.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\_ansi.h:
 
 lib/ChibiOS_3.0.2/os/rt/include/chthreads.h:
 
@@ -514,11 +511,9 @@ src/core/../../lib/mavlink/oroca_bldc/oroca_bldc.h:
 
 src/core/../../lib/mavlink/oroca_bldc/../protocol.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\string.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\string.h:
 
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\_locale.h:
-
-c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.4\ 2016q3\arm-none-eabi\include\sys\string.h:
+c:\program\ files\ (x86)\gnu\ tools\ arm\ embedded\5.3\ 2016q1\arm-none-eabi\include\sys\string.h:
 
 src/core/../../lib/mavlink/oroca_bldc/../mavlink_types.h:
 
@@ -528,15 +523,11 @@ src/core/../../lib/mavlink/oroca_bldc/../checksum.h:
 
 src/core/../../lib/mavlink/oroca_bldc/../mavlink_conversions.h:
 
-src/core/../../lib/mavlink/oroca_bldc/./mavlink_msg_test_cmd.h:
-
-src/core/../../lib/mavlink/oroca_bldc/./mavlink_msg_test_resp1.h:
-
 src/core/../../lib/mavlink/oroca_bldc/./mavlink_msg_set_velocity.h:
 
 src/core/../../lib/mavlink/oroca_bldc/../common/common.h:
 
-d:\git\oroca_bldc_dev\oroca_bldc_fw\lib\mavlink\protocol.h:
+v:\git\oroca_bldc_dev\oroca_bldc_fw\lib\mavlink\protocol.h:
 
 src/core/../../lib/mavlink/oroca_bldc/../common/./mavlink_msg_heartbeat.h:
 

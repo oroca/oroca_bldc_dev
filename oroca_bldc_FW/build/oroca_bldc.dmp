@@ -9,11 +9,11 @@ Program Header:
     LOAD off    0x00010000 vaddr 0x08000000 paddr 0x08000000 align 2**16
          filesz 0x000001c0 memsz 0x000001c0 flags rw-
     LOAD off    0x0001c000 vaddr 0x0800c000 paddr 0x0800c000 align 2**16
-         filesz 0x0000714c memsz 0x00007150 flags rwx
-    LOAD off    0x00030800 vaddr 0x20000800 paddr 0x08013150 align 2**16
+         filesz 0x00007154 memsz 0x00007158 flags rwx
+    LOAD off    0x00030800 vaddr 0x20000800 paddr 0x08013158 align 2**16
          filesz 0x0000046c memsz 0x0000046c flags rw-
-    LOAD off    0x00030c70 vaddr 0x20000c70 paddr 0x080135bc align 2**16
-         filesz 0x00000000 memsz 0x00003d80 flags rw-
+    LOAD off    0x00030c70 vaddr 0x20000c70 paddr 0x080135c4 align 2**16
+         filesz 0x00000000 memsz 0x00003d88 flags rw-
     LOAD off    0x00040000 vaddr 0x20000000 paddr 0x20000000 align 2**16
          filesz 0x00000000 memsz 0x00000800 flags rw-
 private flags = 5000400: [Version5 EABI] [hard-float ABI]
@@ -22,19 +22,19 @@ Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
   0 startup       000001c0  08000000  08000000  00010000  2**4
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000714c  0800c000  0800c000  0001c000  2**4
+  1 .text         00007154  0800c000  0800c000  0001c000  2**4
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .textalign    00000004  0801314c  0801314c  0002314c  2**0
+  2 .textalign    00000004  08013154  08013154  00023154  2**0
                   ALLOC
   3 .mstack       00000400  20000000  20000000  00040000  2**0
                   ALLOC
   4 .pstack       00000400  20000400  20000400  00040000  2**0
                   ALLOC
-  5 .data         0000046c  20000800  08013150  00030800  2**3
+  5 .data         0000046c  20000800  08013158  00030800  2**3
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .bss          00003d80  20000c70  080135bc  00030c70  2**3
+  6 .bss          00003d88  20000c70  080135c4  00030c70  2**3
                   ALLOC
-  7 .ram0         00000000  200049f0  200049f0  00030c6c  2**2
+  7 .ram0         00000000  200049f8  200049f8  00030c6c  2**2
                   CONTENTS
   8 .ram1         00000000  20000000  20000000  00030c6c  2**2
                   CONTENTS
@@ -54,31 +54,31 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  16 .comment      0000006e  00000000  00000000  00030ca1  2**0
                   CONTENTS, READONLY
- 17 .debug_info   00035971  00000000  00000000  00030d0f  2**0
+ 17 .debug_info   000358cc  00000000  00000000  00030d0f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_abbrev 0000901d  00000000  00000000  00066680  2**0
+ 18 .debug_abbrev 00009010  00000000  00000000  000665db  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .debug_aranges 00001678  00000000  00000000  0006f69d  2**0
+ 19 .debug_aranges 00001678  00000000  00000000  0006f5eb  2**0
                   CONTENTS, READONLY, DEBUGGING
- 20 .debug_ranges 000026e0  00000000  00000000  00070d15  2**0
+ 20 .debug_ranges 000026e0  00000000  00000000  00070c63  2**0
                   CONTENTS, READONLY, DEBUGGING
- 21 .debug_line   0000ed0f  00000000  00000000  000733f5  2**0
+ 21 .debug_line   0000ecf3  00000000  00000000  00073343  2**0
                   CONTENTS, READONLY, DEBUGGING
- 22 .debug_str    000071ff  00000000  00000000  00082104  2**0
+ 22 .debug_str    000071b9  00000000  00000000  00082036  2**0
                   CONTENTS, READONLY, DEBUGGING
- 23 .debug_frame  00003fd4  00000000  00000000  00089304  2**2
+ 23 .debug_frame  00003fcc  00000000  00000000  000891f0  2**2
                   CONTENTS, READONLY, DEBUGGING
- 24 .debug_loc    0000e06d  00000000  00000000  0008d2d8  2**0
+ 24 .debug_loc    0000e03b  00000000  00000000  0008d1bc  2**0
                   CONTENTS, READONLY, DEBUGGING
 SYMBOL TABLE:
 08000000 l    d  startup	00000000 startup
 0800c000 l    d  .text	00000000 .text
-0801314c l    d  .textalign	00000000 .textalign
+08013154 l    d  .textalign	00000000 .textalign
 20000000 l    d  .mstack	00000000 .mstack
 20000400 l    d  .pstack	00000000 .pstack
 20000800 l    d  .data	00000000 .data
 20000c70 l    d  .bss	00000000 .bss
-200049f0 l    d  .ram0	00000000 .ram0
+200049f8 l    d  .ram0	00000000 .ram0
 20000000 l    d  .ram1	00000000 .ram1
 2001c000 l    d  .ram2	00000000 .ram2
 00000000 l    d  .ram3	00000000 .ram3
@@ -229,20 +229,20 @@ e000ed04 l       *ABS*	00000000 SCB_ICSR
 08010c80 l     F .text	0000000c mavlink_thread
 08010ec0 l     F .text	0000005c mavlink_uart_thread
 200037e8 l     O .bss	00000598 mavlink_uart_thread_wa
-20003d80 l     O .bss	00000030 m_mavlink_status.9715
-08012c30 l     O .text	00000100 mavlink_message_crcs.9767
-20003db8 l     O .bss	00000440 m_mavlink_buffer.9719
-200041f8 l     O .bss	00000218 mavlink_thread_wa
+20003d80 l     O .bss	00000030 m_mavlink_status.9670
+20003db8 l     O .bss	00000218 mavlink_thread_wa
+20003fd4 l     O .bss	00000440 m_mavlink_buffer.9674
+08012c50 l     O .text	00000100 mavlink_message_crcs.9722
 00000000 l    df *ABS*	00000000 app.c
 00000000 l    df *ABS*	00000000 app_ppm.c
 08010fa0 l     F .text	00000064 ppm_thread
 08011010 l     F .text	00000024 servodec_func
 08011040 l     F .text	00000040 update
-20004410 l     O .bss	00000001 is_running
-20004414 l     O .bss	00000004 ppm_tp
-20004418 l     O .bss	00000598 ppm_thread_wa
-200049b0 l     O .bss	00000004 pulses_without_power
-200049c8 l     O .bss	00000028 config
+20004414 l     O .bss	00000001 is_running
+20004418 l     O .bss	00000004 ppm_tp
+20004420 l     O .bss	00000598 ppm_thread_wa
+200049b8 l     O .bss	00000004 pulses_without_power
+200049d0 l     O .bss	00000028 config
 00000000 l    df *ABS*	00000000 stm32f4xx_adc.c
 00000000 l    df *ABS*	00000000 stm32f4xx_dma.c
 00000000 l    df *ABS*	00000000 stm32f4xx_exti.c
@@ -269,11 +269,11 @@ e000ed04 l       *ABS*	00000000 SCB_ICSR
 00000000 l    df *ABS*	00000000 sf_copysign.c
 00000000 l    df *ABS*	00000000 errno.c
 00000000 l    df *ABS*	00000000 chregistry.c
-00000000 l    df *ABS*	00000000 s_lib_ver.c
 00000000 l    df *ABS*	00000000 impure.c
 20000840 l     O .data	00000428 impure_data
+00000000 l    df *ABS*	00000000 s_lib_ver.c
 00000000 l    df *ABS*	00000000 
-200049f0 l       .ram0	00000000 __ram0_free__
+200049f8 l       .ram0	00000000 __ram0_free__
 08012ae0 g     O .text	000000fc pal_default_config
 0800caf0  w    F .text	00000002 Vector58
 0800caf0  w    F .text	00000002 Vector9C
@@ -326,9 +326,9 @@ e000ed04 l       *ABS*	00000000 SCB_ICSR
 08010be0 g     F .text	000000a0 comm_can_init
 08011c80 g     F .text	00000298 __ieee754_rem_pio2f
 08010060 g     F .text	000000ec DoControl
-200049f0 g       .ram0	00000000 __heap_base__
+200049f8 g       .ram0	00000000 __heap_base__
 08011170 g     F .text	00000028 ADC_CommonInit
-08013150 g       .mstack	00000000 _etext
+08013158 g       .mstack	00000000 _etext
 0800e0f0 g     F .text	00000028 Vector120
 0800f2c0 g     F .text	00000014 usb_lld_clear_out
 0800ec70 g     F .text	000000d8 VectorC8
@@ -411,7 +411,7 @@ e000ed04 l       *ABS*	00000000 SCB_ICSR
 2000083d g     O .data	00000001 __fdlib_version
 08012710 g     F .text	00000090 __kernel_sinf
 080111c0 g     F .text	00000092 ADC_RegularChannelConfig
-200049b4 g     O .bss	00000014 vt
+200049bc g     O .bss	00000014 vt
 0800caf0  w    F .text	00000002 Vector148
 0800e800 g     F .text	00000036 can_lld_is_rx_nonempty
 0800caf0  w    F .text	00000002 Vector188
@@ -423,7 +423,7 @@ e000ed04 l       *ABS*	00000000 SCB_ICSR
 0800caf0  w    F .text	00000002 Vector118
 0800c8e0 g     F .text	0000009e .hidden __aeabi_d2f
 0800caf0  w    F .text	00000002 Vector64
-200049f0 g       .bss	00000000 _bss_end
+200049f8 g       .bss	00000000 _bss_end
 08011360 g     F .text	0000000c EXTI_ClearITPendingBit
 0800eab0 g     F .text	000000b6 _pal_lld_setgroupmode
 080116b0 g     F .text	00000074 TIM_OC1Init
@@ -520,7 +520,7 @@ e000ed04 l       *ABS*	00000000 SCB_ICSR
 00000000 g       *ABS*	00000000 __ram3_size__
 0800caf0  w    F .text	00000002 Vector100
 0800c4b0 g     F .text	00000254 .hidden __muldf3
-08013150 g       *ABS*	00000000 _textdata
+08013158 g       *ABS*	00000000 _textdata
 08010900 g     F .text	00000024 VectorE0
 00000000 g       startup	00000000 _text
 0800caf0  w    F .text	00000002 VectorF4
@@ -643,11 +643,11 @@ e000ed04 l       *ABS*	00000000 SCB_ICSR
 200018d4 g     O .bss	0000000c CtrlParm
 0800c000 g       startup	00000000 __init_array_start
 08011910 g     F .text	00000026 TIM_BDTRConfig
-08010ca0 g     F .text	00000220 mavlink_uart_recv
+08010ca0 g     F .text	00000218 mavlink_uart_recv
 0800f920 g     F .text	000000a8 hw_setup_adc_channels
 0800ce70 g     F .text	00000028 chSchIsPreemptionRequired
 0800f250 g     F .text	0000002a usb_lld_start_in
-080120e0 g     F .text	00000630 __kernel_rem_pio2f
+080120e0 g     F .text	00000626 __kernel_rem_pio2f
 0800eea0 g     F .text	0000001a usb_lld_get_status_out
 0800f130 g     F .text	000000f4 Vector14C
 40024000 g       startup	00000000 __ram5_start__
@@ -679,7 +679,7 @@ e000ed04 l       *ABS*	00000000 SCB_ICSR
 0800f7a0 g     F .text	00000180 hw_init_gpio
 00000400 g       *ABS*	00000000 __main_stack_size__
 0800e0c0 g     F .text	0000002c VectorFC
-20003db4 g     O .bss	00000004 pMavlinkThread
+20003fd0 g     O .bss	00000004 pMavlinkThread
 200018a0 g     O .bss	00000024 PIParmQ
 0800c148 g     F .text	0000027a .hidden __subdf3
 20000800 g       .pstack	00000000 __process_stack_end__
