@@ -36,6 +36,9 @@
 #include <chthreads.h>
 #include <Chvt.h>
 
+#include "mcpwm.h"
+
+
 #include "uart3_print.h"
 
 #include "../../lib/mavlink/oroca_bldc/mavlink.h"
@@ -68,7 +71,7 @@ int mavlink_uart_send( uint8_t data )
     int len = mavlink_msg_to_send_buffer(buf, &msg);
 
     //usb_uart_write(buf, len);
-    //uart3_write(buf, len);
+    Uart3_write(buf, len);
 }
 
 
@@ -79,19 +82,30 @@ bool mavlink_uart_recv( uint8_t ch )
 	mavlink_message_t msg; 
 	mavlink_status_t status; 
 
-	if (mavlink_parse_char(MAVLINK_COMM_0, ch, &msg, &status) == MAVLINK_FRAMING_OK)
-	{
+	uint8_t temp = mavlink_parse_char(MAVLINK_COMM_0, ch, &msg, &status);
 
+	//Uart3_printf(&SD3, "%02x ",ch);
+
+
+	if (temp == MAVLINK_FRAMING_OK)
+	{
 		if( MAVLINK_MSG_ID_SET_VELOCITY == msg.msgid ) 
 		{
 			mavlink_set_velocity_t set_velocity;
 			mavlink_msg_set_velocity_decode( &msg, &set_velocity);
 
-			//Serial.print("seq= ");
-			//Serial.println(test_cmd.arg1);
+			Uart3_printf(&SD3, "SET_VELOCITY\r\n");
+			Uart3_printf(&SD3, "value : %d",set_velocity.ref_angular_velocity );
+
+			int16_t tmp_value = set_velocity.ref_angular_velocity - 1500;
+			float vel = (float)tmp_value / 700.0f;
+
+			CtrlParm.qVelRef = vel / 100.0f;
+
 			ret = true;
 		}
     }
+
 
 	return ret;
 }
@@ -114,11 +128,14 @@ static THD_FUNCTION(mavlink_uart_thread, arg)
 
 		Ch = Uart3_getch();
 
-		//Uart3_printf(&SD3, (uint8_t *)"0x%x", Ch);
+		//Uart3_printf(&SD3, "%02x ",Ch);
 		
+
 		if( mavlink_uart_recv( Ch ) )
 		{
-			mavlink_uart_send( 1 );
+			//mavlink_uart_send( 1 );
+
+			//Uart3_printf(&SD3, (uint8_t *)"0x%x", Ch);
 
 			mavlink_events |= EVT_UART_RX;
 

@@ -82,11 +82,16 @@ static SerialConfig sd3cfg = {
 	chprintf(chp,fmt);
 }
 
-//void Uart3_write(BaseSequentialStream * chp, char *buf, uint8_t len)
-//{
 
-//}
 
+void Uart3_write(char *pbuf, uint8_t len)
+{
+	int i;
+	for(i=0;i<len;i++)
+	{
+		chSequentialStreamPut(&SD3, *pbuf++);
+	}
+}
 
 uint8_t Uart3_getch( void )
 {

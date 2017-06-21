@@ -39,7 +39,7 @@ namespace Serial
             cmbBRate.SelectedIndex = 5;
             cmbDataBits.SelectedIndex = 0;
             cmbParity.SelectedIndex = 2;
-            cmbStopBits.SelectedIndex = 1;
+            cmbStopBits.SelectedIndex = 2;
 
             SerialPort.PortName = cmbPort.SelectedItem.ToString();
 
@@ -87,14 +87,16 @@ namespace Serial
         {
             if (SerialPort.IsOpen)
             {
-                string str = SerialPort.ReadLine();
+               // string str = SerialPort.ReadLine();
 
-                str = str.Trim().Replace("\r\n", "");
-                lbResult.Text = str;
-                rbText.Text = string.Format("{0}{1}{2}", rbText.Text, "[Received]", str+"\r\n");
-                rbText.SelectionStart = rbText.Text.Length;
-                rbText.ScrollToCaret();
-                //rbText.Text += "[전송된 Data] " + str;
+                string str = SerialPort.ReadExisting();
+
+                //str = str.Trim().Replace("\r\n", "");
+                //lbResult.Text = str;
+                //rbText.Text = string.Format("{0}{1}{2}", rbText.Text, "[Received]", str+"\r\n");
+                //rbText.SelectionStart = rbText.Text.Length;
+                //rbText.ScrollToCaret();
+                rbText.Text += "[전송된 Data] " + str;
                 Thread.Sleep(1000);
             }
         }
@@ -203,7 +205,7 @@ namespace Serial
             byte[] sendbuf = new byte[100];
 
             Msg_set_velocity msg_set_velocity = new Msg_set_velocity();
-            msg_set_velocity.ref_angular_velocity = 1000;
+            msg_set_velocity.ref_angular_velocity = 1500;
 
             MavlinkPacket mavlink_packet = new MavlinkPacket();
             mavlink_packet.ComponentId = 121;
@@ -222,5 +224,32 @@ namespace Serial
                 SerialPort.Write(sendbuf, 0, sendbuf.Length);
             }
         }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            byte[] sendbuf = new byte[100];
+
+            Msg_set_velocity msg_set_velocity = new Msg_set_velocity();
+            msg_set_velocity.ref_angular_velocity = (UInt16)numericUpDown1.Value;
+
+            MavlinkPacket mavlink_packet = new MavlinkPacket();
+            mavlink_packet.ComponentId = 121;
+            mavlink_packet.SystemId = 9;
+            mavlink_packet.Message = msg_set_velocity;
+
+            Mavlink mav_link = new Mavlink();
+            sendbuf = mav_link.Send(mavlink_packet);
+
+            // string result = System.Text.Encoding.UTF8.GetString(sendbuf);
+            string result = BitConverter.ToString(sendbuf);
+            rbText.Text += "\r\n" + "[" + SerialPort.PortName.ToString() + "] " + result;
+
+            if (SerialPort.IsOpen)
+            {
+                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+            }
+        }
+
+
     }
 }
