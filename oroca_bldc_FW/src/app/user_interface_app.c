@@ -23,9 +23,6 @@
 #include "hal.h"
 #include "stm32f4xx_conf.h"
 #include "hw.h"
-#include "app.h"
-
-#include "uart3_print.h"
 
 #include <errno.h>
 #include <unistd.h>
@@ -34,31 +31,49 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "mavlink_uart_proc.h"
+#include "user_interface_app.h"
+#include "uart3.h"
 
-// Private variables
-app_use app_to_use = APP_MAVLINK;
+eventmask_t ui_events = 0;
 
-void app_init(void)
+// Threads
+static THD_FUNCTION(user_interface_thread, arg);
+static THD_WORKING_AREA(user_interface_thread_wa, 512);
+
+void user_interface_configure(void)
 {
+	//Uart3_printf(&SD3, (uint8_t *)"oroca_bldc\r\n");//170530
+	mavlink_uart_proc_configure();
+	mavlink_uart_proc_start();
+
 	//Uart3_printf(&SD3, (uint8_t *)"app_init.....\r\n");
-	switch (app_to_use)
-	{
-		case APP_PPM:
-			app_ppm_configure();
-			app_ppm_start();
-			break;
-
-		case APP_MAVLINK:
-			Uart3_print_init();
-			//Uart3_printf(&SD3, (uint8_t *)"oroca_bldc\r\n");//170530	
-
-			mavlink_proc_configure();
-			mavlink_proc_start(); 
-
-			break;
-
-		default:
-			break;
-	}
+	app_ppm_configure();
+	app_ppm_start();
 }
 
+static THD_FUNCTION(user_interface_thread, arg)
+{
+	(void)arg;
+
+	//uint8_t Ch;
+
+	chRegSetThreadName("user_interface_process");
+
+	for(;;)
+	{
+		if (ui_events)
+		{
+			chSysLockFromISR();
+			//chEvtSignalI(pMavlinkThread, ui_events);
+			chSysUnlockFromISR();
+  		}
+	}
+
+}
+
+
+void user_interface_start(void)
+{
+	chThdCreateStatic(user_interface_thread_wa, sizeof(user_interface_thread_wa), NORMALPRIO, user_interface_thread, NULL);
+}

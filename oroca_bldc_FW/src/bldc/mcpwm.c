@@ -30,14 +30,13 @@
 //#include "main.h"
 #include "mcpwm.h"
 #include "utils.h"
-#include "uart3_print.h"
-
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include "../core/uart3.h"
 
 
 

@@ -23,43 +23,29 @@
  */
 
 
-
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
-
-
-#include "timeout.h"
-#include "utils.h"
 
 #include <math.h>
 #include <chthreads.h>
 #include <Chvt.h>
 
+#include "timeout.h"
+#include "utils.h"
 #include "mcpwm.h"
 
-
-#include "uart3_print.h"
-
+#include "user_interface_app.h"
 #include "../../lib/mavlink/oroca_bldc/mavlink.h"
-
-
-#define EVT_UART_RX EVENT_MASK(0)
-#define EVT_CAN_RX EVENT_MASK(1)
+#include "mavlink_uart_proc.h"
+#include "uart3.h"
 
 
 // Threads
 static THD_FUNCTION(mavlink_uart_thread, arg);
 static THD_WORKING_AREA(mavlink_uart_thread_wa, 1024);
 
-static THD_FUNCTION(mavlink_thread, arg);
-static THD_WORKING_AREA(mavlink_thread_wa, 128);
-
 thread_t *pMavlinkThread;
-eventmask_t mavlink_events = 0;
-
-
-
 
 int mavlink_uart_send( uint8_t data )
 {
@@ -70,8 +56,9 @@ int mavlink_uart_send( uint8_t data )
 
     int len = mavlink_msg_to_send_buffer(buf, &msg);
 
-    //usb_uart_write(buf, len);
     Uart3_write(buf, len);
+
+    return 0;
 }
 
 
@@ -86,7 +73,6 @@ bool mavlink_uart_recv( uint8_t ch )
 
 	//Uart3_printf(&SD3, "%02x ",ch);
 
-
 	if (temp == MAVLINK_FRAMING_OK)
 	{
 		if( MAVLINK_MSG_ID_SET_VELOCITY == msg.msgid ) 
@@ -95,13 +81,15 @@ bool mavlink_uart_recv( uint8_t ch )
 			mavlink_msg_set_velocity_decode( &msg, &set_velocity);
 
 			Uart3_printf(&SD3, "SET_VELOCITY\r\n");
-			Uart3_printf(&SD3, "value : %d",set_velocity.ref_angular_velocity );
+			Uart3_printf(&SD3, "value : %d",(uint16_t)set_velocity.ref_angular_velocity );
 
+			//--------------------------------------------------------------------------------
+			//test code
 			int16_t tmp_value = set_velocity.ref_angular_velocity - 1500;
 			float vel = (float)tmp_value / 700.0f;
 
 			CtrlParm.qVelRef = vel / 100.0f;
-
+			//------------------------------------------------------------------------------
 			ret = true;
 		}
     }
@@ -120,33 +108,17 @@ static THD_FUNCTION(mavlink_uart_thread, arg)
 
 	chRegSetThreadName("mavlink_uart_rx_process");
 
-	//process_tp = chThdSelf();
-
 	for(;;)
 	{
 		//chThdSleepMilliseconds(1);
-
 		Ch = Uart3_getch();
-
-		//Uart3_printf(&SD3, "%02x ",Ch);
-		
 
 		if( mavlink_uart_recv( Ch ) )
 		{
-			//mavlink_uart_send( 1 );
+			//mavlink_uart_send( 1 ); //hand shake?
 
-			//Uart3_printf(&SD3, (uint8_t *)"0x%x", Ch);
-
-			mavlink_events |= EVT_UART_RX;
-
+			ui_events |= EVT_UART_RX;
 		}
-
-		if (mavlink_events) 
-		{
-		    chSysLockFromISR();
-		    chEvtSignalI(pMavlinkThread, mavlink_events);
-		    chSysUnlockFromISR();
-  		}
 	}
 
 	return 0;
@@ -154,47 +126,18 @@ static THD_FUNCTION(mavlink_uart_thread, arg)
 }
 
 
-
-
-void mavlink_proc_configure(void)
+void mavlink_uart_proc_configure(void)
 {
-
-	mavlink_events=0;
+	Uart3_init();
+	return;
 }
 
-void mavlink_proc_start(void) 
+void mavlink_uart_proc_start(void)
 {
 	chThdCreateStatic(mavlink_uart_thread_wa, sizeof(mavlink_uart_thread_wa), NORMALPRIO, mavlink_uart_thread, NULL);
-
-
-	//Uart3_printf(&SD3, (uint8_t *)"mavlink_proc_start.....\r\n");  //170530  
-	chThdCreateStatic(mavlink_thread_wa, sizeof(mavlink_thread_wa),NORMALPRIO + 1, mavlink_thread, NULL);
-}
-
- 
-static THD_FUNCTION(mavlink_thread, arg)
-{
- 
-	/* Thread activity.*/
-	while (true)
-	{
-		/* Waiting for any event.*/
-		eventmask_t evt = chEvtWaitAny(ALL_EVENTS);
-
-		/* Serving events.*/
-		if (evt & EVT_UART_RX)
-		{
-		  /* Error event.*/
-		  //uart_rx_handler();
-		}
-		if (evt & EVT_CAN_RX)
-		{
-		  /* Error event.*/
-		  //can_rx_handler();
-		}
-
-	}
 }
 
 
+//--------------------------------------------------------------
+//function below
 

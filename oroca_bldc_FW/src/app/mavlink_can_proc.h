@@ -22,14 +22,39 @@
  *      Author: benjamin
  */
 
-#ifndef COMM_CAN_H_
-#define COMM_CAN_H_
+#ifndef __MAVLINK_CAN_PROC_H__
+#define __MAVLINK_CAN_PROC_H__
 
-//#include "conf_general.h"
+#include <chtypes.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define EVT_CAN EVENT_MASK(2)
+
+// CAN commands
+typedef enum {
+	CAN_PACKET_SET_VELOCITY = 0,
+	CAN_PACKET_SET_CURRENT,
+	CAN_PACKET_SET_RPM,
+	CAN_PACKET_SET_POS,
+	CAN_PACKET_FILL_RX_BUFFER,
+	CAN_PACKET_FILL_RX_BUFFER_LONG,
+	CAN_PACKET_PROCESS_RX_BUFFER,
+	CAN_PACKET_PROCESS_SHORT_BUFFER,
+	CAN_PACKET_STATUS
+} CAN_PACKET_ID;
+
+#define CAN_PACKET_BROADCASTING	0xFF
+
+typedef struct {
+	int id;
+	systime_t rx_time;
+	float rpm;
+	float current;//?????
+	float duty;//?????
+} can_status_msg;
 
 
 // Settings

@@ -22,21 +22,23 @@
  *      Author: benjamin
  */
 
-#include <string.h>
-#include <stdbool.h>
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
 
-#include "comm_can.h"
-//#include "datatypes.h"
+#include <string.h>
+#include <stdbool.h>
+
 #include "buffer.h"
-//#include "mc_interface.h"
 #include "timeout.h"
-//#include "commands.h"
-#include "app.h"
-//#include "crc.h"
-//#include "packet.h"
+#include "utils.h"
+#include "mcpwm.h"
+
+#include "user_interface_app.h"
+#include "../../lib/mavlink/oroca_bldc/mavlink.h"
+#include "mavlink_can_proc.h"
+#include "uart3.h"
+
 
 // Settings
 #define CANDx			CAND1
@@ -52,7 +54,7 @@ static THD_FUNCTION(cancom_status_thread, arg);
 static THD_FUNCTION(cancom_process_thread, arg);
 
 // Variables
-//static can_status_msg stat_msgs[CAN_STATUS_MSGS_TO_STORE];
+static can_status_msg stat_msgs[CAN_STATUS_MSGS_TO_STORE];
 static mutex_t can_mtx;
 static uint8_t rx_buffer[RX_BUFFER_SIZE];
 static unsigned int rx_buffer_last_id;
@@ -60,6 +62,10 @@ static CANRxFrame rx_frames[RX_FRAMES_SIZE];
 static int rx_frame_read;
 static int rx_frame_write;
 static thread_t *process_tp;
+
+
+uint8_t CtrlrID = 0x01;
+
 
 /*
  * 500KBaud, automatic wakeup, automatic recover
@@ -142,6 +148,9 @@ static THD_FUNCTION(cancom_process_thread, arg) {
 	uint8_t crc_low;
 	uint8_t crc_high;
 	bool commands_send;
+	
+	mavlink_message_t msg; 
+	mavlink_status_t status; 
 
 	for(;;)
 	{
@@ -150,6 +159,85 @@ static THD_FUNCTION(cancom_process_thread, arg) {
 		while (rx_frame_read != rx_frame_write)
 		{
 			CANRxFrame rxmsg = rx_frames[rx_frame_read++];
+
+			if (rxmsg.IDE == CAN_IDE_EXT) 
+			{
+				uint8_t id = rxmsg.EID & 0xFF;
+				CAN_PACKET_ID cmd = rxmsg.EID >> 8;
+				can_status_msg *stat_tmp;
+
+
+				if (id == CtrlrID || id == CAN_PACKET_BROADCASTING) 
+				{	
+					for(char c=0; c < rxmsg.DLC; c++)
+					{
+						uint8_t temp = mavlink_parse_char(MAVLINK_COMM_0, rxmsg.data8[c], &msg, &status);
+						if( MAVLINK_MSG_ID_SET_VELOCITY == msg.msgid ) 
+						{
+							mavlink_set_velocity_t set_velocity;
+							mavlink_msg_set_velocity_decode( &msg, &set_velocity);
+						
+							Uart3_printf(&SD3, "SET_VELOCITY\r\n");
+							Uart3_printf(&SD3, "value : %d",set_velocity.ref_angular_velocity );
+						
+							//--------------------------------------------------------------------------------
+							//test code
+							int16_t tmp_value = set_velocity.ref_angular_velocity - 1500;
+							float vel = (float)tmp_value / 700.0f;
+						
+							//CtrlParm.qVelRef = vel / 100.0f;
+							//------------------------------------------------------------------------------
+						}
+
+					}
+				}
+
+			
+#if 0
+				if (id == CtrlrID || id == CAN_PACKET_BROADCASTING) 
+				{
+					switch (cmd)
+					{
+						case CAN_PACKET_SET_VELOCITY:
+							ind = 0;
+
+							Uart3_printf(&SD3, "SET_VELOCITY\r\n");
+							Uart3_printf(&SD3, "value : %d",set_velocity.ref_angular_velocity );
+							
+							//--------------------------------------------------------------------------------
+							//test code
+							int16_t tmp_value = (float)buffer_get_int32(rxmsg.data8, &ind) - 1500;
+							float vel = (float)tmp_value / 700.0f;
+							
+							CtrlParm.qVelRef = vel / 100.0f;
+							//------------------------------------------------------------------------------
+
+							timeout_reset();
+							break;
+						default:						break;
+					}
+				}
+
+				switch (cmd) {
+				case CAN_PACKET_STATUS:
+					for (int i = 0;i < CAN_STATUS_MSGS_TO_STORE;i++) {
+						stat_tmp = &stat_msgs[i];
+						if (stat_tmp->id == id || stat_tmp->id == CAN_PACKET_BROADCASTING) {
+							ind = 0;
+							stat_tmp->id = id;
+							stat_tmp->rx_time = chVTGetSystemTime();
+							stat_tmp->rpm = (float)buffer_get_int32(rxmsg.data8, &ind);
+							stat_tmp->current = (float)buffer_get_int16(rxmsg.data8, &ind) / 10.0;
+							stat_tmp->duty = (float)buffer_get_int16(rxmsg.data8, &ind) / 1000.0;
+							break;
+						}
+					}
+					break;
+
+				default: break;
+				}
+#endif
+			}
 		}
 
 		if (rx_frame_read == RX_FRAMES_SIZE) 

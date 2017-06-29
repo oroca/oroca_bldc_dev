@@ -10,17 +10,16 @@
 #include "hw.h"
 #include "timeout.h"
 
-#include "main.h"
-#include "uart3_print.h"
-
-#include "comm_can.h"
-
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "main.h"
+
+#include "src/core/uart3.h"
 
 class cTest
 {
@@ -51,12 +50,10 @@ int main(void)
 	
 	bldc_init();
 
-	app_init();
+	user_interface_configure();
 
 	timeout_init();
 	timeout_configure(1000);
-
-	comm_can_init();
 
 	test.print();
 

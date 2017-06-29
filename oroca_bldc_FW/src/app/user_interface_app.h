@@ -22,24 +22,24 @@
  *      Author: bakchajang
  */
 
-#ifndef APP_UARTCOMM_H_
-#define APP_UARTCOMM_H_
+#ifndef __USER_INTERFACE_APP_H__
+#define __USER_INTERFACE_APP_H__
 
-#include <chtypes.h>
-
+#include "local_ppm_proc.h"
+#include "mavlink_uart_proc.h"
+#include "mavlink_can_proc.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+extern eventmask_t ui_events;
 
 // Standard apps
-void app_uartcomm_start(void);
-void app_uartcomm_init(void);
+void user_interface_configure(void);
 
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif /* APP_H_ */

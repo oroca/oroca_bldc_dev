@@ -98,9 +98,9 @@ BLDCINC = src/bldc
 APPSRC = src/app
 APPINC = src/app
 
-#MAVINC  = lib/mavlink
-#MAVINC += lib/mavlink/common
-#MAVINC += lib/mavlink/oroca_bldc
+MAVINC  = lib/mavlink
+MAVINC += lib/mavlink/common
+MAVINC += lib/mavlink/oroca_bldc
 
 
 
@@ -143,15 +143,16 @@ CSRC = $(STARTUPSRC) \
        $(BLDCSRC)/mcpwm.c \
        $(BLDCSRC)/spi_dac.c \
        $(CORESRC)/servo_dec.c \
-       $(CORESRC)/uart3_print.c\
+       $(CORESRC)/uart3.c\
        $(CORESRC)/irq_handlers.c \
        $(CORESRC)/utils.c	\
        $(CORESRC)/timeout.c	\
-	   $(CORESRC)/comm_can.c	\
 	   $(CORESRC)/buffer.c	\
-	   $(CORESRC)/mavlink_proc.c	\
-       $(APPSRC)/app.c \
-       $(APPSRC)/app_ppm.c
+	   $(APPSRC)/mavlink_can_proc.c	\
+	   $(APPSRC)/mavlink_uart_proc.c	\
+	   $(APPSRC)/local_ppm_proc.c \
+       $(APPSRC)/user_interface_app.c 
+
        
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global

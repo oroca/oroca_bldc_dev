@@ -2,17 +2,14 @@
 
 #include "ch.h"
 #include "hal.h"
+#include "stm32f4xx_conf.h"
 
 #include <math.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
 
-
-#include "chprintf.h"
-
-#include "uart3_print.h"
-
+#include "uart3.h"
 
 #define USART_CR1_9BIT_WORD     (1 << 12)   /* CR1 9 bit word */
 #define USART_CR1_PARITY_SET    (1 << 10)   /* CR1 parity bit enable */
@@ -27,7 +24,8 @@ static SerialConfig sd3cfg = {
     0
 };
 
- void Uart3_print_init(void)
+
+ void Uart3_init(void)
 {
 
     /*
@@ -41,8 +39,6 @@ static SerialConfig sd3cfg = {
     palSetPadMode(GPIOC, 11, PAL_MODE_ALTERNATE(7));
 
 }
-
-
 
  void Uart3_print(char *p)
 {

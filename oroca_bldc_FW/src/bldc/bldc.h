@@ -40,16 +40,8 @@
 
 #define MCCONF_OUTRUNNER2
 
-
-
 #include "hw.h"
 #include "mcpwm.h"
-#include "comm_usb.h"
-
-//jsyoon
-//#include "chprintf.h"
-//#include "memstreams.h"
-
 
 #ifdef __cplusplus
 extern "C" {

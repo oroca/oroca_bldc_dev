@@ -22,22 +22,22 @@
  *      Author: bakchajang
  */
 
-#include "app_ppm.h"
-
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
+
 #include "servo_dec.h"
 #include "mcpwm.h"
 #include "timeout.h"
 #include "utils.h"
-//#include "comm_can.h"
+
 #include <math.h>
 #include <chthreads.h>
 #include <Chvt.h>
 
-#include "uart3_print.h"
-
+#include "user_interface_app.h"
+#include "local_ppm_proc.h"
+#include "../core/uart3.h"
 
 // Settings
 #define MAX_CAN_AGE						0.1
@@ -101,8 +101,6 @@ static THD_FUNCTION(ppm_thread, arg)
 {
 	(void)arg;
 
-	
-
 	chRegSetThreadName("APP_PPM");
 	ppm_tp = chThdGetSelfX();
 
@@ -115,18 +113,15 @@ static THD_FUNCTION(ppm_thread, arg)
 
 		chEvtWaitAny((eventmask_t) 1);
 
-		//if (timeout_has_timeout() || servodec_get_time_since_update() > timeout_get_timeout_msec()) 
-		//{
-		//	pulses_without_power = 0;
-		//	continue;
-		//}
-
 		float servo_val = servodec_get_servo(0);
 
+		//--------------------------------------------------------------------------------
+		//test code
+		Uart3_printf(&SD3, (uint8_t *)"servo : %f\r\n",(float)servo_val);    //170530
+		//CtrlParm.qVelRef=servo_val/100.0f;
+		//--------------------------------------------------------------------------------
 
-//		Uart3_printf(&SD3, (uint8_t *)"servo : %f\r\n",(float)servo_val);    //170530  
-
-		CtrlParm.qVelRef=servo_val/100.0f;
+		ui_events |= EVT_PPM;
 	}
 
 }

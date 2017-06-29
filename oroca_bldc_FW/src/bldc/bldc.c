@@ -24,13 +24,11 @@
 #include "hw.h"
 #include "bldc.h"
 #include "Mcpwm.h"
-#include "uart3_print.h"
-//#include "../../mavlink/oroca_bldc/mavlink.h"
-
 #include <math.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include "../core/uart3.h"
 
 
 

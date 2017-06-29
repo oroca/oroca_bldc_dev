@@ -27,9 +27,9 @@
 #include "ch.h"
 #include "hal.h"
 #include "hw.h"
+#include "uart3.h"
 #include "utils.h"
 
-#include "uart3_print.h"
 
 /*
  * Settings

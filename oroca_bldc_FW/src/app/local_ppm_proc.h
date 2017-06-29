@@ -22,8 +22,8 @@
  *      Author: bakchajang
  */
 
-#ifndef APP_PPM_H_
-#define APP_PPM_H_
+#ifndef __LOCAL_PPM_PROC_H__
+#define __LOCAL_PPM_PROC_H__
 
 #include <chtypes.h>
 
@@ -54,10 +54,12 @@ typedef struct {
 	float tc_max_diff;
 } ppm_config;
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#define EVT_PPM EVENT_MASK(0)
 
 // Standard apps
 void app_ppm_start(void);

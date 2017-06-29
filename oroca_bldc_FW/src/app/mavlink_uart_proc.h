@@ -22,24 +22,19 @@
  *      Author: bakchajang
  */
 
-#ifndef APP_H_
-#define APP_H_
+#ifndef __MAVLINK_UART_PROC_H__
+#define __MAVLINK_UART_PROC_H__
 
-#include "app_ppm.h"
-
-// Applications to use
-typedef enum {
-	APP_NONE = 0,
-	APP_PPM,
-	APP_MAVLINK,
-} app_use;
-
+#include <chtypes.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-// Standard apps
-void app_init(void);
+
+#define EVT_UART_RX EVENT_MASK(1)
+
+void mavlink_uart_proc_configure(void);
+void mavlink_uart_proc_start(void);
 
 #ifdef __cplusplus
 }
