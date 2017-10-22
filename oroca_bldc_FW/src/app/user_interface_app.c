@@ -44,12 +44,17 @@ static THD_WORKING_AREA(user_interface_thread_wa, 512);
 void user_interface_configure(void)
 {
 	//Uart3_printf(&SD3, (uint8_t *)"oroca_bldc\r\n");//170530
-	mavlink_uart_proc_configure();
-	mavlink_uart_proc_start();
+	//mavlink_uart_proc_configure();
+	//mavlink_uart_proc_start();
 
 	//Uart3_printf(&SD3, (uint8_t *)"app_init.....\r\n");
 	app_ppm_configure();
 	app_ppm_start();
+
+	//comm_can_init();
+
+
+	//CtrlParm.qVelRef=0.01f;
 }
 
 static THD_FUNCTION(user_interface_thread, arg)

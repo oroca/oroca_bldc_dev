@@ -139,9 +139,7 @@ CSRC = $(STARTUPSRC) \
        $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
        $(LIBSRC)/hwconf/hw_oroca.c\
-       $(BLDCSRC)/bldc.c \
        $(BLDCSRC)/mcpwm.c \
-       $(BLDCSRC)/spi_dac.c \
        $(CORESRC)/servo_dec.c \
        $(CORESRC)/uart3.c\
        $(CORESRC)/irq_handlers.c \
@@ -151,13 +149,14 @@ CSRC = $(STARTUPSRC) \
 	   $(APPSRC)/mavlink_can_proc.c	\
 	   $(APPSRC)/mavlink_uart_proc.c	\
 	   $(APPSRC)/local_ppm_proc.c \
-       $(APPSRC)/user_interface_app.c 
+       $(APPSRC)/user_interface_app.c \
+       main.c
 
        
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = main.cpp
+CPPSRC =
 
 
 # C sources to be compiled in ARM mode regardless of the global setting.

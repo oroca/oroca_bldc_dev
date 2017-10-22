@@ -106,6 +106,12 @@ static volatile float TargetDCbus = 0;// DC Bus is measured before running motor
 						// and compensated linearly.
 
 
+float qVelRef = 0.01f;
+float dbg_fTheta;
+float dbg_fMea;
+uint16_t dbg_AccumTheta;
+
+
 void mcpwm_init(void)
 {
 
@@ -367,7 +373,7 @@ void mcpwm_init(void)
 
 	uGF.bit.RunMotor = 1;
 
-	
+	//CtrlParm.qVelRef=0.1f;
 //
 }
 
@@ -480,7 +486,7 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags)
 	
 			//ParkParm.qAngle = 0.0f;
 	
-			//ParkParm.qAngle -= 0.002f;
+			//ParkParm.qAngle -= 0.01f;
 			//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
 	
 			//ParkParm.qAngle += 0.002f;

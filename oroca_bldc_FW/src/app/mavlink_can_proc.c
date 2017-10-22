@@ -110,6 +110,7 @@ static THD_FUNCTION(cancom_read_thread, arg)
 	CANRxFrame rxmsg;
 
 	chEvtRegister(&CANDx.rxfull_event, &el, 0);
+	Uart3_printf(&SD3, "cancom_read_thread\r\n");
 
 	while(!chThdShouldTerminateX()) 
 	{
@@ -122,6 +123,7 @@ static THD_FUNCTION(cancom_read_thread, arg)
 
 		while (result == MSG_OK) 
 		{
+		Uart3_printf(&SD3, ">");
 			rx_frames[rx_frame_write++] = rxmsg;
 			if (rx_frame_write == RX_FRAMES_SIZE) 
 			{
@@ -152,6 +154,9 @@ static THD_FUNCTION(cancom_process_thread, arg) {
 	mavlink_message_t msg; 
 	mavlink_status_t status; 
 
+	Uart3_printf(&SD3, "cancom_process_thread\r\n");
+
+
 	for(;;)
 	{
 		chEvtWaitAny((eventmask_t) 1);
@@ -165,6 +170,9 @@ static THD_FUNCTION(cancom_process_thread, arg) {
 				uint8_t id = rxmsg.EID & 0xFF;
 				CAN_PACKET_ID cmd = rxmsg.EID >> 8;
 				can_status_msg *stat_tmp;
+
+				Uart3_printf(&SD3, "Y");
+
 
 
 				if (id == CtrlrID || id == CAN_PACKET_BROADCASTING) 
@@ -252,6 +260,10 @@ static THD_FUNCTION(cancom_status_thread, arg)
 {
 	(void)arg;
 	chRegSetThreadName("CAN status");
+
+	Uart3_printf(&SD3, "cancom_status_thread\r\n");
+
+
 
 	for(;;) {
 	//	if (app_get_configuration()->send_can_status) {

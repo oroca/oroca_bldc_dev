@@ -117,8 +117,8 @@ static THD_FUNCTION(ppm_thread, arg)
 
 		//--------------------------------------------------------------------------------
 		//test code
-		Uart3_printf(&SD3, (uint8_t *)"servo : %f\r\n",(float)servo_val);    //170530
-		//CtrlParm.qVelRef=servo_val/100.0f;
+		//Uart3_printf(&SD3, (uint8_t *)"servo : %f\r\n",(float)servo_val);    //170530
+		CtrlParm.qVelRef=servo_val/100.0f;
 		//--------------------------------------------------------------------------------
 
 		ui_events |= EVT_PPM;

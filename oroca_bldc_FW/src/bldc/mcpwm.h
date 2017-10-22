@@ -230,15 +230,16 @@ typedef struct {
 
 //************** PI Coefficients **************
 
+#if 1
 //******** D Control Loop Coefficients *******
-#define     DKP        0.05
-#define     DKI        0.01
+#define     DKP        0.02
+#define     DKI        0.05
 #define     DKC        0.99999
 #define     DOUTMAX    0.99999
 
 //******** Q Control Loop Coefficients *******
-#define     QKP        0.05
-#define     QKI        0.01
+#define     QKP        0.02
+#define     QKI        0.05
 #define     QKC        0.99999
 #define     QOUTMAX    0.99999
 
@@ -247,7 +248,29 @@ typedef struct {
 #define     WKI        2.0
 #define     WKC        0.99999
 #define     WOUTMAX    0.95
+#endif
 
+
+#if 0
+    //******** D Control Loop Coefficients *******
+    #define     DKP        0.05
+    #define     DKI        0.01
+    #define     DKC        0.99999
+    #define     DOUTMAX    0.99999
+
+    //******** Q Control Loop Coefficients *******
+    #define     QKP        0.05
+    #define     QKI        0.01
+    #define     QKC        0.99999
+    #define     QOUTMAX    0.99999
+
+    //*** Velocity Control Loop Coefficients *****
+    #define     WKP       2.0
+    #define     WKI        0.01
+    #define     WKC        0.99999
+    #define     WOUTMAX    0.95
+
+#endif
 
 #define     PLLKP       2.0
 #define     PLLKI        0.01
