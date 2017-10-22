@@ -44,8 +44,9 @@
  *
  */
 
+static THD_WORKING_AREA(periodic_thread_wa, 1024);
+static THD_WORKING_AREA(timer_thread_wa, 128);
 
-static THD_WORKING_AREA(periodic_thread_wa, 128);
 static THD_FUNCTION(periodic_thread, arg)
 {
 	(void)arg;
@@ -63,7 +64,16 @@ static THD_FUNCTION(periodic_thread, arg)
 	}
 }
 
+static THD_FUNCTION(timer_thread, arg) {
+	(void)arg;
 
+	chRegSetThreadName("msec_timer");
+
+	for(;;) {
+		//packet_timerfunc();
+		chThdSleepMilliseconds(1);
+	}
+}
 
 /*---------------------------------------------------------------------------
      TITLE   : main
@@ -82,12 +92,14 @@ int main(void)
 
 	mcpwm_init();
 
-	user_interface_configure();
+	//user_interface_configure();
 
 	timeout_init();
 	timeout_configure(1000);
 
+	// Threads
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
+	chThdCreateStatic(timer_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, timer_thread, NULL);
 
 //=================================
 	for(;;)
