@@ -7,17 +7,18 @@
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
-#include "hw.h"
-#include "timeout.h"
 
 #include <errno.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <math.h>
+
 #include <stdio.h>
+#include <math.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "main.h"
+#include "hw.h"
+#include "timeout.h"
 
 #include "src/core/uart3.h"
 

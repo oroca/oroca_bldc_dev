@@ -29,28 +29,22 @@
 //#include "datatypes.h"
 #include <stdbool.h>
 
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-
-void spi_dac_hw_init(void);
-void spi_dac_write_A( short data);
-void spi_dac_write_B( short data);
-void spi_dac_write_AB( short data);
+//Defines
 
 #define SYSTEM_CORE_CLOCK		168000000
 
-//Defines
+#define False  0
+#define True   1
+
 typedef unsigned short WORD;
 //typedef signed int SFRAC16;
 typedef unsigned char  BYTE;
 //typedef unsigned char  BOOL;
 
-// Structs
+
 typedef struct {
 	float	qKa;	
 	short	Offseta;
@@ -58,7 +52,6 @@ typedef struct {
 	float	qKb;   
 	short	Offsetb;
 } tMeasCurrParm;
-
 
 typedef struct {
 	float HallPLLlead  ;
@@ -128,7 +121,6 @@ typedef struct {
 	float Futi	 	;
 	float Omega;     	// Output: Rotor speed
 	float rpm;     	// Output: Rotor speed
-
 } SMC;
 
 typedef struct {
@@ -200,8 +192,36 @@ typedef struct {
 
     } tSVGenParm;
 
-#define False  0
-#define True   1
+typedef struct {
+	//******** D Control Loop Coefficients *******
+	float     dkp;        //0.02
+	float     dki;        //0.05
+	float     dkc;        //0.99999
+	float     dout_max;   //0.99999
+	//******** Q Control Loop Coefficients *******
+	float     qkp;        //0.02
+	float     qki;        //0.05
+	float     qkc;        //0.99999
+	float     qout_max;    //0.99999
+
+	//*** Velocity Control Loop Coefficients *****
+	float     wkp;       //12.0
+	float     wki;        //2.0
+	float     wkc;        //0.99999
+	float     wout_max;    //0.95
+
+	//*** analog hallsensor Coefficients *****
+	float     pll_kp;       //2.0
+	float     pll_ki;	   //0.01
+	float     pll_kc;       //0.99999
+	float     pllout_max;    //0.95
+
+	//*** current sensor gain *****
+	float     dqk_a;       //0.0008058608f
+	float     dqk_b;       //0.0008058608f
+
+} mc_configuration;
+
 
 #define MCPWM_DEAD_TIME_CYCLES			80		// Dead time
 #define MCPWM_RPM_TIMER_FREQ			1000000.0	// Frequency of the RPM measurement timer
@@ -230,7 +250,6 @@ typedef struct {
 
 //************** PI Coefficients **************
 
-#if 1
 //******** D Control Loop Coefficients *******
 #define     DKP        0.02
 #define     DKI        0.05
@@ -248,29 +267,6 @@ typedef struct {
 #define     WKI        2.0
 #define     WKC        0.99999
 #define     WOUTMAX    0.95
-#endif
-
-
-#if 0
-    //******** D Control Loop Coefficients *******
-    #define     DKP        0.05
-    #define     DKI        0.01
-    #define     DKC        0.99999
-    #define     DOUTMAX    0.99999
-
-    //******** Q Control Loop Coefficients *******
-    #define     QKP        0.05
-    #define     QKI        0.01
-    #define     QKC        0.99999
-    #define     QOUTMAX    0.99999
-
-    //*** Velocity Control Loop Coefficients *****
-    #define     WKP       2.0
-    #define     WKI        0.01
-    #define     WKC        0.99999
-    #define     WOUTMAX    0.95
-
-#endif
 
 #define     PLLKP       2.0
 #define     PLLKI        0.01
@@ -287,7 +283,6 @@ typedef struct {
 #define IRP_PERCALC (unsigned int)(SPEEDLOOPTIME/LOOPTIMEINSEC)	// PWM loops per velocity calculation
 #define SPEEDLOOPTIME (float)(1.0/SPEEDLOOPFREQ) // Speed Control Period
 #define LOOPINTCY	 TIM1->ARR
-
 
 #define		PI				3.14159265358979f
 #define		SQRT2			1.414213562f

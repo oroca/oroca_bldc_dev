@@ -33,6 +33,30 @@
 extern "C" {
 #endif
 
+typedef struct {
+	// Settings
+	uint8_t controller_id;
+	uint32_t timeout_msec;
+	float timeout_brake_current;
+	bool send_can_status;
+	uint32_t send_can_status_rate_hz;
+
+	// Application to use
+	app_use app_to_use;
+
+	// PPM application settings
+	ppm_config app_ppm_conf;
+
+	// ADC application settings
+	adc_config app_adc_conf;
+
+	// UART application settings
+	uint32_t app_uart_baudrate;
+
+} app_configuration;
+
+
+
 extern eventmask_t ui_events;
 
 // Standard apps
