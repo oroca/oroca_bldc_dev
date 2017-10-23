@@ -30,6 +30,10 @@
 #define FW_VERSION_MINOR	18
 
 //#include "datatypes.h"
+#include <stdint.h>
+#include<stdbool.h>
+#include "ch.h"
+
 
 /*
  * Settings

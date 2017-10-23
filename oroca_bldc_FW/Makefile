@@ -93,8 +93,8 @@ LIBSRC  = lib
 LIBDIR  = lib
 CORESRC = src/core
 COREINC = src/core
-BLDCSRC = src/bldc
-BLDCINC = src/bldc
+MCSRC = src/mc
+MCINC = src/mc
 APPSRC = src/app
 APPINC = src/app
 
@@ -139,7 +139,8 @@ CSRC = $(STARTUPSRC) \
        $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
        $(LIBSRC)/hwconf/hw_oroca.c\
-       $(BLDCSRC)/mcpwm.c \
+       $(MCSRC)/mcpwm.c \
+       $(MCSRC)/mc_interface.c \
        $(CORESRC)/servo_dec.c \
        $(CORESRC)/uart3.c\
        $(CORESRC)/irq_handlers.c \
@@ -193,7 +194,7 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(HWINC) \
          $(NRFINC) \
          $(COREINC) \
-         $(BLDCINC)	\
+         $(MCINC)	\
          $(APPINC)	\
          $(MAVINC)
  		#$(LIBDIR)/mcconf \
