@@ -92,7 +92,11 @@ int main(void)
 	hw_init_gpio();
 
 	mcpwm_init();
+	LED_RED_OFF();
+	LED_GREEN_OFF();
 
+	conf_general_init();
+	ledpwm_init();
 	//user_interface_configure();
 
 	timeout_init();

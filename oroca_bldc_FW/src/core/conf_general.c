@@ -29,8 +29,8 @@
 #endif
 
 // Default configuration parameters that can be overridden
-#include "mcconf_default.h"
-#include "appconf_default.h"
+//#include "mcconf_default.h"
+//#include "appconf_default.h"
 
 // EEPROM settings
 #define EEPROM_BASE_MCCONF		1000
