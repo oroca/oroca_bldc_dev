@@ -26,11 +26,8 @@
 #define HW_H_
 
 
-//#include "conf_general.h"
-
-#define HW_VERSION_OROCA
-
-
+#include "conf_general.h"
+#include "stm32f4xx_conf.h"
 
 #ifdef HW_VERSION_40
 #include "hw_40.h"
@@ -38,10 +35,14 @@
 #include "hw_45.h"
 #elif defined HW_VERSION_46
 #include "hw_46.h"
+#elif defined HW_VERSION_48
+#include "hw_48.h"
+#elif defined HW_VERSION_49
+#include "hw_49.h"
+#elif defined HW_VERSION_410
+#include "hw_410.h"
 #elif defined HW_VERSION_R2
 #include "hw_r2.h"
-#elif defined HW_VERSION_BW
-#include "hw_bw.h"
 #elif defined HW_VERSION_VICTOR_R1A
 #include "hw_victor_r1a.h"
 #elif defined HW_VERSION_OROCA

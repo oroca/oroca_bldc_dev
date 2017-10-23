@@ -41,17 +41,6 @@ typedef struct {
 	bool send_can_status;
 	uint32_t send_can_status_rate_hz;
 
-	// Application to use
-	app_use app_to_use;
-
-	// PPM application settings
-	ppm_config app_ppm_conf;
-
-	// ADC application settings
-	adc_config app_adc_conf;
-
-	// UART application settings
-	uint32_t app_uart_baudrate;
 
 } app_configuration;
 

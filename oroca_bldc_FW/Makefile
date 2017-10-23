@@ -141,6 +141,7 @@ CSRC = $(STARTUPSRC) \
        $(LIBSRC)/hwconf/hw_oroca.c\
        $(MCSRC)/mcpwm.c \
        $(MCSRC)/mc_interface.c \
+       $(CORESRC)/ledpwm.c \
        $(CORESRC)/servo_dec.c \
        $(CORESRC)/uart3.c\
        $(CORESRC)/irq_handlers.c \
@@ -152,7 +153,7 @@ CSRC = $(STARTUPSRC) \
 	   $(APPSRC)/mavlink_can_proc.c	\
 	   $(APPSRC)/mavlink_uart_proc.c	\
 	   $(APPSRC)/local_ppm_proc.c \
-       $(APPSRC)/user_interface_app.c \
+       $(APPSRC)/ui_app.c \
        main.c
 
        

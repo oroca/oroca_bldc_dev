@@ -97,7 +97,17 @@ int main(void)
 
 	conf_general_init();
 	ledpwm_init();
-	//user_interface_configure();
+
+	mc_configuration mcconf;
+	conf_general_read_mc_configuration(&mcconf);
+	mc_interface_init(&mcconf);
+
+	//	commands_init();
+	//	comm_usb_init();
+
+	app_configuration appconf;
+	conf_general_read_app_configuration(&appconf);
+	app_init(&appconf);
 
 	timeout_init();
 	timeout_configure(1000);

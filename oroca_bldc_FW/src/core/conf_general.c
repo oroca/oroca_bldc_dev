@@ -5,18 +5,21 @@
  *      Author: benjamin
  */
 
-#include "conf_general.h"
+
 #include "ch.h"
+#include "stm32f4xx_conf.h"
+
 #include "eeprom.h"
 #include "mcpwm.h"
 #include "mc_interface.h"
 #include "hw.h"
 #include "utils.h"
-#include "stm32f4xx_conf.h"
 #include "timeout.h"
 
 #include <string.h>
 #include <math.h>
+
+#include "conf_general.h"
 
 // User defined default motor configuration file
 #ifdef MCCONF_DEFAULT_USER

@@ -1,5 +1,5 @@
 /*
-	Copyright 2015 Benjamin Vedder	benjamin@vedder.se
+	Copyright 2012-2014 Benjamin Vedder	benjamin@vedder.se
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -13,30 +13,30 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    */
 
 /*
- * mc_interface.h
+ * ledpwm.h
  *
- *  Created on: 10 okt 2015
+ *  Created on: 3 nov 2012
  *      Author: benjamin
  */
 
-#ifndef MC_INTERFACE_H_
-#define MC_INTERFACE_H_
+#ifndef LEDPWM_H_
+#define LEDPWM_H_
 
-#include "conf_general.h"
+// Settings
+#define LEDPWM_LED_NUM		2
+#define LEDPWM_CNT_TOP		200
+
+#define LED_GREEN			0
+#define LED_RED				1
 
 // Functions
-void mc_interface_init(mc_configuration *configuration);
-const volatile mc_configuration* mc_interface_get_configuration(void);
-void mc_interface_set_configuration(mc_configuration *configuration);
-void mc_interface_set_pwm_callback(void (*p_func)(void));
-void mc_interface_lock(void);
-void mc_interface_unlock(void);
-void mc_interface_lock_override_once(void);
+void ledpwm_init(void);
+void ledpwm_set_intensity(unsigned int led, float intensity);
+void ledpwm_led_on(int led);
+void ledpwm_led_off(int led);
+void ledpwm_update_pwm(void);
 
-
-
-
-#endif /* MC_INTERFACE_H_ */
+#endif /* LEDPWM_H_ */
