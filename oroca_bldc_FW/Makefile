@@ -141,6 +141,7 @@ CSRC = $(STARTUPSRC) \
        $(LIBSRC)/hwconf/hw_oroca.c\
        $(MCSRC)/mcpwm.c \
        $(MCSRC)/mc_interface.c \
+       $(MCSRC)/encoder.c \
        $(CORESRC)/ledpwm.c \
        $(CORESRC)/servo_dec.c \
        $(CORESRC)/uart3.c\

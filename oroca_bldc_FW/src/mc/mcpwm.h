@@ -192,7 +192,88 @@ typedef struct {
 
     } tSVGenParm;
 
+#include <stdint.h>
+#include <stdbool.h>
+#include "ch.h"
+
+// Data types
+typedef enum {
+   MC_STATE_OFF = 0,
+   MC_STATE_DETECTING,
+   MC_STATE_RUNNING,
+   MC_STATE_FULL_BRAKE,
+} mc_state;
+
+typedef enum {
+	PWM_MODE_NONSYNCHRONOUS_HISW = 0, // This mode is not recommended
+	PWM_MODE_SYNCHRONOUS, // The recommended and most tested mode
+	PWM_MODE_BIPOLAR // Some glitches occasionally, can kill MOSFETs
+} mc_pwm_mode;
+
+typedef enum {
+	COMM_MODE_INTEGRATE = 0,
+	COMM_MODE_DELAY
+} mc_comm_mode;
+
+typedef enum {
+	SENSOR_MODE_SENSORLESS = 0,
+	SENSOR_MODE_SENSORED,
+	SENSOR_MODE_HYBRID
+} mc_sensor_mode;
+
+typedef enum {
+	FOC_SENSOR_MODE_SENSORLESS = 0,
+	FOC_SENSOR_MODE_ENCODER,
+	FOC_SENSOR_MODE_HALL
+} mc_foc_sensor_mode;
+
+typedef enum {
+	MOTOR_TYPE_BLDC = 0,
+	MOTOR_TYPE_DC,
+	MOTOR_TYPE_FOC
+} mc_motor_type;
+
+typedef enum {
+	FAULT_CODE_NONE = 0,
+	FAULT_CODE_OVER_VOLTAGE,
+	FAULT_CODE_UNDER_VOLTAGE,
+	FAULT_CODE_DRV8302,
+	FAULT_CODE_ABS_OVER_CURRENT,
+	FAULT_CODE_OVER_TEMP_FET,
+	FAULT_CODE_OVER_TEMP_MOTOR
+} mc_fault_code;
+
+typedef enum {
+	CONTROL_MODE_DUTY = 0,
+	CONTROL_MODE_SPEED,
+	CONTROL_MODE_CURRENT,
+	CONTROL_MODE_CURRENT_BRAKE,
+	CONTROL_MODE_POS,
+	CONTROL_MODE_NONE
+} mc_control_mode;
+
+typedef enum {
+	DISP_POS_MODE_NONE = 0,
+	DISP_POS_MODE_INDUCTANCE,
+	DISP_POS_MODE_OBSERVER,
+	DISP_POS_MODE_ENCODER,
+	DISP_POS_MODE_PID_POS,
+	DISP_POS_MODE_PID_POS_ERROR,
+	DISP_POS_MODE_ENCODER_OBSERVER_ERROR
+} disp_pos_mode;
+
+typedef enum {
+	SENSOR_PORT_MODE_HALL = 0,
+	SENSOR_PORT_MODE_ABI,
+	SENSOR_PORT_MODE_AS5047_SPI
+} sensor_port_mode;
+
 typedef struct {
+	mc_pwm_mode pwm_mode;
+	mc_comm_mode comm_mode;
+	mc_motor_type motor_type;
+	mc_sensor_mode sensor_mode;
+
 	//******** D Control Loop Coefficients *******
 	float     dkp;        //0.02
 	float     dki;        //0.05

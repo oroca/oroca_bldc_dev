@@ -1,5 +1,5 @@
 /*
-	Copyright 2015 Benjamin Vedder	benjamin@vedder.se
+	Copyright 2012-2015 Benjamin Vedder	benjamin@vedder.se
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -13,31 +13,29 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    */
 
 /*
- * mc_interface.h
+ * encoder.h
  *
- *  Created on: 10 okt 2015
+ *  Created on: 7 mar 2015
  *      Author: benjamin
  */
 
-#ifndef MC_INTERFACE_H_
-#define MC_INTERFACE_H_
+#ifndef ENCODER_H_
+#define ENCODER_H_
 
 #include "conf_general.h"
-#include "hw.h"
 
 // Functions
-void mc_interface_init(mc_configuration *configuration);
-const volatile mc_configuration* mc_interface_get_configuration(void);
-void mc_interface_set_configuration(mc_configuration *configuration);
-void mc_interface_set_pwm_callback(void (*p_func)(void));
-void mc_interface_lock(void);
-void mc_interface_unlock(void);
-void mc_interface_lock_override_once(void);
+void encoder_deinit(void);
+void encoder_init_abi(uint32_t counts);
+void encoder_init_as5047p_spi(void);
+bool encoder_is_configured(void);
+float encoder_read_deg(void);
+void encoder_reset(void);
+void encoder_tim_isr(void);
+void encoder_set_counts(uint32_t counts);
+bool encoder_index_found(void);
 
-
-
-
-#endif /* MC_INTERFACE_H_ */
+#endif /* ENCODER_H_ */
