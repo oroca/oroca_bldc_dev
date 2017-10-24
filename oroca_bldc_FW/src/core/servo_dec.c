@@ -1,5 +1,5 @@
 /*
-	Copyright 2012-2015 OROCA ESC Project 	www.oroca.org
+	Copyright 2012-2015 Benjamin Vedder	benjamin@vedder.se
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * servo_dec.c
  *
  *  Created on: 20 jan 2013
- *      Author: bakchajang
+ *      Author: benjamin
  */
 
 #include "servo_dec.h"
@@ -27,9 +27,7 @@
 #include "ch.h"
 #include "hal.h"
 #include "hw.h"
-#include "uart3.h"
 #include "utils.h"
-
 
 /*
  * Settings
@@ -40,8 +38,8 @@
 // Private variables
 static volatile systime_t last_update_time;
 static volatile float servo_pos[SERVO_NUM];
-static volatile float pulse_start = 1.0f;
-static volatile float pulse_end = 2.0f;
+static volatile float pulse_start = 1.0;
+static volatile float pulse_end = 2.0;
 static volatile float last_len_received[SERVO_NUM];
 static volatile bool use_median_filter = false;
 
@@ -49,13 +47,9 @@ static volatile bool use_median_filter = false;
 static void(*done_func)(void) = 0;
 
 static void icuwidthcb(ICUDriver *icup) {
-
-	last_len_received[0] = ((float) icuGetWidthX(icup) / ((float)TIMER_FREQ / 1000.0f));
-	
+	last_len_received[0] = ((float)icuGetWidthX(icup) / ((float)TIMER_FREQ / 1000.0));
 	float len = last_len_received[0] - pulse_start;
-	const float len_set = pulse_end - pulse_start;
-
-	//Uart3_printf(&SD3, (uint8_t *)"len_set:%f\r\n",len_set);
+	const float len_set = (pulse_end - pulse_start);
 
 	if (len > len_set) {
 		if (len < (len_set * 1.2)) {

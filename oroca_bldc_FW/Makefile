@@ -144,6 +144,8 @@ CSRC = $(STARTUPSRC) \
        $(MCSRC)/encoder.c \
        $(CORESRC)/ledpwm.c \
        $(CORESRC)/servo_dec.c \
+       $(CORESRC)/servo_simple.c \
+       $(CORESRC)/servo.c \
        $(CORESRC)/uart3.c\
        $(CORESRC)/irq_handlers.c \
        $(CORESRC)/utils.c	\

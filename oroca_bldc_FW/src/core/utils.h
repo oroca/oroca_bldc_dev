@@ -1,5 +1,5 @@
 /*
-	Copyright 2012-2015 OROCA ESC Project 	www.oroca.org
+	Copyright 2012-2015 Benjamin Vedder	benjamin@vedder.se
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * utils.h
  *
  *  Created on: 16 maj 2013
- *      Author: bakchajang
+ *      Author: benjamin
  */
 
 #ifndef UTILS_H_

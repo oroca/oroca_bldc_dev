@@ -90,8 +90,6 @@ int main(void)
 	chThdSleepMilliseconds(1000);
 
 	hw_init_gpio();
-
-	mcpwm_init();
 	LED_RED_OFF();
 	LED_GREEN_OFF();
 

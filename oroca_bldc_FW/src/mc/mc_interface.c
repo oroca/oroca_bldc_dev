@@ -31,11 +31,10 @@
 #include "ch.h"
 #include "hal.h"
 //#include "commands.h"
-//#include "encoder.h"
+#include "encoder.h"
 #include <math.h>
 
 // Global variables
-volatile uint16_t ADC_Value[HW_ADC_CHANNELS];
 volatile int ADC_curr_norm_value[3];
 
 // Private variables
@@ -140,7 +139,7 @@ void mc_interface_init(mc_configuration *configuration) {
 			break;
 
 		case MOTOR_TYPE_FOC:
-			mcpwm_foc_init(&m_conf);
+			//mcpwm_foc_init(&m_conf);
 			break;
 
 		default:
@@ -175,17 +174,20 @@ void mc_interface_set_configuration(mc_configuration *configuration) {
 	}
 #endif
 
-	if (m_conf.motor_type == MOTOR_TYPE_FOC
-			&& configuration->motor_type != MOTOR_TYPE_FOC) {
-		mcpwm_foc_deinit();
+	if (m_conf.motor_type == MOTOR_TYPE_FOC	&& configuration->motor_type != MOTOR_TYPE_FOC)
+	{
+		//mcpwm_foc_deinit();
 		m_conf = *configuration;
 		mcpwm_init(&m_conf);
-	} else if (m_conf.motor_type != MOTOR_TYPE_FOC
-			&& configuration->motor_type == MOTOR_TYPE_FOC) {
+	}
+	else if (m_conf.motor_type != MOTOR_TYPE_FOC && configuration->motor_type == MOTOR_TYPE_FOC)
+	{
 		mcpwm_deinit();
 		m_conf = *configuration;
-		mcpwm_foc_init(&m_conf);
-	} else {
+		//mcpwm_foc_init(&m_conf);
+	}
+	else
+	{
 		m_conf = *configuration;
 	}
 
@@ -198,7 +200,7 @@ void mc_interface_set_configuration(mc_configuration *configuration) {
 		break;
 
 	case MOTOR_TYPE_FOC:
-		mcpwm_foc_set_configuration(&m_conf);
+		//mcpwm_foc_set_configuration(&m_conf);
 		break;
 
 	default:
@@ -211,11 +213,11 @@ bool mc_interface_dccal_done(void) {
 	switch (m_conf.motor_type) {
 	case MOTOR_TYPE_BLDC:
 	case MOTOR_TYPE_DC:
-		ret = mcpwm_is_dccal_done();
+		//ret = mcpwm_is_dccal_done();
 		break;
 
 	case MOTOR_TYPE_FOC:
-		ret = mcpwm_foc_is_dccal_done();
+		//ret = mcpwm_foc_is_dccal_done();
 		break;
 
 	default:
@@ -268,7 +270,45 @@ mc_fault_code mc_interface_get_fault(void) {
  * The configaration to update.
  */
 static void update_override_limits(volatile mc_configuration *conf) {
+	const float temp = NTC_TEMP(ADC_IND_TEMP_MOS2);
+	const float v_in = GET_INPUT_VOLTAGE();
 
+	// Temperature
+/*	if (temp < conf->l_temp_fet_start) {
+		conf->lo_current_min = conf->l_current_min;
+		conf->lo_current_max = conf->l_current_max;
+	} else if (temp > conf->l_temp_fet_end) {
+		conf->lo_current_min = 0.0;
+		conf->lo_current_max = 0.0;
+		mc_interface_fault_stop(FAULT_CODE_OVER_TEMP_FET);
+	} else {
+		float maxc = fabsf(conf->l_current_max);
+		if (fabsf(conf->l_current_min) > maxc) {
+			maxc = fabsf(conf->l_current_min);
+		}
+
+		maxc = utils_map(temp, conf->l_temp_fet_start, conf->l_temp_fet_end, maxc, 0.0);
+
+		if (fabsf(conf->l_current_max) > maxc) {
+			conf->lo_current_max = SIGN(conf->l_current_max) * maxc;
+		}
+
+		if (fabsf(conf->l_current_min) > maxc) {
+			conf->lo_current_min = SIGN(conf->l_current_min) * maxc;
+		}
+	}
+
+	// Battery cutoff
+	if (v_in > conf->l_battery_cut_start) {
+		conf->lo_in_current_max = conf->l_in_current_max;
+	} else if (v_in < conf->l_battery_cut_end) {
+		conf->lo_in_current_max = 0.0;
+	} else {
+		conf->lo_in_current_max = utils_map(v_in, conf->l_battery_cut_start,
+				conf->l_battery_cut_end, conf->l_in_current_max, 0.0);
+	}
+
+	conf->lo_in_current_min = conf->l_in_current_min;*/
 }
 
 static THD_FUNCTION(timer_thread, arg) {

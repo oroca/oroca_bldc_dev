@@ -274,6 +274,9 @@ typedef struct {
 	mc_motor_type motor_type;
 	mc_sensor_mode sensor_mode;
 
+	sensor_port_mode m_sensor_port_mode;
+	uint32_t m_encoder_counts;
+
 	//******** D Control Loop Coefficients *******
 	float     dkp;        //0.02
 	float     dki;        //0.05
@@ -411,15 +414,14 @@ extern SMC smc1;
 
 // Functions
 bool SetupParm(void);
-
 void InitMeasCompCurr( short Offset_a, short Offset_b );
-
 void SinCos(void);      // Calculate qSin,qCos from iAngle
 
 
+void mcpwm_init(volatile mc_configuration *configuration);
+void mcpwm_deinit(void);
+void mcpwm_set_configuration(volatile mc_configuration *configuration);
 
-
-void mcpwm_init(void);
 float mcpwm_get_rpm(void);
 
 float FieldWeakening(float qMotorSpeed);
@@ -443,7 +445,6 @@ void SetupControlParameters(void);
 void CalcSVGen( void );
 
 // Interrupt handlers
-void mcpwm_adc_int_prehandler(void *p, uint32_t flags) ;
 void mcpwm_adc_int_handler(void *p, uint32_t flags);
 
 #ifdef __cplusplus

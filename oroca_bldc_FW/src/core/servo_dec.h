@@ -1,5 +1,5 @@
 /*
-	Copyright 2012-2014 OROCA ESC Project 	www.oroca.org
+	Copyright 2012-2014 Benjamin Vedder	benjamin@vedder.se
 
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,15 +19,14 @@
  * servo_dec.h
  *
  *  Created on: 20 jan 2013
- *      Author: bakchajang
+ *      Author: benjamin
  */
 
 #ifndef SERVO_DEC_H_
 #define SERVO_DEC_H_
 
-#include <chtypes.h>
 #include <stdint.h>
-//#include <conf_general.h>
+#include <conf_general.h>
 
 // Functions
 void servodec_init(void (*d_func)(void));

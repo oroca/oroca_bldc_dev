@@ -22,6 +22,9 @@
  *      Author: bakchajang
  */
 
+#include <stdint.h>
+#include <stdbool.h>
+
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
@@ -30,15 +33,15 @@
 //#include "main.h"
 #include "mcpwm.h"
 #include "utils.h"
-#include <errno.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+
 #include "../core/uart3.h"
 
-
+//#include <errno.h>
+//#include <unistd.h>
+//#include <stdlib.h>
+#include <math.h>
+//#include <stdio.h>
+//#include <string.h>
 
 
 union{
@@ -106,276 +109,28 @@ static volatile float TargetDCbus = 0;// DC Bus is measured before running motor
 						// and compensated linearly.
 
 
-float qVelRef = 0.01f;
-float dbg_fTheta;
-float dbg_fMea;
-uint16_t dbg_AccumTheta;
 
 
-void mcpwm_init(void)
-{
 
-	//Uart3_printf(&SD3, (uint8_t *)"mcpwm_init....\r\n");//170530  
-	utils_sys_lock_cnt();
+void stop_pwm_hw(void) {
+	TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_ForcedAction_InActive);
+	TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Enable);
+	TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Disable);
 
-	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
-	TIM_OCInitTypeDef  TIM_OCInitStructure;
-	TIM_BDTRInitTypeDef TIM_BDTRInitStructure;
-	//NVIC_InitTypeDef NVIC_InitStructure;
+	TIM_SelectOCxM(TIM1, TIM_Channel_2, TIM_ForcedAction_InActive);
+	TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Enable);
+	TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
 
-	// Initialize variables
-	dccal_done = false;
+	TIM_SelectOCxM(TIM1, TIM_Channel_3, TIM_ForcedAction_InActive);
+	TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Enable);
+	TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Disable);
 
-	TIM_DeInit(TIM1);
-	TIM_DeInit(TIM8);
-	TIM1->CNT = 0;
-	TIM8->CNT = 0;
-
-	// TIM1 clock enable
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
-
-	// Time Base configuration
-	TIM_TimeBaseStructure.TIM_Prescaler = 0;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_CenterAligned1;
-	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now /2;
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-	TIM_TimeBaseStructure.TIM_RepetitionCounter = 1;
-
-	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
-
-	// Channel 1, 2 and 3 Configuration in PWM mode
-	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
-	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-	TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Enable;
-	TIM_OCInitStructure.TIM_Pulse = TIM1->ARR / 2;
-	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
-	TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
-	TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
-	TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
-
-	TIM_OC1Init(TIM1, &TIM_OCInitStructure);
-	TIM_OC2Init(TIM1, &TIM_OCInitStructure);
-	TIM_OC3Init(TIM1, &TIM_OCInitStructure);
-	TIM_OC4Init(TIM1, &TIM_OCInitStructure);
-
-	TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
-	TIM_OC2PreloadConfig(TIM1, TIM_OCPreload_Enable);
-	TIM_OC3PreloadConfig(TIM1, TIM_OCPreload_Enable);
-	TIM_OC4PreloadConfig(TIM1, TIM_OCPreload_Enable);
-
-	// Automatic Output enable, Break, dead time and lock configuration
-	TIM_BDTRInitStructure.TIM_OSSRState = TIM_OSSRState_Enable;
-	TIM_BDTRInitStructure.TIM_OSSIState = TIM_OSSRState_Enable;
-	TIM_BDTRInitStructure.TIM_LOCKLevel = TIM_LOCKLevel_OFF;
-	TIM_BDTRInitStructure.TIM_DeadTime = MCPWM_DEAD_TIME_CYCLES;
-	TIM_BDTRInitStructure.TIM_Break = TIM_Break_Disable;
-	TIM_BDTRInitStructure.TIM_BreakPolarity = TIM_BreakPolarity_High;
-	TIM_BDTRInitStructure.TIM_AutomaticOutput = TIM_AutomaticOutput_Disable;
-
-	TIM_BDTRConfig(TIM1, &TIM_BDTRInitStructure);
-	TIM_CCPreloadControl(TIM1, ENABLE);
-	TIM_ARRPreloadConfig(TIM1, ENABLE);
-
-	/*
-	 * ADC!
-	 */
-	ADC_CommonInitTypeDef ADC_CommonInitStructure;
-	DMA_InitTypeDef DMA_InitStructure;
-	ADC_InitTypeDef ADC_InitStructure;
-
-	// Clock
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 | RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOC, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | RCC_APB2Periph_ADC3, ENABLE);
-
-	dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_int_handler,(void *)0);
-
-	// DMA for the ADC
-	DMA_InitStructure.DMA_Channel = DMA_Channel_0;
-	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&ADC_Value;
-	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&ADC->CDR;
-	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
-	DMA_InitStructure.DMA_BufferSize = HW_ADC_CHANNELS;
-	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
-	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
-	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-	DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-	DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
-	DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_1QuarterFull;
-	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
-	DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
-	DMA_Init(DMA2_Stream4, &DMA_InitStructure);
-
-	// DMA2_Stream0 enable
-	DMA_Cmd(DMA2_Stream4, ENABLE);
-
-	// Enable transfer complete interrupt
-	DMA_ITConfig(DMA2_Stream4, DMA_IT_TC, ENABLE);
-
-	// ADC Common Init
-	// Note that the ADC is running at 42MHz, which is higher than the
-	// specified 36MHz in the data sheet, but it works.
-	ADC_CommonInitStructure.ADC_Mode = ADC_TripleMode_RegSimult;
-	ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
-	ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_1;
-	ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
-	ADC_CommonInit(&ADC_CommonInitStructure);
-
-	// Channel-specific settings
-	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
-	ADC_InitStructure.ADC_ScanConvMode = ENABLE;
-	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
-	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_Falling;
-	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T8_CC1;
-	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-	ADC_InitStructure.ADC_NbrOfConversion = HW_ADC_NBR_CONV;
-
-	ADC_Init(ADC1, &ADC_InitStructure);
-	ADC_Init(ADC2, &ADC_InitStructure);
-	ADC_Init(ADC3, &ADC_InitStructure);
-
-	hw_setup_adc_channels();
-
-	// Enable DMA request after last transfer (Multi-ADC mode)
-	ADC_MultiModeDMARequestAfterLastTransferCmd(ENABLE);
-
-	// Enable ADC
-	ADC_Cmd(ADC1, ENABLE);
-	ADC_Cmd(ADC2, ENABLE);
-	ADC_Cmd(ADC3, ENABLE);
-
-	// ------------- Timer8 for ADC sampling ------------- //
-	// Time Base configuration
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8, ENABLE);
-
-	TIM_TimeBaseStructure.TIM_Prescaler = 0;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now;
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
-
-	TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
-
-	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
-	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-	TIM_OCInitStructure.TIM_Pulse = TIM1->ARR;
-	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
-	TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
-	TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
-	TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
-	TIM_OC1Init(TIM8, &TIM_OCInitStructure);	TIM_OC1PreloadConfig(TIM8, TIM_OCPreload_Enable);
-	TIM_OC2Init(TIM8, &TIM_OCInitStructure);	TIM_OC2PreloadConfig(TIM8, TIM_OCPreload_Enable);
-	TIM_OC3Init(TIM8, &TIM_OCInitStructure);	TIM_OC3PreloadConfig(TIM8, TIM_OCPreload_Enable);
-
-	TIM_ARRPreloadConfig(TIM8, ENABLE);
-	TIM_CCPreloadControl(TIM8, ENABLE);
-
-	// PWM outputs have to be enabled in order to trigger ADC on CCx
-	TIM_CtrlPWMOutputs(TIM8, ENABLE);
-
-	// TIM1 Master and TIM8 slave
-	TIM_SelectOutputTrigger(TIM1, TIM_TRGOSource_Update);
-	TIM_SelectMasterSlaveMode(TIM1, TIM_MasterSlaveMode_Enable);
-	TIM_SelectInputTrigger(TIM8, TIM_TS_ITR0);
-	TIM_SelectSlaveMode(TIM8, TIM_SlaveMode_Reset);
-
-	// Enable TIM8
-	TIM_Cmd(TIM8, ENABLE);
-
-	// Enable TIM1
-	TIM_Cmd(TIM1, ENABLE);
-
-	// Main Output Enable
-	TIM_CtrlPWMOutputs(TIM1, ENABLE);
-
-	// 32-bit timer for RPM measurement
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-	uint16_t PrescalerValue = (uint16_t) ((SYSTEM_CORE_CLOCK / 2) / MCPWM_RPM_TIMER_FREQ) - 1;
-
-	// Time base configuration
-	TIM_TimeBaseStructure.TIM_Period = 0xFFFFFFFF;
-	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
-
-	// TIM2 enable counter
-	TIM_Cmd(TIM2, ENABLE);
-
-	// ADC sampling locations
-	//stop_pwm_hw();
-	utils_sys_lock_cnt();
-
-	// Disable preload register updates
-	TIM1->CR1 |= TIM_CR1_UDIS;
-	TIM8->CR1 |= TIM_CR1_UDIS;
-
-	TIM8->CCR1 = TIM1->ARR;//for vdc
-	TIM8->CCR2 = TIM1->ARR;//for Ib
-	TIM8->CCR3 = TIM1->ARR;//for Ia
-
-	// Enables preload register updates
-	TIM1->CR1 &= ~TIM_CR1_UDIS;
-	TIM8->CR1 &= ~TIM_CR1_UDIS;
-
-	utils_sys_unlock_cnt();
-
-	// Calibrate current offset
-	ENABLE_GATE();
-	DCCAL_OFF();
-	GAIN_FULLDN();
-	do_dc_cal();
-	//Uart3_printf(&SD3, (uint8_t *)"5-1\r\n");
-	// Enable transfer complete interrupt
-
-
-	// Various time measurements
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM12, ENABLE);
-	PrescalerValue = (uint16_t) ((SYSTEM_CORE_CLOCK / 2) / 10000000) - 1;
-
-	// Time base configuration
-	TIM_TimeBaseStructure.TIM_Period = 0xFFFFFFFF;
-	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseInit(TIM12, &TIM_TimeBaseStructure);
-
-	// TIM3 enable counter
-	TIM_Cmd(TIM12, ENABLE);
-
-	// WWDG configuration
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, ENABLE);
-	WWDG_SetPrescaler(WWDG_Prescaler_1);
-	WWDG_SetWindowValue(255);
-	WWDG_Enable(100);
-
-
-//--------------------------------------------------
-//main ctrl setup
-
-	SetupParm();
-	SetupControlParameters();
-
-
-	//dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_int_handler,(void *)0);
-	//DMA_ITConfig(DMA2_Stream4, DMA_IT_TC, ENABLE);
-
-
-	uGF.Word = 0;                   // clear flags
-	#ifdef TORQUEMODE
-    	uGF.bit.EnTorqueMod = 1;
-	#endif
-
-	#ifdef ENVOLTRIPPLE
-    	uGF.bit.EnVoltRipCo = 1;
-	#endif
-
-	uGF.bit.RunMotor = 1;
-
-	//CtrlParm.qVelRef=0.1f;
-//
+	TIM_GenerateEvent(TIM1, TIM_EventSource_COM);
 }
+
+
+
+
 
 
 static volatile int curr0_sum;
@@ -401,22 +156,6 @@ void do_dc_cal(void)
 	//Uart3_printf(&SD3, (uint8_t *)"curr1_offset : %u\r\n",curr1_offset);//170530  
 }
 
-
-void mcpwm_adc_int_prehandler(void *p, uint32_t flags) 
-{
-	(void)p;
-	(void)flags;
-//	LED_RED_ON();
-
-	curr_start_samples++;
-	curr0_sum += ADC_Value[ADC_IND_CURR1] ;
-	curr1_sum += ADC_Value[ADC_IND_CURR2] ;
-
-//	LED_RED_OFF();
-
-	// Reset the watchdog
-	WWDG_SetCounter(100);	
-}
 
 
 /*
@@ -968,20 +707,318 @@ void SMC_HallSensor_Estimation (SMC *s)
 	//DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
 }
 
+
+float qVelRef = 0.01f;
+float dbg_fTheta;
+float dbg_fMea;
+uint16_t dbg_AccumTheta;
+
+static volatile mc_configuration *conf;
+void mcpwm_init(volatile mc_configuration *configuration)
+{
+
+	//Uart3_printf(&SD3, (uint8_t *)"mcpwm_init....\r\n");//170530  
+	utils_sys_lock_cnt();
+
+	conf = configuration;
+
+
+	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+	TIM_OCInitTypeDef  TIM_OCInitStructure;
+	TIM_BDTRInitTypeDef TIM_BDTRInitStructure;
+	//NVIC_InitTypeDef NVIC_InitStructure;
+
+	// Initialize variables
+	dccal_done = false;
+
+	TIM_DeInit(TIM1);
+	TIM_DeInit(TIM8);
+	TIM1->CNT = 0;
+	TIM8->CNT = 0;
+
+	// TIM1 clock enable
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+
+	// Time Base configuration
+	TIM_TimeBaseStructure.TIM_Prescaler = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_CenterAligned1;
+	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now /2;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_RepetitionCounter = 1;
+
+	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
+
+	// Channel 1, 2 and 3 Configuration in PWM mode
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+	TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Enable;
+	TIM_OCInitStructure.TIM_Pulse = TIM1->ARR / 2;
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+	TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
+	TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
+	TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
+
+	TIM_OC1Init(TIM1, &TIM_OCInitStructure);
+	TIM_OC2Init(TIM1, &TIM_OCInitStructure);
+	TIM_OC3Init(TIM1, &TIM_OCInitStructure);
+	TIM_OC4Init(TIM1, &TIM_OCInitStructure);
+
+	TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	TIM_OC2PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	TIM_OC3PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	TIM_OC4PreloadConfig(TIM1, TIM_OCPreload_Enable);
+
+	// Automatic Output enable, Break, dead time and lock configuration
+	TIM_BDTRInitStructure.TIM_OSSRState = TIM_OSSRState_Enable;
+	TIM_BDTRInitStructure.TIM_OSSIState = TIM_OSSRState_Enable;
+	TIM_BDTRInitStructure.TIM_LOCKLevel = TIM_LOCKLevel_OFF;
+	TIM_BDTRInitStructure.TIM_DeadTime = MCPWM_DEAD_TIME_CYCLES;
+	TIM_BDTRInitStructure.TIM_Break = TIM_Break_Disable;
+	TIM_BDTRInitStructure.TIM_BreakPolarity = TIM_BreakPolarity_High;
+	TIM_BDTRInitStructure.TIM_AutomaticOutput = TIM_AutomaticOutput_Disable;
+
+	TIM_BDTRConfig(TIM1, &TIM_BDTRInitStructure);
+	TIM_CCPreloadControl(TIM1, ENABLE);
+	TIM_ARRPreloadConfig(TIM1, ENABLE);
+
+	/*
+	 * ADC!
+	 */
+	ADC_CommonInitTypeDef ADC_CommonInitStructure;
+	DMA_InitTypeDef DMA_InitStructure;
+	ADC_InitTypeDef ADC_InitStructure;
+
+	// Clock
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 | RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOC, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | RCC_APB2Periph_ADC3, ENABLE);
+
+	dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_int_handler,(void *)0);
+
+	// DMA for the ADC
+	DMA_InitStructure.DMA_Channel = DMA_Channel_0;
+	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&ADC_Value;
+	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&ADC->CDR;
+	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
+	DMA_InitStructure.DMA_BufferSize = HW_ADC_CHANNELS;
+	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
+	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
+	DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+	DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
+	DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_1QuarterFull;
+	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
+	DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+	DMA_Init(DMA2_Stream4, &DMA_InitStructure);
+
+	// DMA2_Stream0 enable
+	DMA_Cmd(DMA2_Stream4, ENABLE);
+
+	// Enable transfer complete interrupt
+	DMA_ITConfig(DMA2_Stream4, DMA_IT_TC, ENABLE);
+
+	// ADC Common Init
+	// Note that the ADC is running at 42MHz, which is higher than the
+	// specified 36MHz in the data sheet, but it works.
+	ADC_CommonInitStructure.ADC_Mode = ADC_TripleMode_RegSimult;
+	ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
+	ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_1;
+	ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
+	ADC_CommonInit(&ADC_CommonInitStructure);
+
+	// Channel-specific settings
+	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
+	ADC_InitStructure.ADC_ScanConvMode = ENABLE;
+	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
+	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_Falling;
+	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T8_CC1;
+	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+	ADC_InitStructure.ADC_NbrOfConversion = HW_ADC_NBR_CONV;
+
+	ADC_Init(ADC1, &ADC_InitStructure);
+	ADC_Init(ADC2, &ADC_InitStructure);
+	ADC_Init(ADC3, &ADC_InitStructure);
+
+	hw_setup_adc_channels();
+
+	// Enable DMA request after last transfer (Multi-ADC mode)
+	ADC_MultiModeDMARequestAfterLastTransferCmd(ENABLE);
+
+	// Enable ADC
+	ADC_Cmd(ADC1, ENABLE);
+	ADC_Cmd(ADC2, ENABLE);
+	ADC_Cmd(ADC3, ENABLE);
+
+	// ------------- Timer8 for ADC sampling ------------- //
+	// Time Base configuration
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8, ENABLE);
+
+	TIM_TimeBaseStructure.TIM_Prescaler = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
+
+	TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
+
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+	TIM_OCInitStructure.TIM_Pulse = TIM1->ARR;
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+	TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
+	TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
+	TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
+	TIM_OC1Init(TIM8, &TIM_OCInitStructure);	TIM_OC1PreloadConfig(TIM8, TIM_OCPreload_Enable);
+	TIM_OC2Init(TIM8, &TIM_OCInitStructure);	TIM_OC2PreloadConfig(TIM8, TIM_OCPreload_Enable);
+	TIM_OC3Init(TIM8, &TIM_OCInitStructure);	TIM_OC3PreloadConfig(TIM8, TIM_OCPreload_Enable);
+
+	TIM_ARRPreloadConfig(TIM8, ENABLE);
+	TIM_CCPreloadControl(TIM8, ENABLE);
+
+	// PWM outputs have to be enabled in order to trigger ADC on CCx
+	TIM_CtrlPWMOutputs(TIM8, ENABLE);
+
+	// TIM1 Master and TIM8 slave
+	TIM_SelectOutputTrigger(TIM1, TIM_TRGOSource_Update);
+	TIM_SelectMasterSlaveMode(TIM1, TIM_MasterSlaveMode_Enable);
+	TIM_SelectInputTrigger(TIM8, TIM_TS_ITR0);
+	TIM_SelectSlaveMode(TIM8, TIM_SlaveMode_Reset);
+
+	// Enable TIM8
+	TIM_Cmd(TIM8, ENABLE);
+
+	// Enable TIM1
+	TIM_Cmd(TIM1, ENABLE);
+
+	// Main Output Enable
+	TIM_CtrlPWMOutputs(TIM1, ENABLE);
+
+	// 32-bit timer for RPM measurement
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+	uint16_t PrescalerValue = (uint16_t) ((SYSTEM_CORE_CLOCK / 2) / MCPWM_RPM_TIMER_FREQ) - 1;
+
+	// Time base configuration
+	TIM_TimeBaseStructure.TIM_Period = 0xFFFFFFFF;
+	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+
+	// TIM2 enable counter
+	TIM_Cmd(TIM2, ENABLE);
+
+	// ADC sampling locations
+	//stop_pwm_hw();
+	utils_sys_lock_cnt();
+
+	// Disable preload register updates
+	TIM1->CR1 |= TIM_CR1_UDIS;
+	TIM8->CR1 |= TIM_CR1_UDIS;
+
+	TIM8->CCR1 = TIM1->ARR;//for vdc
+	TIM8->CCR2 = TIM1->ARR;//for Ib
+	TIM8->CCR3 = TIM1->ARR;//for Ia
+
+	// Enables preload register updates
+	TIM1->CR1 &= ~TIM_CR1_UDIS;
+	TIM8->CR1 &= ~TIM_CR1_UDIS;
+
+	utils_sys_unlock_cnt();
+
+	// Calibrate current offset
+	ENABLE_GATE();
+	DCCAL_OFF();
+	do_dc_cal();
+	//Uart3_printf(&SD3, (uint8_t *)"5-1\r\n");
+	// Enable transfer complete interrupt
+
+
+	// Various time measurements
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM12, ENABLE);
+	PrescalerValue = (uint16_t) ((SYSTEM_CORE_CLOCK / 2) / 10000000) - 1;
+
+	// Time base configuration
+	TIM_TimeBaseStructure.TIM_Period = 0xFFFFFFFF;
+	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseInit(TIM12, &TIM_TimeBaseStructure);
+
+	// TIM3 enable counter
+	TIM_Cmd(TIM12, ENABLE);
+
+	// WWDG configuration
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, ENABLE);
+	WWDG_SetPrescaler(WWDG_Prescaler_1);
+	WWDG_SetWindowValue(255);
+	WWDG_Enable(100);
+
+
+//--------------------------------------------------
+//main ctrl setup
+
+	SetupParm();
+	SetupControlParameters();
+
+
+	//dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_int_handler,(void *)0);
+	//DMA_ITConfig(DMA2_Stream4, DMA_IT_TC, ENABLE);
+
+
+	uGF.Word = 0;                   // clear flags
+	#ifdef TORQUEMODE
+    	uGF.bit.EnTorqueMod = 1;
+	#endif
+
+	#ifdef ENVOLTRIPPLE
+    	uGF.bit.EnVoltRipCo = 1;
+	#endif
+
+	uGF.bit.RunMotor = 1;
+
+	//CtrlParm.qVelRef=0.1f;
+//
+}
+
+void mcpwm_deinit(void) {
+	WWDG_DeInit();
+
+	//timer_thd_stop = true;
+	//rpm_thd_stop = true;
+
+	//while (timer_thd_stop || rpm_thd_stop)
+	//{
+	//	chThdSleepMilliseconds(1);
+	//}
+
+	TIM_DeInit(TIM1);
+	TIM_DeInit(TIM2);
+	TIM_DeInit(TIM8);
+	TIM_DeInit(TIM12);
+	ADC_DeInit();
+	DMA_DeInit(DMA2_Stream4);
+	nvicDisableVector(ADC_IRQn);
+	dmaStreamRelease(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)));
+}
+
+static volatile mc_state state;
+static volatile mc_control_mode control_mode;
+
+void mcpwm_set_configuration(volatile mc_configuration *configuration) {
+	// Stop everything first to be safe
+	control_mode = CONTROL_MODE_NONE;
+
+	stop_pwm_hw();//stop_pwm_ll();
+
+	utils_sys_lock_cnt();
+	conf = configuration;
+	//mcpwm_init_hall_table((int8_t*)conf->hall_table);
+	//update_sensor_mode();
+	utils_sys_unlock_cnt();
+}
+
+
 #endif
 
-void stop_pwm_hw(void) {
-	TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_ForcedAction_InActive);
-	TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Enable);
-	TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Disable);
 
-	TIM_SelectOCxM(TIM1, TIM_Channel_2, TIM_ForcedAction_InActive);
-	TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Enable);
-	TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
-
-	TIM_SelectOCxM(TIM1, TIM_Channel_3, TIM_ForcedAction_InActive);
-	TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Enable);
-	TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Disable);
-
-	TIM_GenerateEvent(TIM1, TIM_EventSource_COM);
-}

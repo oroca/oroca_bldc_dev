@@ -28,7 +28,7 @@
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
-
+#include "servo.h"
 
 // Variables
 static volatile bool i2c_running = false;
@@ -47,92 +47,127 @@ void hw_init_gpio(void) {
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
 
 	// LEDs
-	palSetPadMode(GPIOB, 6,	PAL_MODE_OUTPUT_PUSHPULL |	PAL_STM32_OSPEED_HIGHEST);
-//	palSetPadMode(GPIOB, 7,	PAL_MODE_OUTPUT_PUSHPULL |	PAL_STM32_OSPEED_HIGHEST);
-
-	palClearPad(GPIOB, 6);
-//	palClearPad(GPIOB, 7);
+	palSetPadMode(GPIOC, 4,
+			PAL_MODE_OUTPUT_PUSHPULL |
+			PAL_STM32_OSPEED_HIGHEST);
+	palSetPadMode(GPIOC, 5,
+			PAL_MODE_OUTPUT_PUSHPULL |
+			PAL_STM32_OSPEED_HIGHEST);
 
 	// GPIOC (ENABLE_GATE)
-	palSetPadMode(GPIOC, 6,PAL_MODE_OUTPUT_PUSHPULL |	PAL_STM32_OSPEED_HIGHEST);
+	palSetPadMode(GPIOC, 10,
+			PAL_MODE_OUTPUT_PUSHPULL |
+			PAL_STM32_OSPEED_HIGHEST);
 	DISABLE_GATE();
 
-	// GPIOC (DCCAL)
-	palSetPadMode(GPIOC, 7,PAL_MODE_OUTPUT_PUSHPULL |	PAL_STM32_OSPEED_HIGHEST);
-	
-	// GPIOC (GAIN)
-	palSetPadMode(GPIOC, 8,PAL_MODE_OUTPUT_PUSHPULL |	PAL_STM32_OSPEED_HIGHEST);
-	GAIN_FULLDN();
+	// GPIOB (DCCAL)
+	palSetPadMode(GPIOB, 12,
+			PAL_MODE_OUTPUT_PUSHPULL |
+			PAL_STM32_OSPEED_HIGHEST);
 
-	// Fault pin
-	palSetPadMode(GPIOB, 12, PAL_MODE_INPUT_PULLUP);
+	// GPIOA Configuration: Channel 1 to 3 as alternate function push-pull
+	palSetPadMode(GPIOA, 8, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |
+			PAL_STM32_OSPEED_HIGHEST |
+			PAL_STM32_PUDR_FLOATING);
+	palSetPadMode(GPIOA, 9, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |
+			PAL_STM32_OSPEED_HIGHEST |
+			PAL_STM32_PUDR_FLOATING);
+	palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |
+			PAL_STM32_OSPEED_HIGHEST |
+			PAL_STM32_PUDR_FLOATING);
 
-	//PWM ( GPIOA Configuration: Channel 1 to 3 as alternate function push-pull)
-	palSetPadMode(GPIOA, 8, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |PAL_STM32_OSPEED_HIGHEST |	PAL_STM32_PUDR_FLOATING);
-	palSetPadMode(GPIOA, 9, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |PAL_STM32_OSPEED_HIGHEST |	PAL_STM32_PUDR_FLOATING);
-	palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |PAL_STM32_OSPEED_HIGHEST |PAL_STM32_PUDR_FLOATING);
+	palSetPadMode(GPIOB, 13, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |
+			PAL_STM32_OSPEED_HIGHEST |
+			PAL_STM32_PUDR_FLOATING);
+	palSetPadMode(GPIOB, 14, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |
+			PAL_STM32_OSPEED_HIGHEST |
+			PAL_STM32_PUDR_FLOATING);
+	palSetPadMode(GPIOB, 15, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |
+			PAL_STM32_OSPEED_HIGHEST |
+			PAL_STM32_PUDR_FLOATING);
 
-	palSetPadMode(GPIOB, 13, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |PAL_STM32_OSPEED_HIGHEST |PAL_STM32_PUDR_FLOATING);
-	palSetPadMode(GPIOB, 14, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |PAL_STM32_OSPEED_HIGHEST |PAL_STM32_PUDR_FLOATING);
-	palSetPadMode(GPIOB, 15, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |PAL_STM32_OSPEED_HIGHEST |PAL_STM32_PUDR_FLOATING);
-
-	// DHall sensors
+	// Hall sensors
 	palSetPadMode(HW_HALL_ENC_GPIO1, HW_HALL_ENC_PIN1, PAL_MODE_INPUT_PULLUP);
 	palSetPadMode(HW_HALL_ENC_GPIO2, HW_HALL_ENC_PIN2, PAL_MODE_INPUT_PULLUP);
 	palSetPadMode(HW_HALL_ENC_GPIO3, HW_HALL_ENC_PIN3, PAL_MODE_INPUT_PULLUP);
 
+	// Fault pin
+	palSetPadMode(GPIOC, 12, PAL_MODE_INPUT_PULLUP);
+
 	// ADC Pins
-	palSetPadMode(GPIOA, 0, PAL_MODE_INPUT_ANALOG);//sen3
-	palSetPadMode(GPIOA, 1, PAL_MODE_INPUT_ANALOG);//sen2
-	palSetPadMode(GPIOA, 2, PAL_MODE_INPUT_ANALOG);//sen1
-	palSetPadMode(GPIOA, 3, PAL_MODE_INPUT_ANALOG);//INV_TEMP
+	palSetPadMode(GPIOA, 0, PAL_MODE_INPUT_ANALOG);
+	palSetPadMode(GPIOA, 1, PAL_MODE_INPUT_ANALOG);
+	palSetPadMode(GPIOA, 2, PAL_MODE_INPUT_ANALOG);
+	palSetPadMode(GPIOA, 3, PAL_MODE_INPUT_ANALOG);
 	palSetPadMode(GPIOA, 4, PAL_MODE_INPUT_ANALOG);
 	palSetPadMode(GPIOA, 5, PAL_MODE_INPUT_ANALOG);
 	palSetPadMode(GPIOA, 6, PAL_MODE_INPUT_ANALOG);
-	palSetPadMode(GPIOA, 7, PAL_MODE_INPUT_ANALOG);
 
-	palSetPadMode(GPIOB, 0, PAL_MODE_INPUT_ANALOG);//BR_SO1
-	palSetPadMode(GPIOB, 1, PAL_MODE_INPUT_ANALOG);//BR_SO2
+	palSetPadMode(GPIOB, 0, PAL_MODE_INPUT_ANALOG);
+	palSetPadMode(GPIOB, 1, PAL_MODE_INPUT_ANALOG);
 
-	palSetPadMode(GPIOC, 0, PAL_MODE_INPUT_ANALOG);//MOTOR_TEMP
+	palSetPadMode(GPIOC, 0, PAL_MODE_INPUT_ANALOG);
 	palSetPadMode(GPIOC, 1, PAL_MODE_INPUT_ANALOG);
-	palSetPadMode(GPIOC, 2, PAL_MODE_INPUT_ANALOG);//VIN
+	palSetPadMode(GPIOC, 2, PAL_MODE_INPUT_ANALOG);
 	palSetPadMode(GPIOC, 3, PAL_MODE_INPUT_ANALOG);
-	palSetPadMode(GPIOC, 4, PAL_MODE_INPUT_ANALOG);
-	palSetPadMode(GPIOC, 5, PAL_MODE_INPUT_ANALOG);//ADC_EXT
-
 }
 
 void hw_setup_adc_channels(void) {
-	// ADC1 regular channels 
+	// ADC1 regular channels
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_0, 1, ADC_SampleTime_15Cycles);
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_8, 2, ADC_SampleTime_15Cycles);
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 3, ADC_SampleTime_15Cycles);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_Vrefint, 3, ADC_SampleTime_15Cycles);
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_4, 4, ADC_SampleTime_15Cycles);
 
-	// ADC2 regular channels 
+	// ADC2 regular channels
 	ADC_RegularChannelConfig(ADC2, ADC_Channel_1, 1, ADC_SampleTime_15Cycles);
 	ADC_RegularChannelConfig(ADC2, ADC_Channel_9, 2, ADC_SampleTime_15Cycles);
-	ADC_RegularChannelConfig(ADC2, ADC_Channel_11, 3, ADC_SampleTime_15Cycles);
-	ADC_RegularChannelConfig(ADC2, ADC_Channel_15, 4, ADC_SampleTime_15Cycles);
+	ADC_RegularChannelConfig(ADC2, ADC_Channel_6, 3, ADC_SampleTime_15Cycles);
+	ADC_RegularChannelConfig(ADC2, ADC_Channel_5, 4, ADC_SampleTime_15Cycles);
 
-	// ADC3 regular channels 
+	// ADC3 regular channels
 	ADC_RegularChannelConfig(ADC3, ADC_Channel_2, 1, ADC_SampleTime_15Cycles);
 	ADC_RegularChannelConfig(ADC3, ADC_Channel_3, 2, ADC_SampleTime_15Cycles);
 	ADC_RegularChannelConfig(ADC3, ADC_Channel_12, 3, ADC_SampleTime_15Cycles);
-	ADC_RegularChannelConfig(ADC3, ADC_Channel_5, 4, ADC_SampleTime_15Cycles);
+	ADC_RegularChannelConfig(ADC3, ADC_Channel_3, 4, ADC_SampleTime_15Cycles);
 
 	// Injected channels
-//==	ADC_InjectedChannelConfig(ADC1, ADC_Channel_8, 1, ADC_SampleTime_15Cycles);
-//==	ADC_InjectedChannelConfig(ADC2, ADC_Channel_9, 1, ADC_SampleTime_15Cycles);
+	ADC_InjectedChannelConfig(ADC1, ADC_Channel_9, 1, ADC_SampleTime_15Cycles);
+	ADC_InjectedChannelConfig(ADC1, ADC_Channel_8, 2, ADC_SampleTime_15Cycles);
+	ADC_InjectedChannelConfig(ADC2, ADC_Channel_8, 1, ADC_SampleTime_15Cycles);
+	ADC_InjectedChannelConfig(ADC2, ADC_Channel_9, 2, ADC_SampleTime_15Cycles);
+}
+
+void hw_setup_servo_outputs(void) {
+	// Set up GPIO ports
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+
+	// Set up servo structures
+	servos[0].gpio = GPIOB;
+	servos[0].pin = 5;
+	servos[0].offset = 0;
+	servos[0].pos = 128;
+
+	servos[1].gpio = GPIOB;
+	servos[1].pin = 4;
+	servos[1].offset = 0;
+	servos[1].pos = 0;
 }
 
 void hw_start_i2c(void) {
 	i2cAcquireBus(&HW_I2C_DEV);
 
 	if (!i2c_running) {
-		palSetPadMode(HW_I2C_SCL_PORT, HW_I2C_SCL_PIN,PAL_MODE_ALTERNATE(HW_I2C_GPIO_AF) |	PAL_STM32_OTYPE_OPENDRAIN |PAL_STM32_OSPEED_MID1 |PAL_STM32_PUDR_PULLUP);
-		palSetPadMode(HW_I2C_SDA_PORT, HW_I2C_SDA_PIN,PAL_MODE_ALTERNATE(HW_I2C_GPIO_AF) |PAL_STM32_OTYPE_OPENDRAIN |PAL_STM32_OSPEED_MID1 |PAL_STM32_PUDR_PULLUP);
+		palSetPadMode(HW_I2C_SCL_PORT, HW_I2C_SCL_PIN,
+				PAL_MODE_ALTERNATE(HW_I2C_GPIO_AF) |
+				PAL_STM32_OTYPE_OPENDRAIN |
+				PAL_STM32_OSPEED_MID1 |
+				PAL_STM32_PUDR_PULLUP);
+		palSetPadMode(HW_I2C_SDA_PORT, HW_I2C_SDA_PIN,
+				PAL_MODE_ALTERNATE(HW_I2C_GPIO_AF) |
+				PAL_STM32_OTYPE_OPENDRAIN |
+				PAL_STM32_OSPEED_MID1 |
+				PAL_STM32_PUDR_PULLUP);
 
 		i2cStart(&HW_I2C_DEV, &i2cfg);
 		i2c_running = true;
@@ -163,8 +198,15 @@ void hw_try_restore_i2c(void) {
 	if (i2c_running) {
 		i2cAcquireBus(&HW_I2C_DEV);
 
-		palSetPadMode(HW_I2C_SCL_PORT, HW_I2C_SCL_PIN,	PAL_STM32_OTYPE_OPENDRAIN |PAL_STM32_OSPEED_MID1 |PAL_STM32_PUDR_PULLUP);
-		palSetPadMode(HW_I2C_SDA_PORT, HW_I2C_SDA_PIN,PAL_STM32_OTYPE_OPENDRAIN |PAL_STM32_OSPEED_MID1 |PAL_STM32_PUDR_PULLUP);
+		palSetPadMode(HW_I2C_SCL_PORT, HW_I2C_SCL_PIN,
+				PAL_STM32_OTYPE_OPENDRAIN |
+				PAL_STM32_OSPEED_MID1 |
+				PAL_STM32_PUDR_PULLUP);
+
+		palSetPadMode(HW_I2C_SDA_PORT, HW_I2C_SDA_PIN,
+				PAL_STM32_OTYPE_OPENDRAIN |
+				PAL_STM32_OSPEED_MID1 |
+				PAL_STM32_PUDR_PULLUP);
 
 		palSetPad(HW_I2C_SCL_PORT, HW_I2C_SCL_PIN);
 		palSetPad(HW_I2C_SDA_PORT, HW_I2C_SDA_PIN);
@@ -187,8 +229,17 @@ void hw_try_restore_i2c(void) {
 		chThdSleep(1);
 		palSetPad(HW_I2C_SDA_PORT, HW_I2C_SDA_PIN);
 
-		palSetPadMode(HW_I2C_SCL_PORT, HW_I2C_SCL_PIN,PAL_MODE_ALTERNATE(HW_I2C_GPIO_AF) |	PAL_STM32_OTYPE_OPENDRAIN |PAL_STM32_OSPEED_MID1 |PAL_STM32_PUDR_PULLUP);
-		palSetPadMode(HW_I2C_SDA_PORT, HW_I2C_SDA_PIN,PAL_MODE_ALTERNATE(HW_I2C_GPIO_AF) |PAL_STM32_OTYPE_OPENDRAIN |PAL_STM32_OSPEED_MID1 |PAL_STM32_PUDR_PULLUP);
+		palSetPadMode(HW_I2C_SCL_PORT, HW_I2C_SCL_PIN,
+				PAL_MODE_ALTERNATE(HW_I2C_GPIO_AF) |
+				PAL_STM32_OTYPE_OPENDRAIN |
+				PAL_STM32_OSPEED_MID1 |
+				PAL_STM32_PUDR_PULLUP);
+
+		palSetPadMode(HW_I2C_SDA_PORT, HW_I2C_SDA_PIN,
+				PAL_MODE_ALTERNATE(HW_I2C_GPIO_AF) |
+				PAL_STM32_OTYPE_OPENDRAIN |
+				PAL_STM32_OSPEED_MID1 |
+				PAL_STM32_PUDR_PULLUP);
 
 		HW_I2C_DEV.state = I2C_STOP;
 		i2cStart(&HW_I2C_DEV, &i2cfg);
@@ -196,5 +247,4 @@ void hw_try_restore_i2c(void) {
 		i2cReleaseBus(&HW_I2C_DEV);
 	}
 }
-
 #endif
