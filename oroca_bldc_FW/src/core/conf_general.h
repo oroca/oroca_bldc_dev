@@ -37,7 +37,7 @@
 #include "ch.h"
 
 #include "mcpwm.h"
-#include "ui_app.h"
+#include "app.h"
 
 /*
  * Settings

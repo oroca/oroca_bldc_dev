@@ -153,10 +153,12 @@ CSRC = $(STARTUPSRC) \
 	   $(CORESRC)/conf_general.c \
 	   $(CORESRC)/eeprom.c \
 	   $(CORESRC)/flash_helper.c \
-	   $(APPSRC)/mavlink_can_proc.c	\
-	   $(APPSRC)/mavlink_uart_proc.c	\
-	   $(APPSRC)/local_ppm_proc.c \
-       $(APPSRC)/ui_app.c \
+       $(APPSRC)/app.c \
+		$(APPSRC)/app_ppm.c \
+		$(APPSRC)/app_adc.c \
+		$(APPSRC)/app_sten.c \
+		$(APPSRC)/app_uartcomm.c \
+		$(APPSRC)/app_nunchuk.c\
        main.c
 
        
