@@ -26,7 +26,7 @@
 #define MCPWM_H_
 
 //#include "conf_general.h"
-//#include "datatypes.h"
+#include <stdint.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus

@@ -25,7 +25,10 @@
 #ifndef APP_H_
 #define APP_H_
 
-#include "conf_general.h"
+//#include "conf_general.h"
+#include <stdint.h>
+#include <stdbool.h>
+
 
 // Applications to use
 typedef enum {
@@ -200,7 +203,7 @@ typedef struct {
 
 	// NRF application settings
 	nrf_config app_nrf_conf;
-} app_configuration7;
+} app_configuration;
 
 typedef struct {
 	int js_x;

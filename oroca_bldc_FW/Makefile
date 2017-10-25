@@ -153,6 +153,9 @@ CSRC = $(STARTUPSRC) \
 	   $(CORESRC)/conf_general.c \
 	   $(CORESRC)/eeprom.c \
 	   $(CORESRC)/flash_helper.c \
+	   $(CORESRC)/comm_can.c \
+	   $(CORESRC)/comm_usb.c \
+	   $(CORESRC)/comm_usb_serial.c \
        $(APPSRC)/app.c \
 		$(APPSRC)/app_ppm.c \
 		$(APPSRC)/app_adc.c \
