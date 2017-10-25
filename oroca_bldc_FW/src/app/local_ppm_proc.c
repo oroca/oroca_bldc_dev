@@ -35,9 +35,9 @@
 #include <chthreads.h>
 #include <Chvt.h>
 
-#include "user_interface_app.h"
+#include "ui_app.h"
 #include "local_ppm_proc.h"
-#include "../core/uart3.h"
+//#include "../core/uart3.h"
 
 // Settings
 #define MAX_CAN_AGE						0.1

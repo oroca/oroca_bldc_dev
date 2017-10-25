@@ -34,10 +34,10 @@
 #include "utils.h"
 #include "mcpwm.h"
 
-#include "user_interface_app.h"
+#include "ui_app.h"
 #include "../../lib/mavlink/oroca_bldc/mavlink.h"
 #include "mavlink_can_proc.h"
-#include "uart3.h"
+//#include "uart3.h"
 
 
 // Settings
@@ -110,7 +110,7 @@ static THD_FUNCTION(cancom_read_thread, arg)
 	CANRxFrame rxmsg;
 
 	chEvtRegister(&CANDx.rxfull_event, &el, 0);
-	Uart3_printf(&SD3, "cancom_read_thread\r\n");
+//	Uart3_printf(&SD3, "cancom_read_thread\r\n");
 
 	while(!chThdShouldTerminateX()) 
 	{
@@ -123,7 +123,7 @@ static THD_FUNCTION(cancom_read_thread, arg)
 
 		while (result == MSG_OK) 
 		{
-		Uart3_printf(&SD3, ">");
+		//Uart3_printf(&SD3, ">");
 			rx_frames[rx_frame_write++] = rxmsg;
 			if (rx_frame_write == RX_FRAMES_SIZE) 
 			{
@@ -154,7 +154,7 @@ static THD_FUNCTION(cancom_process_thread, arg) {
 	mavlink_message_t msg; 
 	mavlink_status_t status; 
 
-	Uart3_printf(&SD3, "cancom_process_thread\r\n");
+	//Uart3_printf(&SD3, "cancom_process_thread\r\n");
 
 
 	for(;;)
@@ -171,7 +171,7 @@ static THD_FUNCTION(cancom_process_thread, arg) {
 				CAN_PACKET_ID cmd = rxmsg.EID >> 8;
 				can_status_msg *stat_tmp;
 
-				Uart3_printf(&SD3, "Y");
+			//	Uart3_printf(&SD3, "Y");
 
 
 
@@ -185,8 +185,8 @@ static THD_FUNCTION(cancom_process_thread, arg) {
 							mavlink_set_velocity_t set_velocity;
 							mavlink_msg_set_velocity_decode( &msg, &set_velocity);
 						
-							Uart3_printf(&SD3, "SET_VELOCITY\r\n");
-							Uart3_printf(&SD3, "value : %d",set_velocity.ref_angular_velocity );
+							//Uart3_printf(&SD3, "SET_VELOCITY\r\n");
+							//Uart3_printf(&SD3, "value : %d",set_velocity.ref_angular_velocity );
 						
 							//--------------------------------------------------------------------------------
 							//test code
@@ -261,7 +261,7 @@ static THD_FUNCTION(cancom_status_thread, arg)
 	(void)arg;
 	chRegSetThreadName("CAN status");
 
-	Uart3_printf(&SD3, "cancom_status_thread\r\n");
+	//Uart3_printf(&SD3, "cancom_status_thread\r\n");
 
 
 

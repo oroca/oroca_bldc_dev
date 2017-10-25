@@ -32,8 +32,8 @@
 #include <string.h>
 
 #include "mavlink_uart_proc.h"
-#include "user_interface_app.h"
-#include "uart3.h"
+#include "ui_app.h"
+//#include "uart3.h"
 
 eventmask_t ui_events = 0;
 

@@ -35,10 +35,10 @@
 #include "utils.h"
 #include "mcpwm.h"
 
-#include "user_interface_app.h"
+#include "ui_app.h"
 #include "../../lib/mavlink/oroca_bldc/mavlink.h"
 #include "mavlink_uart_proc.h"
-#include "uart3.h"
+//#include "uart3.h"
 
 
 // Threads
@@ -80,8 +80,8 @@ bool mavlink_uart_recv( uint8_t ch )
 			mavlink_set_velocity_t set_velocity;
 			mavlink_msg_set_velocity_decode( &msg, &set_velocity);
 
-			Uart3_printf(&SD3, "SET_VELOCITY\r\n");
-			Uart3_printf(&SD3, "value : %d",(uint16_t)set_velocity.ref_angular_velocity );
+		//	Uart3_printf(&SD3, "SET_VELOCITY\r\n");
+		//	Uart3_printf(&SD3, "value : %d",(uint16_t)set_velocity.ref_angular_velocity );
 
 			//--------------------------------------------------------------------------------
 			//test code

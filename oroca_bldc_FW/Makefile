@@ -146,13 +146,13 @@ CSRC = $(STARTUPSRC) \
        $(CORESRC)/servo_dec.c \
        $(CORESRC)/servo_simple.c \
        $(CORESRC)/servo.c \
-       $(CORESRC)/uart3.c\
        $(CORESRC)/irq_handlers.c \
        $(CORESRC)/utils.c	\
        $(CORESRC)/timeout.c	\
 	   $(CORESRC)/buffer.c	\
 	   $(CORESRC)/conf_general.c \
 	   $(CORESRC)/eeprom.c \
+	   $(CORESRC)/flash_helper.c \
 	   $(APPSRC)/mavlink_can_proc.c	\
 	   $(APPSRC)/mavlink_uart_proc.c	\
 	   $(APPSRC)/local_ppm_proc.c \

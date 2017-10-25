@@ -10,7 +10,7 @@
 #include "stm32f4xx_conf.h"
 
 #include "eeprom.h"
-#include "mcpwm.h"
+//#include "mcpwm.h"
 #include "mc_interface.h"
 #include "hw.h"
 #include "utils.h"
@@ -72,7 +72,7 @@ void conf_general_init(void) {
  */
 void conf_general_get_default_app_configuration(app_configuration *conf) {
 	memset(conf, 0, sizeof(app_configuration));
-	conf->controller_id = APPCONF_CONTROLLER_ID;
+/*	conf->controller_id = APPCONF_CONTROLLER_ID;
 	conf->timeout_msec = APPCONF_TIMEOUT_MSEC;
 	conf->timeout_brake_current = APPCONF_TIMEOUT_BRAKE_CURRENT;
 	conf->send_can_status = APPCONF_SEND_CAN_STATUS;
@@ -131,7 +131,7 @@ void conf_general_get_default_app_configuration(app_configuration *conf) {
 	conf->app_nrf_conf.address[0] = APPCONF_NRF_ADDR_B0;
 	conf->app_nrf_conf.address[1] = APPCONF_NRF_ADDR_B1;
 	conf->app_nrf_conf.address[2] = APPCONF_NRF_ADDR_B2;
-	conf->app_nrf_conf.send_crc_ack = APPCONF_NRF_SEND_CRC_ACK;
+	conf->app_nrf_conf.send_crc_ack = APPCONF_NRF_SEND_CRC_ACK;*/
 }
 
 /**
@@ -142,7 +142,7 @@ void conf_general_get_default_app_configuration(app_configuration *conf) {
  */
 void conf_general_get_default_mc_configuration(mc_configuration *conf) {
 	memset(conf, 0, sizeof(mc_configuration));
-	conf->pwm_mode = MCCONF_PWM_MODE;
+/*	conf->pwm_mode = MCCONF_PWM_MODE;
 	conf->comm_mode = MCCONF_COMM_MODE;
 	conf->motor_type = MCCONF_DEFAULT_MOTOR_TYPE;
 	conf->sensor_mode = MCCONF_SENSOR_MODE;
@@ -243,7 +243,7 @@ void conf_general_get_default_mc_configuration(mc_configuration *conf) {
 	conf->m_duty_ramp_step_rpm_lim = MCCONF_M_RAMP_STEP_RPM_LIM;
 	conf->m_current_backoff_gain = MCCONF_M_CURRENT_BACKOFF_GAIN;
 	conf->m_encoder_counts = MCCONF_M_ENCODER_COUNTS;
-	conf->m_sensor_port_mode = MCCONF_M_SENSOR_PORT_MODE;
+	conf->m_sensor_port_mode = MCCONF_M_SENSOR_PORT_MODE;*/
 }
 
 /**
@@ -377,7 +377,7 @@ bool conf_general_detect_motor_param(float current, float min_rpm, float low_dut
 	int ok_steps = 0;
 	const float spinup_to_duty = 0.6;
 
-	mcconf = *mc_interface_get_configuration();
+/*	mcconf = *mc_interface_get_configuration();
 	mcconf_old = mcconf;
 
 	mcconf.motor_type = MOTOR_TYPE_BLDC;
@@ -484,7 +484,7 @@ bool conf_general_detect_motor_param(float current, float min_rpm, float low_dut
 	// Restore settings
 	mc_interface_set_configuration(&mcconf_old);
 
-	mc_interface_unlock();
+	mc_interface_unlock();*/
 
 	return ok_steps == 5 ? true : false;
 }
@@ -512,7 +512,7 @@ bool conf_general_detect_motor_param(float current, float min_rpm, float low_dut
  */
 bool conf_general_measure_flux_linkage(float current, float duty,
 		float min_erpm, float res, float *linkage) {
-	mcconf = *mc_interface_get_configuration();
+/*	mcconf = *mc_interface_get_configuration();
 	mcconf_old = mcconf;
 
 	mcconf.motor_type = MOTOR_TYPE_BLDC;
@@ -571,7 +571,7 @@ bool conf_general_measure_flux_linkage(float current, float duty,
 	avg_current /= samples;
 	avg_voltage -= avg_current * res * 2.0;
 
-	*linkage = avg_voltage * 60.0 / (sqrtf(3.0) * 2.0 * M_PI * avg_rpm);
+	*linkage = avg_voltage * 60.0 / (sqrtf(3.0) * 2.0 * M_PI * avg_rpm);*/
 
 	return true;
 }
