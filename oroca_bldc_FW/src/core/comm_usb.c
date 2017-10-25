@@ -88,7 +88,16 @@ static THD_FUNCTION(serial_process_thread, arg) {
 		chEvtWaitAny((eventmask_t) 1);
 
 		while (serial_rx_read_pos != serial_rx_write_pos) {
-			packet_process_byte(serial_rx_buffer[serial_rx_read_pos++], PACKET_HANDLER);
+			//packet_process_byte(serial_rx_buffer[serial_rx_read_pos++], PACKET_HANDLER);
+
+			if( mavlink_uart_recv( serial_rx_buffer[serial_rx_read_pos++] ) )
+			{
+				//mavlink_uart_send( 1 ); //hand shake?
+
+				//ui_events |= EVT_UART_RX;
+			}
+
+
 
 			if (serial_rx_read_pos == SERIAL_RX_BUFFER_SIZE) {
 				serial_rx_read_pos = 0;
@@ -98,13 +107,13 @@ static THD_FUNCTION(serial_process_thread, arg) {
 }
 
 static void process_packet(unsigned char *data, unsigned int len) {
-	commands_set_send_func(send_packet_wrapper);
-	commands_process_packet(data, len);
+	//commands_set_send_func(send_packet_wrapper);
+	//commands_process_packet(data, len);
 }
 
 static void send_packet_wrapper(unsigned char *data, unsigned int len) {
 	chMtxLock(&send_mutex);
-	packet_send_packet(data, len, PACKET_HANDLER);
+	//packet_send_packet(data, len, PACKET_HANDLER);
 	chMtxUnlock(&send_mutex);
 }
 
@@ -114,7 +123,7 @@ static void send_packet(unsigned char *buffer, unsigned int len) {
 
 void comm_usb_init(void) {
 	comm_usb_serial_init();
-	packet_init(send_packet, process_packet, PACKET_HANDLER);
+	//packet_init(send_packet, process_packet, PACKET_HANDLER);
 
 	chMtxObjectInit(&send_mutex);
 

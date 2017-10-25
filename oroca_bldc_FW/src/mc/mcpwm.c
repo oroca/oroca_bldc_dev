@@ -34,7 +34,7 @@
 #include "mcpwm.h"
 #include "utils.h"
 
-#include "../core/uart3.h"
+//#include "../core/uart3.h"
 
 //#include <errno.h>
 //#include <unistd.h>

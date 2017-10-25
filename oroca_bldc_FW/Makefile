@@ -142,23 +142,23 @@ CSRC = $(STARTUPSRC) \
 				$(MCSRC)/mcpwm.c \
 				$(MCSRC)/mc_interface.c \
 				$(MCSRC)/encoder.c \
-					$(CORESRC)/ledpwm.c \
-					$(CORESRC)/led_external.c\
-					$(CORESRC)/ws2811.c \
-					$(CORESRC)/servo_dec.c \
-					$(CORESRC)/servo_simple.c \
-					$(CORESRC)/servo.c \
+					$(CORESRC)/comm_can.c \
+					$(CORESRC)/comm_usb.c \
+					$(CORESRC)/comm_usb_serial.c \
+					 $(CORESRC)/servo_dec.c \
+					 $(CORESRC)/servo_simple.c \
+					 $(CORESRC)/servo.c \
+					  $(CORESRC)/ledpwm.c \
+					  $(CORESRC)/led_external.c\
+					  $(CORESRC)/ws2811.c \
+					   $(CORESRC)/eeprom.c \
+					   $(CORESRC)/flash_helper.c \
 					$(CORESRC)/irq_handlers.c \
 					$(CORESRC)/utils.c	\
 					$(CORESRC)/timeout.c	\
 					$(CORESRC)/buffer.c	\
 					$(CORESRC)/conf_general.c \
-					$(CORESRC)/eeprom.c \
-					$(CORESRC)/flash_helper.c \
-					$(CORESRC)/comm_can.c \
-					$(CORESRC)/comm_usb.c \
-					$(CORESRC)/comm_usb_serial.c \
-					$(CORESRC)/crc.c\
+					$(CORESRC)/crc.c \
 				$(CORESRC)/spi_sw.c \
 				$(CORESRC)/rf.c \
 				$(CORESRC)/rfhelp.c \

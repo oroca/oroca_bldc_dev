@@ -20,7 +20,7 @@
 #include "hw.h"
 #include "timeout.h"
 
-#include "src/core/uart3.h"
+//#include "src/core/uart3.h"
 
 /*
  * Timers used:
@@ -101,7 +101,7 @@ int main(void)
 	mc_interface_init(&mcconf);
 
 	//	commands_init();
-	//	comm_usb_init();
+		comm_usb_init();
 
 	app_configuration appconf;
 	conf_general_read_app_configuration(&appconf);
