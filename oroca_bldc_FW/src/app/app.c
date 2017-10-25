@@ -25,8 +25,8 @@
 #include "ch.h"
 #include "hal.h"
 #include "hw.h"
-//#include "nrf_driver.h"
-//#include "rfhelp.h"
+#include "nrf_driver.h"
+#include "rfhelp.h"
 
 // Private variables
 static app_configuration appconf;

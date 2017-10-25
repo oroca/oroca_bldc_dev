@@ -27,13 +27,13 @@
 #include "hal.h"
 #include "hw.h"
 #include "mc_interface.h"
-#include "commands.h"
+//#include "commands.h"
 #include "utils.h"
 #include "timeout.h"
 #include <string.h>
 #include <math.h>
-#include "led_external.h"
-#include "datatypes.h"
+//#include "led_external.h"
+//#include "datatypes.h"
 #include "comm_can.h"
 
 // Settings
@@ -180,7 +180,7 @@ static THD_FUNCTION(output_thread, arg) {
 		if (timeout_has_timeout() || chuck_error != 0 || config.ctrl_type == CHUK_CTRL_TYPE_NONE) {
 			continue;
 		}
-
+/*
 		static bool is_reverse = false;
 		static bool was_z = false;
 		const float current_now = mc_interface_get_tot_current_directional_filtered();
@@ -450,6 +450,6 @@ static THD_FUNCTION(output_thread, arg) {
 			} else {
 				mc_interface_set_current(current_out);
 			}
-		}
+		}*/
 	}
 }

@@ -26,15 +26,15 @@
 #include "ch.h"
 #include "hal.h"
 #include "hw.h"
-#include "packet.h"
-#include "commands.h"
-
+//#include "packet.h"
+//#include "commands.h"
+#include "conf_general.h"
 #include <string.h>
 
 // Settings
 #define BAUDRATE					115200
 #define PACKET_HANDLER				1
-#define SERIAL_RX_BUFFER_SIZE		1024
+#define SERIAL_RX_BUFFER_SIZE		PACKET_MAX_PL_LEN
 
 // Threads
 static THD_FUNCTION(packet_process_thread, arg);
@@ -116,12 +116,12 @@ static UARTConfig uart_cfg = {
 };
 
 static void process_packet(unsigned char *data, unsigned int len) {
-	commands_set_send_func(send_packet_wrapper);
-	commands_process_packet(data, len);
+	//commands_set_send_func(send_packet_wrapper);
+	//commands_process_packet(data, len);
 }
 
 static void send_packet_wrapper(unsigned char *data, unsigned int len) {
-	packet_send_packet(data, len, PACKET_HANDLER);
+	//packet_send_packet(data, len, PACKET_HANDLER);
 }
 
 static void send_packet(unsigned char *data, unsigned int len) {
@@ -132,22 +132,18 @@ static void send_packet(unsigned char *data, unsigned int len) {
 
 	// Copy this data to a new buffer in case the provided one is re-used
 	// after this function returns.
-	static uint8_t buffer[PACKET_MAX_PL_LEN + 5];
-	memcpy(buffer, data, len);
+	//static uint8_t buffer[PACKET_MAX_PL_LEN + 5];
+	//memcpy(buffer, data, len);
 
-	uartStartSend(&HW_UART_DEV, len, buffer);
+	//uartStartSend(&HW_UART_DEV, len, buffer);
 }
 
 void app_uartcomm_start(void) {
-	packet_init(send_packet, process_packet, PACKET_HANDLER);
+	//packet_init(send_packet, process_packet, PACKET_HANDLER);
 
 	uartStart(&HW_UART_DEV, &uart_cfg);
-	palSetPadMode(HW_UART_TX_PORT, HW_UART_TX_PIN, PAL_MODE_ALTERNATE(HW_UART_GPIO_AF) |
-			PAL_STM32_OSPEED_HIGHEST |
-			PAL_STM32_PUDR_PULLUP);
-	palSetPadMode(HW_UART_RX_PORT, HW_UART_RX_PIN, PAL_MODE_ALTERNATE(HW_UART_GPIO_AF) |
-			PAL_STM32_OSPEED_HIGHEST |
-			PAL_STM32_PUDR_PULLUP);
+	palSetPadMode(HW_UART_TX_PORT, HW_UART_TX_PIN, PAL_MODE_ALTERNATE(HW_UART_GPIO_AF) | PAL_STM32_OSPEED_HIGHEST |	PAL_STM32_PUDR_PULLUP);
+	palSetPadMode(HW_UART_RX_PORT, HW_UART_RX_PIN, PAL_MODE_ALTERNATE(HW_UART_GPIO_AF) | PAL_STM32_OSPEED_HIGHEST |	PAL_STM32_PUDR_PULLUP);
 
 	is_running = 1;
 
@@ -172,12 +168,12 @@ static THD_FUNCTION(packet_process_thread, arg) {
 	for(;;) {
 		chEvtWaitAny((eventmask_t) 1);
 
-		while (serial_rx_read_pos != serial_rx_write_pos) {
+		/*while (serial_rx_read_pos != serial_rx_write_pos) {
 			packet_process_byte(serial_rx_buffer[serial_rx_read_pos++], PACKET_HANDLER);
 
 			if (serial_rx_read_pos == SERIAL_RX_BUFFER_SIZE) {
 				serial_rx_read_pos = 0;
 			}
-		}
+		}*/
 	}
 }

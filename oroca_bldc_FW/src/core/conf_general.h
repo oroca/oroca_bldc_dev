@@ -39,6 +39,8 @@
 #include "mcpwm.h"
 #include "app.h"
 
+#define PACKET_MAX_PL_LEN		1024
+
 /*
  * Settings
  */

@@ -115,7 +115,7 @@ static THD_FUNCTION(ppm_thread, arg) {
 			pulses_without_power = 0;
 			continue;
 		}
-
+/*
 		float servo_val = servodec_get_servo(0);
 
 		switch (config.ctrl_type) {
@@ -138,62 +138,7 @@ static THD_FUNCTION(ppm_thread, arg) {
 		const volatile mc_configuration *mcconf = mc_interface_get_configuration();
 		bool send_duty = false;
 
-		switch (config.ctrl_type) {
-		case PPM_CTRL_TYPE_CURRENT:
-		case PPM_CTRL_TYPE_CURRENT_NOREV:
-			current_mode = true;
-			if (servo_val >= 0.0) {
-				current = servo_val * mcconf->l_current_max;
-			} else {
-				current = servo_val * fabsf(mcconf->l_current_min);
-			}
 
-			if (fabsf(servo_val) < 0.001) {
-				pulses_without_power++;
-			}
-			break;
-
-		case PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE:
-			current_mode = true;
-			if (servo_val >= 0.0) {
-				current = servo_val * mcconf->l_current_max;
-			} else {
-				current = fabsf(servo_val * mcconf->l_current_min);
-				current_mode_brake = true;
-			}
-
-			if (servo_val < 0.001) {
-				pulses_without_power++;
-			}
-			break;
-
-		case PPM_CTRL_TYPE_DUTY:
-		case PPM_CTRL_TYPE_DUTY_NOREV:
-			if (fabsf(servo_val) < 0.001) {
-				pulses_without_power++;
-			}
-
-			if (!(pulses_without_power < MIN_PULSES_WITHOUT_POWER && config.safe_start)) {
-				mc_interface_set_duty(utils_map(servo_val, -1.0, 1.0, -mcconf->l_max_duty, mcconf->l_max_duty));
-				send_duty = true;
-			}
-			break;
-
-		case PPM_CTRL_TYPE_PID:
-		case PPM_CTRL_TYPE_PID_NOREV:
-			if (fabsf(servo_val) < 0.001) {
-				pulses_without_power++;
-			}
-
-			if (!(pulses_without_power < MIN_PULSES_WITHOUT_POWER && config.safe_start)) {
-				mc_interface_set_pid_speed(servo_val * config.pid_max_erpm);
-				send_duty = true;
-			}
-			break;
-
-		default:
-			continue;
-		}
 
 		if (pulses_without_power < MIN_PULSES_WITHOUT_POWER && config.safe_start) {
 			static int pulses_without_power_before = 0;
@@ -212,7 +157,7 @@ static THD_FUNCTION(ppm_thread, arg) {
 			for (int i = 0;i < CAN_STATUS_MSGS_TO_STORE;i++) {
 				can_status_msg *msg = comm_can_get_status_msg_index(i);
 
-				if (msg->id >= 0 && UTILS_AGE_S(msg->rx_time) < MAX_CAN_AGE) {
+				/*if (msg->id >= 0 && UTILS_AGE_S(msg->rx_time) < MAX_CAN_AGE) {
 					float rpm_tmp = msg->rpm;
 
 					if (fabsf(rpm_tmp) < fabsf(rpm_lowest)) {
@@ -314,7 +259,7 @@ static THD_FUNCTION(ppm_thread, arg) {
 					mc_interface_set_current(current_out);
 				}
 			}
-		}
+		}*/
 
 	}
 }

@@ -84,7 +84,7 @@ static THD_FUNCTION(adc_thread, arg) {
 	(void)arg;
 
 	chRegSetThreadName("APP_ADC");
-
+/*
 	// Set servo pin as an input with pullup
 	if (use_rx_tx_as_buttons) {
 		palSetPadMode(HW_UART_TX_PORT, HW_UART_TX_PIN, PAL_MODE_INPUT_PULLUP);
@@ -373,7 +373,7 @@ static THD_FUNCTION(adc_thread, arg) {
 		// Find lowest RPM (for traction control)
 		float rpm_local = mc_interface_get_rpm();
 		float rpm_lowest = rpm_local;
-		if (config.multi_esc) {
+		/*if (config.multi_esc) {
 			for (int i = 0;i < CAN_STATUS_MSGS_TO_STORE;i++) {
 				can_status_msg *msg = comm_can_get_status_msg_index(i);
 
@@ -481,5 +481,5 @@ static THD_FUNCTION(adc_thread, arg) {
 				}
 			}
 		}
-	}
+	}*/
 }

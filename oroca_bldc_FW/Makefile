@@ -129,34 +129,41 @@ LDSCRIPT= ld_eeprom_emu.ld
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC = $(STARTUPSRC) \
-       $(KERNSRC) \
-       $(PORTSRC) \
-       $(OSALSRC) \
-       $(HALSRC) \
-       $(PLATFORMSRC) \
-       $(BOARDSRC) \
-       $(CHIBIOS)/os/various/syscalls.c \
-       $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
-       $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
-       $(LIBSRC)/hwconf/hw_oroca.c\
-       $(MCSRC)/mcpwm.c \
-       $(MCSRC)/mc_interface.c \
-       $(MCSRC)/encoder.c \
-       $(CORESRC)/ledpwm.c \
-       $(CORESRC)/servo_dec.c \
-       $(CORESRC)/servo_simple.c \
-       $(CORESRC)/servo.c \
-       $(CORESRC)/irq_handlers.c \
-       $(CORESRC)/utils.c	\
-       $(CORESRC)/timeout.c	\
-	   $(CORESRC)/buffer.c	\
-	   $(CORESRC)/conf_general.c \
-	   $(CORESRC)/eeprom.c \
-	   $(CORESRC)/flash_helper.c \
-	   $(CORESRC)/comm_can.c \
-	   $(CORESRC)/comm_usb.c \
-	   $(CORESRC)/comm_usb_serial.c \
-       $(APPSRC)/app.c \
+		$(KERNSRC) \
+		$(PORTSRC) \
+		$(OSALSRC) \
+		$(HALSRC) \
+		$(PLATFORMSRC) \
+		$(BOARDSRC) \
+		$(CHIBIOS)/os/various/syscalls.c \
+		$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
+		$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
+			$(LIBSRC)/hwconf/hw_oroca.c\
+				$(MCSRC)/mcpwm.c \
+				$(MCSRC)/mc_interface.c \
+				$(MCSRC)/encoder.c \
+					$(CORESRC)/ledpwm.c \
+					$(CORESRC)/led_external.c\
+					$(CORESRC)/ws2811.c \
+					$(CORESRC)/servo_dec.c \
+					$(CORESRC)/servo_simple.c \
+					$(CORESRC)/servo.c \
+					$(CORESRC)/irq_handlers.c \
+					$(CORESRC)/utils.c	\
+					$(CORESRC)/timeout.c	\
+					$(CORESRC)/buffer.c	\
+					$(CORESRC)/conf_general.c \
+					$(CORESRC)/eeprom.c \
+					$(CORESRC)/flash_helper.c \
+					$(CORESRC)/comm_can.c \
+					$(CORESRC)/comm_usb.c \
+					$(CORESRC)/comm_usb_serial.c \
+					$(CORESRC)/crc.c\
+				$(CORESRC)/spi_sw.c \
+				$(CORESRC)/rf.c \
+				$(CORESRC)/rfhelp.c \
+				$(CORESRC)/nrf_driver.c\
+		$(APPSRC)/app.c \
 		$(APPSRC)/app_ppm.c \
 		$(APPSRC)/app_adc.c \
 		$(APPSRC)/app_sten.c \

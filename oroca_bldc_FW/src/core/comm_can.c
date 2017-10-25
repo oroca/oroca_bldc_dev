@@ -27,7 +27,7 @@
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
-//#include "datatypes.h"
+#include "conf_general.h"
 //#include "buffer.h"
 #include "mc_interface.h"
 #include "timeout.h"
@@ -40,7 +40,7 @@
 // Settings
 #define CANDx			CAND1
 #define RX_FRAMES_SIZE	100
-#define RX_BUFFER_SIZE	1024//PACKET_MAX_PL_LEN
+#define RX_BUFFER_SIZE	PACKET_MAX_PL_LEN
 
 // Threads
 static THD_WORKING_AREA(cancom_read_thread_wa, 512);
