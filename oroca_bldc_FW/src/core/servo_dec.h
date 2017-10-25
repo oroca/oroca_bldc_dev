@@ -26,6 +26,7 @@
 #define SERVO_DEC_H_
 
 #include <stdint.h>
+#include <chtypes.h>
 #include <conf_general.h>
 
 // Functions
