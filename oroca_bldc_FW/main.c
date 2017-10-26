@@ -8,19 +8,30 @@
 #include "hal.h"
 #include "stm32f4xx_conf.h"
 
-#include <errno.h>
-#include <unistd.h>
-
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
 
-#include "main.h"
+#include "mc_interface.h"
+#include "mcpwm.h"
+//#include "mcpwm_foc.h"
+#include "ledpwm.h"
+#include "comm_usb.h"
+#include "ledpwm.h"
+//#include "terminal.h"
 #include "hw.h"
+#include "app.h"
+//#include "packet.h"
+//#include "commands.h"
 #include "timeout.h"
-
-//#include "src/core/uart3.h"
+#include "comm_can.h"
+#include "ws2811.h"
+#include "led_external.h"
+#include "encoder.h"
+#include "servo.h"
+#include "servo_simple.h"
+#include "utils.h"
 
 /*
  * Timers used:

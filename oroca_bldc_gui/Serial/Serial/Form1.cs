@@ -27,7 +27,7 @@ namespace Serial
             cmbPort.EndUpdate();
 
             //SerialPort 초기 설정
-           // SerialPort.PortName = "COM10";
+            //SerialPort.PortName = "COM4";
             //SerialPort.BaudRate = (int)19200;
             //SerialPort.DataBits = (int)8;
             //SerialPort.Parity = Parity.None;
@@ -124,6 +124,7 @@ namespace Serial
         private void cmbPort_SelectedIndexChanged(object sender, EventArgs e)
         {
             SerialPort.PortName = cmbPort.SelectedItem.ToString();
+
         }
 
         private void cmbBRate_SelectedIndexChanged(object sender, EventArgs e)

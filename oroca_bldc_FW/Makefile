@@ -89,27 +89,21 @@ endif
 # Project, sources and paths
 #
 
-LIBSRC  = lib
-LIBDIR  = lib
+CONFSRC  = src
 CORESRC = src/core
-COREINC = src/core
 MCSRC = src/mc
-MCINC = src/mc
 APPSRC = src/app
-APPINC = src/app
 
-MAVINC  = lib/mavlink
-MAVINC += lib/mavlink/common
-MAVINC += lib/mavlink/oroca_bldc
-
-
-
+MAVSRC  =src/mavlink
+MAVSRC += src/mavlink/common
+MAVSRC += src/mavlink/oroca_bldc
 
 # Define project name here
 PROJECT = oroca_bldc
 
 # Imported source files and paths
-CHIBIOS = lib/ChibiOS_3.0.2
+CHIBIOS = src/ChibiOS_3.0.2
+
 # Startup files.
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
 # HAL-OSAL files (optional).
@@ -138,10 +132,11 @@ CSRC = $(STARTUPSRC) \
 		$(CHIBIOS)/os/various/syscalls.c \
 		$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
 		$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
-			$(LIBSRC)/hwconf/hw_oroca.c\
+			$(CONFSRC)/hw_oroca.c\
 				$(MCSRC)/mcpwm.c \
 				$(MCSRC)/mc_interface.c \
 				$(MCSRC)/encoder.c \
+					$(CORESRC)/mavlink_proc.c \
 					$(CORESRC)/comm_can.c \
 					$(CORESRC)/comm_usb.c \
 					$(CORESRC)/comm_usb_serial.c \
@@ -206,14 +201,12 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/hal/lib/ports/STM32/LLD/TIMv1 \
          $(CHIBIOS)/os/hal/lib/streams \
-		 $(LIBDIR)/hwconf \
-         $(HWINC) \
-         $(NRFINC) \
-         $(COREINC) \
-         $(MCINC)	\
-         $(APPINC)	\
-         $(MAVINC)
- 		#$(LIBDIR)/mcconf \
+		 $(CONFSRC) \
+         $(HWSRC) \
+         $(CORESRC) \
+         $(MCSRC)	\
+         $(APPSRC)	\
+         $(MAVSRC)
 # Project, sources and paths
 ##############################################################################
 

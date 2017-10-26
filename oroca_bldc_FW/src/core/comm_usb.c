@@ -24,10 +24,9 @@
 
 #include "ch.h"
 #include "hal.h"
+#include "mavlink_proc.h"
 #include "comm_usb.h"
-//#include "packet.h"
 #include "comm_usb_serial.h"
-//#include "commands.h"
 
 // Settings
 #define PACKET_HANDLER				0
@@ -90,7 +89,7 @@ static THD_FUNCTION(serial_process_thread, arg) {
 		while (serial_rx_read_pos != serial_rx_write_pos) {
 			//packet_process_byte(serial_rx_buffer[serial_rx_read_pos++], PACKET_HANDLER);
 
-			if( mavlink_uart_recv( serial_rx_buffer[serial_rx_read_pos++] ) )
+			if( mavlink_byte_recv( serial_rx_buffer[serial_rx_read_pos++] ) )
 			{
 				//mavlink_uart_send( 1 ); //hand shake?
 
