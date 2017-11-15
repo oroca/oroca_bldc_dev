@@ -321,3 +321,5 @@ void comm_usb_serial_init(void) {
 int comm_usb_serial_is_active(void) {
 	return SDU1.config->usbp->state == USB_ACTIVE;
 }
+
+

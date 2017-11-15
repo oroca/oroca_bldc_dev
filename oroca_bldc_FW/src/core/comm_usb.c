@@ -87,16 +87,15 @@ static THD_FUNCTION(serial_process_thread, arg) {
 		chEvtWaitAny((eventmask_t) 1);
 
 		while (serial_rx_read_pos != serial_rx_write_pos) {
-			//packet_process_byte(serial_rx_buffer[serial_rx_read_pos++], PACKET_HANDLER);
 
 			if( mavlink_byte_recv( serial_rx_buffer[serial_rx_read_pos++] ) )
 			{
 				//mavlink_uart_send( 1 ); //hand shake?
-
-				//ui_events |= EVT_UART_RX;
 			}
 
-
+			//chSequentialStreamWrite(&SDU1, &serial_rx_buffer[serial_rx_read_pos++], 1);//echo
+			//chSequentialStreamWrite(&SDU1, "test",4);
+			//chvprintf(&SDU1, (uint8_t *)"periodic_thread\r\n");
 
 			if (serial_rx_read_pos == SERIAL_RX_BUFFER_SIZE) {
 				serial_rx_read_pos = 0;
@@ -130,3 +129,7 @@ void comm_usb_init(void) {
 	chThdCreateStatic(serial_read_thread_wa, sizeof(serial_read_thread_wa), NORMALPRIO, serial_read_thread, NULL);
 	chThdCreateStatic(serial_process_thread_wa, sizeof(serial_process_thread_wa), NORMALPRIO, serial_process_thread, NULL);
 }
+
+
+
+

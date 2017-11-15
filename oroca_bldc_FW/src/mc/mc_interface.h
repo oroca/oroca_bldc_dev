@@ -28,6 +28,111 @@
 #include "conf_general.h"
 #include "hw.h"
 
+// Default settings
+#ifndef MCCONF_DEFAULT_MOTOR_TYPE
+#define MCCONF_DEFAULT_MOTOR_TYPE		MOTOR_TYPE_BLDC
+#endif
+#ifndef MCCONF_PWM_MODE
+#define MCCONF_PWM_MODE					PWM_MODE_SYNCHRONOUS // Default PWM mode
+#endif
+#ifndef MCCONF_SENSOR_MODE
+#define MCCONF_SENSOR_MODE				SENSOR_MODE_SENSORLESS // Sensor mode
+#endif
+#ifndef MCCONF_COMM_MODE
+#define MCCONF_COMM_MODE				COMM_MODE_INTEGRATE	// The commutation mode to use
+#endif
+
+// Limits
+#ifndef MCCONF_L_CURRENT_MAX
+#define MCCONF_L_CURRENT_MAX			60.0	// Current limit in Amperes (Upper)
+#endif
+#ifndef MCCONF_L_CURRENT_MIN
+#define MCCONF_L_CURRENT_MIN			-60.0	// Current limit in Amperes (Lower)
+#endif
+#ifndef MCCONF_L_IN_CURRENT_MAX
+#define MCCONF_L_IN_CURRENT_MAX			60.0	// Input current limit in Amperes (Upper)
+#endif
+#ifndef MCCONF_L_IN_CURRENT_MIN
+#define MCCONF_L_IN_CURRENT_MIN			-40.0	// Input current limit in Amperes (Lower)
+#endif
+#ifndef MCCONF_L_MAX_ABS_CURRENT
+#define MCCONF_L_MAX_ABS_CURRENT		130.0	// The maximum absolute current above which a fault is generated
+#endif
+#ifndef MCCONF_L_MIN_VOLTAGE
+#define MCCONF_L_MIN_VOLTAGE			8.0		// Minimum input voltage
+#endif
+#ifndef MCCONF_L_MAX_VOLTAGE
+#define MCCONF_L_MAX_VOLTAGE			57.0	// Maximum input voltage
+#endif
+#ifndef MCCONF_L_BATTERY_CUT_START
+#define MCCONF_L_BATTERY_CUT_START		10.0	// Start limiting the positive current at this voltage
+#endif
+#ifndef MCCONF_L_BATTERY_CUT_END
+#define MCCONF_L_BATTERY_CUT_END		8.0		// Limit the positive current completely at this voltage
+#endif
+#ifndef MCCONF_L_RPM_MAX
+#define MCCONF_L_RPM_MAX				100000.0	// The motor speed limit (Upper)
+#endif
+#ifndef MCCONF_L_RPM_MIN
+#define MCCONF_L_RPM_MIN				-100000.0	// The motor speed limit (Lower)
+#endif
+#ifndef MCCONF_L_RPM_START
+#define MCCONF_L_RPM_START				0.8		// Fraction of full speed where RPM current limiting starts
+#endif
+#ifndef MCCONF_L_SLOW_ABS_OVERCURRENT
+#define MCCONF_L_SLOW_ABS_OVERCURRENT	true	// Use the filtered (and hence slower) current for the overcurrent fault detection
+#endif
+#ifndef MCCONF_L_MIN_DUTY
+#define MCCONF_L_MIN_DUTY				0.005	// Minimum duty cycle
+#endif
+#ifndef MCCONF_L_MAX_DUTY
+#define MCCONF_L_MAX_DUTY				0.95	// Maximum duty cycle
+#endif
+#ifndef MCCONF_L_CURR_MAX_RPM_FBRAKE
+#define MCCONF_L_CURR_MAX_RPM_FBRAKE	300		// Maximum electrical RPM to use full brake at
+#endif
+#ifndef MCCONF_L_CURR_MAX_RPM_FBRAKE_CC
+#define MCCONF_L_CURR_MAX_RPM_FBRAKE_CC	1500	// Maximum electrical RPM to use full brake at with current control
+#endif
+#ifndef MCCONF_L_LIM_TEMP_FET_START
+#define MCCONF_L_LIM_TEMP_FET_START		80.0	// MOSFET temperature where current limiting should begin
+#endif
+#ifndef MCCONF_L_LIM_TEMP_FET_END
+#define MCCONF_L_LIM_TEMP_FET_END		100.0	// MOSFET temperature where everything should be shut off
+#endif
+#ifndef MCCONF_L_LIM_TEMP_MOTOR_START
+#define MCCONF_L_LIM_TEMP_MOTOR_START	80.0	// MOTOR temperature where current limiting should begin
+#endif
+#ifndef MCCONF_L_LIM_TEMP_MOTOR_END
+#define MCCONF_L_LIM_TEMP_MOTOR_END		100.0	// MOTOR temperature where everything should be shut off
+#endif
+#ifndef MCCONF_L_WATT_MAX
+#define MCCONF_L_WATT_MAX				15000.0	// Maximum wattage output
+#endif
+#ifndef MCCONF_L_WATT_MIN
+#define MCCONF_L_WATT_MIN				-15000.0	// Minimum wattage output (braking)
+#endif
+
+
+// Logged fault data
+typedef struct {
+	mc_fault_code fault;
+	float current;
+	float current_filtered;
+	float voltage;
+	float duty;
+	float rpm;
+	int tacho;
+	int cycles_running;
+	int tim_val_samp;
+	int tim_current_samp;
+	int tim_top;
+	int comm_step;
+	float temperature;
+	int drv8301_faults;
+} fault_data;
+
+
 // Functions
 void mc_interface_init(mc_configuration *configuration);
 const volatile mc_configuration* mc_interface_get_configuration(void);
@@ -37,6 +142,7 @@ void mc_interface_lock(void);
 void mc_interface_unlock(void);
 void mc_interface_lock_override_once(void);
 
+void mc_interface_fault_stop(mc_fault_code fault);
 
 
 

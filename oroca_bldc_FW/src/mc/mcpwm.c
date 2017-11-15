@@ -22,20 +22,12 @@
  *      Author: bakchajang
  */
 
-#include <stdint.h>
-#include <stdbool.h>
-
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
-#include "hw.h"
 
-//#include "main.h"
-#include "mcpwm.h"
-#include "utils.h"
-
-//#include "../core/uart3.h"
-
+#include <stdint.h>
+#include <stdbool.h>
 //#include <errno.h>
 //#include <unistd.h>
 //#include <stdlib.h>
@@ -43,23 +35,11 @@
 //#include <stdio.h>
 //#include <string.h>
 
+#include "hw.h"
+#include "mcpwm.h"
+#include "utils.h"
 
-union{
-        struct {
-		unsigned OpenLoop:1;	// Indicates if motor is running in open or closed loop
-		unsigned RunMotor:1;	// If motor is running, or stopped.
-		unsigned EnTorqueMod:1;	// This bit enables Torque mode when running closed loop
-		unsigned EnVoltRipCo:1;	// Bit that enables Voltage Ripple Compensation
-		unsigned ChangeMode:1;	// This flag indicates that a transition from open to closed
-								// loop, or closed to open loop has happened. This
-								// causes DoControl subroutine to initialize some variables
-								// before executing open or closed loop for the first time
-		unsigned ChangeSpeed:1;	// This flag indicates a step command in speed reference.
-								// This is mainly used to analyze step response
-		unsigned    :10;
-            }bit;
-        	WORD Word;
- } uGF;
+
 
 
 SMC smc1;
@@ -85,31 +65,279 @@ uint16_t ADC_Value[HW_ADC_CHANNELS];
 unsigned int  switching_frequency_now = PWMFREQUENCY;
 
 // Speed Calculation Variables
+WORD MCCtrlCnt = 0;	
 
-float AccumTheta = 0;	// Accumulates delta theta over a number of times
-WORD AccumThetaCnt = 0;	// Counter used to calculate motor speed. Is incremented
-						// in SMC_Position_Estimation() subroutine, and accumulates
-						// delta Theta. After N number of accumulations, Omega is
-						// calculated. This N is diIrpPerCalc which is defined in
-						// UserParms.h.
+float qVelRef = 0.01f;
+float dbg_fTheta;
+float dbg_fMea;
+uint16_t dbg_AccumTheta;
 
-// Vd and Vq vector limitation variables
+static volatile mc_configuration *conf;
+void mcpwm_init(volatile mc_configuration *configuration)
+{
 
-static volatile float qVdSquared = 0;	// This variable is used to know what is left from the VqVd vector
-						// in order to have maximum output PWM without saturation. This is
-						// done before executing Iq control loop at the end of DoControl()
+	//Uart3_printf(&SD3, (uint8_t *)"mcpwm_init....\r\n");//170530  
+	utils_sys_lock_cnt();
 
-static volatile float DCbus = 0;		// DC Bus measured continuously and stored in this variable
-						// while motor is running. Will be compared with TargetDCbus
-						// and Vd and Vq will be compensated depending on difference
-						// between DCbus and TargetDCbus
+	//conf = configuration;
 
-static volatile float TargetDCbus = 0;// DC Bus is measured before running motor and stored in this
-						// variable. Any variation on DC bus will be compared to this value
-						// and compensated linearly.
+	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+	TIM_OCInitTypeDef  TIM_OCInitStructure;
+	TIM_BDTRInitTypeDef TIM_BDTRInitStructure;
+
+	// Initialize variables
+	dccal_done = false;
+
+	TIM_DeInit(TIM1);
+	TIM_DeInit(TIM8);
+	TIM1->CNT = 0;
+	TIM8->CNT = 0;
+
+	// TIM1 clock enable
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+
+	// Time Base configuration
+	TIM_TimeBaseStructure.TIM_Prescaler = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_CenterAligned1;
+	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now /2;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_RepetitionCounter = 1;
+
+	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
+
+	// Channel 1, 2 and 3 Configuration in PWM mode
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+	TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Enable;
+	TIM_OCInitStructure.TIM_Pulse = TIM1->ARR / 2;
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+	TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
+	TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
+	TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
+
+	TIM_OC1Init(TIM1, &TIM_OCInitStructure);
+	TIM_OC2Init(TIM1, &TIM_OCInitStructure);
+	TIM_OC3Init(TIM1, &TIM_OCInitStructure);
+	TIM_OC4Init(TIM1, &TIM_OCInitStructure);
+
+	TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	TIM_OC2PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	TIM_OC3PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	TIM_OC4PreloadConfig(TIM1, TIM_OCPreload_Enable);
+
+	// Automatic Output enable, Break, dead time and lock configuration
+	TIM_BDTRInitStructure.TIM_OSSRState = TIM_OSSRState_Enable;
+	TIM_BDTRInitStructure.TIM_OSSIState = TIM_OSSRState_Enable;
+	TIM_BDTRInitStructure.TIM_LOCKLevel = TIM_LOCKLevel_OFF;
+	TIM_BDTRInitStructure.TIM_DeadTime = MCPWM_DEAD_TIME_CYCLES;
+	TIM_BDTRInitStructure.TIM_Break = TIM_Break_Disable;
+	TIM_BDTRInitStructure.TIM_BreakPolarity = TIM_BreakPolarity_High;
+	TIM_BDTRInitStructure.TIM_AutomaticOutput = TIM_AutomaticOutput_Disable;
+
+	TIM_BDTRConfig(TIM1, &TIM_BDTRInitStructure);
+	TIM_CCPreloadControl(TIM1, ENABLE);
+	TIM_ARRPreloadConfig(TIM1, ENABLE);
+
+	/*
+	 * ADC!
+	 */
+	ADC_CommonInitTypeDef ADC_CommonInitStructure;
+	DMA_InitTypeDef DMA_InitStructure;
+	ADC_InitTypeDef ADC_InitStructure;
+
+	// Clock
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 | RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOC, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | RCC_APB2Periph_ADC3, ENABLE);
+
+	dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_int_handler,(void *)0);
+
+	// DMA for the ADC
+	DMA_InitStructure.DMA_Channel = DMA_Channel_0;
+	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&ADC_Value;
+	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&ADC->CDR;
+	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
+	DMA_InitStructure.DMA_BufferSize = HW_ADC_CHANNELS;
+	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
+	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
+	DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+	DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
+	DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_1QuarterFull;
+	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
+	DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+	DMA_Init(DMA2_Stream4, &DMA_InitStructure);
+
+	// DMA2_Stream0 enable
+	DMA_Cmd(DMA2_Stream4, ENABLE);
+
+	// Enable transfer complete interrupt
+	DMA_ITConfig(DMA2_Stream4, DMA_IT_TC, ENABLE);
+
+	// ADC Common Init
+	// Note that the ADC is running at 42MHz, which is higher than the
+	// specified 36MHz in the data sheet, but it works.
+	ADC_CommonInitStructure.ADC_Mode = ADC_TripleMode_RegSimult;
+	ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
+	ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_1;
+	ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
+	ADC_CommonInit(&ADC_CommonInitStructure);
+
+	// Channel-specific settings
+	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
+	ADC_InitStructure.ADC_ScanConvMode = ENABLE;
+	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
+	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_Falling;
+	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T8_CC1;
+	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+	ADC_InitStructure.ADC_NbrOfConversion = HW_ADC_NBR_CONV;
+
+	ADC_Init(ADC1, &ADC_InitStructure);
+	ADC_Init(ADC2, &ADC_InitStructure);
+	ADC_Init(ADC3, &ADC_InitStructure);
+
+	hw_setup_adc_channels();
+
+	// Enable DMA request after last transfer (Multi-ADC mode)
+	ADC_MultiModeDMARequestAfterLastTransferCmd(ENABLE);
+
+	// Enable ADC
+	ADC_Cmd(ADC1, ENABLE);
+	ADC_Cmd(ADC2, ENABLE);
+	ADC_Cmd(ADC3, ENABLE);
+
+	// ------------- Timer8 for ADC sampling ------------- //
+	// Time Base configuration
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8, ENABLE);
+
+	TIM_TimeBaseStructure.TIM_Prescaler = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
+
+	TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
+
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+	TIM_OCInitStructure.TIM_Pulse = TIM1->ARR;
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+	TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
+	TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
+	TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
+	TIM_OC1Init(TIM8, &TIM_OCInitStructure);	TIM_OC1PreloadConfig(TIM8, TIM_OCPreload_Enable);
+	TIM_OC2Init(TIM8, &TIM_OCInitStructure);	TIM_OC2PreloadConfig(TIM8, TIM_OCPreload_Enable);
+	TIM_OC3Init(TIM8, &TIM_OCInitStructure);	TIM_OC3PreloadConfig(TIM8, TIM_OCPreload_Enable);
+
+	TIM_ARRPreloadConfig(TIM8, ENABLE);
+	TIM_CCPreloadControl(TIM8, ENABLE);
+
+	// PWM outputs have to be enabled in order to trigger ADC on CCx
+	TIM_CtrlPWMOutputs(TIM8, ENABLE);
+
+	// TIM1 Master and TIM8 slave
+	TIM_SelectOutputTrigger(TIM1, TIM_TRGOSource_Update);
+	TIM_SelectMasterSlaveMode(TIM1, TIM_MasterSlaveMode_Enable);
+	TIM_SelectInputTrigger(TIM8, TIM_TS_ITR0);
+	TIM_SelectSlaveMode(TIM8, TIM_SlaveMode_Reset);
+
+	// Enable TIM8
+	TIM_Cmd(TIM8, ENABLE);
+
+	// Enable TIM1
+	TIM_Cmd(TIM1, ENABLE);
+
+	// Main Output Enable
+	TIM_CtrlPWMOutputs(TIM1, ENABLE);
+
+	// 32-bit timer for RPM measurement
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+	uint16_t PrescalerValue = (uint16_t) ((SYSTEM_CORE_CLOCK / 2) / MCPWM_RPM_TIMER_FREQ) - 1;
+
+	// Time base configuration
+	TIM_TimeBaseStructure.TIM_Period = 0xFFFFFFFF;
+	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+
+	// TIM2 enable counter
+	TIM_Cmd(TIM2, ENABLE);
+
+	// ADC sampling locations
+	//stop_pwm_hw();
+
+	// Disable preload register updates
+	TIM1->CR1 |= TIM_CR1_UDIS;
+	TIM8->CR1 |= TIM_CR1_UDIS;
+
+	TIM8->CCR1 = TIM1->ARR;//for vdc
+	TIM8->CCR2 = TIM1->ARR;//for Ib
+	TIM8->CCR3 = TIM1->ARR;//for Ia
+
+	// Enables preload register updates
+	TIM1->CR1 &= ~TIM_CR1_UDIS;
+	TIM8->CR1 &= ~TIM_CR1_UDIS;
+
+	utils_sys_unlock_cnt();
+
+	// Calibrate current offset
+	ENABLE_GATE();
+	DCCAL_OFF();
+	do_dc_cal();
+
+	// Various time measurements
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM12, ENABLE);
+	PrescalerValue = (uint16_t) ((SYSTEM_CORE_CLOCK / 2) / 10000000) - 1;
+
+	// Time base configuration
+	TIM_TimeBaseStructure.TIM_Period = 0xFFFFFFFF;
+	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseInit(TIM12, &TIM_TimeBaseStructure);
+
+	// TIM3 enable counter
+	TIM_Cmd(TIM12, ENABLE);
+
+	// WWDG configuration
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, ENABLE);
+	WWDG_SetPrescaler(WWDG_Prescaler_1);
+	WWDG_SetWindowValue(255);
+	WWDG_Enable(100);
+
+	SetupParm();
+	SetupControlParameters();
 
 
+	//dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_int_handler,(void *)0);
+	//DMA_ITConfig(DMA2_Stream4, DMA_IT_TC, ENABLE);
 
+	//CtrlParm.qVelRef=0.1f;
+//
+}
+
+void mcpwm_deinit(void) {
+	WWDG_DeInit();
+
+	//timer_thd_stop = true;
+	//rpm_thd_stop = true;
+
+	//while (timer_thd_stop || rpm_thd_stop)
+	//{
+	//	chThdSleepMilliseconds(1);
+	//}
+
+	TIM_DeInit(TIM1);
+	TIM_DeInit(TIM2);
+	TIM_DeInit(TIM8);
+	TIM_DeInit(TIM12);
+	ADC_DeInit();
+	DMA_DeInit(DMA2_Stream4);
+	nvicDisableVector(ADC_IRQn);
+	dmaStreamRelease(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)));
+}
 
 
 void stop_pwm_hw(void) {
@@ -127,8 +355,6 @@ void stop_pwm_hw(void) {
 
 	TIM_GenerateEvent(TIM1, TIM_EventSource_COM);
 }
-
-
 
 
 
@@ -166,95 +392,96 @@ void mcpwm_adc_int_handler(void *p, uint32_t flags)
 	(void)p;
 	(void)flags;
 
-	TIM12->CNT = 0;
+	MCCtrlCnt++;
+	if(MCCtrlCnt % 16 == 1) //speed ctrl
+	{
+		SMC_HallSensor_Estimation (&smc1);
 
-	curr_start_samples++;
-	curr0_sum += ADC_Value[ADC_IND_CURR1] ;
-	curr1_sum += ADC_Value[ADC_IND_CURR2] ;
+	
+		//LED_GREEN_ON();
+		// Execute the velocity control loop
+		PIParmW.qInMeas = smc1.Omega;
+		PIParmW.qInRef	= CtrlParm.qVelRef;
+		CalcPI(&PIParmW);
+		CtrlParm.qVqRef = PIParmW.qOut;
+		
+		//LED_GREEN_OFF();
+	}
 
-	SMC_HallSensor_Estimation (&smc1);
+	if(MCCtrlCnt % 4 == 0)//current ctrl
+	{
+		LED_RED_ON();
 
-	// Check for faults that should stop the motor
-	uGF.bit.RunMotor = 1;
-	if( uGF.bit.RunMotor )
-		{
-			ENABLE_GATE();
-//			LED_RED_ON();
-	
-			// Calculate qIa,qIb
-			 int CorrADC1, CorrADC2;
+		TIM12->CNT = 0;
 
-			 CorrADC1 = ADC_Value[ADC_IND_CURR1] - MeasCurrParm.Offseta;
-			 CorrADC2 = ADC_Value[ADC_IND_CURR2] - MeasCurrParm.Offsetb;
-			// ADC_curr_norm_value[2] = -(ADC_curr_norm_value[0] + ADC_curr_norm_value[1]);
-
-			 ParkParm.qIa = MeasCurrParm.qKa * (float)CorrADC1;
-			 ParkParm.qIb = MeasCurrParm.qKb * (float)CorrADC2;	
-	
-			//Uart3_printf(&SD3,  "%f,%d,%d\r\n",ParkParm.qAngle ,ParkParm.qIa,CorrADC2);
-
-			// Calculate commutation angle using estimator
-			ParkParm.qAngle = smc1.Theta;
-	
-			//ParkParm.qAngle = (float)IN[2];
-			//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
-	
-			AccumThetaCnt++;
-			if (AccumThetaCnt == IRP_PERCALC)
-			{
-				AccumThetaCnt = 0;
-			}
-	
-	
-			// Calculate qId,qIq from qSin,qCos,qIa,qIb
-			ParkParm.qIalpha = ParkParm.qIa;
-			ParkParm.qIbeta = ParkParm.qIa*INV_SQRT3 + 2*ParkParm.qIb*INV_SQRT3;
-			// Ialpha and Ibeta have been calculated. Now do rotation.
-			// Get qSin, qCos from ParkParm structure
-
-			ParkParm.qId = -ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
-			ParkParm.qIq = ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
-	
-			// Calculate control values
-			DoControl();
-	
-	//=============================================================================
-	//for open loop test
-			//ParkParm.qVd =0.5f;
-			//ParkParm.qVq = 0.0f;
-	
-			//ParkParm.qAngle = 0.0f;
-	
-			//ParkParm.qAngle -= 0.01f;
-			//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
-	
-			//ParkParm.qAngle += 0.002f;
-			//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
-	//==============================================================================
-	
-			// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
-			ParkParm.qValpha =  ParkParm.qVd*cosf(ParkParm.qAngle) - ParkParm.qVq*sinf(ParkParm.qAngle);
-			ParkParm.qVbeta  =  ParkParm.qVd*sinf(ParkParm.qAngle) + ParkParm.qVq*cosf(ParkParm.qAngle);
-	
-			// Calculate Vr1,Vr2,Vr3 from qValpha, qVbeta
-			SVGenParm.qVr1 = ParkParm.qVbeta;
-			SVGenParm.qVr2 = (-ParkParm.qVbeta + SQRT3 * ParkParm.qValpha)/2;
-			SVGenParm.qVr3 = (-ParkParm.qVbeta	- SQRT3 * ParkParm.qValpha)/2;
+		curr_start_samples++;
+		curr0_sum += ADC_Value[ADC_IND_CURR1] ;
+		curr1_sum += ADC_Value[ADC_IND_CURR2] ;
 
 
-			CalcSVGen();
-	
-//			LED_RED_OFF();
-			//DISABLE_GATE();
-	
-				
-		}
-		else
-		{
-			DISABLE_GATE();
-		}
+		// Calculate qIa,qIb
+		int CorrADC1, CorrADC2;
 
-	// Reset the watchdog
+		CorrADC1 = ADC_Value[ADC_IND_CURR1] - MeasCurrParm.Offseta;
+		CorrADC2 = ADC_Value[ADC_IND_CURR2] - MeasCurrParm.Offsetb;
+		// ADC_curr_norm_value[2] = -(ADC_curr_norm_value[0] + ADC_curr_norm_value[1]);
+
+		ParkParm.qIa = MeasCurrParm.qKa * (float)CorrADC1;
+		ParkParm.qIb = MeasCurrParm.qKb * (float)CorrADC2;	
+
+		//Uart3_printf(&SD3,  "%f,%d,%d\r\n",ParkParm.qAngle ,ParkParm.qIa,CorrADC2);
+
+		// Calculate commutation angle using estimator
+		ParkParm.qAngle = smc1.Theta;
+
+		//ParkParm.qAngle = (float)IN[2];
+		//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
+
+
+
+		// Calculate qId,qIq from qSin,qCos,qIa,qIb
+		ParkParm.qIalpha = ParkParm.qIa;
+		ParkParm.qIbeta = ParkParm.qIa*INV_SQRT3 + 2*ParkParm.qIb*INV_SQRT3;
+		// Ialpha and Ibeta have been calculated. Now do rotation.
+		// Get qSin, qCos from ParkParm structure
+
+		ParkParm.qId = -ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
+		ParkParm.qIq = ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
+
+		// Calculate control values
+		DoControl();
+
+		//=============================================================================
+		//for open loop test
+		//ParkParm.qVd =0.5f;
+		//ParkParm.qVq = 0.0f;
+
+		//ParkParm.qAngle = 0.0f;
+
+		//ParkParm.qAngle -= 0.01f;
+		//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
+
+		//ParkParm.qAngle += 0.002f;
+		//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
+		//==============================================================================
+
+		// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
+		ParkParm.qValpha =  ParkParm.qVd*cosf(ParkParm.qAngle) - ParkParm.qVq*sinf(ParkParm.qAngle);
+		ParkParm.qVbeta  =  ParkParm.qVd*sinf(ParkParm.qAngle) + ParkParm.qVq*cosf(ParkParm.qAngle);
+
+		// Calculate Vr1,Vr2,Vr3 from qValpha, qVbeta
+		SVGenParm.qVr1 = ParkParm.qVbeta;
+		SVGenParm.qVr2 = (-ParkParm.qVbeta + SQRT3 * ParkParm.qValpha)/2;
+		SVGenParm.qVr3 = (-ParkParm.qVbeta	- SQRT3 * ParkParm.qValpha)/2;
+
+		CalcSVGen();
+
+		// Reset the watchdog
+		
+
+		LED_RED_OFF();
+	}
+
 	WWDG_SetCounter(100);
 
 }
@@ -268,10 +495,12 @@ bool SetupParm(void)
 	MeasCurrParm.qKb    = DQKB;
 
 	// Initial Current offsets
-	InitMeasCompCurr( curr0_offset, curr1_offset ); 
+	MeasCurrParm.Offseta = curr0_offset;
+	MeasCurrParm.Offsetb = curr1_offset;
+
 
 	// Target DC Bus, without sign.
-	TargetDCbus = GET_INPUT_VOLTAGE();
+	//TargetDCbus = GET_INPUT_VOLTAGE();
 
 	// ============= SVGen ===============
 	// Set PWM period to Loop Time
@@ -285,20 +514,12 @@ bool SetupParm(void)
 
 //---------------------------------------------------------------------
 // Executes one PI itteration for each of the three loops Id,Iq,Speed,
+float qVdSquared = 0.0f;
 
 void DoControl( void )
 {
-	if(AccumThetaCnt == 0)
-	{
-		// Execute the velocity control loop
-		PIParmW.qInMeas = smc1.Omega;
-		PIParmW.qInRef	= CtrlParm.qVelRef;
-		CalcPI(&PIParmW);
-		CtrlParm.qVqRef = PIParmW.qOut;
-	}
-
-	if (uGF.bit.EnTorqueMod)
-		CtrlParm.qVqRef = CtrlParm.qVelRef;
+	//if (uGF.bit.EnTorqueMod)
+	//	CtrlParm.qVqRef = CtrlParm.qVelRef;
 
 	//CtrlParm.qVdRef = FieldWeakening(fabsf(CtrlParm.qVelRef));
 
@@ -308,9 +529,9 @@ void DoControl( void )
 	PIParmD.qInRef	= 0.0f;
 	CalcPI(&PIParmD);
 
-	if(uGF.bit.EnVoltRipCo)
-		ParkParm.qVd = VoltRippleComp(PIParmD.qOut);
-	else
+	//if(uGF.bit.EnVoltRipCo)
+	//	ParkParm.qVd = VoltRippleComp(PIParmD.qOut);
+	//else
 		ParkParm.qVd = PIParmD.qOut;
 
 	qVdSquared = ParkParm.qVd * ParkParm.qVd;
@@ -324,9 +545,9 @@ void DoControl( void )
 
 	// If voltage ripple compensation flag is set, adjust the output
 	// of the Q controller depending on measured DC Bus voltage
-	if(uGF.bit.EnVoltRipCo)
-		ParkParm.qVq = VoltRippleComp(PIParmQ.qOut);
-	else
+	//if(uGF.bit.EnVoltRipCo)
+	//	ParkParm.qVq = VoltRippleComp(PIParmQ.qOut);
+	//else
 		ParkParm.qVq = PIParmQ.qOut;
 
 }
@@ -396,51 +617,6 @@ void SetupControlParameters(void)
 	return;
 }
 
-// NOTE:
-//
-// If Input power supply has switching frequency noise, for example if a
-// switch mode power supply is used, Voltage Ripple Compensation is not
-// recommended, since it will generate spikes on Vd and Vq, which can
-// potentially make the controllers unstable.
-
-float VoltRippleComp(float Vdq)
-{
-	float CompVdq;
-	// DCbus is already updated with new DC Bus measurement
-	// in ReadSignedADC0 subroutine.
-	//
-	// If target DC Bus is greater than what we measured last sample, adjust
-	// output as follows:
-	//
-	//                  TargetDCbus - DCbus
-	// CompVdq = Vdq + --------------------- * Vdq
-	//                         DCbus
-	//
-	// If Measured DCbus is greater than target, then the following compensation
-	// is implemented:
-	//
-	//            TargetDCbus 
-	// CompVdq = ------------- * Vdq
-	//               DCbus
-	//
-	// If target and measured are equal, no operation is made.
-	//
-	if (TargetDCbus > DCbus)
-		CompVdq = Vdq + (((TargetDCbus - DCbus)/ DCbus)* Vdq);
-	else if (DCbus > TargetDCbus)
-		CompVdq = ((TargetDCbus/ DCbus)* Vdq);
-	else
-		CompVdq = Vdq;
-
-	return CompVdq;
-}
-
-void InitMeasCompCurr( short Offset_a, short Offset_b )
-{
-	MeasCurrParm.Offseta = Offset_a;
-	MeasCurrParm.Offsetb = Offset_b;
-	return;
-}
 
 
 void CalcTimes(void)
@@ -466,13 +642,6 @@ void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty
 	TIM1->CCR1 = duty_A;
 	TIM1->CCR2 = duty_B;
 	TIM1->CCR3 = duty_C;
-
-	//debug_print_usb( "%u,%u,%u\r\n",duty_A ,duty_B,duty_C);
-	//TIM1->CCR4 = 100;
-	//TIM8->CCR1 = duty_A;
-	//TIM8->CCR2 = duty_A;
-	//TIM8->CCR3 = duty_C;
-
 
 	// Enables preload register updates
 	TIM1->CR1 &= ~TIM_CR1_UDIS;
@@ -707,305 +876,15 @@ void SMC_HallSensor_Estimation (SMC *s)
 	//DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
 }
 
+#endif
 
-float qVelRef = 0.01f;
-float dbg_fTheta;
-float dbg_fMea;
-uint16_t dbg_AccumTheta;
 
-static volatile mc_configuration *conf;
-void mcpwm_init(volatile mc_configuration *configuration)
-{
-
-	//Uart3_printf(&SD3, (uint8_t *)"mcpwm_init....\r\n");//170530  
-	utils_sys_lock_cnt();
-
-	conf = configuration;
-
-
-	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
-	TIM_OCInitTypeDef  TIM_OCInitStructure;
-	TIM_BDTRInitTypeDef TIM_BDTRInitStructure;
-	//NVIC_InitTypeDef NVIC_InitStructure;
-
-	// Initialize variables
-	dccal_done = false;
-
-	TIM_DeInit(TIM1);
-	TIM_DeInit(TIM8);
-	TIM1->CNT = 0;
-	TIM8->CNT = 0;
-
-	// TIM1 clock enable
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
-
-	// Time Base configuration
-	TIM_TimeBaseStructure.TIM_Prescaler = 0;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_CenterAligned1;
-	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now /2;
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-	TIM_TimeBaseStructure.TIM_RepetitionCounter = 1;
-
-	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
-
-	// Channel 1, 2 and 3 Configuration in PWM mode
-	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
-	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-	TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Enable;
-	TIM_OCInitStructure.TIM_Pulse = TIM1->ARR / 2;
-	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
-	TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
-	TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
-	TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
-
-	TIM_OC1Init(TIM1, &TIM_OCInitStructure);
-	TIM_OC2Init(TIM1, &TIM_OCInitStructure);
-	TIM_OC3Init(TIM1, &TIM_OCInitStructure);
-	TIM_OC4Init(TIM1, &TIM_OCInitStructure);
-
-	TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
-	TIM_OC2PreloadConfig(TIM1, TIM_OCPreload_Enable);
-	TIM_OC3PreloadConfig(TIM1, TIM_OCPreload_Enable);
-	TIM_OC4PreloadConfig(TIM1, TIM_OCPreload_Enable);
-
-	// Automatic Output enable, Break, dead time and lock configuration
-	TIM_BDTRInitStructure.TIM_OSSRState = TIM_OSSRState_Enable;
-	TIM_BDTRInitStructure.TIM_OSSIState = TIM_OSSRState_Enable;
-	TIM_BDTRInitStructure.TIM_LOCKLevel = TIM_LOCKLevel_OFF;
-	TIM_BDTRInitStructure.TIM_DeadTime = MCPWM_DEAD_TIME_CYCLES;
-	TIM_BDTRInitStructure.TIM_Break = TIM_Break_Disable;
-	TIM_BDTRInitStructure.TIM_BreakPolarity = TIM_BreakPolarity_High;
-	TIM_BDTRInitStructure.TIM_AutomaticOutput = TIM_AutomaticOutput_Disable;
-
-	TIM_BDTRConfig(TIM1, &TIM_BDTRInitStructure);
-	TIM_CCPreloadControl(TIM1, ENABLE);
-	TIM_ARRPreloadConfig(TIM1, ENABLE);
-
-	/*
-	 * ADC!
-	 */
-	ADC_CommonInitTypeDef ADC_CommonInitStructure;
-	DMA_InitTypeDef DMA_InitStructure;
-	ADC_InitTypeDef ADC_InitStructure;
-
-	// Clock
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 | RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOC, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | RCC_APB2Periph_ADC3, ENABLE);
-
-	dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_int_handler,(void *)0);
-
-	// DMA for the ADC
-	DMA_InitStructure.DMA_Channel = DMA_Channel_0;
-	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&ADC_Value;
-	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&ADC->CDR;
-	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
-	DMA_InitStructure.DMA_BufferSize = HW_ADC_CHANNELS;
-	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
-	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
-	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-	DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-	DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
-	DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_1QuarterFull;
-	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
-	DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
-	DMA_Init(DMA2_Stream4, &DMA_InitStructure);
-
-	// DMA2_Stream0 enable
-	DMA_Cmd(DMA2_Stream4, ENABLE);
-
-	// Enable transfer complete interrupt
-	DMA_ITConfig(DMA2_Stream4, DMA_IT_TC, ENABLE);
-
-	// ADC Common Init
-	// Note that the ADC is running at 42MHz, which is higher than the
-	// specified 36MHz in the data sheet, but it works.
-	ADC_CommonInitStructure.ADC_Mode = ADC_TripleMode_RegSimult;
-	ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
-	ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_1;
-	ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
-	ADC_CommonInit(&ADC_CommonInitStructure);
-
-	// Channel-specific settings
-	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
-	ADC_InitStructure.ADC_ScanConvMode = ENABLE;
-	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
-	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_Falling;
-	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T8_CC1;
-	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-	ADC_InitStructure.ADC_NbrOfConversion = HW_ADC_NBR_CONV;
-
-	ADC_Init(ADC1, &ADC_InitStructure);
-	ADC_Init(ADC2, &ADC_InitStructure);
-	ADC_Init(ADC3, &ADC_InitStructure);
-
-	hw_setup_adc_channels();
-
-	// Enable DMA request after last transfer (Multi-ADC mode)
-	ADC_MultiModeDMARequestAfterLastTransferCmd(ENABLE);
-
-	// Enable ADC
-	ADC_Cmd(ADC1, ENABLE);
-	ADC_Cmd(ADC2, ENABLE);
-	ADC_Cmd(ADC3, ENABLE);
-
-	// ------------- Timer8 for ADC sampling ------------- //
-	// Time Base configuration
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8, ENABLE);
-
-	TIM_TimeBaseStructure.TIM_Prescaler = 0;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now;
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
-
-	TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
-
-	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
-	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-	TIM_OCInitStructure.TIM_Pulse = TIM1->ARR;
-	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
-	TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
-	TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
-	TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
-	TIM_OC1Init(TIM8, &TIM_OCInitStructure);	TIM_OC1PreloadConfig(TIM8, TIM_OCPreload_Enable);
-	TIM_OC2Init(TIM8, &TIM_OCInitStructure);	TIM_OC2PreloadConfig(TIM8, TIM_OCPreload_Enable);
-	TIM_OC3Init(TIM8, &TIM_OCInitStructure);	TIM_OC3PreloadConfig(TIM8, TIM_OCPreload_Enable);
-
-	TIM_ARRPreloadConfig(TIM8, ENABLE);
-	TIM_CCPreloadControl(TIM8, ENABLE);
-
-	// PWM outputs have to be enabled in order to trigger ADC on CCx
-	TIM_CtrlPWMOutputs(TIM8, ENABLE);
-
-	// TIM1 Master and TIM8 slave
-	TIM_SelectOutputTrigger(TIM1, TIM_TRGOSource_Update);
-	TIM_SelectMasterSlaveMode(TIM1, TIM_MasterSlaveMode_Enable);
-	TIM_SelectInputTrigger(TIM8, TIM_TS_ITR0);
-	TIM_SelectSlaveMode(TIM8, TIM_SlaveMode_Reset);
-
-	// Enable TIM8
-	TIM_Cmd(TIM8, ENABLE);
-
-	// Enable TIM1
-	TIM_Cmd(TIM1, ENABLE);
-
-	// Main Output Enable
-	TIM_CtrlPWMOutputs(TIM1, ENABLE);
-
-	// 32-bit timer for RPM measurement
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-	uint16_t PrescalerValue = (uint16_t) ((SYSTEM_CORE_CLOCK / 2) / MCPWM_RPM_TIMER_FREQ) - 1;
-
-	// Time base configuration
-	TIM_TimeBaseStructure.TIM_Period = 0xFFFFFFFF;
-	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
-
-	// TIM2 enable counter
-	TIM_Cmd(TIM2, ENABLE);
-
-	// ADC sampling locations
-	//stop_pwm_hw();
-	utils_sys_lock_cnt();
-
-	// Disable preload register updates
-	TIM1->CR1 |= TIM_CR1_UDIS;
-	TIM8->CR1 |= TIM_CR1_UDIS;
-
-	TIM8->CCR1 = TIM1->ARR;//for vdc
-	TIM8->CCR2 = TIM1->ARR;//for Ib
-	TIM8->CCR3 = TIM1->ARR;//for Ia
-
-	// Enables preload register updates
-	TIM1->CR1 &= ~TIM_CR1_UDIS;
-	TIM8->CR1 &= ~TIM_CR1_UDIS;
-
-	utils_sys_unlock_cnt();
-
-	// Calibrate current offset
-	ENABLE_GATE();
-	DCCAL_OFF();
-	do_dc_cal();
-	//Uart3_printf(&SD3, (uint8_t *)"5-1\r\n");
-	// Enable transfer complete interrupt
-
-
-	// Various time measurements
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM12, ENABLE);
-	PrescalerValue = (uint16_t) ((SYSTEM_CORE_CLOCK / 2) / 10000000) - 1;
-
-	// Time base configuration
-	TIM_TimeBaseStructure.TIM_Period = 0xFFFFFFFF;
-	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseInit(TIM12, &TIM_TimeBaseStructure);
-
-	// TIM3 enable counter
-	TIM_Cmd(TIM12, ENABLE);
-
-	// WWDG configuration
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, ENABLE);
-	WWDG_SetPrescaler(WWDG_Prescaler_1);
-	WWDG_SetWindowValue(255);
-	WWDG_Enable(100);
-
-
-//--------------------------------------------------
-//main ctrl setup
-
-	SetupParm();
-	SetupControlParameters();
-
-
-	//dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_int_handler,(void *)0);
-	//DMA_ITConfig(DMA2_Stream4, DMA_IT_TC, ENABLE);
-
-
-	uGF.Word = 0;                   // clear flags
-	#ifdef TORQUEMODE
-    	uGF.bit.EnTorqueMod = 1;
-	#endif
-
-	#ifdef ENVOLTRIPPLE
-    	uGF.bit.EnVoltRipCo = 1;
-	#endif
-
-	uGF.bit.RunMotor = 1;
-
-	//CtrlParm.qVelRef=0.1f;
-//
-}
-
-void mcpwm_deinit(void) {
-	WWDG_DeInit();
-
-	//timer_thd_stop = true;
-	//rpm_thd_stop = true;
-
-	//while (timer_thd_stop || rpm_thd_stop)
-	//{
-	//	chThdSleepMilliseconds(1);
-	//}
-
-	TIM_DeInit(TIM1);
-	TIM_DeInit(TIM2);
-	TIM_DeInit(TIM8);
-	TIM_DeInit(TIM12);
-	ADC_DeInit();
-	DMA_DeInit(DMA2_Stream4);
-	nvicDisableVector(ADC_IRQn);
-	dmaStreamRelease(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)));
-}
 
 static volatile mc_state state;
 static volatile mc_control_mode control_mode;
 
-void mcpwm_set_configuration(volatile mc_configuration *configuration) {
+void mcpwm_set_configuration(volatile mc_configuration *configuration)
+{
 	// Stop everything first to be safe
 	control_mode = CONTROL_MODE_NONE;
 
@@ -1019,6 +898,5 @@ void mcpwm_set_configuration(volatile mc_configuration *configuration) {
 }
 
 
-#endif
 
 

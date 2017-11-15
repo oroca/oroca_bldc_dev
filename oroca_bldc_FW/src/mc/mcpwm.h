@@ -25,7 +25,9 @@
 #ifndef MCPWM_H_
 #define MCPWM_H_
 
-//#include "conf_general.h"
+#include "ch.h"
+#include "hal.h"
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -192,9 +194,7 @@ typedef struct {
 
     } tSVGenParm;
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "ch.h"
+
 
 // Data types
 typedef enum {
@@ -273,6 +273,39 @@ typedef struct {
 	mc_comm_mode comm_mode;
 	mc_motor_type motor_type;
 	mc_sensor_mode sensor_mode;
+
+	// Limits
+	float l_current_max;
+	float l_current_min;
+	float l_in_current_max;
+	float l_in_current_min;
+	float l_abs_current_max;
+	float l_min_erpm;
+	float l_max_erpm;
+	float l_erpm_start;
+	float l_max_erpm_fbrake;
+	float l_max_erpm_fbrake_cc;
+	float l_min_vin;
+	float l_max_vin;
+	float l_battery_cut_start;
+	float l_battery_cut_end;
+	bool l_slow_abs_current;
+	float l_temp_fet_start;
+	float l_temp_fet_end;
+	float l_temp_motor_start;
+	float l_temp_motor_end;
+	float l_min_duty;
+	float l_max_duty;
+	float l_watt_max;
+	float l_watt_min;
+	// Overridden limits (Computed during runtime)
+	float lo_current_max;
+	float lo_current_min;
+	float lo_in_current_max;
+	float lo_in_current_min;
+	float lo_current_motor_max_now;
+	float lo_current_motor_min_now;
+
 
 	sensor_port_mode m_sensor_port_mode;
 	uint32_t m_encoder_counts;
@@ -414,9 +447,6 @@ extern SMC smc1;
 
 // Functions
 bool SetupParm(void);
-void InitMeasCompCurr( short Offset_a, short Offset_b );
-void SinCos(void);      // Calculate qSin,qCos from iAngle
-
 
 void mcpwm_init(volatile mc_configuration *configuration);
 void mcpwm_deinit(void);
@@ -430,9 +460,6 @@ float FieldWeakening(float qMotorSpeed);
 void CalcRefVec( void );
 void CorrectPhase( void );
 void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
-
-float VoltRippleComp(float Vdq);
-
 
 
 void do_dc_cal(void);

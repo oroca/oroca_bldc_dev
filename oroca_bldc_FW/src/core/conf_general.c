@@ -7,6 +7,7 @@
 
 
 #include "ch.h"
+#include "hal.h"
 #include "stm32f4xx_conf.h"
 
 #include "eeprom.h"
@@ -20,6 +21,10 @@
 #include <math.h>
 
 #include "conf_general.h"
+
+//#include "comm_usb.h"
+#include "comm_usb_serial.h"//for debug
+
 
 // User defined default motor configuration file
 #ifdef MCCONF_DEFAULT_USER
@@ -50,17 +55,18 @@ void conf_general_init(void) {
 	memset(VirtAddVarTab, 0, sizeof(VirtAddVarTab));
 
 	int ind = 0;
-	for (unsigned int i = 0;i < (sizeof(app_configuration) / 2);i++) {
+	for (unsigned int i = 0;i < (sizeof(app_configuration) / 2);i++)
+	{
 		VirtAddVarTab[ind++] = EEPROM_BASE_MCCONF + i;
 	}
 
-	for (unsigned int i = 0;i < (sizeof(app_configuration) / 2);i++) {
+	for (unsigned int i = 0;i < (sizeof(app_configuration) / 2);i++) 
+	{
 		VirtAddVarTab[ind++] = EEPROM_BASE_APPCONF + i;
 	}
 
 	FLASH_Unlock();
-	FLASH_ClearFlag(FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR |
-			FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
+	FLASH_ClearFlag(FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
 	EE_Init();
 }
 
@@ -142,7 +148,7 @@ void conf_general_get_default_app_configuration(app_configuration *conf) {
  */
 void conf_general_get_default_mc_configuration(mc_configuration *conf) {
 	memset(conf, 0, sizeof(mc_configuration));
-/*	conf->pwm_mode = MCCONF_PWM_MODE;
+	conf->pwm_mode = MCCONF_PWM_MODE;
 	conf->comm_mode = MCCONF_COMM_MODE;
 	conf->motor_type = MCCONF_DEFAULT_MOTOR_TYPE;
 	conf->sensor_mode = MCCONF_SENSOR_MODE;
@@ -161,7 +167,6 @@ void conf_general_get_default_mc_configuration(mc_configuration *conf) {
 	conf->l_battery_cut_start = MCCONF_L_BATTERY_CUT_START;
 	conf->l_battery_cut_end = MCCONF_L_BATTERY_CUT_END;
 	conf->l_slow_abs_current = MCCONF_L_SLOW_ABS_OVERCURRENT;
-	conf->l_rpm_lim_neg_torque = MCCONF_L_RPM_LIMIT_NEG_TORQUE;
 	conf->l_temp_fet_start = MCCONF_L_LIM_TEMP_FET_START;
 	conf->l_temp_fet_end = MCCONF_L_LIM_TEMP_FET_END;
 	conf->l_temp_motor_start = MCCONF_L_LIM_TEMP_MOTOR_START;
@@ -173,6 +178,7 @@ void conf_general_get_default_mc_configuration(mc_configuration *conf) {
 	conf->lo_current_min = conf->l_current_min;
 	conf->lo_in_current_max = conf->l_in_current_max;
 	conf->lo_in_current_min = conf->l_in_current_min;
+	/*
 
 	conf->sl_min_erpm = MCCONF_SL_MIN_RPM;
 	conf->sl_max_fullbreak_current_dir_change = MCCONF_SL_MAX_FB_CURR_DIR_CHANGE;
@@ -315,24 +321,36 @@ bool conf_general_store_app_configuration(app_configuration *conf) {
  * @param conf
  * A pointer to a mc_configuration struct to write the read configuration to.
  */
-void conf_general_read_mc_configuration(mc_configuration *conf) {
+void conf_general_read_mc_configuration(mc_configuration *conf)
+{
 	bool is_ok = true;
 	uint8_t *conf_addr = (uint8_t*)conf;
 	uint16_t var;
 
-	for (unsigned int i = 0;i < (sizeof(mc_configuration) / 2);i++) {
-		if (EE_ReadVariable(EEPROM_BASE_MCCONF + i, &var) == 0) {
+	for (unsigned int i = 0;i < (sizeof(mc_configuration) / 2);i++) 
+	{
+		if (EE_ReadVariable(EEPROM_BASE_MCCONF + i, &var) == 0) 
+		{
 			conf_addr[2 * i] = (var >> 8) & 0xFF;
 			conf_addr[2 * i + 1] = var & 0xFF;
-		} else {
+		}
+		else
+		{
 			is_ok = false;
 			break;
 		}
 	}
 
-	if (!is_ok) {
+	chvprintf(&SDU1, (uint8_t *)"to conf_general.c : conf_general_read_mc_configuration\r\n");
+
+
+	if (!is_ok) 
+	{
+		
 		conf_general_get_default_mc_configuration(conf);
 	}
+
+	chvprintf(&SDU1, (uint8_t *)"%d\r\n", conf->motor_type);
 }
 
 /**
@@ -377,13 +395,13 @@ bool conf_general_detect_motor_param(float current, float min_rpm, float low_dut
 	int ok_steps = 0;
 	const float spinup_to_duty = 0.6;
 
-/*	mcconf = *mc_interface_get_configuration();
+	mcconf = *mc_interface_get_configuration();
 	mcconf_old = mcconf;
 
 	mcconf.motor_type = MOTOR_TYPE_BLDC;
 	mcconf.sensor_mode = SENSOR_MODE_SENSORLESS;
 	mcconf.comm_mode = COMM_MODE_DELAY;
-	mcconf.sl_phase_advance_at_br = 1.0;
+/*	mcconf.sl_phase_advance_at_br = 1.0;
 	mcconf.sl_min_erpm = min_rpm;
 	mc_interface_set_configuration(&mcconf);
 
@@ -512,13 +530,13 @@ bool conf_general_detect_motor_param(float current, float min_rpm, float low_dut
  */
 bool conf_general_measure_flux_linkage(float current, float duty,
 		float min_erpm, float res, float *linkage) {
-/*	mcconf = *mc_interface_get_configuration();
+	mcconf = *mc_interface_get_configuration();
 	mcconf_old = mcconf;
 
 	mcconf.motor_type = MOTOR_TYPE_BLDC;
 	mcconf.sensor_mode = SENSOR_MODE_SENSORLESS;
 	mcconf.comm_mode = COMM_MODE_DELAY;
-	mcconf.sl_phase_advance_at_br = 1.0;
+/*	mcconf.sl_phase_advance_at_br = 1.0;
 	mcconf.sl_min_erpm = min_erpm;
 	mc_interface_set_configuration(&mcconf);
 

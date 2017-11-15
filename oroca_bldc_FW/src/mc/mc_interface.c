@@ -21,18 +21,20 @@
  *  Created on: 10 okt 2015
  *      Author: benjamin
  */
+#include "ch.h"
+#include "hal.h"
 
+#include <math.h>
+
+#include "hw.h"
 #include "mc_interface.h"
 #include "mcpwm.h"
 #include "ledpwm.h"
 #include "stm32f4xx_conf.h"
-#include "hw.h"
 #include "utils.h"
-#include "ch.h"
-#include "hal.h"
-//#include "commands.h"
 #include "encoder.h"
-#include <math.h>
+
+#include "comm_usb_serial.h"
 
 // Global variables
 volatile int ADC_curr_norm_value[3];
@@ -86,7 +88,10 @@ static THD_WORKING_AREA(sample_send_thread_wa, 1024);
 static THD_FUNCTION(sample_send_thread, arg);
 static thread_t *sample_send_tp;
 
-void mc_interface_init(mc_configuration *configuration) {
+void mc_interface_init(mc_configuration *configuration) 
+{
+	chvprintf(&SDU1, (uint8_t *)"mc_interface_init\r\n");
+	
 	m_conf = *configuration;
 	m_fault_now = FAULT_CODE_NONE;
 	m_ignore_iterations = 0;
@@ -115,6 +120,7 @@ void mc_interface_init(mc_configuration *configuration) {
 	chThdCreateStatic(timer_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, timer_thread, NULL);
 	chThdCreateStatic(sample_send_thread_wa, sizeof(sample_send_thread_wa), NORMALPRIO - 1, sample_send_thread, NULL);
 
+#if 0
 	// Initialize encoder
 #if !WS2811_ENABLE
 	switch (m_conf.m_sensor_port_mode) {
@@ -130,9 +136,14 @@ void mc_interface_init(mc_configuration *configuration) {
 			break;
 	}
 #endif
+#endif
+
+
+//	m_conf.motor_type = MOTOR_TYPE_BLDC;
+	mcpwm_init(&m_conf);
 
 	// Initialize selected implementation
-	switch (m_conf.motor_type) {
+/*	switch (m_conf.motor_type) {
 		case MOTOR_TYPE_BLDC:
 		case MOTOR_TYPE_DC:
 			mcpwm_init(&m_conf);
@@ -145,6 +156,11 @@ void mc_interface_init(mc_configuration *configuration) {
 		default:
 			break;
 	}
+*/
+	
+
+
+
 }
 
 const volatile mc_configuration* mc_interface_get_configuration(void) {
@@ -269,56 +285,137 @@ mc_fault_code mc_interface_get_fault(void) {
  * @param conf
  * The configaration to update.
  */
-static void update_override_limits(volatile mc_configuration *conf) {
+static void update_override_limits(volatile mc_configuration *conf)
+{
 	const float temp = NTC_TEMP(ADC_IND_TEMP_MOS2);
 	const float v_in = GET_INPUT_VOLTAGE();
 
 	// Temperature
-/*	if (temp < conf->l_temp_fet_start) {
+	if (temp < conf->l_temp_fet_start) 
+	{
 		conf->lo_current_min = conf->l_current_min;
 		conf->lo_current_max = conf->l_current_max;
-	} else if (temp > conf->l_temp_fet_end) {
+	}
+	else if (temp > conf->l_temp_fet_end) 
+	{
 		conf->lo_current_min = 0.0;
 		conf->lo_current_max = 0.0;
 		mc_interface_fault_stop(FAULT_CODE_OVER_TEMP_FET);
-	} else {
+	}
+	else
+	{
 		float maxc = fabsf(conf->l_current_max);
-		if (fabsf(conf->l_current_min) > maxc) {
+		if (fabsf(conf->l_current_min) > maxc)
+		{
 			maxc = fabsf(conf->l_current_min);
 		}
 
 		maxc = utils_map(temp, conf->l_temp_fet_start, conf->l_temp_fet_end, maxc, 0.0);
 
-		if (fabsf(conf->l_current_max) > maxc) {
+		if (fabsf(conf->l_current_max) > maxc)
+		{
 			conf->lo_current_max = SIGN(conf->l_current_max) * maxc;
 		}
 
-		if (fabsf(conf->l_current_min) > maxc) {
+		if (fabsf(conf->l_current_min) > maxc) 
+		{
 			conf->lo_current_min = SIGN(conf->l_current_min) * maxc;
 		}
 	}
 
 	// Battery cutoff
-	if (v_in > conf->l_battery_cut_start) {
-		conf->lo_in_current_max = conf->l_in_current_max;
-	} else if (v_in < conf->l_battery_cut_end) {
+	if (v_in > conf->l_battery_cut_start)
+	{
+		conf->lo_in_current_max = conf->l_in_current_max;	
+	} 
+	else if (v_in < conf->l_battery_cut_end) 
+	{
 		conf->lo_in_current_max = 0.0;
-	} else {
+	}
+	else 
+	{
 		conf->lo_in_current_max = utils_map(v_in, conf->l_battery_cut_start,
-				conf->l_battery_cut_end, conf->l_in_current_max, 0.0);
+		conf->l_battery_cut_end, conf->l_in_current_max, 0.0);
 	}
 
-	conf->lo_in_current_min = conf->l_in_current_min;*/
+	conf->lo_in_current_min = conf->l_in_current_min;
 }
+
+
+void mc_interface_fault_stop(mc_fault_code fault) 
+{
+/*	if (m_fault_now == fault) {
+		m_ignore_iterations = m_conf.m_fault_stop_time_ms;
+		return;
+	}
+
+	if (mc_interface_dccal_done() && m_fault_now == FAULT_CODE_NONE) 
+	{
+		// Sent to terminal fault logger so that all faults and their conditions
+		// can be printed for debugging.
+		utils_sys_lock_cnt();
+		volatile int val_samp = TIM8->CCR1;
+		volatile int current_samp = TIM1->CCR4;
+		volatile int tim_top = TIM1->ARR;
+		utils_sys_unlock_cnt();
+
+		fault_data fdata;
+		fdata.fault = fault;
+		fdata.current = mc_interface_get_tot_current();
+		fdata.current_filtered = mc_interface_get_tot_current_filtered();
+		fdata.voltage = GET_INPUT_VOLTAGE();
+		fdata.duty = mc_interface_get_duty_cycle_now();
+		fdata.rpm = mc_interface_get_rpm();
+		fdata.tacho = mc_interface_get_tachometer_value(false);
+		fdata.cycles_running = m_cycles_running;
+		fdata.tim_val_samp = val_samp;
+		fdata.tim_current_samp = current_samp;
+		fdata.tim_top = tim_top;
+		fdata.comm_step = mcpwm_get_comm_step();
+		fdata.temperature = NTC_TEMP(ADC_IND_TEMP_MOS);
+#ifdef HW_HAS_DRV8301
+		if (fault == FAULT_CODE_DRV) {
+			fdata.drv8301_faults = drv8301_read_faults();
+		}
+#endif
+		terminal_add_fault_data(&fdata);
+	}
+
+	m_ignore_iterations = m_conf.m_fault_stop_time_ms;
+
+	switch (m_conf.motor_type) {
+	case MOTOR_TYPE_BLDC:
+	case MOTOR_TYPE_DC:
+		mcpwm_stop_pwm();
+		break;
+
+	case MOTOR_TYPE_FOC:
+		mcpwm_foc_stop_pwm();
+		break;
+
+	default:
+		break;
+	}
+
+	m_fault_now = fault;
+	*/
+}
+
+
+
+
 
 static THD_FUNCTION(timer_thread, arg) {
 	(void)arg;
 
 	chRegSetThreadName("mcif timer");
 
+	chvprintf(&SDU1, (uint8_t *)"to mc_interface -> mcif timer\r\n");
+
+
 	for(;;) {
 
-		update_override_limits(&m_conf);
+		//update_override_limits(&m_conf);
 
 		chThdSleepMilliseconds(1);
 	}
@@ -331,10 +428,13 @@ static THD_FUNCTION(sample_send_thread, arg) {
 
 	sample_send_tp = chThdGetSelfX();
 
+	chvprintf(&SDU1, (uint8_t *)"to mc_interface -> SampleSender\r\n");
+
+
 	for(;;) {
 		chEvtWaitAny((eventmask_t) 1);
 
-		for (int i = 0;i < m_sample_len;i++) {
+		/*for (int i = 0;i < m_sample_len;i++) {
 			uint8_t buffer[20];
 			int index = 0;
 
@@ -357,6 +457,6 @@ static THD_FUNCTION(sample_send_thread, arg) {
 			buffer[index++] = m_f_sw_samples[i];
 
 			//commands_send_samples(buffer, index);
-		}
+		}*/
 	}
 }

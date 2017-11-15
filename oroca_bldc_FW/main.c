@@ -15,15 +15,9 @@
 
 #include "mc_interface.h"
 #include "mcpwm.h"
-//#include "mcpwm_foc.h"
 #include "ledpwm.h"
-#include "comm_usb.h"
-#include "ledpwm.h"
-//#include "terminal.h"
 #include "hw.h"
 #include "app.h"
-//#include "packet.h"
-//#include "commands.h"
 #include "timeout.h"
 #include "comm_can.h"
 #include "ws2811.h"
@@ -32,6 +26,9 @@
 #include "servo.h"
 #include "servo_simple.h"
 #include "utils.h"
+
+#include "comm_usb.h"
+#include "comm_usb_serial.h"
 
 /*
  * Timers used:
@@ -65,7 +62,7 @@ static THD_FUNCTION(periodic_thread, arg)
 
 	chRegSetThreadName("BLDC periodic");
 
-	//Uart3_printf(&SD3, (uint8_t *)"periodic_thread\r\n");//170530
+	chvprintf(&SDU1, (uint8_t *)"to main -> periodic_thread : LED blink 0.5s\r\n");
 
 	for(;;)
 	{
@@ -80,6 +77,8 @@ static THD_FUNCTION(timer_thread, arg) {
 	(void)arg;
 
 	chRegSetThreadName("msec_timer");
+
+	chvprintf(&SDU1, (uint8_t *)"to main -> timer_thread\r\n");
 
 	for(;;) {
 		//packet_timerfunc();
@@ -107,12 +106,18 @@ int main(void)
 	conf_general_init();
 	ledpwm_init();
 
+	comm_usb_init();
+	chThdSleepMilliseconds(1000);
+	chvprintf(&SDU1, (uint8_t *)"\x1b[2J\x1b[0;0H");
+	chvprintf(&SDU1, (uint8_t *)"USB Serial ready...\r\n\r\n\r\n");
+
+	chvprintf(&SDU1, (uint8_t *)"Project : OROCA BLDC\r\n");
+	chvprintf(&SDU1, (uint8_t *)"by BakChaJang\r\n");
+	chvprintf(&SDU1, (uint8_t *)"date : 2017/11/15\r\n\r\n");
+
 	mc_configuration mcconf;
 	conf_general_read_mc_configuration(&mcconf);
 	mc_interface_init(&mcconf);
-
-	//	commands_init();
-		comm_usb_init();
 
 	app_configuration appconf;
 	conf_general_read_app_configuration(&appconf);
@@ -120,6 +125,10 @@ int main(void)
 
 	timeout_init();
 	timeout_configure(1000);
+
+#if CAN_ENABLE
+	comm_can_init();
+#endif
 
 	// Threads
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);
