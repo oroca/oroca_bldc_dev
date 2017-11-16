@@ -149,7 +149,7 @@ void mcpwm_init(volatile mc_configuration *configuration)
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 | RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOC, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | RCC_APB2Periph_ADC3, ENABLE);
 
-	dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_int_handler,(void *)0);
+	dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_dma_int_handler,(void *)0);
 
 	// DMA for the ADC
 	DMA_InitStructure.DMA_Channel = DMA_Channel_0;
@@ -285,7 +285,7 @@ void mcpwm_init(volatile mc_configuration *configuration)
 	// Calibrate current offset
 	ENABLE_GATE();
 	DCCAL_OFF();
-	do_dc_cal();
+	//do_dc_cal();//내부 while 루프때문에 동작먹춤  일단 주석처리~
 
 	// Various time measurements
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM12, ENABLE);
@@ -387,7 +387,7 @@ void do_dc_cal(void)
 /*
  * New ADC samples ready. Do commutation!
  */
-void mcpwm_adc_int_handler(void *p, uint32_t flags) 
+void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 {
 	(void)p;
 	(void)flags;

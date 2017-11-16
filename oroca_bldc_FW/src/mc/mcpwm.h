@@ -472,7 +472,7 @@ void SetupControlParameters(void);
 void CalcSVGen( void );
 
 // Interrupt handlers
-void mcpwm_adc_int_handler(void *p, uint32_t flags);
+void mcpwm_adc_dma_int_handler(void *p, uint32_t flags);
 
 #ifdef __cplusplus
 }
