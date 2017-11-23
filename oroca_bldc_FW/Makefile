@@ -95,7 +95,7 @@ MCSRC = src/mc
 APPSRC = src/app
 
 MAVSRC  =src/mavlink
-MAVSRC += src/mavlink/common
+#MAVSRC += src/mavlink/common
 MAVSRC += src/mavlink/oroca_bldc
 
 # Define project name here
