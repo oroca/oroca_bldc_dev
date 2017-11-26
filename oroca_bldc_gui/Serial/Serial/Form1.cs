@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.Threading;
+using System.Text;
 
 using MavLink;
 
@@ -10,6 +11,8 @@ namespace Serial
 {
     public partial class Form1 : Form
     {
+        // Mavlink message object
+        Mavlink receivedMsg = new Mavlink();
 
         public Form1()
         {
@@ -35,13 +38,13 @@ namespace Serial
             //SP.ReadTimeout = (int)100;
             //SP.WriteTimeout = (int)100;
 
-            cmbPort.SelectedIndex = 0;
+            //cmbPort.SelectedIndex = 0;
             cmbBRate.SelectedIndex = 5;
             cmbDataBits.SelectedIndex = 0;
             cmbParity.SelectedIndex = 2;
             cmbStopBits.SelectedIndex = 2;
 
-            SerialPort.PortName = cmbPort.SelectedItem.ToString();
+            //SerialPort.PortName = cmbPort.SelectedItem.ToString();
 
             switch (cmbBRate.SelectedIndex)
             {
@@ -81,6 +84,31 @@ namespace Serial
                 case 3: SerialPort.StopBits = StopBits.Two; break;
                 default: SerialPort.StopBits = StopBits.One; break;
             }
+
+            
+            // Add my packet receive methods to the event handler
+            receivedMsg.PacketReceived += new PacketReceivedEventHandler(this.PrintRecievedPackets);
+        }
+
+        public void PrintRecievedPackets(object sender, MavlinkPacket e)
+        {
+            // Print Message Basic Info
+                        Console.WriteLine("System ID: {0}", e.SystemId);
+                        Console.WriteLine("Message: {0}", e.Message.ToString ());
+                        Console.WriteLine ("Time Stamp: {0}", e.TimeStamp);
+
+            rbText.Text += ".";
+
+            if (e.Message.GetType() == typeof(MavLink.Msg_debug_string))
+            {
+                Console.WriteLine((e.Message as MavLink.Msg_debug_string).dbg_str);
+                rbText.Text += "[수신된 Data] " + (e.Message as MavLink.Msg_debug_string).dbg_str + "\r\n";
+            }
+            else if (e.Message.GetType() == typeof(MavLink.Msg_set_velocity))
+            {
+                Console.WriteLine("Msg_set_velocity : {0}", (e.Message as MavLink.Msg_set_velocity).ref_angular_velocity);
+                rbText.Text += "[수신된 Data] " + (e.Message as MavLink.Msg_set_velocity).ref_angular_velocity + "\r\n";
+            }
         }
 
         private void SP_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -91,13 +119,17 @@ namespace Serial
 
                 string str = SerialPort.ReadExisting();
 
+                byte[] receiveByteArray = Encoding.UTF8.GetBytes(str);
+                
+                receivedMsg.ParseBytes(receiveByteArray);
+
                 //str = str.Trim().Replace("\r\n", "");
                 //lbResult.Text = str;
                 //rbText.Text = string.Format("{0}{1}{2}", rbText.Text, "[Received]", str+"\r\n");
                 //rbText.SelectionStart = rbText.Text.Length;
                 //rbText.ScrollToCaret();
-                rbText.Text += "[전송된 Data] " + str;
-                Thread.Sleep(1000);
+                //rbText.Text += "[전송된 Data] " + str;
+                Thread.Sleep(1);
             }
         }
 

@@ -30,6 +30,9 @@
 #include "comm_usb.h"
 #include "comm_usb_serial.h"
 
+#include "mavlink_proc.h"
+
+
 /*
  * Timers used:
  * TIM7: servo
@@ -53,7 +56,7 @@
  *
  */
 
-static THD_WORKING_AREA(periodic_thread_wa, 1024);
+static THD_WORKING_AREA(periodic_thread_wa, 128);
 static THD_WORKING_AREA(timer_thread_wa, 128);
 
 static THD_FUNCTION(periodic_thread, arg)
@@ -70,6 +73,9 @@ static THD_FUNCTION(periodic_thread, arg)
 		chThdSleepMilliseconds(500);
 		LED_GREEN_OFF();
 		chThdSleepMilliseconds(500);
+
+		//mavlink_dbgString_send((uint8_t*)"test");
+		mavlink_velocity_send((uint8_t)55);
 	}
 }
 

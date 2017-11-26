@@ -31,7 +31,9 @@
 extern "C" {
 #endif
 
-int mavlink_byte_send( uint8_t data );
+int mavlink_velocity_send( uint8_t data );
+int mavlink_dbgString_send( uint8_t* data );
+
 bool mavlink_byte_recv( uint8_t ch );
 
 #ifdef __cplusplus

@@ -29,5 +29,6 @@
 
 // Functions
 void comm_usb_init(void);
+void usb_serial_send(uint8_t* buffer, uint16_t len);
 
 #endif /* COMM_USB_H_ */

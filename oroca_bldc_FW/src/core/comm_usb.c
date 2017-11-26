@@ -24,9 +24,17 @@
 
 #include "ch.h"
 #include "hal.h"
+#include "stm32f4xx_conf.h"
+
 #include "mavlink_proc.h"
 #include "comm_usb.h"
 #include "comm_usb_serial.h"
+
+#include <math.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
+
 
 // Settings
 #define PACKET_HANDLER				0
@@ -38,13 +46,22 @@ static int serial_rx_read_pos = 0;
 static int serial_rx_write_pos = 0;
 static THD_WORKING_AREA(serial_read_thread_wa, 512);
 static THD_WORKING_AREA(serial_process_thread_wa, 4096);
+
+//static uint8_t obuf[512];
+//static output_queue_t oq;
+#define SERIAL_TX_BUFFER_SIZE		2048
+static uint8_t serial_tx_buffer[SERIAL_TX_BUFFER_SIZE];
+static int serial_tx_read_pos = 0;
+static int serial_tx_write_pos = 0;
+static THD_WORKING_AREA(serial_write_thread_wa, 512);
+
 static mutex_t send_mutex;
-static thread_t *process_tp;
+static thread_t *process_rx_tp;
+static thread_t *process_tx_tp;
+
 
 // Private functions
-static void process_packet(unsigned char *data, unsigned int len);
-static void send_packet(unsigned char *buffer, unsigned int len);
-static void send_packet_wrapper(unsigned char *data, unsigned int len);
+int usb_uart_printf( const char *fmt, ...);
 
 static THD_FUNCTION(serial_read_thread, arg) {
 	(void)arg;
@@ -56,21 +73,25 @@ static THD_FUNCTION(serial_read_thread, arg) {
 	int len;
 	int had_data = 0;
 
-	for(;;) {
+	for(;;) 
+	{
 		len = chSequentialStreamRead(&SDU1, (uint8_t*) buffer, 1);
 
-		for (i = 0;i < len;i++) {
+		for (i = 0;i < len;i++) 
+		{
 			serial_rx_buffer[serial_rx_write_pos++] = buffer[i];
 
-			if (serial_rx_write_pos == SERIAL_RX_BUFFER_SIZE) {
+			if (serial_rx_write_pos == SERIAL_RX_BUFFER_SIZE) 
+			{
 				serial_rx_write_pos = 0;
 			}
-
+			
 			had_data = 1;
 		}
 
-		if (had_data) {
-			chEvtSignal(process_tp, (eventmask_t) 1);
+		if (had_data) 
+		{
+			chEvtSignal(process_rx_tp, (eventmask_t) 1);
 			had_data = 0;
 		}
 	}
@@ -81,7 +102,7 @@ static THD_FUNCTION(serial_process_thread, arg) {
 
 	chRegSetThreadName("USB-Serial process");
 
-	process_tp = chThdGetSelfX();
+	process_rx_tp = chThdGetSelfX();
 
 	for(;;) {
 		chEvtWaitAny((eventmask_t) 1);
@@ -93,31 +114,66 @@ static THD_FUNCTION(serial_process_thread, arg) {
 				//mavlink_uart_send( 1 ); //hand shake?
 			}
 
-			//chSequentialStreamWrite(&SDU1, &serial_rx_buffer[serial_rx_read_pos++], 1);//echo
-			//chSequentialStreamWrite(&SDU1, "test",4);
-			//chvprintf(&SDU1, (uint8_t *)"periodic_thread\r\n");
-
-			if (serial_rx_read_pos == SERIAL_RX_BUFFER_SIZE) {
+			if (serial_rx_read_pos == SERIAL_RX_BUFFER_SIZE) 
+			{
 				serial_rx_read_pos = 0;
 			}
 		}
 	}
 }
 
-static void process_packet(unsigned char *data, unsigned int len) {
-	//commands_set_send_func(send_packet_wrapper);
-	//commands_process_packet(data, len);
+
+static THD_FUNCTION(serial_write_thread, arg) {
+	(void)arg;
+
+	chRegSetThreadName("USB-Serial write");
+
+	process_tx_tp = chThdGetSelfX();
+
+	for(;;)
+	{
+		chEvtWaitAny((eventmask_t) 1);
+
+		//chvprintf(&SDU1, (uint8_t *)".");
+	
+		while (serial_tx_read_pos != serial_tx_write_pos) 
+		{
+			chSequentialStreamWrite(&SDU1, (uint8_t)serial_tx_buffer[serial_tx_read_pos++],1);
+
+			if (serial_tx_read_pos == SERIAL_TX_BUFFER_SIZE) 
+			{
+				serial_tx_read_pos = 0;
+			}
+		}
+	}
 }
 
-static void send_packet_wrapper(unsigned char *data, unsigned int len) {
-	chMtxLock(&send_mutex);
-	//packet_send_packet(data, len, PACKET_HANDLER);
-	chMtxUnlock(&send_mutex);
+
+
+void usb_serial_send(uint8_t* buffer, uint16_t len)
+{
+		uint16_t i;
+		int had_data = 0;
+
+		for (i = 0;i < len;i++) 
+		{
+			serial_tx_buffer[serial_tx_write_pos++] = buffer[i];
+
+			if (serial_tx_write_pos == SERIAL_TX_BUFFER_SIZE) 
+			{
+				serial_tx_write_pos = 0;
+			}
+			
+			had_data = 1;
+		}
+
+		if (had_data) 
+		{
+			chEvtSignal(process_tx_tp, (eventmask_t) 1);
+			had_data = 0;
+		}
 }
 
-static void send_packet(unsigned char *buffer, unsigned int len) {
-	chSequentialStreamWrite(&SDU1, buffer, len);
-}
 
 void comm_usb_init(void) {
 	comm_usb_serial_init();
@@ -125,11 +181,51 @@ void comm_usb_init(void) {
 
 	chMtxObjectInit(&send_mutex);
 
+//	oqObjectInit(&oq, obuf, SERIAL_BUFFERS_SIZE, NULL, NULL);
+
 	// Threads
 	chThdCreateStatic(serial_read_thread_wa, sizeof(serial_read_thread_wa), NORMALPRIO, serial_read_thread, NULL);
 	chThdCreateStatic(serial_process_thread_wa, sizeof(serial_process_thread_wa), NORMALPRIO, serial_process_thread, NULL);
+	chThdCreateStatic(serial_write_thread_wa, sizeof(serial_write_thread_wa), NORMALPRIO, serial_write_thread, NULL);
 }
 
 
 
+
+int usb_uart_printf( const char *fmt, ...)
+{
+	int ret = 0;
+	va_list arg;
+	va_start (arg, fmt);
+	int len;
+	static char print_buffer[255];
+
+	len = vsnprintf(print_buffer, 255, fmt, arg);
+	va_end (arg);
+
+	ret = chSequentialStreamWrite(&SDU1, print_buffer, len);
+
+	return ret;
+}
+
+
+int usb_uart_write( uint8_t *p_data, uint32_t len )
+{
+	int ret = 0;
+
+	ret = chSequentialStreamWrite(&SDU1, p_data, len);
+
+	return ret;
+}
+
+uint8_t usb_uart_getch( void )
+{
+	uint8_t buffer[128];
+	int len;
+
+
+	len = chSequentialStreamRead(&SDU1, (uint8_t*) buffer, 1);
+
+	return buffer[0];
+}
 

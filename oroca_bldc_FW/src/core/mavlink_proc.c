@@ -37,11 +37,12 @@
 #include "../mavlink/oroca_bldc/mavlink.h"
 #include "mavlink_proc.h"
 
+#include "comm_usb.h"
 #include "comm_usb_serial.h"
 
 
 
-int mavlink_byte_send( uint8_t data )
+int mavlink_velocity_send( uint8_t data )
 {
     mavlink_message_t msg; 
     uint8_t buf[1024];     
@@ -51,7 +52,24 @@ int mavlink_byte_send( uint8_t data )
     int len = mavlink_msg_to_send_buffer(buf, &msg);
 
     //Uart3_write(buf, len);
-    chSequentialStreamWrite(&SDU1, buf,len);
+    //chSequentialStreamWrite(&SDU1, buf,len);
+    usb_serial_send(buf,len); 
+
+    return 0;
+}
+
+
+
+int mavlink_dbgString_send( uint8_t* data )
+{
+    mavlink_message_t msg; 
+    uint8_t buf[1024];     
+
+    mavlink_msg_debug_string_pack( 9, 121, &msg, data );
+
+    int len = mavlink_msg_to_send_buffer(buf, &msg);
+
+   usb_serial_send(buf,len);
 
     return 0;
 }
