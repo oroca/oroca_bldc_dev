@@ -117,10 +117,12 @@ namespace Serial
             {
                // string str = SerialPort.ReadLine();
 
-                string str = SerialPort.ReadExisting();
+               // string str = SerialPort.ReadExisting();
+                // byte[] receiveByteArray = Encoding.UTF8.GetBytes(str);
 
-                byte[] receiveByteArray = Encoding.UTF8.GetBytes(str);
-                
+
+                byte[] receiveByteArray = new byte[1024];
+                SerialPort.Read(receiveByteArray, 0, SerialPort.BytesToRead);
                 receivedMsg.ParseBytes(receiveByteArray);
 
                 //str = str.Trim().Replace("\r\n", "");
