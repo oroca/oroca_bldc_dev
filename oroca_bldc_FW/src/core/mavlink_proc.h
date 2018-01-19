@@ -27,14 +27,33 @@
 
 #include <chtypes.h>
 
+#include "../mavlink/oroca_bldc/mavlink.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int mavlink_velocity_send( uint8_t data );
+typedef struct
+{
+  uint8_t ch;
+  mavlink_message_t *p_msg;
+} msg_handle_t;
+
+extern msg_handle_t	gMsg;
+
+typedef uint16_t err_code_t;
+
+#define OK                                  0x0000
+#define ERR_INVALID_CMD                     0x0001
+
+
+int mavlink_velocity_send( uint16_t data );
 int mavlink_dbgString_send( uint8_t* data );
 
-bool mavlink_byte_recv( uint8_t ch );
+void mavlink_msg_send(uint8_t ch, mavlink_message_t *p_msg);
+bool mavlink_msg_recv( uint8_t ch, uint8_t data , msg_handle_t *p_msg );
+void  mavlink_msg_process_vcp( msg_handle_t* p_msg);
+
 
 #ifdef __cplusplus
 }

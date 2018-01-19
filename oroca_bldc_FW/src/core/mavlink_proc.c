@@ -34,81 +34,221 @@
 #include "timeout.h"
 #include "utils.h"
 
-#include "../mavlink/oroca_bldc/mavlink.h"
-#include "mavlink_proc.h"
-
 #include "comm_usb.h"
 #include "comm_usb_serial.h"
 
+#include "mavlink_proc.h"
+
+const uint8_t  *board_name   = "BLDC R10";
+uint32_t boot_version        = 0x17020800;
+uint32_t boot_revision       = 0x00000000;
+
+#define MSG_CH_MAX	1
+msg_handle_t	gMsg;
 
 
-int mavlink_velocity_send( uint8_t data )
+/*---------------------------------------------------------------------------
+     TITLE   : resp_ack
+     WORK    :
+---------------------------------------------------------------------------*/
+void resp_ack( uint8_t ch, mavlink_ack_t *p_ack )
 {
-    mavlink_message_t msg; 
-    uint8_t buf[1024];     
+  mavlink_message_t mav_msg;
 
-    mavlink_msg_set_velocity_pack( 9, 121, &msg, data );
+  mavlink_msg_ack_pack_chan(0, 0, ch, &mav_msg, p_ack->msg_id, p_ack->err_code, p_ack->length, p_ack->data);
 
-    int len = mavlink_msg_to_send_buffer(buf, &msg);
+  mavlink_msg_send( ch, &mav_msg);
+}
 
-    //Uart3_write(buf, len);
-    //chSequentialStreamWrite(&SDU1, buf,len);
-    usb_serial_send(buf,len); 
+/*---------------------------------------------------------------------------
+     TITLE   : cmd_send_error
+     WORK    :
+---------------------------------------------------------------------------*/
+void cmd_send_error( msg_handle_t *p_msg, err_code_t err_code )
+{
 
-    return 0;
+  mavlink_ack_t     mav_ack;
+  mavlink_read_version_t mav_data;
+
+
+  mavlink_msg_read_version_decode(p_msg->p_msg, &mav_data);
+
+  mav_ack.msg_id   = p_msg->p_msg->msgid;
+  mav_ack.err_code = err_code;
+  resp_ack(p_msg->ch, &mav_ack);
 }
 
 
 
-int mavlink_dbgString_send( uint8_t* data )
+/*---------------------------------------------------------------------------
+     TITLE   : cmd_read_version
+     WORK    :
+---------------------------------------------------------------------------*/
+void cmd_read_version( msg_handle_t *p_msg )
 {
-    mavlink_message_t msg; 
-    uint8_t buf[1024];     
+  err_code_t err_code = OK;
+  mavlink_ack_t     mav_ack;
+  mavlink_read_version_t mav_data;
 
-    mavlink_msg_debug_string_pack( 9, 121, &msg, data );
+  mavlink_msg_read_version_decode(p_msg->p_msg, &mav_data);
 
-    int len = mavlink_msg_to_send_buffer(buf, &msg);
-
-   usb_serial_send(buf,len);
-
-    return 0;
+  if( mav_data.resp == 1 )
+  {
+    mav_ack.msg_id   = p_msg->p_msg->msgid;
+    mav_ack.err_code = err_code;
+    mav_ack.data[0] = boot_version;
+    mav_ack.data[1] = boot_version>>8;
+    mav_ack.data[2] = boot_version>>16;
+    mav_ack.data[3] = boot_version>>24;
+    mav_ack.data[4] = boot_revision;
+    mav_ack.data[5] = boot_revision>>8;
+    mav_ack.data[6] = boot_revision>>16;
+    mav_ack.data[7] = boot_revision>>24;
+    mav_ack.length  = 8;
+    resp_ack(p_msg->ch, &mav_ack);
+  }
 }
 
 
-bool mavlink_byte_recv( uint8_t ch )
+/*---------------------------------------------------------------------------
+     TITLE   : cmd_read_board_name
+     WORK    :
+---------------------------------------------------------------------------*/
+void cmd_read_board_name( msg_handle_t *p_msg )
 {
-	bool ret = false;
+  err_code_t err_code = OK;
+  mavlink_ack_t     mav_ack;
+  mavlink_read_board_name_t mav_data;
+  uint8_t i;
 
-	mavlink_message_t msg; 
-	mavlink_status_t status; 
+  mavlink_msg_read_board_name_decode(p_msg->p_msg, &mav_data);
 
-	uint8_t temp = mavlink_parse_char(MAVLINK_COMM_0, ch, &msg, &status);
 
-	//Uart3_printf(&SD3, "%02x ",ch);
 
-	if (temp == MAVLINK_FRAMING_OK)
-	{
-		if( MAVLINK_MSG_ID_SET_VELOCITY == msg.msgid ) 
-		{
-			mavlink_set_velocity_t set_velocity;
-			mavlink_msg_set_velocity_decode( &msg, &set_velocity);
+  if( mav_data.resp == 1 )
+  {
+    mav_ack.msg_id   = p_msg->p_msg->msgid;
+    mav_ack.err_code = err_code;
 
-		//	Uart3_printf(&SD3, "SET_VELOCITY\r\n");
-		//	Uart3_printf(&SD3, "value : %d",(uint16_t)set_velocity.ref_angular_velocity );
 
-			//--------------------------------------------------------------------------------
-			//test code
-			//int16_t tmp_value = set_velocity.ref_angular_velocity - 1500;
-			//float vel = (float)tmp_value / 700.0f;
-
-			//CtrlParm.qVelRef = vel / 100.0f;
-			//------------------------------------------------------------------------------
-			ret = true;
-		}
+    for( i=0; i<strlen(board_name); i++ )
+    {
+      mav_ack.data[i] = board_name[i];
     }
-
-
-	return ret;
+    mav_ack.data[i] = 0;
+    mav_ack.length  = i;
+    resp_ack(p_msg->ch, &mav_ack);
+  }
 }
 
+
+/*---------------------------------------------------------------------------
+     TITLE   : cmd_read_tag
+     WORK    :
+---------------------------------------------------------------------------*/
+void cmd_read_tag( msg_handle_t *p_msg )
+{
+  err_code_t err_code = OK;
+  mavlink_ack_t     mav_ack;
+  mavlink_read_tag_t mav_data;
+
+  mavlink_msg_read_tag_decode(p_msg->p_msg, &mav_data);
+
+
+
+  if( mav_data.resp == 1 )
+  {
+    mav_ack.msg_id   = p_msg->p_msg->msgid;
+    mav_ack.err_code = err_code;
+
+    mav_ack.length  = 0;
+    resp_ack(p_msg->ch, &mav_ack);
+  }
+}
+
+
+
+int cmd_velocity( uint16_t data )
+{
+    mavlink_message_t msg; 
+
+  //  mavlink_msg_set_velocity_pack( 9, 121, &msg, data );
+
+   // mavlink_bytes_send( &msg);
+
+    return 0;
+}
+
+
+int cmd_dbgString( uint8_t* data )
+{
+    mavlink_message_t msg; 
+     
+   // mavlink_msg_debug_string_pack( 9, 121, &msg, data );
+
+    //mavlink_bytes_send( &msg);
+
+    return 0;
+}
+
+
+void mavlink_msg_send(uint8_t ch, mavlink_message_t *p_msg)
+
+{
+	uint8_t buf[1024];	  
+
+	int len = mavlink_msg_to_send_buffer(buf, p_msg);
+	
+	switch(ch)
+	{
+	  case 0:		usb_serial_send(buf,len);		break;
+	  case 1:		break;
+	}
+	
+	return;
+}
+
+
+bool mavlink_msg_recv( uint8_t ch, uint8_t data , msg_handle_t *p_msg )
+{
+	bool ret = FALSE;
+	static mavlink_message_t msg[MSG_CH_MAX];
+	mavlink_status_t status[MSG_CH_MAX];
+
+	p_msg->ch = ch;
+
+	if(ch == 0)
+	{
+		if (mavlink_parse_char(MAVLINK_COMM_0, data, &msg[ch], &status[ch]) == MAVLINK_FRAMING_OK)
+		{
+			p_msg->p_msg = &msg[ch];
+			ret = TRUE;
+		}
+	}
+	else
+	{
+		if (mavlink_parse_char(MAVLINK_COMM_1, data, &msg[ch], &status[ch]) == MAVLINK_FRAMING_OK)
+		{
+			p_msg->p_msg = &msg[ch];
+			ret = TRUE;
+		}
+	}
+	return ret;
+
+}
+
+
+
+void  mavlink_msg_process_vcp( msg_handle_t* p_msg)
+{
+
+      switch( p_msg->p_msg->msgid )
+      {
+	case MAVLINK_MSG_ID_READ_VERSION:			cmd_read_version(p_msg);						break;
+	case MAVLINK_MSG_ID_READ_BOARD_NAME:		cmd_read_board_name(p_msg);					break;
+	case MAVLINK_MSG_ID_READ_TAG:				cmd_read_tag(p_msg);							break;
+	default:										cmd_send_error(p_msg, ERR_INVALID_CMD);		break;
+      }
+
+}
 

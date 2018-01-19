@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>mavlink</name>
+    </assembly>
+    <members>
+        <member name="F:MavLink.Msg_ack.msg_id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_ack.err_code">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_ack.length">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_ack.data">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_read_version.resp">
+            <summary>
+            0:No Resp, 1:Resp
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_read_version.param">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_read_board_name.resp">
+            <summary>
+            0:No Resp, 1:Resp
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_read_board_name.param">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_read_tag.resp">
+            <summary>
+            0:No Resp, 1:Resp
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_read_tag.type">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_read_tag.param">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_set_velocity.resp">
+            <summary>
+            0:No Resp, 1:Resp
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_set_velocity.ref_angular_velocity">
+            <summary>
+            velocity value
+            </summary>
+        </member>
+        <member name="T:MavLink.Msg_debug_string">
+            <summary>
+            debug String
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_debug_string.resp">
+            <summary>
+            0:No Resp, 1:Resp
+            </summary>
+        </member>
+        <member name="F:MavLink.Msg_debug_string.dbg_str">
+            <summary>
+            string
+            </summary>
+        </member>
+        <member name="T:MavLink.FrameworkBitConverter">
+            <summary>
+            converter from byte[] => primitive CLR types
+            delegates to the .Net framework bitconverter for speed, and to avoid using unsafe pointer 
+            casting for Silverlight.
+            </summary>
+        </member>
+        <member name="T:MavLink.Mavlink">
+            <summary>
+            Mavlink communication class. 
+            </summary>
+            <remarks>
+            Keeps track of state across send and receive of packets. 
+            User of this class can just send Mavlink Messsages, and 
+            receive them by feeding this class bytes off the wire as 
+            they arrive
+            </remarks>
+        </member>
+        <member name="M:MavLink.Mavlink.#ctor">
+            <summary>
+            Create a new MavlinkLink Object
+            </summary>
+        </member>
+        <member name="M:MavLink.Mavlink.ParseBytes(System.Byte[])">
+            <summary>
+            Process latest bytes from the stream. Received packets will be raised in the event
+            </summary>
+        </member>
+        <member name="E:MavLink.Mavlink.PacketReceived">
+            <summary>
+            Event raised when a message is decoded successfully
+            </summary>
+        </member>
+        <member name="P:MavLink.Mavlink.PacketsReceived">
+            <summary>
+            Total number of packets successfully received so far
+            </summary>
+        </member>
+        <member name="P:MavLink.Mavlink.BadCrcPacketsReceived">
+            <summary>
+            Total number of packets which have been rejected due to a failed crc
+            </summary>
+        </member>
+        <member name="E:MavLink.Mavlink.PacketFailedCRC">
+            <summary>
+            Raised when a packet does not pass CRC
+            </summary>
+        </member>
+        <member name="E:MavLink.Mavlink.BytesUnused">
+            <summary>
+            Raised when a number of bytes are passed over and cannot 
+            be used to decode a packet
+            </summary>
+        </member>
+        <member name="T:MavLink.PacketCRCFailEventArgs">
+            <summary>
+             Describes an occurance when a packet fails CRC
+            </summary>
+        </member>
+        <member name="M:MavLink.PacketCRCFailEventArgs.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:MavLink.PacketCRCFailEventArgs.BadPacket">
+            <summary>
+            The bytes that filed the CRC, including the starting character
+            </summary>
+        </member>
+        <member name="F:MavLink.PacketCRCFailEventArgs.Offset">
+            <summary>
+            The offset in bytes where the start of the block begins, e.g 
+            50 would mean the block of badbytes would start 50 bytes ago 
+            in the stread. No negative sign is necessary
+            </summary>
+        </member>
+        <member name="T:MavLink.PacketCRCFailEventHandler">
+            <summary>
+             Handler for an PacketFailedCRC Event
+            </summary>
+        </member>
+        <member name="T:MavLink.MavlinkPacket">
+            <summary>
+             Represents a Mavlink message - both the message object itself
+             and the identified sending party
+            </summary>
+        </member>
+        <member name="F:MavLink.MavlinkPacket.SystemId">
+            <summary>
+            The sender's system ID
+            </summary>
+        </member>
+        <member name="F:MavLink.MavlinkPacket.ComponentId">
+            <summary>
+            The sender's component ID
+            </summary>
+        </member>
+        <member name="F:MavLink.MavlinkPacket.SequenceNumber">
+            <summary>
+            The sequence number received for this packet
+            </summary>
+        </member>
+        <member name="F:MavLink.MavlinkPacket.TimeStamp">
+            <summary>
+            Time of receipt
+            </summary>
+        </member>
+        <member name="F:MavLink.MavlinkPacket.Message">
+            <summary>
+            Object which is the mavlink message
+            </summary>
+        </member>
+        <member name="T:MavLink.Mavlink_Crc">
+            <summary>
+            Crc code copied/adapted from ardumega planner code
+            </summary>
+        </member>
+    </members>
+</doc>

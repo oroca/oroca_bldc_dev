@@ -6,15 +6,16 @@
 MAVPACKED(
 typedef struct __mavlink_set_velocity_t {
  uint16_t ref_angular_velocity; /*< velocity value*/
+ uint8_t resp; /*< 0:No Resp, 1:Resp*/
 }) mavlink_set_velocity_t;
 
-#define MAVLINK_MSG_ID_SET_VELOCITY_LEN 2
-#define MAVLINK_MSG_ID_SET_VELOCITY_MIN_LEN 2
-#define MAVLINK_MSG_ID_220_LEN 2
-#define MAVLINK_MSG_ID_220_MIN_LEN 2
+#define MAVLINK_MSG_ID_SET_VELOCITY_LEN 3
+#define MAVLINK_MSG_ID_SET_VELOCITY_MIN_LEN 3
+#define MAVLINK_MSG_ID_220_LEN 3
+#define MAVLINK_MSG_ID_220_MIN_LEN 3
 
-#define MAVLINK_MSG_ID_SET_VELOCITY_CRC 100
-#define MAVLINK_MSG_ID_220_CRC 100
+#define MAVLINK_MSG_ID_SET_VELOCITY_CRC 249
+#define MAVLINK_MSG_ID_220_CRC 249
 
 
 
@@ -22,15 +23,17 @@ typedef struct __mavlink_set_velocity_t {
 #define MAVLINK_MESSAGE_INFO_SET_VELOCITY { \
     220, \
     "SET_VELOCITY", \
-    1, \
-    {  { "ref_angular_velocity", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_set_velocity_t, ref_angular_velocity) }, \
+    2, \
+    {  { "resp", NULL, MAVLINK_TYPE_UINT8_T, 0, 2, offsetof(mavlink_set_velocity_t, resp) }, \
+         { "ref_angular_velocity", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_set_velocity_t, ref_angular_velocity) }, \
          } \
 }
 #else
 #define MAVLINK_MESSAGE_INFO_SET_VELOCITY { \
     "SET_VELOCITY", \
-    1, \
-    {  { "ref_angular_velocity", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_set_velocity_t, ref_angular_velocity) }, \
+    2, \
+    {  { "resp", NULL, MAVLINK_TYPE_UINT8_T, 0, 2, offsetof(mavlink_set_velocity_t, resp) }, \
+         { "ref_angular_velocity", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_set_velocity_t, ref_angular_velocity) }, \
          } \
 }
 #endif
@@ -41,20 +44,23 @@ typedef struct __mavlink_set_velocity_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
+ * @param resp 0:No Resp, 1:Resp
  * @param ref_angular_velocity velocity value
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_set_velocity_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-                               uint16_t ref_angular_velocity)
+                               uint8_t resp, uint16_t ref_angular_velocity)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_SET_VELOCITY_LEN];
     _mav_put_uint16_t(buf, 0, ref_angular_velocity);
+    _mav_put_uint8_t(buf, 2, resp);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_SET_VELOCITY_LEN);
 #else
     mavlink_set_velocity_t packet;
     packet.ref_angular_velocity = ref_angular_velocity;
+    packet.resp = resp;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_SET_VELOCITY_LEN);
 #endif
@@ -69,21 +75,24 @@ static inline uint16_t mavlink_msg_set_velocity_pack(uint8_t system_id, uint8_t 
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
+ * @param resp 0:No Resp, 1:Resp
  * @param ref_angular_velocity velocity value
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_set_velocity_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
                                mavlink_message_t* msg,
-                                   uint16_t ref_angular_velocity)
+                                   uint8_t resp,uint16_t ref_angular_velocity)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_SET_VELOCITY_LEN];
     _mav_put_uint16_t(buf, 0, ref_angular_velocity);
+    _mav_put_uint8_t(buf, 2, resp);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_SET_VELOCITY_LEN);
 #else
     mavlink_set_velocity_t packet;
     packet.ref_angular_velocity = ref_angular_velocity;
+    packet.resp = resp;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_SET_VELOCITY_LEN);
 #endif
@@ -102,7 +111,7 @@ static inline uint16_t mavlink_msg_set_velocity_pack_chan(uint8_t system_id, uin
  */
 static inline uint16_t mavlink_msg_set_velocity_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_set_velocity_t* set_velocity)
 {
-    return mavlink_msg_set_velocity_pack(system_id, component_id, msg, set_velocity->ref_angular_velocity);
+    return mavlink_msg_set_velocity_pack(system_id, component_id, msg, set_velocity->resp, set_velocity->ref_angular_velocity);
 }
 
 /**
@@ -116,27 +125,30 @@ static inline uint16_t mavlink_msg_set_velocity_encode(uint8_t system_id, uint8_
  */
 static inline uint16_t mavlink_msg_set_velocity_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_set_velocity_t* set_velocity)
 {
-    return mavlink_msg_set_velocity_pack_chan(system_id, component_id, chan, msg, set_velocity->ref_angular_velocity);
+    return mavlink_msg_set_velocity_pack_chan(system_id, component_id, chan, msg, set_velocity->resp, set_velocity->ref_angular_velocity);
 }
 
 /**
  * @brief Send a set_velocity message
  * @param chan MAVLink channel to send the message
  *
+ * @param resp 0:No Resp, 1:Resp
  * @param ref_angular_velocity velocity value
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_set_velocity_send(mavlink_channel_t chan, uint16_t ref_angular_velocity)
+static inline void mavlink_msg_set_velocity_send(mavlink_channel_t chan, uint8_t resp, uint16_t ref_angular_velocity)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_SET_VELOCITY_LEN];
     _mav_put_uint16_t(buf, 0, ref_angular_velocity);
+    _mav_put_uint8_t(buf, 2, resp);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_SET_VELOCITY, buf, MAVLINK_MSG_ID_SET_VELOCITY_MIN_LEN, MAVLINK_MSG_ID_SET_VELOCITY_LEN, MAVLINK_MSG_ID_SET_VELOCITY_CRC);
 #else
     mavlink_set_velocity_t packet;
     packet.ref_angular_velocity = ref_angular_velocity;
+    packet.resp = resp;
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_SET_VELOCITY, (const char *)&packet, MAVLINK_MSG_ID_SET_VELOCITY_MIN_LEN, MAVLINK_MSG_ID_SET_VELOCITY_LEN, MAVLINK_MSG_ID_SET_VELOCITY_CRC);
 #endif
@@ -150,7 +162,7 @@ static inline void mavlink_msg_set_velocity_send(mavlink_channel_t chan, uint16_
 static inline void mavlink_msg_set_velocity_send_struct(mavlink_channel_t chan, const mavlink_set_velocity_t* set_velocity)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_set_velocity_send(chan, set_velocity->ref_angular_velocity);
+    mavlink_msg_set_velocity_send(chan, set_velocity->resp, set_velocity->ref_angular_velocity);
 #else
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_SET_VELOCITY, (const char *)set_velocity, MAVLINK_MSG_ID_SET_VELOCITY_MIN_LEN, MAVLINK_MSG_ID_SET_VELOCITY_LEN, MAVLINK_MSG_ID_SET_VELOCITY_CRC);
 #endif
@@ -164,16 +176,18 @@ static inline void mavlink_msg_set_velocity_send_struct(mavlink_channel_t chan, 
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_set_velocity_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint16_t ref_angular_velocity)
+static inline void mavlink_msg_set_velocity_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint8_t resp, uint16_t ref_angular_velocity)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char *buf = (char *)msgbuf;
     _mav_put_uint16_t(buf, 0, ref_angular_velocity);
+    _mav_put_uint8_t(buf, 2, resp);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_SET_VELOCITY, buf, MAVLINK_MSG_ID_SET_VELOCITY_MIN_LEN, MAVLINK_MSG_ID_SET_VELOCITY_LEN, MAVLINK_MSG_ID_SET_VELOCITY_CRC);
 #else
     mavlink_set_velocity_t *packet = (mavlink_set_velocity_t *)msgbuf;
     packet->ref_angular_velocity = ref_angular_velocity;
+    packet->resp = resp;
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_SET_VELOCITY, (const char *)packet, MAVLINK_MSG_ID_SET_VELOCITY_MIN_LEN, MAVLINK_MSG_ID_SET_VELOCITY_LEN, MAVLINK_MSG_ID_SET_VELOCITY_CRC);
 #endif
@@ -184,6 +198,16 @@ static inline void mavlink_msg_set_velocity_send_buf(mavlink_message_t *msgbuf, 
 
 // MESSAGE SET_VELOCITY UNPACKING
 
+
+/**
+ * @brief Get field resp from set_velocity message
+ *
+ * @return 0:No Resp, 1:Resp
+ */
+static inline uint8_t mavlink_msg_set_velocity_get_resp(const mavlink_message_t* msg)
+{
+    return _MAV_RETURN_uint8_t(msg,  2);
+}
 
 /**
  * @brief Get field ref_angular_velocity from set_velocity message
@@ -205,6 +229,7 @@ static inline void mavlink_msg_set_velocity_decode(const mavlink_message_t* msg,
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     set_velocity->ref_angular_velocity = mavlink_msg_set_velocity_get_ref_angular_velocity(msg);
+    set_velocity->resp = mavlink_msg_set_velocity_get_resp(msg);
 #else
         uint8_t len = msg->len < MAVLINK_MSG_ID_SET_VELOCITY_LEN? msg->len : MAVLINK_MSG_ID_SET_VELOCITY_LEN;
         memset(set_velocity, 0, MAVLINK_MSG_ID_SET_VELOCITY_LEN);

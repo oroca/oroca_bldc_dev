@@ -107,11 +107,12 @@ static THD_FUNCTION(serial_process_thread, arg) {
 	for(;;) {
 		chEvtWaitAny((eventmask_t) 1);
 
-		while (serial_rx_read_pos != serial_rx_write_pos) {
+		while (serial_rx_read_pos != serial_rx_write_pos) 
+		{
 
-			if( mavlink_byte_recv( serial_rx_buffer[serial_rx_read_pos++] ) )
+			if( mavlink_msg_recv( 0, serial_rx_buffer[serial_rx_read_pos++] , &gMsg) )
 			{
-				//mavlink_uart_send( 1 ); //hand shake?
+				mavlink_msg_process_vcp(&gMsg);
 			}
 
 			if (serial_rx_read_pos == SERIAL_RX_BUFFER_SIZE) 
@@ -138,7 +139,7 @@ static THD_FUNCTION(serial_write_thread, arg) {
 	
 		while (serial_tx_read_pos != serial_tx_write_pos) 
 		{
-			chSequentialStreamWrite(&SDU1, (uint8_t)serial_tx_buffer[serial_tx_read_pos++],1);
+			chSequentialStreamWrite(&SDU1, &serial_tx_buffer[serial_tx_read_pos++],1);
 
 			if (serial_tx_read_pos == SERIAL_TX_BUFFER_SIZE) 
 			{

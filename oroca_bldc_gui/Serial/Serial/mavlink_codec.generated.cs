@@ -49,15 +49,59 @@ namespace MavLink
     
         public static Dictionary<int, MavPacketInfo> Lookup = new Dictionary<int, MavPacketInfo>
         {
-			{220, new MavPacketInfo(Deserialize_SET_VELOCITY, 100)},
-			{0, new MavPacketInfo(Deserialize_DEBUG_STRING, 50)},
+			{150, new MavPacketInfo(Deserialize_ACK, 192)},
+			{151, new MavPacketInfo(Deserialize_READ_VERSION, 166)},
+			{152, new MavPacketInfo(Deserialize_READ_BOARD_NAME, 140)},
+			{153, new MavPacketInfo(Deserialize_READ_TAG, 126)},
+			{220, new MavPacketInfo(Deserialize_SET_VELOCITY, 249)},
+			{0, new MavPacketInfo(Deserialize_DEBUG_STRING, 163)},
 		};
+
+		internal static MavlinkMessage Deserialize_ACK(byte[] bytes, int offset)
+		{
+			return new Msg_ack
+			{
+				err_code = bitconverter.ToUInt16(bytes, offset + 0),
+				msg_id = bytes[offset + 2],
+				length = bytes[offset + 3],
+				data =  ByteArrayUtil.ToUInt8(bytes, offset + 4, 16),
+			};
+		}
+
+		internal static MavlinkMessage Deserialize_READ_VERSION(byte[] bytes, int offset)
+		{
+			return new Msg_read_version
+			{
+				resp = bytes[offset + 0],
+				param =  ByteArrayUtil.ToUInt8(bytes, offset + 1, 8),
+			};
+		}
+
+		internal static MavlinkMessage Deserialize_READ_BOARD_NAME(byte[] bytes, int offset)
+		{
+			return new Msg_read_board_name
+			{
+				resp = bytes[offset + 0],
+				param =  ByteArrayUtil.ToUInt8(bytes, offset + 1, 8),
+			};
+		}
+
+		internal static MavlinkMessage Deserialize_READ_TAG(byte[] bytes, int offset)
+		{
+			return new Msg_read_tag
+			{
+				resp = bytes[offset + 0],
+				type = bytes[offset + 1],
+				param =  ByteArrayUtil.ToUInt8(bytes, offset + 2, 8),
+			};
+		}
 
 		internal static MavlinkMessage Deserialize_SET_VELOCITY(byte[] bytes, int offset)
 		{
 			return new Msg_set_velocity
 			{
 				ref_angular_velocity = bitconverter.ToUInt16(bytes, offset + 0),
+				resp = bytes[offset + 2],
 			};
 		}
 
@@ -65,21 +109,59 @@ namespace MavLink
 		{
 			return new Msg_debug_string
 			{
-				dbg_str =  ByteArrayUtil.ToChar(bytes, offset + 0, 250),
+				resp = bytes[offset + 0],
+				dbg_str =  ByteArrayUtil.ToChar(bytes, offset + 1, 250),
 			};
+		}
+
+		internal static int Serialize_ACK(this Msg_ack msg, byte[] bytes, ref int offset)
+		{
+			bitconverter.GetBytes(msg.err_code, bytes, offset + 0);
+			bytes[offset + 2] = msg.msg_id;
+			bytes[offset + 3] = msg.length;
+			ByteArrayUtil.ToByteArray(msg.data, bytes, offset + 4, 16);
+			offset += 20;
+			return 150;
+		}
+
+		internal static int Serialize_READ_VERSION(this Msg_read_version msg, byte[] bytes, ref int offset)
+		{
+			bytes[offset + 0] = msg.resp;
+			ByteArrayUtil.ToByteArray(msg.param, bytes, offset + 1, 8);
+			offset += 9;
+			return 151;
+		}
+
+		internal static int Serialize_READ_BOARD_NAME(this Msg_read_board_name msg, byte[] bytes, ref int offset)
+		{
+			bytes[offset + 0] = msg.resp;
+			ByteArrayUtil.ToByteArray(msg.param, bytes, offset + 1, 8);
+			offset += 9;
+			return 152;
+		}
+
+		internal static int Serialize_READ_TAG(this Msg_read_tag msg, byte[] bytes, ref int offset)
+		{
+			bytes[offset + 0] = msg.resp;
+			bytes[offset + 1] = msg.type;
+			ByteArrayUtil.ToByteArray(msg.param, bytes, offset + 2, 8);
+			offset += 10;
+			return 153;
 		}
 
 		internal static int Serialize_SET_VELOCITY(this Msg_set_velocity msg, byte[] bytes, ref int offset)
 		{
 			bitconverter.GetBytes(msg.ref_angular_velocity, bytes, offset + 0);
-			offset += 2;
+			bytes[offset + 2] = msg.resp;
+			offset += 3;
 			return 220;
 		}
 
 		internal static int Serialize_DEBUG_STRING(this Msg_debug_string msg, byte[] bytes, ref int offset)
 		{
-			ByteArrayUtil.ToByteArray(msg.dbg_str, bytes, offset + 0, 250);
-			offset += 250;
+			bytes[offset + 0] = msg.resp;
+			ByteArrayUtil.ToByteArray(msg.dbg_str, bytes, offset + 1, 250);
+			offset += 251;
 			return 0;
 		}
 	}

@@ -31,12 +31,104 @@ namespace MavLink
     {
         public abstract int Serialize(byte[] bytes, ref int offset);
     }
+	public class Msg_ack : MavlinkMessage
+    {
 
-	/// <summary>
-	/// Message For set angular velocity
-	/// </summary>
+		/// <summary>
+		/// 
+		/// </summary>
+		public byte msg_id;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public UInt16 err_code;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public byte length;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public byte[] data; // Array size 16
+
+        public override int Serialize(byte[] bytes, ref int offset)
+            {
+                return MavLinkSerializer.Serialize_ACK(this, bytes, ref offset);
+            }        
+	}
+
+	public class Msg_read_version : MavlinkMessage
+    {
+
+		/// <summary>
+		/// 0:No Resp, 1:Resp
+		/// </summary>
+		public byte resp;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public byte[] param; // Array size 8
+
+        public override int Serialize(byte[] bytes, ref int offset)
+            {
+                return MavLinkSerializer.Serialize_READ_VERSION(this, bytes, ref offset);
+            }        
+	}
+
+	public class Msg_read_board_name : MavlinkMessage
+    {
+
+		/// <summary>
+		/// 0:No Resp, 1:Resp
+		/// </summary>
+		public byte resp;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public byte[] param; // Array size 8
+
+        public override int Serialize(byte[] bytes, ref int offset)
+            {
+                return MavLinkSerializer.Serialize_READ_BOARD_NAME(this, bytes, ref offset);
+            }        
+	}
+
+	public class Msg_read_tag : MavlinkMessage
+    {
+
+		/// <summary>
+		/// 0:No Resp, 1:Resp
+		/// </summary>
+		public byte resp;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public byte type;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public byte[] param; // Array size 8
+
+        public override int Serialize(byte[] bytes, ref int offset)
+            {
+                return MavLinkSerializer.Serialize_READ_TAG(this, bytes, ref offset);
+            }        
+	}
+
 	public class Msg_set_velocity : MavlinkMessage
     {
+
+		/// <summary>
+		/// 0:No Resp, 1:Resp
+		/// </summary>
+		public byte resp;
 
 		/// <summary>
 		/// velocity value
@@ -55,6 +147,11 @@ namespace MavLink
 	/// </summary>
 	public class Msg_debug_string : MavlinkMessage
     {
+
+		/// <summary>
+		/// 0:No Resp, 1:Resp
+		/// </summary>
+		public byte resp;
 
 		/// <summary>
 		/// string

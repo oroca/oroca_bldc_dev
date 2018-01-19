@@ -48,8 +48,9 @@
             this.SerialPort = new System.IO.Ports.SerialPort(this.components);
             this.lbResult = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.getVersion = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.getBoardName = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -273,21 +274,22 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.lbResult);
-            this.groupBox2.Location = new System.Drawing.Point(667, 385);
+            this.groupBox2.Location = new System.Drawing.Point(667, 417);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(229, 90);
+            this.groupBox2.Size = new System.Drawing.Size(229, 58);
             this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
             // 
-            // button1
+            // getVersion
             // 
-            this.button1.Location = new System.Drawing.Point(668, 357);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.getVersion.ForeColor = System.Drawing.Color.DimGray;
+            this.getVersion.Location = new System.Drawing.Point(668, 357);
+            this.getVersion.Name = "getVersion";
+            this.getVersion.Size = new System.Drawing.Size(102, 23);
+            this.getVersion.TabIndex = 16;
+            this.getVersion.Text = "FW Version";
+            this.getVersion.UseVisualStyleBackColor = true;
+            this.getVersion.Click += new System.EventHandler(this.getVersion_Click);
             // 
             // numericUpDown1
             // 
@@ -296,7 +298,7 @@
             0,
             0,
             0});
-            this.numericUpDown1.Location = new System.Drawing.Point(776, 357);
+            this.numericUpDown1.Location = new System.Drawing.Point(667, 389);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             2200,
             0,
@@ -317,6 +319,17 @@
             0});
             this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
+            // getBoardName
+            // 
+            this.getBoardName.ForeColor = System.Drawing.Color.DimGray;
+            this.getBoardName.Location = new System.Drawing.Point(776, 357);
+            this.getBoardName.Name = "getBoardName";
+            this.getBoardName.Size = new System.Drawing.Size(102, 23);
+            this.getBoardName.TabIndex = 18;
+            this.getBoardName.Text = "Board Name";
+            this.getBoardName.UseVisualStyleBackColor = true;
+            this.getBoardName.Click += new System.EventHandler(this.getBoardName_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 14F);
@@ -324,8 +337,9 @@
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Menu;
             this.ClientSize = new System.Drawing.Size(910, 493);
+            this.Controls.Add(this.getBoardName);
             this.Controls.Add(this.numericUpDown1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.getVersion);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.rbText);
@@ -370,8 +384,9 @@
         private System.Windows.Forms.Button btnPortClose;
         private System.Windows.Forms.Label lbResult;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button getVersion;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Button getBoardName;
     }
 }
 

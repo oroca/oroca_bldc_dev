@@ -69,13 +69,10 @@ static THD_FUNCTION(periodic_thread, arg)
 
 	for(;;)
 	{
-		LED_GREEN_ON();
-		chThdSleepMilliseconds(500);
-		LED_GREEN_OFF();
-		chThdSleepMilliseconds(500);
-
-		//mavlink_dbgString_send((uint8_t*)"test");
-		mavlink_velocity_send((uint8_t)55);
+		LED_GREEN_ON();		chThdSleepMilliseconds(50);
+		LED_GREEN_OFF();		chThdSleepMilliseconds(50);
+		LED_GREEN_ON();		chThdSleepMilliseconds(50);
+		LED_GREEN_OFF();		chThdSleepMilliseconds(850);
 	}
 }
 

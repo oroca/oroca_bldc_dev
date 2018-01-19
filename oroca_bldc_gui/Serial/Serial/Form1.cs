@@ -38,13 +38,13 @@ namespace Serial
             //SP.ReadTimeout = (int)100;
             //SP.WriteTimeout = (int)100;
 
-            //cmbPort.SelectedIndex = 0;
+            cmbPort.SelectedIndex = 0;
             cmbBRate.SelectedIndex = 5;
             cmbDataBits.SelectedIndex = 0;
             cmbParity.SelectedIndex = 2;
             cmbStopBits.SelectedIndex = 2;
 
-            //SerialPort.PortName = cmbPort.SelectedItem.ToString();
+           // SerialPort.PortName = cmbPort.SelectedItem.ToString();
 
             switch (cmbBRate.SelectedIndex)
             {
@@ -90,19 +90,21 @@ namespace Serial
             receivedMsg.PacketReceived += new PacketReceivedEventHandler(this.PrintRecievedPackets);
         }
 
+        private MavlinkPacket MsgHandler;
+
         public void PrintRecievedPackets(object sender, MavlinkPacket e)
         {
             // Print Message Basic Info
-                        Console.WriteLine("System ID: {0}", e.SystemId);
-                        Console.WriteLine("Message: {0}", e.Message.ToString ());
-                        Console.WriteLine ("Time Stamp: {0}", e.TimeStamp);
+            Console.WriteLine("System ID: {0}", e.SystemId);
+            Console.WriteLine("Message: {0}", e.Message.ToString ());
+            Console.WriteLine ("Time Stamp: {0}", e.TimeStamp);
 
-            rbText.Text += ".";
-
-            if (e.Message.GetType() == typeof(MavLink.Msg_debug_string))
+            if (e.Message.GetType() == typeof(MavLink.Msg_ack))
             {
-                Console.WriteLine((e.Message as MavLink.Msg_debug_string).dbg_str);
-                rbText.Text += "[수신된 Data] " + (e.Message as MavLink.Msg_debug_string).dbg_str + "\r\n";
+                MsgHandler = e;
+                //byte[] temp = (e.Message as MavLink.Msg_ack).data;
+                //Console.WriteLine(Encoding.Default.GetString(temp));
+                //rbText.Text += "[수신된 Data] " + Encoding.Default.GetString(temp) + "\r\n";
             }
             else if (e.Message.GetType() == typeof(MavLink.Msg_set_velocity))
             {
@@ -115,15 +117,19 @@ namespace Serial
         {
             if (SerialPort.IsOpen)
             {
-               // string str = SerialPort.ReadLine();
+                Thread.Sleep(1);
+                //string str = SerialPort.ReadLine();
 
-               // string str = SerialPort.ReadExisting();
-                // byte[] receiveByteArray = Encoding.UTF8.GetBytes(str);
+               //string str = SerialPort.ReadExisting();
+               // byte[] receiveByteArray = Encoding.UTF8.GetBytes(str);
+                int num = SerialPort.BytesToRead;
+                byte[] receiveByteArray = new byte[num];
+                SerialPort.Read(receiveByteArray, 0, num);
 
-
-                byte[] receiveByteArray = new byte[1024];
-                SerialPort.Read(receiveByteArray, 0, SerialPort.BytesToRead);
+                Console.WriteLine(BitConverter.ToString(receiveByteArray));
+                
                 receivedMsg.ParseBytes(receiveByteArray);
+
 
                 //str = str.Trim().Replace("\r\n", "");
                 //lbResult.Text = str;
@@ -131,7 +137,7 @@ namespace Serial
                 //rbText.SelectionStart = rbText.Text.Length;
                 //rbText.ScrollToCaret();
                 //rbText.Text += "[전송된 Data] " + str;
-                Thread.Sleep(1);
+                
             }
         }
 
@@ -235,31 +241,15 @@ namespace Serial
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void getVersion_Click(object sender, EventArgs e)
         {
-            byte[] sendbuf = new byte[100];
-
-            Msg_set_velocity msg_set_velocity = new Msg_set_velocity();
-            msg_set_velocity.ref_angular_velocity = 1500;
-
-            MavlinkPacket mavlink_packet = new MavlinkPacket();
-            mavlink_packet.ComponentId = 121;
-            mavlink_packet.SystemId = 9;
-            mavlink_packet.Message = msg_set_velocity;
-
-            Mavlink mav_link = new Mavlink();
-            sendbuf = mav_link.Send(mavlink_packet);
-
-           // string result = System.Text.Encoding.UTF8.GetString(sendbuf);
-            string result = BitConverter.ToString(sendbuf);
-            rbText.Text += "\r\n" + "[" + SerialPort.PortName.ToString() + "] " + result;
-
-            if (SerialPort.IsOpen)
-            {
-                SerialPort.Write(sendbuf, 0, sendbuf.Length);
-            }
+            cmd_read_version();
         }
-
+       
+        private void getBoardName_Click(object sender, EventArgs e)
+        {
+            cmd_read_BoardName();
+        }
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             byte[] sendbuf = new byte[100];
@@ -286,5 +276,192 @@ namespace Serial
         }
 
 
+        static class Constants
+        {
+            public const int OK = 0x0000;
+
+            public const int ERR_TIMEOUT = 0xF020;
+            public const int ERR_MISMATCH_ID = 0xF021;
+            public const int ERR_SIZE_OVER = 0xF022;
+        }
+
+        private bool cmd_read_version()
+        {
+            byte[] sendbuf = new byte[100];
+
+            Msg_read_version msg_read_version = new Msg_read_version();
+            msg_read_version.resp = (byte)1;
+            msg_read_version.param = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+            MavlinkPacket mavlink_packet = new MavlinkPacket();
+            mavlink_packet.ComponentId = 121;
+            mavlink_packet.SystemId = 9;
+            mavlink_packet.Message = msg_read_version;
+
+            Mavlink mav_link = new Mavlink();
+            sendbuf = mav_link.Send(mavlink_packet);
+
+            if (SerialPort.IsOpen)
+            {
+                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+
+                DateTime start = DateTime.Now;
+                int retrys = 3;
+
+                while (true)
+                {
+                    if (!(start.AddMilliseconds(200) > DateTime.Now))
+                    {
+                        if (retrys > 0)
+                        {
+                            if (SerialPort.IsOpen)
+                            {
+                                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+                            }
+                            start = DateTime.Now;
+                            retrys--;
+                            continue;
+                        }
+                        return false;
+                    }
+
+                    if (MsgHandler != null)
+                    {
+                        if (MsgHandler.Message.GetType() == typeof(MavLink.Msg_ack))
+                        {
+                            byte[] temp = (MsgHandler.Message as MavLink.Msg_ack).data;
+                            //Console.WriteLine(Encoding.Default.GetString(temp));
+                            rbText.Text += "FW version :  " + BitConverter.ToString(temp);
+                            rbText.Text += "\r\n";
+                            MsgHandler = null;
+                            return true;
+                        }
+                    }
+                }
+
+            }
+            else 
+            {
+                return false;
+            }
+        }
+        private bool cmd_read_BoardName()
+        {
+            byte[] sendbuf = new byte[100];
+
+            Msg_read_board_name msg_read_board_name = new Msg_read_board_name();
+            msg_read_board_name.resp = (byte)1;
+            msg_read_board_name.param = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+            MavlinkPacket mavlink_packet = new MavlinkPacket();
+            mavlink_packet.ComponentId = 121;
+            mavlink_packet.SystemId = 9;
+            mavlink_packet.Message = msg_read_board_name;
+
+            Mavlink mav_link = new Mavlink();
+            sendbuf = mav_link.Send(mavlink_packet);
+
+            if (SerialPort.IsOpen)
+            {
+                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+
+                DateTime start = DateTime.Now;
+                int retrys = 3;
+
+                while (true)
+                {
+                    if (!(start.AddMilliseconds(200) > DateTime.Now))
+                    {
+                        if (retrys > 0)
+                        {
+                            if (SerialPort.IsOpen)
+                            {
+                                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+                            }
+                            start = DateTime.Now;
+                            retrys--;
+                            continue;
+                        }
+                        return false;
+                    }
+                    if (MsgHandler != null)
+                    {
+                        if (MsgHandler.Message.GetType() == typeof(MavLink.Msg_ack))
+                        {
+                            byte[] temp = (MsgHandler.Message as MavLink.Msg_ack).data;
+                           // Console.WriteLine(Encoding.Default.GetString(temp));
+                            rbText.Text += "Board name :  " + Encoding.Default.GetString(temp);
+                            rbText.Text += "\r\n";
+                            MsgHandler = null;
+                            return true;
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool mavlink_packet_gen(MavlinkPacket packet)
+        {
+            MavlinkPacket mavlink_packet = new MavlinkPacket();
+            mavlink_packet.ComponentId = 121;
+            mavlink_packet.SystemId = 9;
+            mavlink_packet.Message = packet.Message;
+
+            Mavlink mav_link = new Mavlink();
+            byte[] sendbuf = mav_link.Send(mavlink_packet);
+
+            return true;
+        }
+
+        private bool mavlink_packet_send(byte[] sendbuf)
+        {
+            if (SerialPort.IsOpen)
+            {
+                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+
+                DateTime start = DateTime.Now;
+                int retrys = 3;
+
+                while (true)
+                {
+                    if (!(start.AddMilliseconds(200) > DateTime.Now))
+                    {
+                        if (retrys > 0)
+                        {
+                            if (SerialPort.IsOpen)
+                            {
+                                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+                            }
+                            start = DateTime.Now;
+                            retrys--;
+                            continue;
+                        }
+                        return false;
+                    }
+                    if (MsgHandler != null)
+                    {
+                        if (MsgHandler.Message.GetType() == typeof(MavLink.Msg_ack))
+                        {
+                            byte[] temp = (MsgHandler.Message as MavLink.Msg_ack).data;
+                            // Console.WriteLine(Encoding.Default.GetString(temp));
+                            rbText.Text += "Board name :  " + Encoding.Default.GetString(temp);
+                            rbText.Text += "\r\n";
+                            MsgHandler = null;
+                            return true;
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

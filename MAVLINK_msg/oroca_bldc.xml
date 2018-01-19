@@ -1,18 +1,50 @@
 <?xml version='1.0'?>
 <mavlink>
     <!--include>common.xml</include-->
-    <version>3</version>
+    <!--version>3</version-->
     <enums>
     </enums>
-    <messages>
+	
+	<messages>
+		<message id="150" name="ACK">
+			<description></description>
+			<field type="uint8_t"    name="msg_id"></field>
+			<field type="uint16_t"   name="err_code"></field>
+			<field type="uint8_t"    name="length"></field>
+			<field type="uint8_t[16]" name="data"></field>
+		</message>
+
+		<message id="151" name="READ_VERSION">
+			<description></description>
+			<field type="uint8_t"    name="resp">0:No Resp, 1:Resp</field>
+			<field type="uint8_t[8]" name="param"></field>
+		</message>
+
+		<message id="152" name="READ_BOARD_NAME">
+			<description></description>
+			<field type="uint8_t"    name="resp">0:No Resp, 1:Resp</field>
+			<field type="uint8_t[8]" name="param"></field>
+		</message>
+
+		<message id="153" name="READ_TAG">
+			<description></description>
+			<field type="uint8_t"    name="resp">0:No Resp, 1:Resp</field>
+			<field type="uint8_t"    name="type"></field>
+			<field type="uint8_t[8]" name="param"></field>
+		</message>
+
 		<!-- Messages for OROCA BLDC  -->
         <message id="220" name="SET_VELOCITY">
-            <description>Message For set angular velocity</description>
+            <description></description>
+			<field type="uint8_t"  name="resp">0:No Resp, 1:Resp</field>
 			<field type="uint16_t" name="ref_angular_velocity">velocity value</field>
         </message>
+		
 		<message id="0" name="DEBUG_STRING">
             <description>debug String</description>
+			<field type="uint8_t"   name="resp">0:No Resp, 1:Resp</field>
 			<field type="char[250]" name="dbg_str">string</field>
         </message>
-  </messages>
+	</messages>
+  
 </mavlink>
