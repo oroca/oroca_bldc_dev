@@ -54,7 +54,9 @@ namespace MavLink
 			{152, new MavPacketInfo(Deserialize_READ_BOARD_NAME, 140)},
 			{153, new MavPacketInfo(Deserialize_READ_TAG, 126)},
 			{220, new MavPacketInfo(Deserialize_SET_VELOCITY, 249)},
-			{0, new MavPacketInfo(Deserialize_DEBUG_STRING, 163)},
+			{221, new MavPacketInfo(Deserialize_SET_MCCONF, 200)},
+			{222, new MavPacketInfo(Deserialize_SET_APPCONF, 33)},
+			{0, new MavPacketInfo(Deserialize_DEBUG_STRING, 50)},
 		};
 
 		internal static MavlinkMessage Deserialize_ACK(byte[] bytes, int offset)
@@ -105,12 +107,29 @@ namespace MavLink
 			};
 		}
 
+		internal static MavlinkMessage Deserialize_SET_MCCONF(byte[] bytes, int offset)
+		{
+			return new Msg_set_mcconf
+			{
+				data =  ByteArrayUtil.ToUInt16(bytes, offset + 0, 128),
+				resp = bytes[offset + 256],
+			};
+		}
+
+		internal static MavlinkMessage Deserialize_SET_APPCONF(byte[] bytes, int offset)
+		{
+			return new Msg_set_appconf
+			{
+				data =  ByteArrayUtil.ToUInt16(bytes, offset + 0, 128),
+				resp = bytes[offset + 256],
+			};
+		}
+
 		internal static MavlinkMessage Deserialize_DEBUG_STRING(byte[] bytes, int offset)
 		{
 			return new Msg_debug_string
 			{
-				resp = bytes[offset + 0],
-				dbg_str =  ByteArrayUtil.ToChar(bytes, offset + 1, 250),
+				dbg_str =  ByteArrayUtil.ToChar(bytes, offset + 0, 250),
 			};
 		}
 
@@ -157,11 +176,26 @@ namespace MavLink
 			return 220;
 		}
 
+		internal static int Serialize_SET_MCCONF(this Msg_set_mcconf msg, byte[] bytes, ref int offset)
+		{
+			ByteArrayUtil.ToByteArray(msg.data, bytes, offset + 0, 128);
+			bytes[offset + 256] = msg.resp;
+			offset += 257;
+			return 221;
+		}
+
+		internal static int Serialize_SET_APPCONF(this Msg_set_appconf msg, byte[] bytes, ref int offset)
+		{
+			ByteArrayUtil.ToByteArray(msg.data, bytes, offset + 0, 128);
+			bytes[offset + 256] = msg.resp;
+			offset += 257;
+			return 222;
+		}
+
 		internal static int Serialize_DEBUG_STRING(this Msg_debug_string msg, byte[] bytes, ref int offset)
 		{
-			bytes[offset + 0] = msg.resp;
-			ByteArrayUtil.ToByteArray(msg.dbg_str, bytes, offset + 1, 250);
-			offset += 251;
+			ByteArrayUtil.ToByteArray(msg.dbg_str, bytes, offset + 0, 250);
+			offset += 250;
 			return 0;
 		}
 	}

@@ -180,16 +180,62 @@ int cmd_velocity( uint16_t data )
 }
 
 
-int cmd_dbgString( uint8_t* data )
+
+void cmd_set_mcconf( msg_handle_t *p_msg )
 {
-    mavlink_message_t msg; 
-     
-   // mavlink_msg_debug_string_pack( 9, 121, &msg, data );
+  err_code_t err_code = OK;
+  mavlink_ack_t     mav_ack;
+  mavlink_read_version_t mav_data;
 
-    //mavlink_bytes_send( &msg);
+  mavlink_msg_read_version_decode(p_msg->p_msg, &mav_data);
 
-    return 0;
+  if( mav_data.resp == 1 )
+  {
+    mav_ack.msg_id   = p_msg->p_msg->msgid;
+    mav_ack.err_code = err_code;
+
+    mav_ack.length  = 0;
+    resp_ack(p_msg->ch, &mav_ack);
+  }
 }
+
+void cmd_set_appconf( msg_handle_t *p_msg )
+{
+  err_code_t err_code = OK;
+  mavlink_ack_t     mav_ack;
+  mavlink_read_version_t mav_data;
+
+  mavlink_msg_read_version_decode(p_msg->p_msg, &mav_data);
+
+  if( mav_data.resp == 1 )
+  {
+    mav_ack.msg_id   = p_msg->p_msg->msgid;
+    mav_ack.err_code = err_code;
+
+    mav_ack.length  = 0;
+    resp_ack(p_msg->ch, &mav_ack);
+  }
+}
+
+
+void mavlink_dbgString( uint8_t ch, char* dbg_str )
+{
+    mavlink_message_t mav_msg;
+
+	mavlink_msg_debug_string_pack_chan(0, 0, ch, &mav_msg, dbg_str);
+
+    mavlink_msg_send( ch, &mav_msg);
+}
+
+//------------------------------------------------------------------------------------------
+// CMD func
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+// MAVLink
+//------------------------------------------------------------------------------------------
+
 
 
 void mavlink_msg_send(uint8_t ch, mavlink_message_t *p_msg)
@@ -244,10 +290,12 @@ void  mavlink_msg_process_vcp( msg_handle_t* p_msg)
 
       switch( p_msg->p_msg->msgid )
       {
-	case MAVLINK_MSG_ID_READ_VERSION:			cmd_read_version(p_msg);						break;
-	case MAVLINK_MSG_ID_READ_BOARD_NAME:		cmd_read_board_name(p_msg);					break;
-	case MAVLINK_MSG_ID_READ_TAG:				cmd_read_tag(p_msg);							break;
-	default:										cmd_send_error(p_msg, ERR_INVALID_CMD);		break;
+		case MAVLINK_MSG_ID_READ_VERSION:		cmd_read_version(p_msg);					break;
+		case MAVLINK_MSG_ID_READ_BOARD_NAME:	cmd_read_board_name(p_msg);					break;
+		case MAVLINK_MSG_ID_READ_TAG:			cmd_read_tag(p_msg);						break;
+		case MAVLINK_MSG_ID_SET_MCCONF: 		cmd_set_mcconf(p_msg); 						break;
+		case MAVLINK_MSG_ID_SET_APPCONF : 		cmd_set_appconf(p_msg); 					break;
+		default:								cmd_send_error(p_msg, ERR_INVALID_CMD);		break;
       }
 
 }

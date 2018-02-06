@@ -47,8 +47,7 @@ typedef uint16_t err_code_t;
 #define ERR_INVALID_CMD                     0x0001
 
 
-int mavlink_velocity_send( uint16_t data );
-int mavlink_dbgString_send( uint8_t* data );
+void mavlink_dbgString( uint8_t ch, char* dbg_str );
 
 void mavlink_msg_send(uint8_t ch, mavlink_message_t *p_msg);
 bool mavlink_msg_recv( uint8_t ch, uint8_t data , msg_handle_t *p_msg );

@@ -4,6 +4,10 @@ using System.Windows.Forms;
 using System.IO.Ports;
 using System.Threading;
 using System.Text;
+using System.Runtime.InteropServices;
+
+using System.Data;
+using System.Data.OleDb;
 
 using MavLink;
 
@@ -18,33 +22,12 @@ namespace Serial
         {
             InitializeComponent();
 
-            //텍스스 박스 초기화;
-            //rbText.ScrollBars = RichTextBoxScrollBars.Vertical;
+            GetSerialPort();
 
-            //Port
-            cmbPort.BeginUpdate();
-            foreach (string comport in SerialPort.GetPortNames())
-            {
-                cmbPort.Items.Add(comport);
-            }
-            cmbPort.EndUpdate();
-
-            //SerialPort 초기 설정
-            //SerialPort.PortName = "COM4";
-            //SerialPort.BaudRate = (int)19200;
-            //SerialPort.DataBits = (int)8;
-            //SerialPort.Parity = Parity.None;
-            //SerialPort.StopBits = StopBits.One;
-            //SP.ReadTimeout = (int)100;
-            //SP.WriteTimeout = (int)100;
-
-            cmbPort.SelectedIndex = 0;
             cmbBRate.SelectedIndex = 5;
-            cmbDataBits.SelectedIndex = 0;
-            cmbParity.SelectedIndex = 2;
-            cmbStopBits.SelectedIndex = 2;
-
-           // SerialPort.PortName = cmbPort.SelectedItem.ToString();
+            SerialPort.DataBits = 8;
+            SerialPort.Parity = Parity.None;
+            SerialPort.StopBits = StopBits.One;
 
             switch (cmbBRate.SelectedIndex)
             {
@@ -57,40 +40,64 @@ namespace Serial
                 default: SerialPort.BaudRate = (int)19200; break;
             }
 
-            switch (cmbDataBits.SelectedIndex)
-            {
-                case 0: SerialPort.DataBits = 8; break;
-                case 1: SerialPort.DataBits = 7; break;
-                default: SerialPort.DataBits = 8; break;
-            }
-
-            switch (cmbParity.SelectedIndex)
-            {
-                case 0: SerialPort.Parity = Parity.Even; break;
-                case 1: SerialPort.Parity = Parity.Mark; break;
-                case 2: SerialPort.Parity = Parity.None; break;
-                case 3: SerialPort.Parity = Parity.Odd; break;
-                case 4: SerialPort.Parity = Parity.Space; break;
-                default: SerialPort.Parity = Parity.None; break;
-            }
-            switch (cmbStopBits.SelectedIndex)
-            {
-                case 0:
-                    //SP.StopBits = StopBits.None;
-                    MessageBox.Show("이 값은 지원되지 않습니다");
-                    break;
-                case 1: SerialPort.StopBits = StopBits.One; break;
-                case 2: SerialPort.StopBits = StopBits.OnePointFive; break;
-                case 3: SerialPort.StopBits = StopBits.Two; break;
-                default: SerialPort.StopBits = StopBits.One; break;
-            }
 
             
             // Add my packet receive methods to the event handler
             receivedMsg.PacketReceived += new PacketReceivedEventHandler(this.PrintRecievedPackets);
         }
 
-        private MavlinkPacket MsgHandler;
+        protected override void WndProc(ref Message m)
+        {
+            UInt32 WM_DEVICECHANGE = 0x0219;
+            UInt32 DBT_DEVTUP_VOLUME = 0x02;
+            UInt32 DBT_DEVICEARRIVAL = 0x8000;
+            UInt32 DBT_DEVICEREMOVECOMPLETE = 0x8004;
+
+            if ((m.Msg == WM_DEVICECHANGE) && (m.WParam.ToInt32() == DBT_DEVICEARRIVAL))//디바이스 연결
+            {
+                //int m_Count = 0;
+                int devType = Marshal.ReadInt32(m.LParam, 4);
+
+                if (devType == DBT_DEVTUP_VOLUME)
+                {
+                    GetSerialPort();
+                }
+            }
+
+            if ((m.Msg == WM_DEVICECHANGE) && (m.WParam.ToInt32() == DBT_DEVICEREMOVECOMPLETE))  //디바이스 연결 해제
+            {
+                int devType = Marshal.ReadInt32(m.LParam, 4);
+                if (devType == DBT_DEVTUP_VOLUME)
+                {
+                    GetSerialPort();
+                }
+            }
+
+            base.WndProc(ref m);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            CheckForIllegalCrossThreadCalls = false;
+#if false
+            OleDbConnection ExcelConn = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;
+                                                              Data Source='Sample.xlsx';
+                                                              Extended Properties=Excel 8.0;
+                                                              HDR=YES");
+
+          //  ExcelConn.Open();
+            OleDbDataAdapter ExcelCmd = new OleDbDataAdapter("select * from [Sheet1$]", ExcelConn);
+            ExcelCmd.TableMappings.Add("Table", "Net-informations.com");
+
+            DataSet DtSet = new DataSet();
+            ExcelCmd.Fill(DtSet);
+            dataGridView1.DataSource = DtSet.Tables[0];
+            ExcelConn.Close();
+
+#endif
+        }
+
+        private MavlinkPacket MsgAckHandler;
 
         public void PrintRecievedPackets(object sender, MavlinkPacket e)
         {
@@ -101,15 +108,24 @@ namespace Serial
 
             if (e.Message.GetType() == typeof(MavLink.Msg_ack))
             {
-                MsgHandler = e;
-                //byte[] temp = (e.Message as MavLink.Msg_ack).data;
-                //Console.WriteLine(Encoding.Default.GetString(temp));
-                //rbText.Text += "[수신된 Data] " + Encoding.Default.GetString(temp) + "\r\n";
+                MsgAckHandler = e;
             }
             else if (e.Message.GetType() == typeof(MavLink.Msg_set_velocity))
             {
-                Console.WriteLine("Msg_set_velocity : {0}", (e.Message as MavLink.Msg_set_velocity).ref_angular_velocity);
-                rbText.Text += "[수신된 Data] " + (e.Message as MavLink.Msg_set_velocity).ref_angular_velocity + "\r\n";
+               // Console.WriteLine("Msg_set_velocity : {0}", (e.Message as MavLink.Msg_set_velocity).ref_angular_velocity);
+                rbText.Text += e.TimeStamp; 
+                rbText.Text += (e.Message as MavLink.Msg_set_velocity).ref_angular_velocity + "\r\n";
+            }
+            else if (e.Message.GetType() == typeof(MavLink.Msg_debug_string))
+            {
+                byte[] temp = (e.Message as MavLink.Msg_debug_string).dbg_str;
+                // Console.WriteLine(Encoding.Default.GetString(temp));
+                rbText.Text += DateTime.Now +" "+Encoding.Default.GetString(temp);
+                rbText.Text += "\r\n";
+
+                rbText.SelectionStart = rbText.TextLength;
+                rbText.ScrollToCaret();
+                
             }
         }
 
@@ -118,49 +134,43 @@ namespace Serial
             if (SerialPort.IsOpen)
             {
                 Thread.Sleep(1);
-                //string str = SerialPort.ReadLine();
 
-               //string str = SerialPort.ReadExisting();
-               // byte[] receiveByteArray = Encoding.UTF8.GetBytes(str);
                 int num = SerialPort.BytesToRead;
                 byte[] receiveByteArray = new byte[num];
                 SerialPort.Read(receiveByteArray, 0, num);
 
-                Console.WriteLine(BitConverter.ToString(receiveByteArray));
+               // Console.WriteLine(BitConverter.ToString(receiveByteArray));
                 
                 receivedMsg.ParseBytes(receiveByteArray);
-
-
-                //str = str.Trim().Replace("\r\n", "");
-                //lbResult.Text = str;
-                //rbText.Text = string.Format("{0}{1}{2}", rbText.Text, "[Received]", str+"\r\n");
-                //rbText.SelectionStart = rbText.Text.Length;
-                //rbText.ScrollToCaret();
-                //rbText.Text += "[전송된 Data] " + str;
                 
             }
         }
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
-                SerialPort.Open();
-                if (SerialPort.IsOpen)
-                {
-                    //rbText.Text = string.Format("{0}{1}", rbText.Text, "\r\n[Succed] Port Open!!");
-                    rbText.Text = "["+SerialPort.PortName.ToString() +"] Port Open Connect!!";
-                    lbStatus.Text = "Connect!!";
-                    btnOpen.Visible = false;
-                    btnPortClose.Visible = true;
-                }
-                else
-                {
-                    //rbText.Text = string.Format("{0}{1}", rbText.Text, "\r\n[Fail] Port Open!!");
-                    rbText.Text = "[" + SerialPort.PortName.ToString() + "] Port Open Failed!";
-                    lbStatus.Text = "[Fail] Port Open!";
-                    lbStatus.ForeColor = Color.Red;
-                }
+            board_connect();
+
+            if (SerialPort.IsOpen)
+            {
+                lbStatus.Text = "connected";
+                btnOpen.Visible = false;
+                btnPortClose.Visible = true;
+            }
+            else
+            {
+                lbStatus.Text = "fail";
+                lbStatus.ForeColor = Color.Red;
+            }
         }
 
+        private void btnPortClose_Click(object sender, EventArgs e)
+        {
+            board_disconnect();
+
+            lbStatus.Text = "disconnected";
+            btnOpen.Visible = true;
+            btnPortClose.Visible = false;
+        }
         private void cmbPort_SelectedIndexChanged(object sender, EventArgs e)
         {
             SerialPort.PortName = cmbPort.SelectedItem.ToString();
@@ -181,57 +191,6 @@ namespace Serial
             }
         }
 
-        private void cmbDataBits_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (cmbDataBits.SelectedIndex)
-            {
-                case 0:                    SerialPort.DataBits = 8;                    break;
-                case 1:                    SerialPort.DataBits = 7;                    break;
-                default :                    SerialPort.DataBits = 8;                    break;
-            }
-        }
-
-        private void cmbParity_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (cmbParity.SelectedIndex)
-            {
-                case 0:                    SerialPort.Parity = Parity.Even;                    break;
-                case 1:                    SerialPort.Parity = Parity.Mark;                    break;
-                case 2:                    SerialPort.Parity = Parity.None;                    break;
-                case 3:                    SerialPort.Parity = Parity.Odd;                    break;
-                case 4:                    SerialPort.Parity = Parity.Space;                    break;
-                default:                    SerialPort.Parity = Parity.None;                    break;
-            }
-        }
-
-        private void cmbStopBits_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (cmbStopBits.SelectedIndex)
-            {
-                case 0:
-                    //SP.StopBits = StopBits.None;
-                    MessageBox.Show("이 값은 지원되지 않습니다");
-                    break;
-                case 1:                    SerialPort.StopBits = StopBits.One;                    break;
-                case 2:                    SerialPort.StopBits = StopBits.OnePointFive;                    break;
-                case 3:                    SerialPort.StopBits = StopBits.Two;                    break;
-                default:                   SerialPort.StopBits = StopBits.One;                    break;
-            }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            CheckForIllegalCrossThreadCalls = false;
-        }
-
-        private void btnPortClose_Click(object sender, EventArgs e)
-        {
-            SerialPort.Close();
-            rbText.Text += "\r\n" + "[" + SerialPort.PortName.ToString() + "] Port Close!!";
-            lbStatus.Text = "Not Connect!!";
-            btnOpen.Visible = true;
-            btnPortClose.Visible = false;
-        }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -275,6 +234,18 @@ namespace Serial
             }
         }
 
+        private void board_connect()
+        {
+            SerialPort.Open();
+
+            cmd_read_BoardName();
+            cmd_read_version();
+
+        }
+        private void board_disconnect()
+        {
+            SerialPort.Close();
+        }
 
         static class Constants
         {
@@ -325,15 +296,15 @@ namespace Serial
                         return false;
                     }
 
-                    if (MsgHandler != null)
+                    if (MsgAckHandler != null)
                     {
-                        if (MsgHandler.Message.GetType() == typeof(MavLink.Msg_ack))
+                        if (MsgAckHandler.Message.GetType() == typeof(MavLink.Msg_ack))
                         {
-                            byte[] temp = (MsgHandler.Message as MavLink.Msg_ack).data;
+                            byte[] temp = (MsgAckHandler.Message as MavLink.Msg_ack).data;
                             //Console.WriteLine(Encoding.Default.GetString(temp));
                             rbText.Text += "FW version :  " + BitConverter.ToString(temp);
                             rbText.Text += "\r\n";
-                            MsgHandler = null;
+                            MsgAckHandler = null;
                             return true;
                         }
                     }
@@ -384,15 +355,15 @@ namespace Serial
                         }
                         return false;
                     }
-                    if (MsgHandler != null)
+                    if (MsgAckHandler != null)
                     {
-                        if (MsgHandler.Message.GetType() == typeof(MavLink.Msg_ack))
+                        if (MsgAckHandler.Message.GetType() == typeof(MavLink.Msg_ack))
                         {
-                            byte[] temp = (MsgHandler.Message as MavLink.Msg_ack).data;
+                            byte[] temp = (MsgAckHandler.Message as MavLink.Msg_ack).data;
                            // Console.WriteLine(Encoding.Default.GetString(temp));
                             rbText.Text += "Board name :  " + Encoding.Default.GetString(temp);
                             rbText.Text += "\r\n";
-                            MsgHandler = null;
+                            MsgAckHandler = null;
                             return true;
                         }
                     }
@@ -443,15 +414,15 @@ namespace Serial
                         }
                         return false;
                     }
-                    if (MsgHandler != null)
+                    if (MsgAckHandler != null)
                     {
-                        if (MsgHandler.Message.GetType() == typeof(MavLink.Msg_ack))
+                        if (MsgAckHandler.Message.GetType() == typeof(MavLink.Msg_ack))
                         {
-                            byte[] temp = (MsgHandler.Message as MavLink.Msg_ack).data;
+                            byte[] temp = (MsgAckHandler.Message as MavLink.Msg_ack).data;
                             // Console.WriteLine(Encoding.Default.GetString(temp));
                             rbText.Text += "Board name :  " + Encoding.Default.GetString(temp);
                             rbText.Text += "\r\n";
-                            MsgHandler = null;
+                            MsgAckHandler = null;
                             return true;
                         }
                     }
@@ -462,6 +433,38 @@ namespace Serial
             {
                 return false;
             }
+        }
+
+        private void GetSerialPort()
+        {
+           // cmbPort.BeginUpdate();
+           // foreach (string comport in SerialPort.GetPortNames())
+           // {
+           //     cmbPort.Items.Add(comport);
+           // }
+           // cmbPort.EndUpdate();
+
+           // cmbPort.SelectedIndex = 0;
+
+            //Port
+            cmbPort.Items.Clear();
+            try
+            {
+                foreach (string str in SerialPort.GetPortNames())
+                {
+                    cmbPort.Items.Add(str);
+                }
+                if (cmbPort.Items.Count <= 0)
+                {
+                    cmbPort.Items.Add("연결 장치 없음");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            cmbPort.SelectedIndex = 0;
         }
     }
 }

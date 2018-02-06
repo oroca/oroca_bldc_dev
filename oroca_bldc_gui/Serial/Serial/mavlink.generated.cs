@@ -141,17 +141,50 @@ namespace MavLink
             }        
 	}
 
-
-	/// <summary>
-	/// debug String
-	/// </summary>
-	public class Msg_debug_string : MavlinkMessage
+	public class Msg_set_mcconf : MavlinkMessage
     {
 
 		/// <summary>
 		/// 0:No Resp, 1:Resp
 		/// </summary>
 		public byte resp;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public UInt16[] data; // Array size 128
+
+        public override int Serialize(byte[] bytes, ref int offset)
+            {
+                return MavLinkSerializer.Serialize_SET_MCCONF(this, bytes, ref offset);
+            }        
+	}
+
+	public class Msg_set_appconf : MavlinkMessage
+    {
+
+		/// <summary>
+		/// 0:No Resp, 1:Resp
+		/// </summary>
+		public byte resp;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public UInt16[] data; // Array size 128
+
+        public override int Serialize(byte[] bytes, ref int offset)
+            {
+                return MavLinkSerializer.Serialize_SET_APPCONF(this, bytes, ref offset);
+            }        
+	}
+
+
+	/// <summary>
+	/// debug String
+	/// </summary>
+	public class Msg_debug_string : MavlinkMessage
+    {
 
 		/// <summary>
 		/// string
