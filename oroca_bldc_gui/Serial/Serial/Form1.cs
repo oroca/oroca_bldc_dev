@@ -99,6 +99,9 @@ namespace Serial
 
 
       //  private void DataView_Load(object sender, EventArgs e)
+        private string ReadDataBuffer_Title = "";
+        private string[] ReadDataBuffer = new string[100000];
+        private int DataNum = 0;
         private void DataView_Load()
         {
             DataGridView dataGridView = dataGridView1;
@@ -113,10 +116,25 @@ namespace Serial
             //string filePath = @"E:\ResultData\Model\" + month.ToString() + @"\" + day.ToString() + @"\Data.csv"; // 현재 날짜에 맞는 디렉토리 경로
 
             string filePath = "Sample.csv";
-            string[] raw_text = File.ReadAllLines(filePath); // Data.csv 파일의 모든 라인을 읽는다.(배열 하나당 한 줄씩 들어간다.)
+           /* string[] raw_text = File.ReadAllLines(filePath); // Data.csv 파일의 모든 라인을 읽는다.(배열 하나당 한 줄씩 들어간다.)
             string[] data_col = null;
-            int x = 0;
-            foreach (string text_line in raw_text)
+            int x = 0;*/
+
+            int i = 0;
+
+            StreamReader sr = new StreamReader(filePath, Encoding.Default);
+            ReadDataBuffer_Title = sr.ReadLine();
+            ReadDataBuffer[0] = sr.ReadLine();
+            while (ReadDataBuffer[i] != null)
+            {
+                i = i + 1;
+                ReadDataBuffer[i] = sr.ReadLine();
+            }
+            DataNum = i;
+            sr.Close();
+
+            string[] split = ReadDataBuffer[i].Split(new Char[] { ',', '\t' });
+            foreach (string text_line in split)
             {
                 data_col = text_line.Split(',');
                 if (x == 0)
@@ -132,6 +150,8 @@ namespace Serial
                     dataTable.Rows.Add(data_col); // 그안에 data_col의 값을 입력한다.
                 }
             }
+
+  
  
             dataGridView.DataSource = dataTable; // 테이블을 그리드 뷰에 올린다.
             //this.Controls.Add(dataGridView); // 그림으로 표시
