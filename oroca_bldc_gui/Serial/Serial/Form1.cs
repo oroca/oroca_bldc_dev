@@ -22,38 +22,6 @@ namespace Serial
 {
     public partial class Form1 : Form
     {
-        //====================
-        // usb auto detection
-        protected override void WndProc(ref Message m)
-        {
-            UInt32 WM_DEVICECHANGE = 0x0219;
-            UInt32 DBT_DEVTUP_VOLUME = 0x02;
-            UInt32 DBT_DEVICEARRIVAL = 0x8000;
-            UInt32 DBT_DEVICEREMOVECOMPLETE = 0x8004;
-
-            if ((m.Msg == WM_DEVICECHANGE) && (m.WParam.ToInt32() == DBT_DEVICEARRIVAL))//디바이스 연결
-            {
-                //int m_Count = 0;
-                int devType = Marshal.ReadInt32(m.LParam, 4);
-
-                if (devType == DBT_DEVTUP_VOLUME)
-                {
-                    GetSerialPort();
-                }
-            }
-
-            if ((m.Msg == WM_DEVICECHANGE) && (m.WParam.ToInt32() == DBT_DEVICEREMOVECOMPLETE))  //디바이스 연결 해제
-            {
-                int devType = Marshal.ReadInt32(m.LParam, 4);
-                if (devType == DBT_DEVTUP_VOLUME)
-                {
-                    GetSerialPort();
-                }
-            }
-
-            base.WndProc(ref m);
-        }
-        
         #region form_func
 
         public Form1()
@@ -87,7 +55,8 @@ namespace Serial
         {
             CheckForIllegalCrossThreadCalls = false;
             //openFileDialog1.ShowDialog();
-            DataView_Load();
+
+            dataGridView1.DataSource = DataView_Load();
         }
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -98,33 +67,18 @@ namespace Serial
         }
 
 
-      //  private void DataView_Load(object sender, EventArgs e)
-        private string ReadDataBuffer_Title = "";
-        private string[] ReadDataBuffer = new string[100000];
-        private int DataNum = 0;
-        private void DataView_Load()
+        private DataTable DataView_Load()
         {
-            DataGridView dataGridView = dataGridView1;
-            DataTable dataTable = new DataTable();
+            string[] ReadDataBuffer = new string[1000];
 
-            this.Size = new Size(750, 450);
-            dataGridView.Size = new Size(600, 400);
-            dataGridView.Location = new Point(5, 5);
- 
-            //int month = DateTime.Now.Month;
-            //int day = DateTime.Now.Day;
-            //string filePath = @"E:\ResultData\Model\" + month.ToString() + @"\" + day.ToString() + @"\Data.csv"; // 현재 날짜에 맞는 디렉토리 경로
-
-            string filePath = "Sample.csv";
-           /* string[] raw_text = File.ReadAllLines(filePath); // Data.csv 파일의 모든 라인을 읽는다.(배열 하나당 한 줄씩 들어간다.)
-            string[] data_col = null;
-            int x = 0;*/
-
+            int DataNum = 0;
             int i = 0;
 
+            string filePath = "Sample.csv";
+
             StreamReader sr = new StreamReader(filePath, Encoding.Default);
-            ReadDataBuffer_Title = sr.ReadLine();
-            ReadDataBuffer[0] = sr.ReadLine();
+            ReadDataBuffer[0] = sr.ReadLine();//read header
+
             while (ReadDataBuffer[i] != null)
             {
                 i = i + 1;
@@ -133,28 +87,24 @@ namespace Serial
             DataNum = i;
             sr.Close();
 
-            string[] split = ReadDataBuffer[i].Split(new Char[] { ',', '\t' });
-            foreach (string text_line in split)
+            DataRow row = null;
+            DataTable dataTable = new DataTable();
+            for (i = 0; i < DataNum; i++)
             {
-                data_col = text_line.Split(',');
-                if (x == 0)
-                {
-                    for (int i = 0; i <= data_col.Count() - 1; i++)
-                    {
-                        dataTable.Columns.Add(data_col[i]); // data_col[i]의 데이터 크기 와 data_col 배열 크기 를 고려하여 table의 항목을 만든다.
-                    }
-                    x++;
-                }
-                else
-                {
-                    dataTable.Rows.Add(data_col); // 그안에 data_col의 값을 입력한다.
-                }
-            }
+                string[] split = ReadDataBuffer[i].Split(new Char[] { ',', '\t' });
 
-  
- 
-            dataGridView.DataSource = dataTable; // 테이블을 그리드 뷰에 올린다.
-            //this.Controls.Add(dataGridView); // 그림으로 표시
+                foreach (string split_data in split)
+                {
+                    if (i == 0)
+                    {
+                        dataTable.Columns.Add();
+                    }
+                }
+                row = dataTable.NewRow();
+                row.ItemArray = split;
+                dataTable.Rows.Add(row);
+            }
+            return dataTable;
         }
         public void saveData() // 호출 할 때 마다 날짜에 맞는 폴더 안에 csv 파일 생성 이미 생성 된경우 이어쓰기
         {
@@ -561,6 +511,38 @@ namespace Serial
         #endregion
 
         #region serial_func
+        //====================
+        // usb auto detection
+        protected override void WndProc(ref Message m)
+        {
+            UInt32 WM_DEVICECHANGE = 0x0219;
+            UInt32 DBT_DEVTUP_VOLUME = 0x02;
+            UInt32 DBT_DEVICEARRIVAL = 0x8000;
+            UInt32 DBT_DEVICEREMOVECOMPLETE = 0x8004;
+
+            if ((m.Msg == WM_DEVICECHANGE) && (m.WParam.ToInt32() == DBT_DEVICEARRIVAL))//디바이스 연결
+            {
+                //int m_Count = 0;
+                int devType = Marshal.ReadInt32(m.LParam, 4);
+
+                if (devType == DBT_DEVTUP_VOLUME)
+                {
+                    GetSerialPort();
+                }
+            }
+
+            if ((m.Msg == WM_DEVICECHANGE) && (m.WParam.ToInt32() == DBT_DEVICEREMOVECOMPLETE))  //디바이스 연결 해제
+            {
+                int devType = Marshal.ReadInt32(m.LParam, 4);
+                if (devType == DBT_DEVTUP_VOLUME)
+                {
+                    GetSerialPort();
+                }
+            }
+
+            base.WndProc(ref m);
+        }
+
         private void GetSerialPort()
         {
            // cmbPort.BeginUpdate();
