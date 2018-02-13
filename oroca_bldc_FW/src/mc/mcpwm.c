@@ -53,19 +53,19 @@ tPIParm     PIParmPLL;
 tCtrlParm CtrlParm;
 tSVGenParm SVGenParm;
 tFdWeakParm FdWeakParm;
-static volatile tMeasCurrParm MeasCurrParm;
+tMeasCurrParm MeasCurrParm;
 
-static volatile bool dccal_done;
+bool dccal_done;
 
 int VelReq = 0;
 
 // Global variables
 uint16_t ADC_Value[HW_ADC_CHANNELS];
 
-unsigned int  switching_frequency_now = PWMFREQUENCY;
+uint16_t switching_frequency = PWMFREQUENCY;
 
 // Speed Calculation Variables
-WORD MCCtrlCnt = 0;	
+uint16_t MCCtrlCnt = 0;	
 
 float qVelRef = 0.01f;
 float dbg_fTheta;
@@ -99,7 +99,7 @@ void mcpwm_init(volatile mc_configuration *configuration)
 	// Time Base configuration
 	TIM_TimeBaseStructure.TIM_Prescaler = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_CenterAligned1;
-	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now /2;
+	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency /2;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_RepetitionCounter = 1;
 
@@ -213,7 +213,7 @@ void mcpwm_init(volatile mc_configuration *configuration)
 
 	TIM_TimeBaseStructure.TIM_Prescaler = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency_now;
+	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
 
@@ -359,11 +359,11 @@ void stop_pwm_hw(void) {
 
 
 
-static volatile int curr0_sum;
-static volatile int curr1_sum;
-static volatile int curr_start_samples;
-static volatile int curr0_offset;
-static volatile int curr1_offset;
+int16_t curr0_sum;
+int16_t curr1_sum;
+int16_t curr_start_samples;
+int16_t curr0_offset;
+int16_t curr1_offset;
 void do_dc_cal(void)
 {
 	DCCAL_ON();

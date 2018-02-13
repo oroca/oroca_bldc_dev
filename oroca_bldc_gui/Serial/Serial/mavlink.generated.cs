@@ -150,9 +150,99 @@ namespace MavLink
 		public byte resp;
 
 		/// <summary>
-		/// 
+		/// x10^1 
 		/// </summary>
-		public UInt16[] data; // Array size 128
+		public byte uVDD;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uRSHUNT;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uPWMFREQUENCY;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uDKP;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uDKI;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uDKC;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uDOUTMAX;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uQKP;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uQKI;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uQKC;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uQOUTMAX;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uWKP;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uWKI;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uWKC;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uWOUTMAX;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uPLLKP;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uPLLKI;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uPLLKC;
+
+		/// <summary>
+		/// x10^3 
+		/// </summary>
+		public UInt16 uPLLOUTMAX;
 
         public override int Serialize(byte[] bytes, ref int offset)
             {

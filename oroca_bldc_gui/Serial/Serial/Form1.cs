@@ -46,17 +46,14 @@ namespace Serial
                 default: SerialPort.BaudRate = (int)19200; break;
             }
 
-
-
             // Add my packet receive methods to the event handler
             receivedMsg.PacketReceived += new PacketReceivedEventHandler(this.PrintRecievedPackets);
         }
         private void Form1_Load(object sender, EventArgs e)
         {
             CheckForIllegalCrossThreadCalls = false;
-            //openFileDialog1.ShowDialog();
 
-            dataGridView1.DataSource = DataView_Load();
+            dataGridView1.DataSource = DataView_import();
         }
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -67,7 +64,7 @@ namespace Serial
         }
 
 
-        private DataTable DataView_Load()
+        private DataTable DataView_import()
         {
             string[] ReadDataBuffer = new string[1000];
 
@@ -106,32 +103,46 @@ namespace Serial
             }
             return dataTable;
         }
-        public void saveData() // 호출 할 때 마다 날짜에 맞는 폴더 안에 csv 파일 생성 이미 생성 된경우 이어쓰기
+        public void DataView_export(DataTable dt) // 호출 할 때 마다 날짜에 맞는 폴더 안에 csv 파일 생성 이미 생성 된경우 이어쓰기
         {
-            int month, day;
- 
-            month = DateTime.Now.Month;
-            day = DateTime.Now.Day;
-            
-            string filePath = @"E:\ResultData\Model\" + month.ToString() + @"\" + day.ToString() + @"\Data.csv"; // 현재 날짜에 맞        는 디렉토리 경로
-            FileInfo fileInfo = new FileInfo(filePath);
-            if (fileInfo.Exists) // 파일이 존재 한다면
+            // Create the CSV file to which grid data will be exported.
+            string filePath = "Sample.csv";
+
+            StreamWriter sw = new StreamWriter(filePath);
+            // First we will write the headers.
+            //DataTable dt = ((DataSet)grid1.DataSource).Tables[0];
+
+            int iColCount = dt.Columns.Count;
+        //    for (int i = 0; i < iColCount; i++)
+        //    {
+        //        sw.Write(dt.Columns[i]);
+        //        if (i < iColCount - 1)
+        //        {
+        //            sw.Write(",");
+        //        }
+        //    }
+            //sw.Write(sw.NewLine);
+            // Now write all the rows.
+            foreach (DataRow dr in dt.Rows)
             {
-                using (FileStream streamWriter = new FileStream(filePath, FileMode.Append, FileAccess.Write)) // 파일 이어쓰기
+                for (int i = 0; i < iColCount; i++)
                 {
-                    using (StreamWriter sWriter = new StreamWriter(streamWriter))
+                    if (!Convert.IsDBNull(dr[i]))
                     {
-                        sWriter.WriteLine(DateTime.Now.ToLongTimeString()); // 덧 붙일 내용
+                        sw.Write(dr[i].ToString());
+                    }
+
+                    if (i < iColCount - 1)
+                    {
+                        sw.Write(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator);
                     }
                 }
+                sw.Write(sw.NewLine);
             }
-            else
-            {
-                StreamWriter streamWriter = new StreamWriter(filePath, false, Encoding.Unicode); // 파일 생성
-            }
+            sw.Close();
         }
 
-
+#if false
         private string Excel03ConString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1}'";
         private string Excel07ConString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1}'";
 
@@ -190,6 +201,7 @@ namespace Serial
                 }
             }
         }
+#endif
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
@@ -592,6 +604,10 @@ namespace Serial
         }
         #endregion
 
-       
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DataView_export((DataTable)dataGridView1.DataSource);
+        }
+
     }
 }

@@ -31,6 +31,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "mc_interface.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -40,11 +42,6 @@ extern "C" {
 
 #define False  0
 #define True   1
-
-typedef unsigned short WORD;
-//typedef signed int SFRAC16;
-typedef unsigned char  BYTE;
-//typedef unsigned char  BOOL;
 
 
 typedef struct {
@@ -196,148 +193,6 @@ typedef struct {
 
 
 
-// Data types
-typedef enum {
-   MC_STATE_OFF = 0,
-   MC_STATE_DETECTING,
-   MC_STATE_RUNNING,
-   MC_STATE_FULL_BRAKE,
-} mc_state;
-
-typedef enum {
-	PWM_MODE_NONSYNCHRONOUS_HISW = 0, // This mode is not recommended
-	PWM_MODE_SYNCHRONOUS, // The recommended and most tested mode
-	PWM_MODE_BIPOLAR // Some glitches occasionally, can kill MOSFETs
-} mc_pwm_mode;
-
-typedef enum {
-	COMM_MODE_INTEGRATE = 0,
-	COMM_MODE_DELAY
-} mc_comm_mode;
-
-typedef enum {
-	SENSOR_MODE_SENSORLESS = 0,
-	SENSOR_MODE_SENSORED,
-	SENSOR_MODE_HYBRID
-} mc_sensor_mode;
-
-typedef enum {
-	FOC_SENSOR_MODE_SENSORLESS = 0,
-	FOC_SENSOR_MODE_ENCODER,
-	FOC_SENSOR_MODE_HALL
-} mc_foc_sensor_mode;
-
-typedef enum {
-	MOTOR_TYPE_BLDC = 0,
-	MOTOR_TYPE_DC,
-	MOTOR_TYPE_FOC
-} mc_motor_type;
-
-typedef enum {
-	FAULT_CODE_NONE = 0,
-	FAULT_CODE_OVER_VOLTAGE,
-	FAULT_CODE_UNDER_VOLTAGE,
-	FAULT_CODE_DRV8302,
-	FAULT_CODE_ABS_OVER_CURRENT,
-	FAULT_CODE_OVER_TEMP_FET,
-	FAULT_CODE_OVER_TEMP_MOTOR
-} mc_fault_code;
-
-typedef enum {
-	CONTROL_MODE_DUTY = 0,
-	CONTROL_MODE_SPEED,
-	CONTROL_MODE_CURRENT,
-	CONTROL_MODE_CURRENT_BRAKE,
-	CONTROL_MODE_POS,
-	CONTROL_MODE_NONE
-} mc_control_mode;
-
-typedef enum {
-	DISP_POS_MODE_NONE = 0,
-	DISP_POS_MODE_INDUCTANCE,
-	DISP_POS_MODE_OBSERVER,
-	DISP_POS_MODE_ENCODER,
-	DISP_POS_MODE_PID_POS,
-	DISP_POS_MODE_PID_POS_ERROR,
-	DISP_POS_MODE_ENCODER_OBSERVER_ERROR
-} disp_pos_mode;
-
-typedef enum {
-	SENSOR_PORT_MODE_HALL = 0,
-	SENSOR_PORT_MODE_ABI,
-	SENSOR_PORT_MODE_AS5047_SPI
-} sensor_port_mode;
-
-typedef struct {
-	mc_pwm_mode pwm_mode;
-	mc_comm_mode comm_mode;
-	mc_motor_type motor_type;
-	mc_sensor_mode sensor_mode;
-
-	// Limits
-	float l_current_max;
-	float l_current_min;
-	float l_in_current_max;
-	float l_in_current_min;
-	float l_abs_current_max;
-	float l_min_erpm;
-	float l_max_erpm;
-	float l_erpm_start;
-	float l_max_erpm_fbrake;
-	float l_max_erpm_fbrake_cc;
-	float l_min_vin;
-	float l_max_vin;
-	float l_battery_cut_start;
-	float l_battery_cut_end;
-	bool l_slow_abs_current;
-	float l_temp_fet_start;
-	float l_temp_fet_end;
-	float l_temp_motor_start;
-	float l_temp_motor_end;
-	float l_min_duty;
-	float l_max_duty;
-	float l_watt_max;
-	float l_watt_min;
-	// Overridden limits (Computed during runtime)
-	float lo_current_max;
-	float lo_current_min;
-	float lo_in_current_max;
-	float lo_in_current_min;
-	float lo_current_motor_max_now;
-	float lo_current_motor_min_now;
-
-
-	sensor_port_mode m_sensor_port_mode;
-	uint32_t m_encoder_counts;
-
-	//******** D Control Loop Coefficients *******
-	float     dkp;        //0.02
-	float     dki;        //0.05
-	float     dkc;        //0.99999
-	float     dout_max;   //0.99999
-	//******** Q Control Loop Coefficients *******
-	float     qkp;        //0.02
-	float     qki;        //0.05
-	float     qkc;        //0.99999
-	float     qout_max;    //0.99999
-
-	//*** Velocity Control Loop Coefficients *****
-	float     wkp;       //12.0
-	float     wki;        //2.0
-	float     wkc;        //0.99999
-	float     wout_max;    //0.95
-
-	//*** analog hallsensor Coefficients *****
-	float     pll_kp;       //2.0
-	float     pll_ki;	   //0.01
-	float     pll_kc;       //0.99999
-	float     pllout_max;    //0.95
-
-	//*** current sensor gain *****
-	float     dqk_a;       //0.0008058608f
-	float     dqk_b;       //0.0008058608f
-
-} mc_configuration;
 
 
 #define MCPWM_DEAD_TIME_CYCLES			80		// Dead time
@@ -351,7 +206,7 @@ typedef struct {
 //************** PWM and Control Timing Parameters **********
 
 #define PWMFREQUENCY	16000		// PWM Frequency in Hertz
-#define PWMPEROID           1.0f/PWMFREQUENCY
+#define PWMPEROID       1.0f/PWMFREQUENCY
 #define SPEEDLOOPFREQ	1000		// Speed loop Frequency in Hertz. This value must
 									// be an integer to avoid pre-compiler error
 									// Use this value to test low speed motor
@@ -414,7 +269,7 @@ typedef struct {
 
 // External variables
 extern  uint16_t ADC_Value[];
-extern  unsigned int  switching_frequency_now;
+extern  uint16_t switching_frequency;
 
 
 //==============================================================

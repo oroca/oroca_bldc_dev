@@ -37,6 +37,7 @@
 #include "comm_usb.h"
 #include "comm_usb_serial.h"
 
+#include "mc_interface.h"
 #include "mavlink_proc.h"
 
 const uint8_t  *board_name   = "BLDC R10";
@@ -183,20 +184,48 @@ int cmd_velocity( uint16_t data )
 
 void cmd_set_mcconf( msg_handle_t *p_msg )
 {
-  err_code_t err_code = OK;
-  mavlink_ack_t     mav_ack;
-  mavlink_read_version_t mav_data;
+	err_code_t err_code = OK;
+	mavlink_ack_t     mav_ack;
+	mavlink_set_mcconf_t mav_data;
 
-  mavlink_msg_read_version_decode(p_msg->p_msg, &mav_data);
+	mavlink_msg_set_mcconf_decode(p_msg->p_msg,&mav_data);
 
-  if( mav_data.resp == 1 )
-  {
-    mav_ack.msg_id   = p_msg->p_msg->msgid;
-    mav_ack.err_code = err_code;
+	if( mav_data.resp == 1 )
+	{
+		mav_ack.msg_id   = p_msg->p_msg->msgid;
+		mav_ack.err_code = err_code;
 
-    mav_ack.length  = 0;
-    resp_ack(p_msg->ch, &mav_ack);
-  }
+		mav_ack.length  = 0;
+		resp_ack(p_msg->ch, &mav_ack);
+	}
+
+	mcconf = *mc_interface_get_configuration();
+
+
+	mcconf.vdd 		= mav_data.uVDD; /*< x10^1 */
+	mcconf.rshunt 	= mav_data.uRSHUNT; /*< x10^3 */
+	mcconf.pwmFreq	= mav_data.uPWMFREQUENCY; /*< x10^3 */
+	mcconf.dkp 		= mav_data.uDKP; /*< x10^3 */
+	mcconf.dki		= mav_data.uDKI; /*< x10^3 */
+	mcconf.dkc		= mav_data.uDKC; /*< x10^3 */
+	mcconf.dout_max	= mav_data.uDOUTMAX; /*< x10^3 */
+	mcconf.qkp		= mav_data.uQKP; /*< x10^3 */
+	mcconf.qki		= mav_data.uQKI; /*< x10^3 */
+	mcconf.qkc		= mav_data.uQKC; /*< x10^3 */
+	mcconf.qout_max	= mav_data.uQOUTMAX; /*< x10^3 */
+	mcconf.wkp		= mav_data.uWKP; /*< x10^3 */
+	mcconf.wki		= mav_data.uWKI; /*< x10^3 */
+	mcconf.wkc		= mav_data.uWKC; /*< x10^3 */
+	mcconf.wout_max	= mav_data.uWOUTMAX; /*< x10^3 */
+	mcconf.pll_kp	= mav_data.uPLLKP; /*< x10^3 */
+	mcconf.pll_ki	= mav_data.uPLLKI; /*< x10^3 */
+	mcconf.pll_kc	= mav_data.uPLLKC; /*< x10^3 */
+	mcconf.pllout_max= mav_data.uPLLOUTMAX; /*< x10^3 */
+
+mc_interface_set_configuration(&mcconf);
+chThdSleepMilliseconds(200);
+
+
 }
 
 void cmd_set_appconf( msg_handle_t *p_msg )

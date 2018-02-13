@@ -212,7 +212,7 @@ void mc_interface_set_configuration(mc_configuration *configuration) {
 	switch (m_conf.motor_type) {
 	case MOTOR_TYPE_BLDC:
 	case MOTOR_TYPE_DC:
-		mcpwm_set_configuration(&m_conf);
+//		mcpwm_set_configuration(&m_conf);
 		break;
 
 	case MOTOR_TYPE_FOC:

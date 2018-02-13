@@ -54,7 +54,7 @@ namespace MavLink
 			{152, new MavPacketInfo(Deserialize_READ_BOARD_NAME, 140)},
 			{153, new MavPacketInfo(Deserialize_READ_TAG, 126)},
 			{220, new MavPacketInfo(Deserialize_SET_VELOCITY, 249)},
-			{221, new MavPacketInfo(Deserialize_SET_MCCONF, 200)},
+			{221, new MavPacketInfo(Deserialize_SET_MCCONF, 107)},
 			{222, new MavPacketInfo(Deserialize_SET_APPCONF, 33)},
 			{0, new MavPacketInfo(Deserialize_DEBUG_STRING, 50)},
 		};
@@ -111,8 +111,26 @@ namespace MavLink
 		{
 			return new Msg_set_mcconf
 			{
-				data =  ByteArrayUtil.ToUInt16(bytes, offset + 0, 128),
-				resp = bytes[offset + 256],
+				uRSHUNT = bitconverter.ToUInt16(bytes, offset + 0),
+				uPWMFREQUENCY = bitconverter.ToUInt16(bytes, offset + 2),
+				uDKP = bitconverter.ToUInt16(bytes, offset + 4),
+				uDKI = bitconverter.ToUInt16(bytes, offset + 6),
+				uDKC = bitconverter.ToUInt16(bytes, offset + 8),
+				uDOUTMAX = bitconverter.ToUInt16(bytes, offset + 10),
+				uQKP = bitconverter.ToUInt16(bytes, offset + 12),
+				uQKI = bitconverter.ToUInt16(bytes, offset + 14),
+				uQKC = bitconverter.ToUInt16(bytes, offset + 16),
+				uQOUTMAX = bitconverter.ToUInt16(bytes, offset + 18),
+				uWKP = bitconverter.ToUInt16(bytes, offset + 20),
+				uWKI = bitconverter.ToUInt16(bytes, offset + 22),
+				uWKC = bitconverter.ToUInt16(bytes, offset + 24),
+				uWOUTMAX = bitconverter.ToUInt16(bytes, offset + 26),
+				uPLLKP = bitconverter.ToUInt16(bytes, offset + 28),
+				uPLLKI = bitconverter.ToUInt16(bytes, offset + 30),
+				uPLLKC = bitconverter.ToUInt16(bytes, offset + 32),
+				uPLLOUTMAX = bitconverter.ToUInt16(bytes, offset + 34),
+				resp = bytes[offset + 36],
+				uVDD = bytes[offset + 37],
 			};
 		}
 
@@ -178,9 +196,27 @@ namespace MavLink
 
 		internal static int Serialize_SET_MCCONF(this Msg_set_mcconf msg, byte[] bytes, ref int offset)
 		{
-			ByteArrayUtil.ToByteArray(msg.data, bytes, offset + 0, 128);
-			bytes[offset + 256] = msg.resp;
-			offset += 257;
+			bitconverter.GetBytes(msg.uRSHUNT, bytes, offset + 0);
+			bitconverter.GetBytes(msg.uPWMFREQUENCY, bytes, offset + 2);
+			bitconverter.GetBytes(msg.uDKP, bytes, offset + 4);
+			bitconverter.GetBytes(msg.uDKI, bytes, offset + 6);
+			bitconverter.GetBytes(msg.uDKC, bytes, offset + 8);
+			bitconverter.GetBytes(msg.uDOUTMAX, bytes, offset + 10);
+			bitconverter.GetBytes(msg.uQKP, bytes, offset + 12);
+			bitconverter.GetBytes(msg.uQKI, bytes, offset + 14);
+			bitconverter.GetBytes(msg.uQKC, bytes, offset + 16);
+			bitconverter.GetBytes(msg.uQOUTMAX, bytes, offset + 18);
+			bitconverter.GetBytes(msg.uWKP, bytes, offset + 20);
+			bitconverter.GetBytes(msg.uWKI, bytes, offset + 22);
+			bitconverter.GetBytes(msg.uWKC, bytes, offset + 24);
+			bitconverter.GetBytes(msg.uWOUTMAX, bytes, offset + 26);
+			bitconverter.GetBytes(msg.uPLLKP, bytes, offset + 28);
+			bitconverter.GetBytes(msg.uPLLKI, bytes, offset + 30);
+			bitconverter.GetBytes(msg.uPLLKC, bytes, offset + 32);
+			bitconverter.GetBytes(msg.uPLLOUTMAX, bytes, offset + 34);
+			bytes[offset + 36] = msg.resp;
+			bytes[offset + 37] = msg.uVDD;
+			offset += 38;
 			return 221;
 		}
 

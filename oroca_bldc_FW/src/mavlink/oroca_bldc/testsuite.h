@@ -315,13 +315,31 @@ static void mavlink_test_set_mcconf(uint8_t system_id, uint8_t component_id, mav
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
     mavlink_set_mcconf_t packet_in = {
-        { 17235, 17236, 17237, 17238, 17239, 17240, 17241, 17242, 17243, 17244, 17245, 17246, 17247, 17248, 17249, 17250, 17251, 17252, 17253, 17254, 17255, 17256, 17257, 17258, 17259, 17260, 17261, 17262, 17263, 17264, 17265, 17266, 17267, 17268, 17269, 17270, 17271, 17272, 17273, 17274, 17275, 17276, 17277, 17278, 17279, 17280, 17281, 17282, 17283, 17284, 17285, 17286, 17287, 17288, 17289, 17290, 17291, 17292, 17293, 17294, 17295, 17296, 17297, 17298, 17299, 17300, 17301, 17302, 17303, 17304, 17305, 17306, 17307, 17308, 17309, 17310, 17311, 17312, 17313, 17314, 17315, 17316, 17317, 17318, 17319, 17320, 17321, 17322, 17323, 17324, 17325, 17326, 17327, 17328, 17329, 17330, 17331, 17332, 17333, 17334, 17335, 17336, 17337, 17338, 17339, 17340, 17341, 17342, 17343, 17344, 17345, 17346, 17347, 17348, 17349, 17350, 17351, 17352, 17353, 17354, 17355, 17356, 17357, 17358, 17359, 17360, 17361, 17362 },5
+        17235,17339,17443,17547,17651,17755,17859,17963,18067,18171,18275,18379,18483,18587,18691,18795,18899,19003,113,180
     };
     mavlink_set_mcconf_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
+        packet1.uRSHUNT = packet_in.uRSHUNT;
+        packet1.uPWMFREQUENCY = packet_in.uPWMFREQUENCY;
+        packet1.uDKP = packet_in.uDKP;
+        packet1.uDKI = packet_in.uDKI;
+        packet1.uDKC = packet_in.uDKC;
+        packet1.uDOUTMAX = packet_in.uDOUTMAX;
+        packet1.uQKP = packet_in.uQKP;
+        packet1.uQKI = packet_in.uQKI;
+        packet1.uQKC = packet_in.uQKC;
+        packet1.uQOUTMAX = packet_in.uQOUTMAX;
+        packet1.uWKP = packet_in.uWKP;
+        packet1.uWKI = packet_in.uWKI;
+        packet1.uWKC = packet_in.uWKC;
+        packet1.uWOUTMAX = packet_in.uWOUTMAX;
+        packet1.uPLLKP = packet_in.uPLLKP;
+        packet1.uPLLKI = packet_in.uPLLKI;
+        packet1.uPLLKC = packet_in.uPLLKC;
+        packet1.uPLLOUTMAX = packet_in.uPLLOUTMAX;
         packet1.resp = packet_in.resp;
+        packet1.uVDD = packet_in.uVDD;
         
-        mav_array_memcpy(packet1.data, packet_in.data, sizeof(uint16_t)*128);
         
 #ifdef MAVLINK_STATUS_FLAG_OUT_MAVLINK1
         if (status->flags & MAVLINK_STATUS_FLAG_OUT_MAVLINK1) {
@@ -335,12 +353,12 @@ static void mavlink_test_set_mcconf(uint8_t system_id, uint8_t component_id, mav
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_set_mcconf_pack(system_id, component_id, &msg , packet1.resp , packet1.data );
+    mavlink_msg_set_mcconf_pack(system_id, component_id, &msg , packet1.resp , packet1.uVDD , packet1.uRSHUNT , packet1.uPWMFREQUENCY , packet1.uDKP , packet1.uDKI , packet1.uDKC , packet1.uDOUTMAX , packet1.uQKP , packet1.uQKI , packet1.uQKC , packet1.uQOUTMAX , packet1.uWKP , packet1.uWKI , packet1.uWKC , packet1.uWOUTMAX , packet1.uPLLKP , packet1.uPLLKI , packet1.uPLLKC , packet1.uPLLOUTMAX );
     mavlink_msg_set_mcconf_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_set_mcconf_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.resp , packet1.data );
+    mavlink_msg_set_mcconf_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.resp , packet1.uVDD , packet1.uRSHUNT , packet1.uPWMFREQUENCY , packet1.uDKP , packet1.uDKI , packet1.uDKC , packet1.uDOUTMAX , packet1.uQKP , packet1.uQKI , packet1.uQKC , packet1.uQOUTMAX , packet1.uWKP , packet1.uWKI , packet1.uWKC , packet1.uWOUTMAX , packet1.uPLLKP , packet1.uPLLKI , packet1.uPLLKC , packet1.uPLLOUTMAX );
     mavlink_msg_set_mcconf_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
@@ -353,7 +371,7 @@ static void mavlink_test_set_mcconf(uint8_t system_id, uint8_t component_id, mav
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_set_mcconf_send(MAVLINK_COMM_1 , packet1.resp , packet1.data );
+    mavlink_msg_set_mcconf_send(MAVLINK_COMM_1 , packet1.resp , packet1.uVDD , packet1.uRSHUNT , packet1.uPWMFREQUENCY , packet1.uDKP , packet1.uDKI , packet1.uDKC , packet1.uDOUTMAX , packet1.uQKP , packet1.uQKI , packet1.uQKC , packet1.uQOUTMAX , packet1.uWKP , packet1.uWKI , packet1.uWKC , packet1.uWOUTMAX , packet1.uPLLKP , packet1.uPLLKI , packet1.uPLLKC , packet1.uPLLOUTMAX );
     mavlink_msg_set_mcconf_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
