@@ -36,8 +36,9 @@
 
 #include "ch.h"
 
-#include "mcpwm.h"
 #include "app.h"
+//#include "mcpwm.h"
+//#include "mc_interface.h"
 
 #define PACKET_MAX_PL_LEN		1024
 
@@ -55,23 +56,6 @@
 //#define WS2811_ENABLE			1
 //#define CURR1_DOUBLE_SAMPLE		0
 //#define CURR2_DOUBLE_SAMPLE		0
-
-/*
- * Select only one hardware version
- */
-#if !defined(HW_VERSION_40) && !defined(HW_VERSION_45) && !defined(HW_VERSION_46) && \
-	!defined(HW_VERSION_48) && !defined(HW_VERSION_49) && !defined(HW_VERSION_410) && \
-	!defined(HW_VERSION_R2) && !defined(HW_VERSION_VICTOR_R1A)  && !defined(HW_VERSION_OROCA)
-//#define HW_VERSION_40
-//#define HW_VERSION_45
-//#define HW_VERSION_46 // Also for 4.7
-//#define HW_VERSION_48
-//#define HW_VERSION_49
-//#define HW_VERSION_410 // Also for 4.11 and 4.12
-//#define HW_VERSION_R2
-//#define HW_VERSION_VICTOR_R1A
-#define HW_VERSION_OROCA
-#endif
 
 /*
  * Select default user motor configuration
@@ -136,11 +120,11 @@
 // Functions
 void conf_general_init(void);
 void conf_general_get_default_app_configuration(app_configuration *conf);
-void conf_general_get_default_mc_configuration(mc_configuration *conf);
+//void conf_general_get_default_mc_configuration(mc_configuration *conf);
 void conf_general_read_app_configuration(app_configuration *conf);
 bool conf_general_store_app_configuration(app_configuration *conf);
-void conf_general_read_mc_configuration(mc_configuration *conf);
-bool conf_general_store_mc_configuration(mc_configuration *conf);
+//void conf_general_read_mc_configuration(mc_configuration *conf);
+//bool conf_general_store_mc_configuration(mc_configuration *conf);
 bool conf_general_detect_motor_param(float current, float min_rpm, float low_duty,
 		float *int_limit, float *bemf_coupling_k, int8_t *hall_table, int *hall_res);
 bool conf_general_measure_flux_linkage(float current, float duty,

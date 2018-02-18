@@ -187,6 +187,7 @@ void cmd_set_mcconf( msg_handle_t *p_msg )
 	err_code_t err_code = OK;
 	mavlink_ack_t     mav_ack;
 	mavlink_set_mcconf_t mav_data;
+	mc_configuration mcconf;
 
 	mavlink_msg_set_mcconf_decode(p_msg->p_msg,&mav_data);
 

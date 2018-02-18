@@ -25,9 +25,24 @@
 #ifndef HW_H_
 #define HW_H_
 
-
-#include "conf_general.h"
 #include "stm32f4xx_conf.h"
+#include "conf_general.h"
+
+/*
+ * Select only one hardware version
+ */
+//#if !defined(HW_VERSION_OROCA)
+//#define HW_VERSION_40
+//#define HW_VERSION_45
+//#define HW_VERSION_46 // Also for 4.7
+//#define HW_VERSION_48
+//#define HW_VERSION_49
+//#define HW_VERSION_410 // Also for 4.11 and 4.12
+//#define HW_VERSION_R2
+//#define HW_VERSION_VICTOR_R1A
+#define HW_VERSION_OROCA
+//#endif
+
 
 #ifdef HW_VERSION_40
 #include "hw_40.h"
@@ -49,6 +64,7 @@
 #include "hw_oroca.h"
 #else
 #error "No hardware version defined"
+//#include "hw_oroca.h"
 #endif
 
 // Functions

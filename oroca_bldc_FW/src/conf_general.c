@@ -11,7 +11,7 @@
 #include "stm32f4xx_conf.h"
 
 #include "eeprom.h"
-//#include "mcpwm.h"
+#include "mcpwm.h"
 #include "mc_interface.h"
 #include "hw.h"
 #include "utils.h"

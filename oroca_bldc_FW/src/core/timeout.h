@@ -27,21 +27,11 @@
 
 #include "chtypes.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
 // Functions
 void timeout_init(void);
 void timeout_configure(systime_t timeout);
 void timeout_reset(void);
 bool timeout_has_timeout(void);
 systime_t timeout_get_timeout_msec(void);
-
-#ifdef __cplusplus
-}
-#endif
-
 
 #endif /* TIMEOUT_H_ */

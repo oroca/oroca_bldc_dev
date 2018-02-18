@@ -28,18 +28,11 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-//#include <errno.h>
-//#include <unistd.h>
-//#include <stdlib.h>
 #include <math.h>
-//#include <stdio.h>
-//#include <string.h>
 
 #include "hw.h"
 #include "mcpwm.h"
 #include "utils.h"
-
-
 
 
 SMC smc1;
@@ -59,9 +52,6 @@ bool dccal_done;
 
 int VelReq = 0;
 
-// Global variables
-uint16_t ADC_Value[HW_ADC_CHANNELS];
-
 uint16_t switching_frequency = PWMFREQUENCY;
 
 // Speed Calculation Variables
@@ -73,6 +63,23 @@ float dbg_fMea;
 uint16_t dbg_AccumTheta;
 
 static volatile mc_configuration *conf;
+
+
+void CalcRefVec( void );
+void CorrectPhase( void );
+void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
+void do_dc_cal(void);
+void SMC_HallSensor_Estimation (SMC *s);
+void CalcPI( tPIParm *pParm);
+void DoControl( void );
+void InitPI( tPIParm *pParm);
+void SetupControlParameters(void);
+
+void CalcSVGen( void );
+
+
+
+
 void mcpwm_init(volatile mc_configuration *configuration)
 {
 
@@ -506,9 +513,7 @@ bool SetupParm(void)
 	// Set PWM period to Loop Time
 	SVGenParm.iPWMPeriod = LOOPINTCY;
 
-
-
-	return False;
+	return 0;
 }
 
 

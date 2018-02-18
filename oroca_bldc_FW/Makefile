@@ -133,6 +133,7 @@ CSRC = $(STARTUPSRC) \
 		$(CHIBIOS)/os/hal/lib/streams/memstreams.c \
 		$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
 			$(CONFSRC)/hw_oroca.c\
+			$(CONFSRC)/conf_general.c\
 				$(MCSRC)/mcpwm.c \
 				$(MCSRC)/mc_interface.c \
 				$(MCSRC)/encoder.c \
@@ -152,7 +153,6 @@ CSRC = $(STARTUPSRC) \
 					$(CORESRC)/utils.c	\
 					$(CORESRC)/timeout.c	\
 					$(CORESRC)/buffer.c	\
-					$(CORESRC)/conf_general.c \
 					$(CORESRC)/crc.c \
 				$(CORESRC)/spi_sw.c \
 				$(CORESRC)/rf.c \
@@ -201,11 +201,11 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
          $(CHIBIOS)/os/various \
          $(CHIBIOS)/os/hal/lib/ports/STM32/LLD/TIMv1 \
          $(CHIBIOS)/os/hal/lib/streams \
-		 $(CONFSRC) \
-         $(HWSRC) \
-         $(CORESRC) \
-         $(MCSRC)	\
-         $(APPSRC)	\
+		 $(CONFSRC)\
+         $(HWSRC)\
+         $(CORESRC)\
+         $(MCSRC)\
+         $(APPSRC)\
          $(MAVSRC)
 # Project, sources and paths
 ##############################################################################

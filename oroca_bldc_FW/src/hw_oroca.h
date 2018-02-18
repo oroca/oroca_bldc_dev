@@ -25,6 +25,8 @@
 #ifndef HW_OROCA_H_
 #define HW_OROCA_H_
 
+#define SYSTEM_CORE_CLOCK		168000000
+
 // Macros
 #define ENABLE_GATE()			palSetPad(GPIOC, 10)
 #define DISABLE_GATE()			palClearPad(GPIOC, 10)
@@ -185,6 +187,7 @@
 #define HW_SPI_PORT_MISO		GPIOA
 #define HW_SPI_PIN_MISO			6
 
+extern  uint16_t ADC_Value[];
 // Measurement macros
 #define ADC_V_L1				ADC_Value[ADC_IND_SENS1]
 #define ADC_V_L2				ADC_Value[ADC_IND_SENS2]

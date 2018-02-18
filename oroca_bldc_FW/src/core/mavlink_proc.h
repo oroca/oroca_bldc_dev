@@ -29,9 +29,6 @@
 
 #include "../mavlink/oroca_bldc/mavlink.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 typedef struct
 {
@@ -52,10 +49,5 @@ void mavlink_dbgString( uint8_t ch, char* dbg_str );
 void mavlink_msg_send(uint8_t ch, mavlink_message_t *p_msg);
 bool mavlink_msg_recv( uint8_t ch, uint8_t data , msg_handle_t *p_msg );
 void  mavlink_msg_process_vcp( msg_handle_t* p_msg);
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* APP_H_ */

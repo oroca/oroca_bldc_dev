@@ -54,20 +54,12 @@ typedef struct {
 	float tc_max_diff;
 } ppm_config;
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define EVT_PPM EVENT_MASK(0)
 
 // Standard apps
 void app_ppm_start(void);
 void app_ppm_init(void);
 
-#ifdef __cplusplus
-}
-#endif
 
 
 #endif /* APP_H_ */
