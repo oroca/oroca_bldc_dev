@@ -45,7 +45,6 @@
 /*
  * Settings
  */
-#define SYSTEM_CORE_CLOCK		168000000
 
 // Settings and parameters to override
 //#define VIN_R1				33000.0
@@ -120,11 +119,11 @@
 // Functions
 void conf_general_init(void);
 void conf_general_get_default_app_configuration(app_configuration *conf);
-//void conf_general_get_default_mc_configuration(mc_configuration *conf);
+//void conf_general_get_default_mc_configuration(mcConfiguration_t *conf);
 void conf_general_read_app_configuration(app_configuration *conf);
 bool conf_general_store_app_configuration(app_configuration *conf);
-//void conf_general_read_mc_configuration(mc_configuration *conf);
-//bool conf_general_store_mc_configuration(mc_configuration *conf);
+//void conf_general_read_mc_configuration(mcConfiguration_t *conf);
+//bool conf_general_store_mc_configuration(mcConfiguration_t *conf);
 bool conf_general_detect_motor_param(float current, float min_rpm, float low_duty,
 		float *int_limit, float *bemf_coupling_k, int8_t *hall_table, int *hall_res);
 bool conf_general_measure_flux_linkage(float current, float duty,

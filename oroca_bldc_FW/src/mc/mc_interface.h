@@ -25,8 +25,7 @@
 #ifndef MC_INTERFACE_H_
 #define MC_INTERFACE_H_
 
-#include "hw.h"
-#include "mcpwm.h"
+#include "mc_typedef.h"
 
 // Default settings
 #ifndef MCCONF_DEFAULT_MOTOR_TYPE
@@ -115,15 +114,15 @@
 
 
 // Functions
-void mc_interface_init(mc_configuration *configuration);
-const volatile mc_configuration* mc_interface_get_configuration(void);
-void mc_interface_set_configuration(mc_configuration *configuration);
+void mc_interface_init(mcConfiguration_t *configuration);
+const volatile mcConfiguration_t* mc_interface_get_configuration(void);
+void mc_interface_set_configuration(mcConfiguration_t *configuration);
 void mc_interface_set_pwm_callback(void (*p_func)(void));
 void mc_interface_lock(void);
 void mc_interface_unlock(void);
 void mc_interface_lock_override_once(void);
 
-void mc_interface_fault_stop(mc_fault_code fault);
+//void mc_interface_fault_stop(mc_fault_code fault);
 
 
 

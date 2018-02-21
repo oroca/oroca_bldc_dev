@@ -11,7 +11,7 @@
 #include "stm32f4xx_conf.h"
 
 #include "eeprom.h"
-#include "mcpwm.h"
+#include "mc_typedef.h"
 #include "mc_interface.h"
 #include "hw.h"
 #include "utils.h"
@@ -48,7 +48,7 @@
 uint16_t VirtAddVarTab[NB_OF_VAR];
 
 // Private variables
-mc_configuration mcconf, mcconf_old;
+mcConfiguration_t mcconf, mcconf_old;
 
 void conf_general_init(void) {
 	// First, make sure that all relevant virtual addresses are assigned for page swapping.
@@ -141,13 +141,13 @@ void conf_general_get_default_app_configuration(app_configuration *conf) {
 }
 
 /**
- * Load the compiled default mc_configuration.
+ * Load the compiled default mcConfiguration_t.
  *
  * @param conf
  * A pointer to store the default configuration to.
  */
-void conf_general_get_default_mc_configuration(mc_configuration *conf) {
-	memset(conf, 0, sizeof(mc_configuration));
+void conf_general_get_default_mc_configuration(mcConfiguration_t *conf) {
+	memset(conf, 0, sizeof(mcConfiguration_t));
 	conf->pwm_mode = MCCONF_PWM_MODE;
 	conf->comm_mode = MCCONF_COMM_MODE;
 	conf->motor_type = MCCONF_DEFAULT_MOTOR_TYPE;
@@ -316,18 +316,18 @@ bool conf_general_store_app_configuration(app_configuration *conf) {
 }
 
 /**
- * Read mc_configuration from EEPROM. If this fails, default values will be used.
+ * Read mcConfiguration_t from EEPROM. If this fails, default values will be used.
  *
  * @param conf
- * A pointer to a mc_configuration struct to write the read configuration to.
+ * A pointer to a mcConfiguration_t struct to write the read configuration to.
  */
-void conf_general_read_mc_configuration(mc_configuration *conf)
+void conf_general_read_mc_configuration(mcConfiguration_t *conf)
 {
 	bool is_ok = true;
 	uint8_t *conf_addr = (uint8_t*)conf;
 	uint16_t var;
 
-	for (unsigned int i = 0;i < (sizeof(mc_configuration) / 2);i++) 
+	for (unsigned int i = 0;i < (sizeof(mcConfiguration_t) / 2);i++) 
 	{
 		if (EE_ReadVariable(EEPROM_BASE_MCCONF + i, &var) == 0) 
 		{
@@ -354,12 +354,12 @@ void conf_general_read_mc_configuration(mc_configuration *conf)
 }
 
 /**
- * Write mc_configuration to EEPROM.
+ * Write mcConfiguration_t to EEPROM.
  *
  * @param conf
  * A pointer to the configuration that should be stored.
  */
-bool conf_general_store_mc_configuration(mc_configuration *conf) {
+bool conf_general_store_mc_configuration(mcConfiguration_t *conf) {
 	mc_interface_unlock();
 	mc_interface_release_motor();
 
@@ -373,7 +373,7 @@ bool conf_general_store_mc_configuration(mc_configuration *conf) {
 	FLASH_ClearFlag(FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR |
 			FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
 
-	for (unsigned int i = 0;i < (sizeof(mc_configuration) / 2);i++) {
+	for (unsigned int i = 0;i < (sizeof(mcConfiguration_t) / 2);i++) {
 		var = (conf_addr[2 * i] << 8) & 0xFF00;
 		var |= conf_addr[2 * i + 1] & 0xFF;
 

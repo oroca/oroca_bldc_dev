@@ -247,7 +247,7 @@ static THD_FUNCTION(adc_thread, arg) {
 		float current = 0.0;
 		bool current_mode = false;
 		bool current_mode_brake = false;
-		const volatile mc_configuration *mcconf = mc_interface_get_configuration();
+		const volatile mcConfiguration_t *mcconf = mc_interface_get_configuration();
 		bool send_duty = false;
 
 		// Use the filtered and mapped voltage for control according to the configuration.

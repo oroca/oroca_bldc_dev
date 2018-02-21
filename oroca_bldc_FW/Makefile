@@ -134,7 +134,7 @@ CSRC = $(STARTUPSRC) \
 		$(CHIBIOS)/os/hal/lib/streams/chprintf.c \
 			$(CONFSRC)/hw_oroca.c\
 			$(CONFSRC)/conf_general.c\
-				$(MCSRC)/mcpwm.c \
+				$(MCSRC)/mc_pwm.c \
 				$(MCSRC)/mc_interface.c \
 				$(MCSRC)/encoder.c \
 					$(CORESRC)/mavlink_proc.c \

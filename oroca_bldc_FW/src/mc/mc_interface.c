@@ -23,14 +23,15 @@
  */
 #include "ch.h"
 #include "hal.h"
+#include "stm32f4xx_conf.h"
 
 #include <math.h>
 
+
 #include "hw.h"
 #include "mc_interface.h"
-#include "mcpwm.h"
+
 #include "ledpwm.h"
-#include "stm32f4xx_conf.h"
 #include "utils.h"
 #include "encoder.h"
 
@@ -40,7 +41,7 @@
 volatile int ADC_curr_norm_value[3];
 
 // Private variables
-static volatile mc_configuration m_conf;
+static volatile mcConfiguration_t m_conf;
 static mc_fault_code m_fault_now;
 static int m_ignore_iterations;
 static volatile unsigned int m_cycles_running;
@@ -76,7 +77,7 @@ static volatile int m_start_comm;
 static volatile float m_last_adc_duration_sample;
 
 // Private functions
-static void update_override_limits(volatile mc_configuration *conf);
+static void update_override_limits(volatile mcConfiguration_t *conf);
 
 // Function pointers
 static void(*pwn_done_func)(void) = 0;
@@ -88,7 +89,7 @@ static THD_WORKING_AREA(sample_send_thread_wa, 1024);
 static THD_FUNCTION(sample_send_thread, arg);
 static thread_t *sample_send_tp;
 
-void mc_interface_init(mc_configuration *configuration) 
+void mc_interface_init(mcConfiguration_t *configuration) 
 {
 	chvprintf(&SDU1, (uint8_t *)"mc_interface_init\r\n");
 	
@@ -157,17 +158,14 @@ void mc_interface_init(mc_configuration *configuration)
 			break;
 	}
 */
-	
-
-
 
 }
 
-const volatile mc_configuration* mc_interface_get_configuration(void) {
+const volatile mcConfiguration_t* mc_interface_get_configuration(void) {
 	return &m_conf;
 }
 
-void mc_interface_set_configuration(mc_configuration *configuration) {
+void mc_interface_set_configuration(mcConfiguration_t *configuration) {
 #if !WS2811_ENABLE
 	if (m_conf.m_sensor_port_mode != configuration->m_sensor_port_mode) {
 		encoder_deinit();
@@ -285,7 +283,7 @@ mc_fault_code mc_interface_get_fault(void) {
  * @param conf
  * The configaration to update.
  */
-static void update_override_limits(volatile mc_configuration *conf)
+static void update_override_limits(volatile mcConfiguration_t *conf)
 {
 	const float temp = NTC_TEMP(ADC_IND_TEMP_MOS2);
 	const float v_in = GET_INPUT_VOLTAGE();
@@ -359,7 +357,7 @@ void mc_interface_fault_stop(mc_fault_code fault)
 		volatile int tim_top = TIM1->ARR;
 		utils_sys_unlock_cnt();
 
-		fault_data fdata;
+		mcFaultData_t fdata;
 		fdata.fault = fault;
 		fdata.current = mc_interface_get_tot_current();
 		fdata.current_filtered = mc_interface_get_tot_current_filtered();

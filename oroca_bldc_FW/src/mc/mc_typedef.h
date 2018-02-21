@@ -22,17 +22,9 @@
  *      Author: bakchajang
  */
 
-#ifndef MCPWM_H_
-#define MCPWM_H_
+#ifndef _MCPWM_TYPEDEF_H_
+#define _MCPWM_TYPEDEF_H_
 
-//#include "ch.h"
-//#include "hal.h"
-
-//#include <stdint.h>
-//#include <stdbool.h>
-
-//#include "mc_interface.h"
-// Data types
 typedef enum {
    MC_STATE_OFF = 0,
    MC_STATE_DETECTING,
@@ -113,15 +105,15 @@ typedef struct {
 	float voltage;
 	float duty;
 	float rpm;
-	int tacho;
-	int cycles_running;
-	int tim_val_samp;
-	int tim_current_samp;
-	int tim_top;
-	int comm_step;
+	int16_t tacho;
+	int16_t cycles_running;
+	int16_t tim_val_samp;
+	int16_t tim_current_samp;
+	int16_t tim_top;
+	int16_t comm_step;
 	float temperature;
-	int drv8301_faults;
-} fault_data;
+	int16_t drv8302_faults;
+} mcFaultData_t;
 
 
 typedef struct {
@@ -197,17 +189,28 @@ typedef struct {
 	float     dqk_a;       //0.0008058608f
 	float     dqk_b;       //0.0008058608f
 
-}mc_configuration;
+}mcConfiguration_t;
 
 //Defines
 
 typedef struct {
-	float	qKa;	
-	short	Offseta;
+	int16_t CorrADC_a;
+	int16_t CorrADC_b;
+	int16_t CorrADC_c;
 
-	float	qKb;   
-	short	Offsetb;
+	float	qKa;
+	float	qKb; 
+	
+	int16_t	Offseta;
+	int16_t	Offsetb;
 } tMeasCurrParm;
+
+typedef struct {
+	float	InputVoltage;
+	float	MotorTemp;
+	float	boardTemp;
+} tMeasSensorValue;
+
 
 typedef struct {
 	float HallPLLlead  ;
@@ -277,7 +280,7 @@ typedef struct {
 	float Futi	 	;
 	float Omega;     	// Output: Rotor speed
 	float rpm;     	// Output: Rotor speed
-} SMC;
+} tSMC;
 
 typedef struct {
     float   qdSum;          // 1.31 format
@@ -315,6 +318,8 @@ typedef struct {
     float   qVelRef;    // Reference velocity
     float   qVdRef;     // Vd flux reference value
     float   qVqRef;     // Vq torque reference value
+
+	bool 	openloop;
     } tCtrlParm;
 
 //------------------  C API for FdWeak routine ---------------------
@@ -342,129 +347,24 @@ typedef struct {
 	float T1;
 	float T2;
 
-	unsigned int Ta;
-	unsigned int Tb;
-	unsigned int Tc;
+	uint16_t Ta;
+	uint16_t Tb;
+	uint16_t Tc;
 
     } tSVGenParm;
 
+typedef struct {
+	union{
+		uint16_t OpenLoop:1;
+		uint16_t RunMotor:1;
+		uint16_t DcCalDone:1;
+		};
+
+	uint16_t Word;
+} tMcCtrlBits;
 
 
 
-
-#define MCPWM_DEAD_TIME_CYCLES			80		// Dead time
-#define MCPWM_RPM_TIMER_FREQ			1000000.0	// Frequency of the RPM measurement timer
-#define MCPWM_MIN_DUTY_CYCLE			0.005	// Minimum duty cycle
-#define MCPWM_MAX_DUTY_CYCLE			0.95	// Maximum duty cycle
-#define MCPWM_RAMP_STEP					0.01	// Ramping step (1000 times/sec) at maximum duty cycle
-#define MCPWM_RAMP_STEP_CURRENT_MAX		0.04	// Maximum ramping step (1000 times/sec) for the current control
-#define MCPWM_RAMP_STEP_RPM_LIMIT		0.0005	// Ramping step when limiting the RPM
-
-//************** PWM and Control Timing Parameters **********
-
-#define PWMFREQUENCY	16000		// PWM Frequency in Hertz
-#define PWMPEROID       1.0f/PWMFREQUENCY
-#define SPEEDLOOPFREQ	1000		// Speed loop Frequency in Hertz. This value must
-									// be an integer to avoid pre-compiler error
-									// Use this value to test low speed motor
-
-//************** Hardware Parameters ****************
-
-#define RSHUNT			0.001f		// Value in Ohms of shunt resistors used.
-#define VDD				3.3f		// VDD voltage, only used to convert torque
-
-//*************** Optional Modes **************
-//#define TORQUEMODE
-//#define ENVOLTRIPPLE
-
-//************** PI Coefficients **************
-
-//******** D Control Loop Coefficients *******
-#define     DKP        0.02
-#define     DKI        0.05
-#define     DKC        0.99999
-#define     DOUTMAX    0.99999
-
-//******** Q Control Loop Coefficients *******
-#define     QKP        0.02
-#define     QKI        0.05
-#define     QKC        0.99999
-#define     QOUTMAX    0.99999
-
-//*** Velocity Control Loop Coefficients *****
-#define     WKP       12.0
-#define     WKI        2.0
-#define     WKC        0.99999
-#define     WOUTMAX    0.95
-
-#define     PLLKP       2.0
-#define     PLLKI        0.01
-#define     PLLKC        0.99999
-#define     PLLOUTMAX    0.95
-
-#define     DQKA       0.0008058608f	// Current feedback software gain : adc*(1/resol)*(AVDD/AmpGAIN)*(1/R) 
-#define     DQKB       0.0008058608f	// Current feedback software gain : adc*(1/4096)*(3.3/10)*(1/0.001)
-
-//************** Derived Parameters ****************
-
-
-#define LOOPTIMEINSEC (1.0/PWMFREQUENCY) // PWM Period = 1.0 / PWMFREQUENCY
-#define IRP_PERCALC (unsigned int)(SPEEDLOOPTIME/LOOPTIMEINSEC)	// PWM loops per velocity calculation
-#define SPEEDLOOPTIME (float)(1.0/SPEEDLOOPFREQ) // Speed Control Period
-#define LOOPINTCY	 TIM1->ARR
-
-#define		PI				3.14159265358979f
-#define		SQRT2			1.414213562f
-#define		SQRT3			1.732050808f
-#define		INV_SQRT3		(float)(1./SQRT3)
-
-
-#define WMd      2.*3.141592654*180.
-#define AMd      (WMd-(2./PWMPEROID))/(WMd+(2./PWMPEROID))
-#define BMd      WMd/(WMd+(2./PWMPEROID))
-
-
-// External variables
-extern  uint16_t switching_frequency;
-
-
-//==============================================================
-//define
-#define Digital_PI_controller(out, ref, in, err0, limit, kp, ki, tsample)   \
-		{						                                            \
-			float err, tmp_kp, tmp_kpi;                                     \
-			tmp_kp = (float)(kp);                                           \
-			tmp_kpi = (float)(kp + ki*tsample);                             \
-			err = ref - in;					                                \
-			out += ((tmp_kpi * err) - (tmp_kp * err0));	                    \
-			out = Bound_limit(out, limit);                                  \
-			err0 = err;                                                     \
-		}
-#define Bound_limit(in,lim)	((in > (lim)) ? (lim) : ((in < -(lim)) ? -(lim) : in))
-#define Bound_min_max(in, min, max)	((in > (max)) ? (max) : ((in < (min)) ? (min) : in))
-
-#define Low_pass_filter(out, in, in_old, alpha)     \
-		{												\
-			float tmp;									\
-			tmp = alpha*(in + in_old - (out*2)); \
-			out += tmp; 								\
-			in_old = in;								\
-		}
-
-extern tCtrlParm CtrlParm;
-extern tParkParm ParkParm;
-extern SMC smc1;
-
-
-// Functions
-bool SetupParm(void);
-
-void mcpwm_init(volatile mc_configuration *configuration);
-void mcpwm_deinit(void);
-void mcpwm_set_configuration(volatile mc_configuration *configuration);
-
-// Interrupt handlers
-void mcpwm_adc_dma_int_handler(void *p, uint32_t flags);
 
 
 #endif /* MC_PWM_H_ */

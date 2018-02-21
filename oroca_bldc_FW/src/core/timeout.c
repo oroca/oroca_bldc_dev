@@ -27,7 +27,7 @@
 #include "stm32f4xx_conf.h"
 
 #include "timeout.h"
-#include "mcpwm.h"
+//#include "mcpwm.h"
 
 // Private variables
 static volatile systime_t timeout_msec;

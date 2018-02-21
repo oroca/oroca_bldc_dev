@@ -229,7 +229,7 @@ static THD_FUNCTION(output_thread, arg) {
 
 		// If c is pressed and no throttle is used, maintain the current speed with PID control
 		static bool was_pid = false;
-		const volatile mc_configuration *mcconf = mc_interface_get_configuration();
+		const volatile mcConfiguration_t *mcconf = mc_interface_get_configuration();
 
 		// Filter RPM to avoid glitches
 		static float filter_buffer[RPM_FILTER_SAMPLES];

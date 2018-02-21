@@ -31,6 +31,8 @@
 //#include <chthreads.h>
 //#include <Chvt.h>
 
+#include "hw.h"
+
 #include "timeout.h"
 #include "utils.h"
 
@@ -187,7 +189,7 @@ void cmd_set_mcconf( msg_handle_t *p_msg )
 	err_code_t err_code = OK;
 	mavlink_ack_t     mav_ack;
 	mavlink_set_mcconf_t mav_data;
-	mc_configuration mcconf;
+	mcConfiguration_t mcconf;
 
 	mavlink_msg_set_mcconf_decode(p_msg->p_msg,&mav_data);
 
@@ -266,12 +268,11 @@ void mavlink_dbgString( uint8_t ch, char* dbg_str )
 // MAVLink
 //------------------------------------------------------------------------------------------
 
-
-
 void mavlink_msg_send(uint8_t ch, mavlink_message_t *p_msg)
-
 {
 	uint8_t buf[1024];	  
+
+	LED_RED_ON();
 
 	int len = mavlink_msg_to_send_buffer(buf, p_msg);
 	
@@ -280,7 +281,8 @@ void mavlink_msg_send(uint8_t ch, mavlink_message_t *p_msg)
 	  case 0:		usb_serial_send(buf,len);		break;
 	  case 1:		break;
 	}
-	
+
+	LED_RED_OFF();	
 	return;
 }
 
@@ -290,6 +292,9 @@ bool mavlink_msg_recv( uint8_t ch, uint8_t data , msg_handle_t *p_msg )
 	bool ret = FALSE;
 	static mavlink_message_t msg[MSG_CH_MAX];
 	mavlink_status_t status[MSG_CH_MAX];
+
+	LED_RED_ON();
+
 
 	p_msg->ch = ch;
 
@@ -309,6 +314,8 @@ bool mavlink_msg_recv( uint8_t ch, uint8_t data , msg_handle_t *p_msg )
 			ret = TRUE;
 		}
 	}
+
+	LED_RED_OFF();
 	return ret;
 
 }
@@ -317,6 +324,7 @@ bool mavlink_msg_recv( uint8_t ch, uint8_t data , msg_handle_t *p_msg )
 
 void  mavlink_msg_process_vcp( msg_handle_t* p_msg)
 {
+	LED_RED_ON();
 
       switch( p_msg->p_msg->msgid )
       {
@@ -327,6 +335,7 @@ void  mavlink_msg_process_vcp( msg_handle_t* p_msg)
 		case MAVLINK_MSG_ID_SET_APPCONF : 		cmd_set_appconf(p_msg); 					break;
 		default:								cmd_send_error(p_msg, ERR_INVALID_CMD);		break;
       }
+  LED_RED_OFF();
 
 }
 

@@ -26,74 +26,61 @@
 #include "hal.h"
 #include "stm32f4xx_conf.h"
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <math.h>
-
 #include "hw.h"
-#include "mcpwm.h"
+#include "mc_define.h"
+#include "mc_typedef.h"
+
+#include "mc_pwm.h"
 #include "utils.h"
 
+#include <math.h>
 
-SMC smc1;
-tParkParm ParkParm;
+//======================================================================================
+//private variable Declaration
 
-tPIParm     PIParmD;	// Structure definition for Flux component of current, or Id
-tPIParm     PIParmQ;	// Structure definition for Torque component of current, or Iq
-tPIParm     PIParmW;	// Structure definition for Speed, or Omega
-tPIParm     PIParmPLL;
+tSMC smc1;
 
+tPIParm PIParmD;	// Structure definition for Flux component of current, or Id
+tPIParm PIParmQ;	// Structure definition for Torque component of current, or Iq
+tPIParm PIParmW;	// Structure definition for Speed, or Omega
+tPIParm PIParmPLL;
+
+tMcCtrlBits McCtrlBits;
 tCtrlParm CtrlParm;
+tParkParm ParkParm;
 tSVGenParm SVGenParm;
 tFdWeakParm FdWeakParm;
 tMeasCurrParm MeasCurrParm;
+tMeasSensorValue MeasSensorValue;
 
-bool dccal_done;
+static mcConfiguration_t mcpwmConf;
 
-int VelReq = 0;
-
-uint16_t switching_frequency = PWMFREQUENCY;
-
-// Speed Calculation Variables
-uint16_t MCCtrlCnt = 0;	
-
-float qVelRef = 0.01f;
-float dbg_fTheta;
-float dbg_fMea;
-uint16_t dbg_AccumTheta;
-
-static volatile mc_configuration *conf;
-
-
+//======================================================================================
+//internal function Declaration
+void SetupControlParameters(void);
 void CalcRefVec( void );
 void CorrectPhase( void );
 void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
-void do_dc_cal(void);
-void SMC_HallSensor_Estimation (SMC *s);
+bool do_dc_cal(void);
+void SMC_HallSensor_Estimation (tSMC *s);
 void CalcPI( tPIParm *pParm);
 void DoControl( void );
 void InitPI( tPIParm *pParm);
-void SetupControlParameters(void);
-
 void CalcSVGen( void );
 
+void mcpwm_adc_dma_int_handler(void *p, uint32_t flags);// Interrupt handlers
 
 
-
-void mcpwm_init(volatile mc_configuration *configuration)
+//======================================================================================
+//external function 
+void mcpwm_init(volatile mcConfiguration_t *configuration)
 {
 
-	//Uart3_printf(&SD3, (uint8_t *)"mcpwm_init....\r\n");//170530  
 	utils_sys_lock_cnt();
-
-	//conf = configuration;
 
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 	TIM_OCInitTypeDef  TIM_OCInitStructure;
 	TIM_BDTRInitTypeDef TIM_BDTRInitStructure;
-
-	// Initialize variables
-	dccal_done = false;
 
 	TIM_DeInit(TIM1);
 	TIM_DeInit(TIM8);
@@ -106,7 +93,7 @@ void mcpwm_init(volatile mc_configuration *configuration)
 	// Time Base configuration
 	TIM_TimeBaseStructure.TIM_Prescaler = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_CenterAligned1;
-	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency /2;
+	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)PWMFREQ /2;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_RepetitionCounter = 1;
 
@@ -220,7 +207,7 @@ void mcpwm_init(volatile mc_configuration *configuration)
 
 	TIM_TimeBaseStructure.TIM_Prescaler = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)switching_frequency;
+	TIM_TimeBaseStructure.TIM_Period = SYSTEM_CORE_CLOCK  / (int)PWMFREQ;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
 
@@ -289,11 +276,6 @@ void mcpwm_init(volatile mc_configuration *configuration)
 
 	utils_sys_unlock_cnt();
 
-	// Calibrate current offset
-	ENABLE_GATE();
-	DCCAL_OFF();
-	//do_dc_cal();//내부 while 루프때문에 동작먹춤  일단 주석처리~
-
 	// Various time measurements
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM12, ENABLE);
 	PrescalerValue = (uint16_t) ((SYSTEM_CORE_CLOCK / 2) / 10000000) - 1;
@@ -314,18 +296,19 @@ void mcpwm_init(volatile mc_configuration *configuration)
 	WWDG_SetWindowValue(255);
 	WWDG_Enable(100);
 
-	SetupParm();
+	//--------------------------------------------------------------------------
 	SetupControlParameters();
 
+	// Calibrate current offset
+	ENABLE_GATE();
+	DCCAL_OFF();
+	McCtrlBits.DcCalDone = do_dc_cal();
 
-	//dmaStreamAllocate(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)),3,(stm32_dmaisr_t)mcpwm_adc_int_handler,(void *)0);
-	//DMA_ITConfig(DMA2_Stream4, DMA_IT_TC, ENABLE);
 
-	//CtrlParm.qVelRef=0.1f;
-//
 }
 
-void mcpwm_deinit(void) {
+void mcpwm_deinit(void) 
+{
 	WWDG_DeInit();
 
 	//timer_thd_stop = true;
@@ -346,6 +329,32 @@ void mcpwm_deinit(void) {
 	dmaStreamRelease(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)));
 }
 
+static volatile mc_state state;
+static volatile mc_control_mode control_mode;
+void mcpwm_set_configuration(mcConfiguration_t configuration)
+{
+	// Stop everything first to be safe
+	control_mode = CONTROL_MODE_NONE;
+
+	stop_pwm_hw();//stop_pwm_ll();
+
+	utils_sys_lock_cnt();
+	mcpwmConf = configuration;
+	//mcpwm_init_hall_table((int8_t*)conf->hall_table);
+	//update_sensor_mode();
+	utils_sys_unlock_cnt();
+}
+
+mcConfiguration_t mcpwm_get_configuration(void)
+{
+	stop_pwm_hw();//stop_pwm_ll();
+	
+ 	return mcpwmConf;
+}
+
+
+//======================================================================================
+//private function 
 
 void stop_pwm_hw(void) {
 	TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_ForcedAction_InActive);
@@ -363,158 +372,44 @@ void stop_pwm_hw(void) {
 	TIM_GenerateEvent(TIM1, TIM_EventSource_COM);
 }
 
-
-
-
-int16_t curr0_sum;
-int16_t curr1_sum;
-int16_t curr_start_samples;
-int16_t curr0_offset;
-int16_t curr1_offset;
-void do_dc_cal(void)
+uint16_t curr0_sum;
+uint16_t curr1_sum;
+uint16_t curr_start_samples;
+uint16_t curr0_offset;
+uint16_t curr1_offset;
+bool do_dc_cal(void)
 {
+	uint16_t fault_cnt=0;
 	DCCAL_ON();
-	while(IS_DRV_FAULT()){};
-	chThdSleepMilliseconds(1000);
+	
+	while(IS_DRV_FAULT())
+	{
+		fault_cnt++;
+		if(5 < fault_cnt)
+		{
+			return false;
+		}
+		
+		chThdSleepMilliseconds(1000);
+	};
+	
 	curr0_sum = 0;
 	curr1_sum = 0;
 	curr_start_samples = 0;
-	while(curr_start_samples < 4000) {};
-	curr0_offset = curr0_sum / curr_start_samples;
-	curr1_offset = curr1_sum / curr_start_samples;
+	
+	chThdSleepMilliseconds(1000);
+
+	MeasCurrParm.Offseta = curr0_sum / curr_start_samples;
+	MeasCurrParm.Offsetb = curr1_sum / curr_start_samples;
+
 	DCCAL_OFF();
-	dccal_done = true;
+	
+	return true;
 
 	//Uart3_printf(&SD3, (uint8_t *)"curr0_offset : %u\r\n",curr0_offset);//170530  
 	//Uart3_printf(&SD3, (uint8_t *)"curr1_offset : %u\r\n",curr1_offset);//170530  
 }
 
-
-
-/*
- * New ADC samples ready. Do commutation!
- */
-void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
-{
-	(void)p;
-	(void)flags;
-
-	MCCtrlCnt++;
-	if(MCCtrlCnt % 16 == 1) //speed ctrl
-	{
-		SMC_HallSensor_Estimation (&smc1);
-
-	
-		//LED_GREEN_ON();
-		// Execute the velocity control loop
-		PIParmW.qInMeas = smc1.Omega;
-		PIParmW.qInRef	= CtrlParm.qVelRef;
-		CalcPI(&PIParmW);
-		CtrlParm.qVqRef = PIParmW.qOut;
-		
-		//LED_GREEN_OFF();
-	}
-
-	if(MCCtrlCnt % 4 == 0)//current ctrl
-	{
-		LED_RED_ON();
-
-		TIM12->CNT = 0;
-
-		curr_start_samples++;
-		curr0_sum += ADC_Value[ADC_IND_CURR1] ;
-		curr1_sum += ADC_Value[ADC_IND_CURR2] ;
-
-
-		// Calculate qIa,qIb
-		int CorrADC1, CorrADC2;
-
-		CorrADC1 = ADC_Value[ADC_IND_CURR1] - MeasCurrParm.Offseta;
-		CorrADC2 = ADC_Value[ADC_IND_CURR2] - MeasCurrParm.Offsetb;
-		// ADC_curr_norm_value[2] = -(ADC_curr_norm_value[0] + ADC_curr_norm_value[1]);
-
-		ParkParm.qIa = MeasCurrParm.qKa * (float)CorrADC1;
-		ParkParm.qIb = MeasCurrParm.qKb * (float)CorrADC2;	
-
-		//Uart3_printf(&SD3,  "%f,%d,%d\r\n",ParkParm.qAngle ,ParkParm.qIa,CorrADC2);
-
-		// Calculate commutation angle using estimator
-		ParkParm.qAngle = smc1.Theta;
-
-		//ParkParm.qAngle = (float)IN[2];
-		//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
-
-
-
-		// Calculate qId,qIq from qSin,qCos,qIa,qIb
-		ParkParm.qIalpha = ParkParm.qIa;
-		ParkParm.qIbeta = ParkParm.qIa*INV_SQRT3 + 2*ParkParm.qIb*INV_SQRT3;
-		// Ialpha and Ibeta have been calculated. Now do rotation.
-		// Get qSin, qCos from ParkParm structure
-
-		ParkParm.qId = -ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
-		ParkParm.qIq = ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
-
-		// Calculate control values
-		DoControl();
-
-		//=============================================================================
-		//for open loop test
-		//ParkParm.qVd =0.5f;
-		//ParkParm.qVq = 0.0f;
-
-		//ParkParm.qAngle = 0.0f;
-
-		//ParkParm.qAngle -= 0.01f;
-		//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
-
-		//ParkParm.qAngle += 0.002f;
-		//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
-		//==============================================================================
-
-		// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
-		ParkParm.qValpha =  ParkParm.qVd*cosf(ParkParm.qAngle) - ParkParm.qVq*sinf(ParkParm.qAngle);
-		ParkParm.qVbeta  =  ParkParm.qVd*sinf(ParkParm.qAngle) + ParkParm.qVq*cosf(ParkParm.qAngle);
-
-		// Calculate Vr1,Vr2,Vr3 from qValpha, qVbeta
-		SVGenParm.qVr1 = ParkParm.qVbeta;
-		SVGenParm.qVr2 = (-ParkParm.qVbeta + SQRT3 * ParkParm.qValpha)/2;
-		SVGenParm.qVr3 = (-ParkParm.qVbeta	- SQRT3 * ParkParm.qValpha)/2;
-
-		CalcSVGen();
-
-		// Reset the watchdog
-		
-
-		LED_RED_OFF();
-	}
-
-	WWDG_SetCounter(100);
-
-}
-
-
-bool SetupParm(void)
-{
-	// ============= ADC - Measure Current & Pot ======================
-
-	MeasCurrParm.qKa    = DQKA;
-	MeasCurrParm.qKb    = DQKB;
-
-	// Initial Current offsets
-	MeasCurrParm.Offseta = curr0_offset;
-	MeasCurrParm.Offsetb = curr1_offset;
-
-
-	// Target DC Bus, without sign.
-	//TargetDCbus = GET_INPUT_VOLTAGE();
-
-	// ============= SVGen ===============
-	// Set PWM period to Loop Time
-	SVGenParm.iPWMPeriod = LOOPINTCY;
-
-	return 0;
-}
 
 
 //---------------------------------------------------------------------
@@ -580,8 +475,25 @@ void CalcPI( tPIParm *pParm)
 	
 	return;
 }
+
 void SetupControlParameters(void)
 {
+	MeasCurrParm.qKa    = DQKA;
+	MeasCurrParm.qKb    = DQKB;
+
+	// Initial Current offsets
+	MeasCurrParm.Offseta = curr0_offset;
+	MeasCurrParm.Offsetb = curr1_offset;
+
+	// ============= SVGen ===============
+	// Set PWM period to Loop Time
+	SVGenParm.iPWMPeriod = TIM1->ARR;
+
+	CtrlParm.qVelRef = 0.0f;
+	CtrlParm.qVdRef = 0.0f;
+	CtrlParm.qVqRef = 0.0f;
+
+	McCtrlBits.OpenLoop = false;
 
 	// ============= PI D Term ===============
 	PIParmD.qKp = DKP;
@@ -619,15 +531,12 @@ void SetupControlParameters(void)
 
 	InitPI(&PIParmPLL);
 
-	return;
 }
 
 
 
 void CalcTimes(void)
 {
-	SVGenParm.iPWMPeriod = LOOPINTCY;	  
-
 	SVGenParm.T1 = ((float)SVGenParm.iPWMPeriod * SVGenParm.T1);
 	SVGenParm.T2 = ((float)SVGenParm.iPWMPeriod * SVGenParm.T2);
 	SVGenParm.Tc = (((float)SVGenParm.iPWMPeriod-SVGenParm.T1-SVGenParm.T2)/2);
@@ -733,7 +642,7 @@ void CalcSVGen( void )
 /********************************PLL loop **********************************/	
 
 #if 0
-void SMC_HallSensor_Estimation (SMC *s)
+void SMC_HallSensor_Estimation (tSMC *s)
 {
 
 	HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
@@ -815,10 +724,8 @@ void SMC_HallSensor_Estimation (SMC *s)
 }
 
 #else
-void SMC_HallSensor_Estimation (SMC *s)
+void SMC_HallSensor_Estimation (tSMC *s)
 {
-
-
 	s->HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
 	s->HallPLLB = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
 
@@ -830,7 +737,7 @@ void SMC_HallSensor_Estimation (SMC *s)
 
 	float err, tmp_kp, tmp_kpi; 									
 	tmp_kp = 1.0f;
-	tmp_kpi = (1.0f + 1.0f * PWMPEROID);
+	tmp_kpi = (1.0f + 1.0f * HALL_SENSOR_PEROID);
 	err = s->Hall_SinCos - s->Hall_CosSin; 											
 	s->Hall_PIout += ((tmp_kpi * err) - (tmp_kp * s->Hall_Err0)); 					
 	s->Hall_PIout = Bound_limit(s->Hall_PIout, 10.0f);						
@@ -852,7 +759,7 @@ void SMC_HallSensor_Estimation (SMC *s)
 	if((2.0f * PI) < s->trueTheta) s->trueTheta = s->trueTheta - (2.0f * PI);
 	else if(s->trueTheta < 0.0f) s->trueTheta = (2.0f * PI) + s->trueTheta;
 
-	s->Futi   = s->Hall_PIout / (2.* PI) * PWMFREQUENCY;
+	s->Futi   = s->Hall_PIout / (2.0f * PI) * HALL_SENSOR_FREQ;
 	s->rpm = 120.0f * s->Futi / 7.0f;
 	
 
@@ -885,22 +792,116 @@ void SMC_HallSensor_Estimation (SMC *s)
 
 
 
-static volatile mc_state state;
-static volatile mc_control_mode control_mode;
-
-void mcpwm_set_configuration(volatile mc_configuration *configuration)
+/*
+ * New ADC samples ready. Do commutation!
+ */
+uint32_t MCCtrlCnt = 0;	
+void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 {
-	// Stop everything first to be safe
-	control_mode = CONTROL_MODE_NONE;
+	(void)p;
+	(void)flags;
 
-	stop_pwm_hw();//stop_pwm_ll();
+	MCCtrlCnt++;
 
-	utils_sys_lock_cnt();
-	conf = configuration;
-	//mcpwm_init_hall_table((int8_t*)conf->hall_table);
-	//update_sensor_mode();
-	utils_sys_unlock_cnt();
+	if(MCCtrlCnt % HALL_SENSOR_DIV == 2) //speed ctrl
+	{
+		SMC_HallSensor_Estimation (&smc1);
+
+		//Target DC Bus, without sign.
+		MeasSensorValue.InputVoltage = GET_INPUT_VOLTAGE();
+		MeasSensorValue.MotorTemp = NTC_TEMP(ADC_IND_TEMP_PCB);
+	}
+	
+	if(MCCtrlCnt % SPD_CTRL_DIV == 1) //speed ctrl
+	{
+		//LED_GREEN_ON();
+		// Execute the velocity control loop
+		PIParmW.qInMeas = smc1.Omega;
+		PIParmW.qInRef	= CtrlParm.qVelRef;
+		CalcPI(&PIParmW);
+		CtrlParm.qVqRef = PIParmW.qOut;
+		
+		//LED_GREEN_OFF();
+	}
+
+	if(MCCtrlCnt % CURR_CTRL_DIV == 0)//current ctrl
+	{
+		//LED_RED_ON();
+
+		TIM12->CNT = 0;
+
+		if(!McCtrlBits.DcCalDone)
+		{
+			curr_start_samples++;
+			curr0_sum += ADC_Value[ADC_IND_CURR1] ;
+			curr1_sum += ADC_Value[ADC_IND_CURR2] ;
+		}
+		
+		// Calculate qIa,qIb
+		MeasCurrParm.CorrADC_a = ADC_Value[ADC_IND_CURR1] - MeasCurrParm.Offseta;
+		MeasCurrParm.CorrADC_b = ADC_Value[ADC_IND_CURR2] - MeasCurrParm.Offsetb;
+		MeasCurrParm.CorrADC_c = -(MeasCurrParm.CorrADC_a + MeasCurrParm.CorrADC_b);
+
+		ParkParm.qIa = MeasCurrParm.qKa * (float)MeasCurrParm.CorrADC_a;
+		ParkParm.qIb = MeasCurrParm.qKb * (float)MeasCurrParm.CorrADC_b;
+
+		//Uart3_printf(&SD3,  "%f,%d,%d\r\n",ParkParm.qAngle ,ParkParm.qIa,CorrADC2);
+
+		// Calculate commutation angle using estimator
+		if(!McCtrlBits.OpenLoop)ParkParm.qAngle = smc1.Theta;
+
+		//ParkParm.qAngle = (float)IN[2];
+		//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
+
+		// Calculate qId,qIq from qSin,qCos,qIa,qIb
+		ParkParm.qIalpha = ParkParm.qIa;
+		ParkParm.qIbeta = ParkParm.qIa*INV_SQRT3 + 2*ParkParm.qIb*INV_SQRT3;
+		// Ialpha and Ibeta have been calculated. Now do rotation.
+		// Get qSin, qCos from ParkParm structure
+
+		ParkParm.qId = -ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
+		ParkParm.qIq = ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
+
+		// Calculate control values
+		DoControl();
+
+		if(McCtrlBits.OpenLoop)
+		{
+			ParkParm.qVd =0.5f;
+			ParkParm.qVq = 0.0f;
+
+			//ParkParm.qAngle = 0.0f;
+
+			ParkParm.qAngle -= 0.01f;
+			if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
+
+			//ParkParm.qAngle += 0.002f;
+			//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
+			//==============================================================================
+		}
+
+		// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
+		ParkParm.qValpha =  ParkParm.qVd*cosf(ParkParm.qAngle) - ParkParm.qVq*sinf(ParkParm.qAngle);
+		ParkParm.qVbeta  =  ParkParm.qVd*sinf(ParkParm.qAngle) + ParkParm.qVq*cosf(ParkParm.qAngle);
+
+		// Calculate Vr1,Vr2,Vr3 from qValpha, qVbeta
+		SVGenParm.qVr1 = ParkParm.qVbeta;
+		SVGenParm.qVr2 = (-ParkParm.qVbeta + SQRT3 * ParkParm.qValpha)/2;
+		SVGenParm.qVr3 = (-ParkParm.qVbeta - SQRT3 * ParkParm.qValpha)/2;
+
+		CalcSVGen();
+
+		// Reset the watchdog
+
+		//LED_RED_OFF();
+	}
+
+	WWDG_SetCounter(100);
+
 }
+
+
+
 
 
 

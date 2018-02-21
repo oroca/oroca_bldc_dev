@@ -14,7 +14,7 @@
 #include <stdlib.h>
 
 #include "mc_interface.h"
-#include "mcpwm.h"
+//#include "mcpwm.h"
 #include "ledpwm.h"
 #include "hw.h"
 #include "app.h"
@@ -53,7 +53,6 @@
  * 2, 4			ADC			mcpwm
  * 1, 0			TIM4		WS2811/WS2812 LEDs CH1 (Ch 1)
  * 1, 3			TIM4		WS2811/WS2812 LEDs CH2 (Ch 2)
- *
  */
 
 static THD_WORKING_AREA(periodic_thread_wa, 128);
@@ -120,7 +119,7 @@ int main(void)
 	chvprintf(&SDU1, (uint8_t *)"by BakChaJang\r\n");
 	chvprintf(&SDU1, (uint8_t *)"date : 2017/11/15\r\n\r\n");
 
-	mc_configuration mcconf;
+	mcConfiguration_t mcconf;
 	conf_general_read_mc_configuration(&mcconf);
 	mc_interface_init(&mcconf);
 
