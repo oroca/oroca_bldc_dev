@@ -850,9 +850,6 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 		// Calculate commutation angle using estimator
 		if(!McCtrlBits.OpenLoop)ParkParm.qAngle = smc1.Theta;
 
-		//ParkParm.qAngle = (float)IN[2];
-		//smc1.Omega = (float)IN[3] *LOOPTIMEINSEC * IRP_PERCALC * POLEPAIRS/PI;
-
 		// Calculate qId,qIq from qSin,qCos,qIa,qIb
 		ParkParm.qIalpha = ParkParm.qIa;
 		ParkParm.qIbeta = ParkParm.qIa*INV_SQRT3 + 2*ParkParm.qIb*INV_SQRT3;
@@ -863,8 +860,6 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 		ParkParm.qIq = ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
 
 		// Calculate control values
-		DoControl();
-
 		if(McCtrlBits.OpenLoop)
 		{
 			ParkParm.qVd =0.5f;
@@ -878,6 +873,10 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 			//ParkParm.qAngle += 0.002f;
 			//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
 			//==============================================================================
+		}
+		else
+		{
+			DoControl();
 		}
 
 		// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
