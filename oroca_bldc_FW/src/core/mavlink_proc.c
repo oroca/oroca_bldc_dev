@@ -171,13 +171,25 @@ void cmd_read_tag( msg_handle_t *p_msg )
 
 
 
-int cmd_velocity( uint16_t data )
+int cmd_set_velocity(  msg_handle_t *p_msg)
 {
-    mavlink_message_t msg; 
+	err_code_t err_code = OK;
+	mavlink_ack_t     mav_ack;
+	mavlink_set_velocity_t mav_data;
 
-  //  mavlink_msg_set_velocity_pack( 9, 121, &msg, data );
+	mavlink_msg_set_velocity_decode(p_msg->p_msg,&mav_data);
 
-   // mavlink_bytes_send( &msg);
+	if( mav_data.resp == 1 )
+	{
+		mav_ack.msg_id   = p_msg->p_msg->msgid;
+		mav_ack.err_code = err_code;
+
+		mav_ack.length  = 0;
+		resp_ack(p_msg->ch, &mav_ack);
+	}
+
+	mc_interface_set_velocity(mav_data.ref_angular_velocity);
+	chThdSleepMilliseconds(200);
 
     return 0;
 }
@@ -333,6 +345,10 @@ void  mavlink_msg_process_vcp( msg_handle_t* p_msg)
 		case MAVLINK_MSG_ID_READ_TAG:			cmd_read_tag(p_msg);						break;
 		case MAVLINK_MSG_ID_SET_MCCONF: 		cmd_set_mcconf(p_msg); 						break;
 		case MAVLINK_MSG_ID_SET_APPCONF : 		cmd_set_appconf(p_msg); 					break;
+		case MAVLINK_MSG_ID_SET_VELOCITY:		cmd_set_velocity(p_msg);					break;
+
+
+		
 		default:								cmd_send_error(p_msg, ERR_INVALID_CMD);		break;
       }
   LED_RED_OFF();

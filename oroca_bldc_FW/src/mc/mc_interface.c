@@ -400,7 +400,10 @@ void mc_interface_fault_stop(mc_fault_code fault)
 }
 
 
-
+void mc_interface_set_velocity(uint16_t vel)
+{
+	mcpwm_setVelocity((float)vel/1000);
+}
 
 
 static THD_FUNCTION(timer_thread, arg) {

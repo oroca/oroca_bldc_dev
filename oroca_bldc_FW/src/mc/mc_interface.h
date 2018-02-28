@@ -124,6 +124,7 @@ void mc_interface_lock_override_once(void);
 
 //void mc_interface_fault_stop(mc_fault_code fault);
 
+void mc_interface_set_velocity(uint16_t vel);
 
 
 #endif /* MC_INTERFACE_H_ */

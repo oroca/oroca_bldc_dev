@@ -302,7 +302,10 @@ void mcpwm_init(volatile mcConfiguration_t *configuration)
 	// Calibrate current offset
 	ENABLE_GATE();
 	DCCAL_OFF();
+
+	McCtrlBits.OpenLoop = 0;
 	McCtrlBits.DcCalDone = do_dc_cal();
+	
 
 
 }
@@ -329,34 +332,13 @@ void mcpwm_deinit(void)
 	dmaStreamRelease(STM32_DMA_STREAM(STM32_DMA_STREAM_ID(2, 4)));
 }
 
-static volatile mc_state state;
-static volatile mc_control_mode control_mode;
-void mcpwm_set_configuration(mcConfiguration_t configuration)
-{
-	// Stop everything first to be safe
-	control_mode = CONTROL_MODE_NONE;
-
-	stop_pwm_hw();//stop_pwm_ll();
-
-	utils_sys_lock_cnt();
-	mcpwmConf = configuration;
-	//mcpwm_init_hall_table((int8_t*)conf->hall_table);
-	//update_sensor_mode();
-	utils_sys_unlock_cnt();
-}
-
-mcConfiguration_t mcpwm_get_configuration(void)
-{
-	stop_pwm_hw();//stop_pwm_ll();
-	
- 	return mcpwmConf;
-}
 
 
 //======================================================================================
 //private function 
 
-void stop_pwm_hw(void) {
+void stop_pwm_hw(void)
+{
 	TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_ForcedAction_InActive);
 	TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Enable);
 	TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Disable);
@@ -900,8 +882,35 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 }
 
 
+//===============================================================================================
+//Accessor func(접근자)
 
+static volatile mc_state state;
+static volatile mc_control_mode control_mode;
+void mcpwm_setConfiguration(mcConfiguration_t configuration)
+{
+	// Stop everything first to be safe
+	control_mode = CONTROL_MODE_NONE;
 
+	stop_pwm_hw();//stop_pwm_ll();
 
+	utils_sys_lock_cnt();
+	mcpwmConf = configuration;
+	//mcpwm_init_hall_table((int8_t*)conf->hall_table);
+	//update_sensor_mode();
+	utils_sys_unlock_cnt();
+}
+
+mcConfiguration_t mcpwm_getConfiguration(void)
+{
+	stop_pwm_hw();//stop_pwm_ll();
+	
+ 	return mcpwmConf;
+}
+
+void mcpwm_setVelocity(float vel)
+{
+	CtrlParm.qVelRef = vel; 
+}
 
 

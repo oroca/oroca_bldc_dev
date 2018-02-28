@@ -69,8 +69,10 @@ extern "C" {
 void mcpwm_init(volatile mcConfiguration_t *configuration);
 void mcpwm_deinit(void);
 
-void mcpwm_set_configuration(mcConfiguration_t configuration);
-mcConfiguration_t mcpwm_get_configuration(void);
+void mcpwm_setConfiguration(mcConfiguration_t configuration);
+mcConfiguration_t mcpwm_getConfiguration(void);
+
+void mcpwm_setVelocity(float vel);
 
 #ifdef __cplusplus
 }
