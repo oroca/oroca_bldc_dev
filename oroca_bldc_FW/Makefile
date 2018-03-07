@@ -136,7 +136,9 @@ CSRC = $(STARTUPSRC) \
 			$(CONFSRC)/conf_general.c\
 				$(MCSRC)/mc_pwm.c \
 				$(MCSRC)/mc_interface.c \
-				$(MCSRC)/encoder.c \
+				$(MCSRC)/mc_control.c \
+				$(MCSRC)/mc_sensor.c \
+				$(MCSRC)/mc_encoder.c \
 					$(CORESRC)/mavlink_proc.c \
 					$(CORESRC)/comm_can.c \
 					$(CORESRC)/comm_usb.c \

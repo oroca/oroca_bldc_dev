@@ -17,12 +17,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
 
-#include "encoder.h"
+
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
+
 #include "hw.h"
-#include "utils.h"
+#include "mc_define.h"
+#include "mc_typedef.h"
+
+#include "mc_control.h"
+#include "mc_encoder.h"
 
 // Defines
 #define AS5047P_READ_ANGLECOM		(0x3FFF | 0x4000 | 0x8000) // This is just ones
@@ -62,7 +67,8 @@
 typedef enum {
 	ENCODER_MODE_NONE = 0,
 	ENCODER_MODE_ABI,
-	ENCODER_MODE_AS5047P_SPI
+	ENCODER_MODE_AS5047P_SPI,
+	ENCODER_MODE_AHALL
 } encoder_mode;
 
 // Private variables
@@ -71,11 +77,14 @@ static uint32_t enc_counts = 10000;
 static encoder_mode mode = ENCODER_MODE_NONE;
 static float last_enc_angle = 0.0;
 
+tSMC smc1;
+
 // Private functions
 static void spi_transfer(uint16_t *in_buf, const uint16_t *out_buf, int length);
 static void spi_begin(void);
 static void spi_end(void);
 static void spi_delay(void);
+
 
 void encoder_deinit(void) {
 	nvicDisableVector(HW_ENC_EXTI_CH);
@@ -323,3 +332,157 @@ static void spi_delay(void) {
 	__NOP();
 	__NOP();
 }
+
+
+
+/********************************PLL loop **********************************/	
+
+#if 0
+void encoder_AnalogHallEstimation_filtered (tSMC *s)
+{
+
+	HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
+	HallPLLB = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
+
+	cos3th = cosf(3.0f * Theta);
+	sin3th = sinf(3.0f * Theta);
+
+	HallPLLA_sin3th = HallPLLA * sin3th * Gamma;
+	HallPLLA_cos3th = HallPLLA * cos3th * Gamma;
+	
+	HallPLLB_cos3th = HallPLLB* cos3th * Gamma;
+	HallPLLB_sin3th = HallPLLB * sin3th * Gamma;
+
+	HallPLLA_cos3th_Integral += HallPLLA_cos3th;
+	HallPLLA_sin3th_Integral += HallPLLA_sin3th;
+	
+	HallPLLB_sin3th_Integral += HallPLLB_sin3th;
+	HallPLLB_cos3th_Integral += HallPLLB_cos3th;
+
+	Asin3th= HallPLLA_sin3th_Integral * sin3th;
+	Acos3th= HallPLLA_cos3th_Integral * cos3th;
+
+	Bsin3th= HallPLLB_sin3th_Integral * sin3th;
+	Bcos3th= HallPLLB_cos3th_Integral * cos3th;
+
+	ANF_PLLA = HallPLLA - Asin3th - Acos3th;
+	ANF_PLLB = HallPLLB - Bsin3th - Bcos3th;
+	
+	costh = cosf(Theta);
+	sinth = sinf(Theta);
+	
+	Hall_SinCos = ANF_PLLA * costh;
+	Hall_CosSin = ANF_PLLB * sinth;
+
+	float err, tmp_kp, tmp_kpi; 									
+	tmp_kp = 1.0f;
+	tmp_kpi = (1.0f + 1.0f * Tsamp);
+	err = Hall_SinCos - Hall_CosSin; 											
+	Hall_PIout += ((tmp_kpi * err) - (tmp_kp * Hall_Err0)); 					
+	Hall_PIout = Bound_limit(Hall_PIout, 10.0f);						
+	Hall_Err0= err;									
+	
+	Theta += Hall_PIout ;
+	if((2.0f * PI) < Theta) Theta = Theta - (2.0f * PI);
+	else if(Theta < 0.0f) Theta = (2.0f * PI) + Theta;
+
+	s->Theta= Theta + 0.3f;
+
+	if((2.0f * PI) < s->Theta) s->Theta = s->Theta - (2.0f * PI);
+	else if(s->Theta < 0.0f) s->Theta = (2.0f * PI) + s->Theta;
+
+	s->Omega = Hall_PIout;
+	//Futi   = Hall_PIout / (2.* PI) *Fsamp;
+
+	//spi_dac_write_A((HallPLLA+ 1.0f) * 200.0f);
+	//spi_dac_write_B((HallPLLB+ 1.0f) * 200.0f);
+
+	//spi_dac_write_A((costh + 1.0f) * 2000.0f);
+	//spi_dac_write_B((sinth + 1.0f) * 2047.0f);
+
+	//spi_dac_write_A( (Hall_SinCos+ 1.0f) * 2048.0f);
+	//spi_dac_write_B( (Hall_CosSin+ 1.0f) * 2048.0f);
+
+	//spi_dac_write_A( (Hall_err+ 1.0f) * 2048.0f);
+	//spi_dac_write_B( (Theta * 200.0f) );
+
+	//spi_dac_write_B( Hall_PIout * 100.0f);
+
+
+	//spi_dac_write_A( (ParkParm.qAngle * 200.0f) );
+	//spi_dac_write_B( (smc1.Theta * 200.0f) );
+
+
+	//s->Omega = Wpll;
+	//s->Theta =Theta;
+
+	//DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
+}
+
+#else
+void encoder_AnalogHallEstimation (tSMC *s)
+{
+	s->HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
+	s->HallPLLB = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
+
+	s->costh = cosf(s->Theta);
+	s->sinth = sinf(s->Theta);
+	
+	s->Hall_SinCos = s->HallPLLA * s->costh;
+	s->Hall_CosSin = s->HallPLLB * s->sinth;
+
+	float err, tmp_kp, tmp_kpi; 									
+	tmp_kp = 1.0f;
+	tmp_kpi = (1.0f + 1.0f * HALL_SENSOR_PEROID);
+	err = s->Hall_SinCos - s->Hall_CosSin; 											
+	s->Hall_PIout += ((tmp_kpi * err) - (tmp_kp * s->Hall_Err0)); 					
+	s->Hall_PIout = Bound_limit(s->Hall_PIout, 10.0f);						
+	s->Hall_Err0= err;									
+	
+	s->Theta += s->Hall_PIout ;
+	if((2.0f * PI) < s->Theta) s->Theta = s->Theta - (2.0f * PI);
+	else if(s->Theta < 0.0f) s->Theta = (2.0f * PI) + s->Theta;
+
+	s->ThetaCal= s->Theta + 0.3f;
+
+	if((2.0f * PI) < s->ThetaCal) s->ThetaCal = s->ThetaCal - (2.0f * PI);
+	else if(s->ThetaCal < 0.0f) s->ThetaCal = (2.0f * PI) + s->ThetaCal;
+
+	s->Omega = s->Hall_PIout;
+
+
+	s->trueTheta += (s->Hall_PIout /7.0f) ;
+	if((2.0f * PI) < s->trueTheta) s->trueTheta = s->trueTheta - (2.0f * PI);
+	else if(s->trueTheta < 0.0f) s->trueTheta = (2.0f * PI) + s->trueTheta;
+
+	s->Futi   = s->Hall_PIout / (2.0f * PI) * HALL_SENSOR_FREQ;
+	s->rpm = 120.0f * s->Futi / 7.0f;
+	
+
+	//spi_dac_write_A((HallPLLA+ 1.0f) * 200.0f);
+	//spi_dac_write_B((HallPLLB+ 1.0f) * 200.0f);
+
+	//spi_dac_write_A((costh + 1.0f) * 2000.0f);
+	//spi_dac_write_B((sinth + 1.0f) * 2047.0f);
+
+	//spi_dac_write_A( (Hall_SinCos+ 1.0f) * 2048.0f);
+	//spi_dac_write_B( (Hall_CosSin+ 1.0f) * 2048.0f);
+
+	//spi_dac_write_A( (Hall_err+ 1.0f) * 2048.0f);
+	//spi_dac_write_B( (Theta * 200.0f) );
+
+	//spi_dac_write_B( Hall_PIout * 100.0f);
+
+
+	//spi_dac_write_A( (ParkParm.qAngle * 200.0f) );
+	//spi_dac_write_B( (smc1.Theta * 200.0f) );
+
+
+	//s->Omega = Wpll;
+	//s->Theta =Theta;
+
+	//DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
+}
+
+#endif
+

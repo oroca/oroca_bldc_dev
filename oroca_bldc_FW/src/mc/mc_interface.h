@@ -22,8 +22,8 @@
  *      Author: benjamin
  */
 
-#ifndef MC_INTERFACE_H_
-#define MC_INTERFACE_H_
+#ifndef _MC_INTERFACE_H_
+#define _MC_INTERFACE_H_
 
 #include "mc_typedef.h"
 
@@ -124,7 +124,6 @@ void mc_interface_lock_override_once(void);
 
 //void mc_interface_fault_stop(mc_fault_code fault);
 
-void mc_interface_set_velocity(uint16_t vel);
-
+void mc_setVelocity(uint16_t vel);
 
 #endif /* MC_INTERFACE_H_ */

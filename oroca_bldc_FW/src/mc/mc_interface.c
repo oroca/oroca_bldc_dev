@@ -27,15 +27,21 @@
 
 #include <math.h>
 
-
 #include "hw.h"
+#include "mc_define.h"
+#include "mc_typedef.h"
+
 #include "mc_interface.h"
+#include "mc_control.h"
+#include "mc_sensor.h"
+#include "mc_pwm.h"
+#include "mc_encoder.h"
 
 #include "ledpwm.h"
 #include "utils.h"
-#include "encoder.h"
 
 #include "comm_usb_serial.h"
+
 
 // Global variables
 volatile int ADC_curr_norm_value[3];
@@ -83,8 +89,6 @@ static void update_override_limits(volatile mcConfiguration_t *conf);
 static void(*pwn_done_func)(void) = 0;
 
 // Threads
-static THD_WORKING_AREA(timer_thread_wa, 1024);
-static THD_FUNCTION(timer_thread, arg);
 static THD_WORKING_AREA(sample_send_thread_wa, 1024);
 static THD_FUNCTION(sample_send_thread, arg);
 static thread_t *sample_send_tp;
@@ -118,7 +122,7 @@ void mc_interface_init(mcConfiguration_t *configuration)
 	m_start_comm = 0;
 
 	// Start threads
-	chThdCreateStatic(timer_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, timer_thread, NULL);
+
 	chThdCreateStatic(sample_send_thread_wa, sizeof(sample_send_thread_wa), NORMALPRIO - 1, sample_send_thread, NULL);
 
 #if 0
@@ -402,25 +406,33 @@ void mc_interface_fault_stop(mc_fault_code fault)
 
 void mc_interface_set_velocity(uint16_t vel)
 {
-	mcpwm_setVelocity((float)vel/1000);
+	CtrlParm.qVelRef = (float)vel/1000; 
 }
 
 
-static THD_FUNCTION(timer_thread, arg) {
-	(void)arg;
+static volatile mc_state state;
+static volatile mc_control_mode control_mode;
+void mcpwm_setConfiguration(mcConfiguration_t configuration)
+{
+	// Stop everything first to be safe
+	control_mode = CONTROL_MODE_NONE;
 
-	chRegSetThreadName("mcif timer");
+	stop_pwm_hw();//stop_pwm_ll();
 
-	chvprintf(&SDU1, (uint8_t *)"to mc_interface -> mcif timer\r\n");
-
-
-	for(;;) {
-
-		//update_override_limits(&m_conf);
-
-		chThdSleepMilliseconds(1);
-	}
+	utils_sys_lock_cnt();
+	m_conf = configuration;
+	//mcpwm_init_hall_table((int8_t*)conf->hall_table);
+	//update_sensor_mode();
+	utils_sys_unlock_cnt();
 }
+
+mcConfiguration_t mcpwm_getConfiguration(void)
+{
+	stop_pwm_hw();//stop_pwm_ll();
+	
+ 	return m_conf;
+}
+
 
 static THD_FUNCTION(sample_send_thread, arg) {
 	(void)arg;

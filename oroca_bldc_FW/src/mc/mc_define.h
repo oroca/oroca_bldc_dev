@@ -22,8 +22,8 @@
  *      Author: bakchajang
  */
 
-#ifndef _MCPWM_DEFINE_H_
-#define _MCPWM_DEFINE_H_
+#ifndef _MC_DEFINE_H_
+#define _MC_DEFINE_H_
 
 #define MCPWM_DEAD_TIME_CYCLES			80		// Dead time
 #define MCPWM_RPM_TIMER_FREQ			1000000.0	// Frequency of the RPM measurement timer

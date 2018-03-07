@@ -203,6 +203,9 @@ typedef struct {
 	
 	int16_t	Offseta;
 	int16_t	Offsetb;
+	uint16_t curr0_sum;
+	uint16_t curr1_sum;
+	uint16_t curr_start_samples;
 } tMeasCurrParm;
 
 typedef struct {

@@ -336,7 +336,7 @@ bool mavlink_msg_recv( uint8_t ch, uint8_t data , msg_handle_t *p_msg )
 
 void  mavlink_msg_process_vcp( msg_handle_t* p_msg)
 {
-	LED_RED_ON();
+	//LED_RED_ON();
 
       switch( p_msg->p_msg->msgid )
       {
@@ -351,7 +351,7 @@ void  mavlink_msg_process_vcp( msg_handle_t* p_msg)
 		
 		default:								cmd_send_error(p_msg, ERR_INVALID_CMD);		break;
       }
-  LED_RED_OFF();
+  //LED_RED_OFF();
 
 }
 

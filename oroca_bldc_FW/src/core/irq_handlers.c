@@ -25,7 +25,7 @@
 //#include "mcpwm_foc.h"
 #include "servo.h"
 #include "hw.h"
-#include "encoder.h"
+#include "mc_encoder.h"
 
 #if SERVO_OUT_ENABLE && !SERVO_OUT_SIMPLE
 CH_IRQ_HANDLER(TIM7_IRQHandler) {

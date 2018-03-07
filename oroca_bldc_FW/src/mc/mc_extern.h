@@ -22,24 +22,9 @@
  *      Author: bakchajang
  */
 
-#ifndef _MC_PWM_H_
-#define _MC_PWM_H_
+#ifndef _MC_EXTERN_H_
+#define _MC_EXTERN_H_
 
 
-//======================================================================================
-//public function Declaration
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-// Functions
-void mcpwm_init(volatile mcConfiguration_t *configuration);
-void mcpwm_deinit(void);
-
-
-#ifdef __cplusplus
-}
-#endif
-
-
-#endif
+#endif /* MC_PWM_H_ */

@@ -16,25 +16,22 @@
     */
 
 /*
- * mc_pwm.h
+ * mc_sensor.h
  *
  *  Created on: 13 okt 2012
  *      Author: bakchajang
  */
 
-#ifndef _MC_PWM_H_
-#define _MC_PWM_H_
+#ifndef _MC_SENSOR_H_
+#define _MC_SENSOR_H_
 
+extern tMeasCurrParm MeasCurrParm;
+extern tMeasSensorValue MeasSensorValue;
 
-//======================================================================================
-//public function Declaration
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// Functions
-void mcpwm_init(volatile mcConfiguration_t *configuration);
-void mcpwm_deinit(void);
 
 
 #ifdef __cplusplus

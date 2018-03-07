@@ -17,10 +17,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
 
-#ifndef ENCODER_H_
-#define ENCODER_H_
+#ifndef _MC_ENCODER_H_
+#define _MC_ENCODER_H_
 
-#include "conf_general.h"
+//#include "conf_general.h"
+#include <stdint.h>
+#include <stdbool.h>
+
+extern tSMC smc1;
 
 // Functions
 void encoder_deinit(void);
@@ -32,5 +36,9 @@ void encoder_reset(void);
 void encoder_tim_isr(void);
 void encoder_set_counts(uint32_t counts);
 bool encoder_index_found(void);
+
+void encoder_AnalogHallEstimation (tSMC *s);
+
+
 
 #endif /* ENCODER_H_ */
