@@ -1,7 +1,7 @@
 #pragma once
 // MESSAGE SET_APPCONF PACKING
 
-#define MAVLINK_MSG_ID_SET_APPCONF 222
+#define MAVLINK_MSG_ID_SET_APPCONF 122
 
 MAVPACKED(
 typedef struct __mavlink_set_appconf_t {
@@ -11,17 +11,17 @@ typedef struct __mavlink_set_appconf_t {
 
 #define MAVLINK_MSG_ID_SET_APPCONF_LEN 257
 #define MAVLINK_MSG_ID_SET_APPCONF_MIN_LEN 257
-#define MAVLINK_MSG_ID_222_LEN 257
-#define MAVLINK_MSG_ID_222_MIN_LEN 257
+#define MAVLINK_MSG_ID_122_LEN 257
+#define MAVLINK_MSG_ID_122_MIN_LEN 257
 
 #define MAVLINK_MSG_ID_SET_APPCONF_CRC 33
-#define MAVLINK_MSG_ID_222_CRC 33
+#define MAVLINK_MSG_ID_122_CRC 33
 
 #define MAVLINK_MSG_SET_APPCONF_FIELD_DATA_LEN 128
 
 #if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_SET_APPCONF { \
-    222, \
+    122, \
     "SET_APPCONF", \
     2, \
     {  { "resp", NULL, MAVLINK_TYPE_UINT8_T, 0, 256, offsetof(mavlink_set_appconf_t, resp) }, \

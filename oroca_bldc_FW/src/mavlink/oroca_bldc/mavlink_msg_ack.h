@@ -1,7 +1,7 @@
 #pragma once
 // MESSAGE ACK PACKING
 
-#define MAVLINK_MSG_ID_ACK 150
+#define MAVLINK_MSG_ID_ACK 1
 
 MAVPACKED(
 typedef struct __mavlink_ack_t {
@@ -13,17 +13,17 @@ typedef struct __mavlink_ack_t {
 
 #define MAVLINK_MSG_ID_ACK_LEN 20
 #define MAVLINK_MSG_ID_ACK_MIN_LEN 20
-#define MAVLINK_MSG_ID_150_LEN 20
-#define MAVLINK_MSG_ID_150_MIN_LEN 20
+#define MAVLINK_MSG_ID_1_LEN 20
+#define MAVLINK_MSG_ID_1_MIN_LEN 20
 
 #define MAVLINK_MSG_ID_ACK_CRC 192
-#define MAVLINK_MSG_ID_150_CRC 192
+#define MAVLINK_MSG_ID_1_CRC 192
 
 #define MAVLINK_MSG_ACK_FIELD_DATA_LEN 16
 
 #if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_ACK { \
-    150, \
+    1, \
     "ACK", \
     4, \
     {  { "msg_id", NULL, MAVLINK_TYPE_UINT8_T, 0, 2, offsetof(mavlink_ack_t, msg_id) }, \

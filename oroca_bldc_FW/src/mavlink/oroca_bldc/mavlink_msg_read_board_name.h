@@ -1,7 +1,7 @@
 #pragma once
 // MESSAGE READ_BOARD_NAME PACKING
 
-#define MAVLINK_MSG_ID_READ_BOARD_NAME 152
+#define MAVLINK_MSG_ID_READ_BOARD_NAME 12
 
 MAVPACKED(
 typedef struct __mavlink_read_board_name_t {
@@ -11,17 +11,17 @@ typedef struct __mavlink_read_board_name_t {
 
 #define MAVLINK_MSG_ID_READ_BOARD_NAME_LEN 9
 #define MAVLINK_MSG_ID_READ_BOARD_NAME_MIN_LEN 9
-#define MAVLINK_MSG_ID_152_LEN 9
-#define MAVLINK_MSG_ID_152_MIN_LEN 9
+#define MAVLINK_MSG_ID_12_LEN 9
+#define MAVLINK_MSG_ID_12_MIN_LEN 9
 
 #define MAVLINK_MSG_ID_READ_BOARD_NAME_CRC 140
-#define MAVLINK_MSG_ID_152_CRC 140
+#define MAVLINK_MSG_ID_12_CRC 140
 
 #define MAVLINK_MSG_READ_BOARD_NAME_FIELD_PARAM_LEN 8
 
 #if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_READ_BOARD_NAME { \
-    152, \
+    12, \
     "READ_BOARD_NAME", \
     2, \
     {  { "resp", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_read_board_name_t, resp) }, \

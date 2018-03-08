@@ -31,6 +31,24 @@ namespace MavLink
     {
         public abstract int Serialize(byte[] bytes, ref int offset);
     }
+
+	/// <summary>
+	/// debug String
+	/// </summary>
+	public class Msg_debug_string : MavlinkMessage
+    {
+
+		/// <summary>
+		/// string
+		/// </summary>
+		public byte[] dbg_str; // Array size 250
+
+        public override int Serialize(byte[] bytes, ref int offset)
+            {
+                return MavLinkSerializer.Serialize_DEBUG_STRING(this, bytes, ref offset);
+            }        
+	}
+
 	public class Msg_ack : MavlinkMessage
     {
 
@@ -119,25 +137,6 @@ namespace MavLink
         public override int Serialize(byte[] bytes, ref int offset)
             {
                 return MavLinkSerializer.Serialize_READ_TAG(this, bytes, ref offset);
-            }        
-	}
-
-	public class Msg_set_velocity : MavlinkMessage
-    {
-
-		/// <summary>
-		/// 0:No Resp, 1:Resp
-		/// </summary>
-		public byte resp;
-
-		/// <summary>
-		/// velocity value
-		/// </summary>
-		public UInt16 ref_angular_velocity;
-
-        public override int Serialize(byte[] bytes, ref int offset)
-            {
-                return MavLinkSerializer.Serialize_SET_VELOCITY(this, bytes, ref offset);
             }        
 	}
 
@@ -269,21 +268,60 @@ namespace MavLink
             }        
 	}
 
-
-	/// <summary>
-	/// debug String
-	/// </summary>
-	public class Msg_debug_string : MavlinkMessage
+	public class Msg_set_velocity : MavlinkMessage
     {
 
 		/// <summary>
-		/// string
+		/// 0:No Resp, 1:Resp
 		/// </summary>
-		public byte[] dbg_str; // Array size 250
+		public byte resp;
+
+		/// <summary>
+		/// velocity value
+		/// </summary>
+		public UInt16 ref_angular_velocity;
 
         public override int Serialize(byte[] bytes, ref int offset)
             {
-                return MavLinkSerializer.Serialize_DEBUG_STRING(this, bytes, ref offset);
+                return MavLinkSerializer.Serialize_SET_VELOCITY(this, bytes, ref offset);
+            }        
+	}
+
+	public class Msg_set_openloop : MavlinkMessage
+    {
+
+		/// <summary>
+		/// 0:No Resp, 1:Resp
+		/// </summary>
+		public byte resp;
+
+		/// <summary>
+		/// 0:closedloop 1:openloop 
+		/// </summary>
+		public byte openLoopMode;
+
+        public override int Serialize(byte[] bytes, ref int offset)
+            {
+                return MavLinkSerializer.Serialize_SET_OPENLOOP(this, bytes, ref offset);
+            }        
+	}
+
+	public class Msg_set_encodermode : MavlinkMessage
+    {
+
+		/// <summary>
+		/// 0:No Resp, 1:Resp
+		/// </summary>
+		public byte resp;
+
+		/// <summary>
+		/// 0:none 1:ABI 2:AS50XX 3:AJALL 
+		/// </summary>
+		public byte encoderMode;
+
+        public override int Serialize(byte[] bytes, ref int offset)
+            {
+                return MavLinkSerializer.Serialize_SET_ENCODERMODE(this, bytes, ref offset);
             }        
 	}
 

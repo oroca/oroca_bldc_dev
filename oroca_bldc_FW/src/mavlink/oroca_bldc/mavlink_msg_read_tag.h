@@ -1,7 +1,7 @@
 #pragma once
 // MESSAGE READ_TAG PACKING
 
-#define MAVLINK_MSG_ID_READ_TAG 153
+#define MAVLINK_MSG_ID_READ_TAG 13
 
 MAVPACKED(
 typedef struct __mavlink_read_tag_t {
@@ -12,17 +12,17 @@ typedef struct __mavlink_read_tag_t {
 
 #define MAVLINK_MSG_ID_READ_TAG_LEN 10
 #define MAVLINK_MSG_ID_READ_TAG_MIN_LEN 10
-#define MAVLINK_MSG_ID_153_LEN 10
-#define MAVLINK_MSG_ID_153_MIN_LEN 10
+#define MAVLINK_MSG_ID_13_LEN 10
+#define MAVLINK_MSG_ID_13_MIN_LEN 10
 
 #define MAVLINK_MSG_ID_READ_TAG_CRC 126
-#define MAVLINK_MSG_ID_153_CRC 126
+#define MAVLINK_MSG_ID_13_CRC 126
 
 #define MAVLINK_MSG_READ_TAG_FIELD_PARAM_LEN 8
 
 #if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_READ_TAG { \
-    153, \
+    13, \
     "READ_TAG", \
     3, \
     {  { "resp", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_read_tag_t, resp) }, \

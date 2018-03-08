@@ -6,7 +6,13 @@
     </enums>
 	
 	<messages>
-		<message id="150" name="ACK">
+		<!-- Messages for system  -->
+		<message id="0" name="DEBUG_STRING">
+            <description>debug String</description>
+			<field type="char[250]" name="dbg_str">string</field>
+        </message>
+	
+		<message id="1" name="ACK">
 			<description></description>
 			<field type="uint8_t"    name="msg_id"></field>
 			<field type="uint16_t"   name="err_code"></field>
@@ -14,19 +20,19 @@
 			<field type="uint8_t[16]" name="data"></field>
 		</message>
 
-		<message id="151" name="READ_VERSION">
+		<message id="11" name="READ_VERSION">
 			<description></description>
 			<field type="uint8_t"    name="resp">0:No Resp, 1:Resp</field>
 			<field type="uint8_t[8]" name="param"></field>
 		</message>
 
-		<message id="152" name="READ_BOARD_NAME">
+		<message id="12" name="READ_BOARD_NAME">
 			<description></description>
 			<field type="uint8_t"    name="resp">0:No Resp, 1:Resp</field>
 			<field type="uint8_t[8]" name="param"></field>
 		</message>
 
-		<message id="153" name="READ_TAG">
+		<message id="13" name="READ_TAG">
 			<description></description>
 			<field type="uint8_t"    name="resp">0:No Resp, 1:Resp</field>
 			<field type="uint8_t"    name="type"></field>
@@ -34,13 +40,7 @@
 		</message>
 
 		<!-- Messages for OROCA BLDC  -->
-        <message id="220" name="SET_VELOCITY">
-            <description></description>
-			<field type="uint8_t"  name="resp">0:No Resp, 1:Resp</field>
-			<field type="uint16_t" name="ref_angular_velocity">velocity value</field>
-        </message>
-		
-		<message id="221" name="SET_MCCONF">
+		<message id="121" name="SET_MCCONF">
 			<description></description>
 			<field type="uint8_t"  name="resp">0:No Resp, 1:Resp</field>
 			<field type="uint8_t" name="uVDD">x10^1 </field>
@@ -68,16 +68,31 @@
 			<field type="uint16_t" name="uPLLOUTMAX">x10^3 </field>
 		</message>
 		
-		<message id="222" name="SET_APPCONF">
+		<message id="122" name="SET_APPCONF">
 			<description></description>
 			<field type="uint8_t"  name="resp">0:No Resp, 1:Resp</field>
 			<field type="uint16_t[128]" name="data"></field>
 		</message>
 		
-		<message id="0" name="DEBUG_STRING">
-            <description>debug String</description>
-			<field type="char[250]" name="dbg_str">string</field>
+		<message id="220" name="SET_VELOCITY">
+            <description></description>
+			<field type="uint8_t"  name="resp">0:No Resp, 1:Resp</field>
+			<field type="uint16_t" name="ref_angular_velocity">velocity value</field>
         </message>
+		
+		<message id="221" name="SET_OPENLOOP">
+            <description></description>
+			<field type="uint8_t"  name="resp">0:No Resp, 1:Resp</field>
+			<field type="uint8_t" name="openLoopMode">0:closedloop 1:openloop </field>
+        </message>
+		
+		<message id="222" name="SET_ENCODERMODE">
+            <description></description>
+			<field type="uint8_t"  name="resp">0:No Resp, 1:Resp</field>
+			<field type="uint8_t" name="encoderMode">0:none 1:ABI 2:AS50XX 3:AJALL </field>
+        </message>
+				
+
 	</messages>
   
 </mavlink>

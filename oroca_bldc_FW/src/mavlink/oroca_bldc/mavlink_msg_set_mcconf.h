@@ -1,7 +1,7 @@
 #pragma once
 // MESSAGE SET_MCCONF PACKING
 
-#define MAVLINK_MSG_ID_SET_MCCONF 221
+#define MAVLINK_MSG_ID_SET_MCCONF 121
 
 MAVPACKED(
 typedef struct __mavlink_set_mcconf_t {
@@ -29,17 +29,17 @@ typedef struct __mavlink_set_mcconf_t {
 
 #define MAVLINK_MSG_ID_SET_MCCONF_LEN 38
 #define MAVLINK_MSG_ID_SET_MCCONF_MIN_LEN 38
-#define MAVLINK_MSG_ID_221_LEN 38
-#define MAVLINK_MSG_ID_221_MIN_LEN 38
+#define MAVLINK_MSG_ID_121_LEN 38
+#define MAVLINK_MSG_ID_121_MIN_LEN 38
 
 #define MAVLINK_MSG_ID_SET_MCCONF_CRC 107
-#define MAVLINK_MSG_ID_221_CRC 107
+#define MAVLINK_MSG_ID_121_CRC 107
 
 
 
 #if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_SET_MCCONF { \
-    221, \
+    121, \
     "SET_MCCONF", \
     20, \
     {  { "resp", NULL, MAVLINK_TYPE_UINT8_T, 0, 36, offsetof(mavlink_set_mcconf_t, resp) }, \

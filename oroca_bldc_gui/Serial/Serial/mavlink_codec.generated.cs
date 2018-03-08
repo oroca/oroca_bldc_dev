@@ -49,15 +49,25 @@ namespace MavLink
     
         public static Dictionary<int, MavPacketInfo> Lookup = new Dictionary<int, MavPacketInfo>
         {
-			{150, new MavPacketInfo(Deserialize_ACK, 192)},
-			{151, new MavPacketInfo(Deserialize_READ_VERSION, 166)},
-			{152, new MavPacketInfo(Deserialize_READ_BOARD_NAME, 140)},
-			{153, new MavPacketInfo(Deserialize_READ_TAG, 126)},
-			{220, new MavPacketInfo(Deserialize_SET_VELOCITY, 249)},
-			{221, new MavPacketInfo(Deserialize_SET_MCCONF, 107)},
-			{222, new MavPacketInfo(Deserialize_SET_APPCONF, 33)},
 			{0, new MavPacketInfo(Deserialize_DEBUG_STRING, 50)},
+			{1, new MavPacketInfo(Deserialize_ACK, 192)},
+			{11, new MavPacketInfo(Deserialize_READ_VERSION, 166)},
+			{12, new MavPacketInfo(Deserialize_READ_BOARD_NAME, 140)},
+			{13, new MavPacketInfo(Deserialize_READ_TAG, 126)},
+			{121, new MavPacketInfo(Deserialize_SET_MCCONF, 107)},
+			{122, new MavPacketInfo(Deserialize_SET_APPCONF, 33)},
+			{220, new MavPacketInfo(Deserialize_SET_VELOCITY, 249)},
+			{221, new MavPacketInfo(Deserialize_SET_OPENLOOP, 84)},
+			{222, new MavPacketInfo(Deserialize_SET_ENCODERMODE, 21)},
 		};
+
+		internal static MavlinkMessage Deserialize_DEBUG_STRING(byte[] bytes, int offset)
+		{
+			return new Msg_debug_string
+			{
+				dbg_str =  ByteArrayUtil.ToChar(bytes, offset + 0, 250),
+			};
+		}
 
 		internal static MavlinkMessage Deserialize_ACK(byte[] bytes, int offset)
 		{
@@ -98,15 +108,6 @@ namespace MavLink
 			};
 		}
 
-		internal static MavlinkMessage Deserialize_SET_VELOCITY(byte[] bytes, int offset)
-		{
-			return new Msg_set_velocity
-			{
-				ref_angular_velocity = bitconverter.ToUInt16(bytes, offset + 0),
-				resp = bytes[offset + 2],
-			};
-		}
-
 		internal static MavlinkMessage Deserialize_SET_MCCONF(byte[] bytes, int offset)
 		{
 			return new Msg_set_mcconf
@@ -143,12 +144,38 @@ namespace MavLink
 			};
 		}
 
-		internal static MavlinkMessage Deserialize_DEBUG_STRING(byte[] bytes, int offset)
+		internal static MavlinkMessage Deserialize_SET_VELOCITY(byte[] bytes, int offset)
 		{
-			return new Msg_debug_string
+			return new Msg_set_velocity
 			{
-				dbg_str =  ByteArrayUtil.ToChar(bytes, offset + 0, 250),
+				ref_angular_velocity = bitconverter.ToUInt16(bytes, offset + 0),
+				resp = bytes[offset + 2],
 			};
+		}
+
+		internal static MavlinkMessage Deserialize_SET_OPENLOOP(byte[] bytes, int offset)
+		{
+			return new Msg_set_openloop
+			{
+				resp = bytes[offset + 0],
+				openLoopMode = bytes[offset + 1],
+			};
+		}
+
+		internal static MavlinkMessage Deserialize_SET_ENCODERMODE(byte[] bytes, int offset)
+		{
+			return new Msg_set_encodermode
+			{
+				resp = bytes[offset + 0],
+				encoderMode = bytes[offset + 1],
+			};
+		}
+
+		internal static int Serialize_DEBUG_STRING(this Msg_debug_string msg, byte[] bytes, ref int offset)
+		{
+			ByteArrayUtil.ToByteArray(msg.dbg_str, bytes, offset + 0, 250);
+			offset += 250;
+			return 0;
 		}
 
 		internal static int Serialize_ACK(this Msg_ack msg, byte[] bytes, ref int offset)
@@ -158,7 +185,7 @@ namespace MavLink
 			bytes[offset + 3] = msg.length;
 			ByteArrayUtil.ToByteArray(msg.data, bytes, offset + 4, 16);
 			offset += 20;
-			return 150;
+			return 1;
 		}
 
 		internal static int Serialize_READ_VERSION(this Msg_read_version msg, byte[] bytes, ref int offset)
@@ -166,7 +193,7 @@ namespace MavLink
 			bytes[offset + 0] = msg.resp;
 			ByteArrayUtil.ToByteArray(msg.param, bytes, offset + 1, 8);
 			offset += 9;
-			return 151;
+			return 11;
 		}
 
 		internal static int Serialize_READ_BOARD_NAME(this Msg_read_board_name msg, byte[] bytes, ref int offset)
@@ -174,7 +201,7 @@ namespace MavLink
 			bytes[offset + 0] = msg.resp;
 			ByteArrayUtil.ToByteArray(msg.param, bytes, offset + 1, 8);
 			offset += 9;
-			return 152;
+			return 12;
 		}
 
 		internal static int Serialize_READ_TAG(this Msg_read_tag msg, byte[] bytes, ref int offset)
@@ -183,15 +210,7 @@ namespace MavLink
 			bytes[offset + 1] = msg.type;
 			ByteArrayUtil.ToByteArray(msg.param, bytes, offset + 2, 8);
 			offset += 10;
-			return 153;
-		}
-
-		internal static int Serialize_SET_VELOCITY(this Msg_set_velocity msg, byte[] bytes, ref int offset)
-		{
-			bitconverter.GetBytes(msg.ref_angular_velocity, bytes, offset + 0);
-			bytes[offset + 2] = msg.resp;
-			offset += 3;
-			return 220;
+			return 13;
 		}
 
 		internal static int Serialize_SET_MCCONF(this Msg_set_mcconf msg, byte[] bytes, ref int offset)
@@ -217,7 +236,7 @@ namespace MavLink
 			bytes[offset + 36] = msg.resp;
 			bytes[offset + 37] = msg.uVDD;
 			offset += 38;
-			return 221;
+			return 121;
 		}
 
 		internal static int Serialize_SET_APPCONF(this Msg_set_appconf msg, byte[] bytes, ref int offset)
@@ -225,14 +244,31 @@ namespace MavLink
 			ByteArrayUtil.ToByteArray(msg.data, bytes, offset + 0, 128);
 			bytes[offset + 256] = msg.resp;
 			offset += 257;
-			return 222;
+			return 122;
 		}
 
-		internal static int Serialize_DEBUG_STRING(this Msg_debug_string msg, byte[] bytes, ref int offset)
+		internal static int Serialize_SET_VELOCITY(this Msg_set_velocity msg, byte[] bytes, ref int offset)
 		{
-			ByteArrayUtil.ToByteArray(msg.dbg_str, bytes, offset + 0, 250);
-			offset += 250;
-			return 0;
+			bitconverter.GetBytes(msg.ref_angular_velocity, bytes, offset + 0);
+			bytes[offset + 2] = msg.resp;
+			offset += 3;
+			return 220;
+		}
+
+		internal static int Serialize_SET_OPENLOOP(this Msg_set_openloop msg, byte[] bytes, ref int offset)
+		{
+			bytes[offset + 0] = msg.resp;
+			bytes[offset + 1] = msg.openLoopMode;
+			offset += 2;
+			return 221;
+		}
+
+		internal static int Serialize_SET_ENCODERMODE(this Msg_set_encodermode msg, byte[] bytes, ref int offset)
+		{
+			bytes[offset + 0] = msg.resp;
+			bytes[offset + 1] = msg.encoderMode;
+			offset += 2;
+			return 222;
 		}
 	}
 

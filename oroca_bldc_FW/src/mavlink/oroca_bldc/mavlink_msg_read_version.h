@@ -1,7 +1,7 @@
 #pragma once
 // MESSAGE READ_VERSION PACKING
 
-#define MAVLINK_MSG_ID_READ_VERSION 151
+#define MAVLINK_MSG_ID_READ_VERSION 11
 
 MAVPACKED(
 typedef struct __mavlink_read_version_t {
@@ -11,17 +11,17 @@ typedef struct __mavlink_read_version_t {
 
 #define MAVLINK_MSG_ID_READ_VERSION_LEN 9
 #define MAVLINK_MSG_ID_READ_VERSION_MIN_LEN 9
-#define MAVLINK_MSG_ID_151_LEN 9
-#define MAVLINK_MSG_ID_151_MIN_LEN 9
+#define MAVLINK_MSG_ID_11_LEN 9
+#define MAVLINK_MSG_ID_11_MIN_LEN 9
 
 #define MAVLINK_MSG_ID_READ_VERSION_CRC 166
-#define MAVLINK_MSG_ID_151_CRC 166
+#define MAVLINK_MSG_ID_11_CRC 166
 
 #define MAVLINK_MSG_READ_VERSION_FIELD_PARAM_LEN 8
 
 #if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_READ_VERSION { \
-    151, \
+    11, \
     "READ_VERSION", \
     2, \
     {  { "resp", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_read_version_t, resp) }, \

@@ -334,6 +334,52 @@ static void spi_delay(void) {
 }
 
 
+void encoder_init_pwm(void) {
+#if 0
+	// Enable timer clock
+	HW_ENC_TIM_CLK_EN();
+
+    /* GPIOA  clock enable */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    
+    /* Enable the TIM3 global Interrupt */
+    NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+    
+    /* TIM3_ch1(PA6),TIM3_ch2(PA7) configuration */
+	palSetPadMode(HW_HALL_ENC_GPIO1, HW_HALL_ENC_PIN1, PAL_MODE_ALTERNATE(HW_ENC_TIM_AF));
+
+    /* Time base configuration */
+    TIM_TimeBaseStructure.TIM_Period = 65535;
+    TIM_TimeBaseStructure.TIM_Prescaler = 72-1; // 1 usec for 72MHz clock
+    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
+    
+    TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+    TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+    TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+    TIM_ICInitStructure.TIM_ICFilter = 0x0;
+    TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;
+    TIM_ICInit(TIM4, &TIM_ICInitStructure);
+
+    /* TIM enable counter */
+    TIM_Cmd(TIM4, ENABLE);
+    
+    /* Enable the CC2 Interrupt Request */
+    TIM_ITConfig(TIM4, TIM_IT_CC1, ENABLE);
+
+	nvicEnableVector(HW_ENC_TIM_ISR_CH, 6);
+
+	mode = ENCODER_MODE_AS5047P_SPI;
+	index_found = true;
+#endif
+}
+
+
 
 /********************************PLL loop **********************************/	
 
