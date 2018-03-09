@@ -68,7 +68,8 @@ typedef enum {
 	ENCODER_MODE_NONE = 0,
 	ENCODER_MODE_ABI,
 	ENCODER_MODE_AS5047P_SPI,
-	ENCODER_MODE_AHALL
+	ENCODER_MODE_AHALL,
+	ENCODER_MODE_PWM
 } encoder_mode;
 
 // Private variables
@@ -121,9 +122,7 @@ void encoder_init_abi(uint32_t counts) {
 	// Enable SYSCFG clock
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
-	TIM_EncoderInterfaceConfig (HW_ENC_TIM, TIM_EncoderMode_TI12,
-			TIM_ICPolarity_Rising,
-			TIM_ICPolarity_Rising);
+	TIM_EncoderInterfaceConfig (HW_ENC_TIM, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising,TIM_ICPolarity_Rising);
 	TIM_SetAutoreload(HW_ENC_TIM, enc_counts - 1);
 
 	// Filter
@@ -247,15 +246,43 @@ void encoder_reset(void) {
 /**
  * Timer interrupt
  */
+uint16_t cap1_cnt=0, cap1_r_new=0, cap1_r_old=0, cap1_f=0;
+uint16_t pul1_width=0,pul1_period=0;
 void encoder_tim_isr(void) {
 	uint16_t pos;
 
-	spi_begin();
-	spi_transfer(&pos, 0, 1);
-	spi_end();
+	if(mode == ENCODER_MODE_AS5047P_SPI)
+	{
+		spi_begin();
+		spi_transfer(&pos, 0, 1);
+		spi_end();
 
-	pos &= 0x3FFF;
-	last_enc_angle = ((float)pos * 360.0) / 16384.0;
+		pos &= 0x3FFF;
+		last_enc_angle = ((float)pos * 360.0) / 16384.0;
+	}
+	else if(mode == ENCODER_MODE_PWM)
+	{
+		if((TIM4->SR & TIM_IT_CC1)&&(TIM4->DIER & TIM_IT_CC1))
+		{
+			cap1_cnt++;
+			TIM4->SR = (uint16_t)~TIM_IT_CC1;	// clear flag
+			if((GPIOA->IDR >> HW_HALL_ENC_PIN1) & 1U)
+			{	
+				// Timer4 Ch1 pin is High
+				cap1_r_new = TIM4->CCR1; // read capture data
+				pul1_period = (uint32_t)(cap1_r_new - cap1_r_old);
+				cap1_r_old = cap1_r_new;
+				TIM4->CCER &= ~TIM_CCER_CC1P;	// to falling edge
+			}
+			else
+			{	// Timer4 Ch1 pin is Low
+				cap1_f = TIM4->CCR1; // read capture data
+				pul1_width = (uint32_t)(cap1_f - cap1_r_new);
+				TIM4->CCER |= TIM_CCER_CC1P;	// to rising edge
+			}
+		}
+	}
+	
 }
 
 /**
@@ -335,20 +362,13 @@ static void spi_delay(void) {
 
 
 void encoder_init_pwm(void) {
-#if 0
+	NVIC_InitTypeDef NVIC_InitStructure;
+	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+	TIM_ICInitTypeDef TIM_ICInitStructure;
+
 	// Enable timer clock
 	HW_ENC_TIM_CLK_EN();
 
-    /* GPIOA  clock enable */
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-    
-    /* Enable the TIM3 global Interrupt */
-    NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStructure);
-    
     /* TIM3_ch1(PA6),TIM3_ch2(PA7) configuration */
 	palSetPadMode(HW_HALL_ENC_GPIO1, HW_HALL_ENC_PIN1, PAL_MODE_ALTERNATE(HW_ENC_TIM_AF));
 
@@ -372,12 +392,13 @@ void encoder_init_pwm(void) {
     /* Enable the CC2 Interrupt Request */
     TIM_ITConfig(TIM4, TIM_IT_CC1, ENABLE);
 
+	/* Enable the TIM3 global Interrupt */
 	nvicEnableVector(HW_ENC_TIM_ISR_CH, 6);
 
-	mode = ENCODER_MODE_AS5047P_SPI;
+	mode = ENCODER_MODE_PWM;
 	index_found = true;
-#endif
 }
+
 
 
 
