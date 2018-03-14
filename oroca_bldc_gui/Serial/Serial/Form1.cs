@@ -22,7 +22,7 @@ namespace Serial
 {
     public partial class Form1 : Form
     {
-        #region form_func
+        #region formBasefunction
 
         public Form1()
         {
@@ -53,7 +53,7 @@ namespace Serial
         {
             CheckForIllegalCrossThreadCalls = false;
 
-            dataGridView1.DataSource = DataView_import();
+            dataGridView1.DataSource = DataView_import("Sample.csv");
         }
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -63,15 +63,14 @@ namespace Serial
             }
         }
 
-
-        private DataTable DataView_import()
+        private DataTable DataView_import(string filePath)
         {
             string[] ReadDataBuffer = new string[1000];
 
             int DataNum = 0;
             int i = 0;
 
-            string filePath = "Sample.csv";
+            //string filePath = "Sample.csv";
 
             StreamReader sr = new StreamReader(filePath, Encoding.Default);
             ReadDataBuffer[0] = sr.ReadLine();//read header
@@ -103,10 +102,10 @@ namespace Serial
             }
             return dataTable;
         }
-        public void DataView_export(DataTable dt) // 호출 할 때 마다 날짜에 맞는 폴더 안에 csv 파일 생성 이미 생성 된경우 이어쓰기
+        private void DataView_export(DataTable dt, string filePath) // 호출 할 때 마다 날짜에 맞는 폴더 안에 csv 파일 생성 이미 생성 된경우 이어쓰기
         {
             // Create the CSV file to which grid data will be exported.
-            string filePath = "Sample.csv";
+            //string filePath = "Sample.csv";
 
             StreamWriter sw = new StreamWriter(filePath);
             // First we will write the headers.
@@ -142,6 +141,30 @@ namespace Serial
             sw.Close();
         }
 
+        private void setControlValueFromDataview()
+        {
+            Int32 val = Convert.ToInt32(dataGridView1[1, 0].Value);
+            if (val == 0)//openloop:1 closedloop:0
+                rdBtn_ClosedLoop.Checked = true;
+            else
+                rdBtn_OpenLoop.Checked = true;
+            ControlModeTextBoxStatusUpdate(rdBtn_OpenLoop.Checked);
+
+            textBox_openDValue.Text = Convert.ToString(dataGridView1[3, 1].Value);
+            textBox_openQValue.Text = Convert.ToString(dataGridView1[4, 1].Value);
+            textBox_DeltaAngle.Text = Convert.ToString(dataGridView1[5, 1].Value);
+
+            cmbEncoderMode.SelectedIndex = Convert.ToInt32(dataGridView1[1, 1].Value);
+        }
+        private void dataGridView1_BindingCompleteEvent(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            //MessageBox.Show("BindingCompleteEvent");
+            setControlValueFromDataview();
+        }
+
+        #endregion
+
+//엑셀시트와 연동하면서 테스트 했던 코드 
 #if false
         private string Excel03ConString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1}'";
         private string Excel07ConString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1}'";
@@ -203,85 +226,6 @@ namespace Serial
         }
 #endif
 
-        private void btnOpen_Click(object sender, EventArgs e)
-        {
-            board_connect();
-
-            if (SerialPort.IsOpen)
-            {
-                lbStatus.Text = "connected";
-                btnOpen.Visible = false;
-                btnPortClose.Visible = true;
-            }
-            else
-            {
-                lbStatus.Text = "fail";
-                lbStatus.ForeColor = Color.Red;
-            }
-        }
-
-        private void btnPortClose_Click(object sender, EventArgs e)
-        {
-            board_disconnect();
-
-            lbStatus.Text = "disconnected";
-            btnOpen.Visible = true;
-            btnPortClose.Visible = false;
-        }
-        private void cmbPort_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SerialPort.PortName = cmbPort.SelectedItem.ToString();
-
-        }
-        private void cmbBRate_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (cmbBRate.SelectedIndex)
-            {
-                case 0 :                    SerialPort.BaudRate = (int)9600;                    break;
-                case 1 :                    SerialPort.BaudRate = (int)14400;                    break;
-                case 2 :                    SerialPort.BaudRate = (int)19200;                    break;
-                case 3 :                    SerialPort.BaudRate = (int)38400;                    break;
-                case 4 :                    SerialPort.BaudRate = (int)57600;                    break;
-                case 5 :                    SerialPort.BaudRate = (int)115200;                    break;
-                default:                    SerialPort.BaudRate = (int)19200;                    break;
-            }
-        }
-       
-        private void getVersion_Click(object sender, EventArgs e)
-        {
-            cmd_read_version();
-        }
-       
-        private void getBoardName_Click(object sender, EventArgs e)
-        {
-            cmd_read_BoardName();
-        }
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-            byte[] sendbuf = new byte[100];
-
-            Msg_set_velocity msg_set_velocity = new Msg_set_velocity();
-            msg_set_velocity.ref_angular_velocity = (UInt16)numericUpDown1.Value;
-
-            MavlinkPacket mavlink_packet = new MavlinkPacket();
-            mavlink_packet.ComponentId = 121;
-            mavlink_packet.SystemId = 9;
-            mavlink_packet.Message = msg_set_velocity;
-
-            Mavlink mav_link = new Mavlink();
-            sendbuf = mav_link.Send(mavlink_packet);
-
-            // string result = System.Text.Encoding.UTF8.GetString(sendbuf);
-            string result = BitConverter.ToString(sendbuf);
-            rbText.Text += "\r\n" + "[" + SerialPort.PortName.ToString() + "] " + result;
-
-            if (SerialPort.IsOpen)
-            {
-                SerialPort.Write(sendbuf, 0, sendbuf.Length);
-            }
-        }
-        #endregion
-
         #region Mavlink_func
 
         // Mavlink message object
@@ -307,6 +251,97 @@ namespace Serial
         private void board_disconnect()
         {
             SerialPort.Close();
+        }
+
+#if false
+        private byte[] mavlink_packet_gen(int systemID, int ComponentId, ref packet)
+        {
+            MavlinkPacket mavlink_packet = new MavlinkPacket();
+            mavlink_packet.ComponentId = 121;
+            mavlink_packet.SystemId = 9;
+            mavlink_packet.Message = packet;
+
+            Mavlink mav_link = new Mavlink();
+            byte[] sendbuf = mav_link.Send(mavlink_packet);
+
+            return sendbuf;
+        }
+#endif
+        private bool mavlink_packet_send(byte[] sendbuf)
+        {
+            if (SerialPort.IsOpen)
+            {
+                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+
+                DateTime start = DateTime.Now;
+                int retrys = 3;
+
+                while (true)
+                {
+                    if (!(start.AddMilliseconds(200) > DateTime.Now))
+                    {
+                        if (retrys > 0)
+                        {
+                            if (SerialPort.IsOpen)
+                            {
+                                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+                            }
+                            start = DateTime.Now;
+                            retrys--;
+                            continue;
+                        }
+                        return false;
+                    }
+                    if (MsgAckHandler != null)
+                    {
+                        if (MsgAckHandler.Message.GetType() == typeof(MavLink.Msg_ack))
+                        {
+                            byte[] temp = (MsgAckHandler.Message as MavLink.Msg_ack).data;
+                            // Console.WriteLine(Encoding.Default.GetString(temp));
+                            rbText.Text += "Board name :  " + Encoding.Default.GetString(temp);
+                            rbText.Text += "\r\n";
+                            MsgAckHandler = null;
+                            return true;
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private MavlinkPacket MsgAckHandler;
+        public void PrintRecievedPackets(object sender, MavlinkPacket e)
+        {
+            // Print Message Basic Info
+            Console.WriteLine("System ID: {0}", e.SystemId);
+            Console.WriteLine("Message: {0}", e.Message.ToString());
+            Console.WriteLine("Time Stamp: {0}", e.TimeStamp);
+
+            if (e.Message.GetType() == typeof(MavLink.Msg_ack))
+            {
+                MsgAckHandler = e;
+            }
+            else if (e.Message.GetType() == typeof(MavLink.Msg_set_velocity))
+            {
+                // Console.WriteLine("Msg_set_velocity : {0}", (e.Message as MavLink.Msg_set_velocity).ref_angular_velocity);
+                rbText.Text += e.TimeStamp;
+                rbText.Text += (e.Message as MavLink.Msg_set_velocity).ref_angular_velocity + "\r\n";
+            }
+            else if (e.Message.GetType() == typeof(MavLink.Msg_debug_string))
+            {
+                byte[] temp = (e.Message as MavLink.Msg_debug_string).dbg_str;
+                // Console.WriteLine(Encoding.Default.GetString(temp));
+                rbText.Text += DateTime.Now + " " + Encoding.Default.GetString(temp);
+                rbText.Text += "\r\n";
+
+                rbText.SelectionStart = rbText.TextLength;
+                rbText.ScrollToCaret();
+
+            }
         }
 
         private bool cmd_read_version()
@@ -364,7 +399,7 @@ namespace Serial
                 }
 
             }
-            else 
+            else
             {
                 return false;
             }
@@ -413,65 +448,6 @@ namespace Serial
                         if (MsgAckHandler.Message.GetType() == typeof(MavLink.Msg_ack))
                         {
                             byte[] temp = (MsgAckHandler.Message as MavLink.Msg_ack).data;
-                           // Console.WriteLine(Encoding.Default.GetString(temp));
-                            rbText.Text += "Board name :  " + Encoding.Default.GetString(temp);
-                            rbText.Text += "\r\n";
-                            MsgAckHandler = null;
-                            return true;
-                        }
-                    }
-                }
-
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private bool mavlink_packet_gen(MavlinkPacket packet)
-        {
-            MavlinkPacket mavlink_packet = new MavlinkPacket();
-            mavlink_packet.ComponentId = 121;
-            mavlink_packet.SystemId = 9;
-            mavlink_packet.Message = packet.Message;
-
-            Mavlink mav_link = new Mavlink();
-            byte[] sendbuf = mav_link.Send(mavlink_packet);
-
-            return true;
-        }
-
-        private bool mavlink_packet_send(byte[] sendbuf)
-        {
-            if (SerialPort.IsOpen)
-            {
-                SerialPort.Write(sendbuf, 0, sendbuf.Length);
-
-                DateTime start = DateTime.Now;
-                int retrys = 3;
-
-                while (true)
-                {
-                    if (!(start.AddMilliseconds(200) > DateTime.Now))
-                    {
-                        if (retrys > 0)
-                        {
-                            if (SerialPort.IsOpen)
-                            {
-                                SerialPort.Write(sendbuf, 0, sendbuf.Length);
-                            }
-                            start = DateTime.Now;
-                            retrys--;
-                            continue;
-                        }
-                        return false;
-                    }
-                    if (MsgAckHandler != null)
-                    {
-                        if (MsgAckHandler.Message.GetType() == typeof(MavLink.Msg_ack))
-                        {
-                            byte[] temp = (MsgAckHandler.Message as MavLink.Msg_ack).data;
                             // Console.WriteLine(Encoding.Default.GetString(temp));
                             rbText.Text += "Board name :  " + Encoding.Default.GetString(temp);
                             rbText.Text += "\r\n";
@@ -487,39 +463,31 @@ namespace Serial
                 return false;
             }
         }
-
-        private MavlinkPacket MsgAckHandler;
-
-        public void PrintRecievedPackets(object sender, MavlinkPacket e)
+        private void cmd_set_openloop()
         {
-            // Print Message Basic Info
-            Console.WriteLine("System ID: {0}", e.SystemId);
-            Console.WriteLine("Message: {0}", e.Message.ToString());
-            Console.WriteLine("Time Stamp: {0}", e.TimeStamp);
+            byte[] sendbuf = new byte[100];
 
-            if (e.Message.GetType() == typeof(MavLink.Msg_ack))
-            {
-                MsgAckHandler = e;
-            }
-            else if (e.Message.GetType() == typeof(MavLink.Msg_set_velocity))
-            {
-                // Console.WriteLine("Msg_set_velocity : {0}", (e.Message as MavLink.Msg_set_velocity).ref_angular_velocity);
-                rbText.Text += e.TimeStamp;
-                rbText.Text += (e.Message as MavLink.Msg_set_velocity).ref_angular_velocity + "\r\n";
-            }
-            else if (e.Message.GetType() == typeof(MavLink.Msg_debug_string))
-            {
-                byte[] temp = (e.Message as MavLink.Msg_debug_string).dbg_str;
-                // Console.WriteLine(Encoding.Default.GetString(temp));
-                rbText.Text += DateTime.Now + " " + Encoding.Default.GetString(temp);
-                rbText.Text += "\r\n";
+            Msg_set_openloop msg_set_openloop = new Msg_set_openloop();
+            msg_set_openloop.openLoopMode = (Byte)numericUpDown1.Value;
 
-                rbText.SelectionStart = rbText.TextLength;
-                rbText.ScrollToCaret();
+            //sendbuf = mavlink_packet_gen(9, 121,(MavlinkPacket)msg_set_openloop);
+            MavlinkPacket mavlink_packet = new MavlinkPacket();
+            mavlink_packet.ComponentId = 121;
+            mavlink_packet.SystemId = 9;
+            mavlink_packet.Message = msg_set_openloop;
 
+            Mavlink mav_link = new Mavlink();
+            sendbuf = mav_link.Send(mavlink_packet);
+
+            // string result = System.Text.Encoding.UTF8.GetString(sendbuf);
+            string result = BitConverter.ToString(sendbuf);
+            rbText.Text += "\r\n" + "[" + SerialPort.PortName.ToString() + "] " + result;
+
+            if (SerialPort.IsOpen)
+            {
+                SerialPort.Write(sendbuf, 0, sendbuf.Length);
             }
         }
-
         #endregion
 
         #region serial_func
@@ -602,12 +570,151 @@ namespace Serial
 
             }
         }
+        private void cmbPort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SerialPort.PortName = cmbPort.SelectedItem.ToString();
+
+        }
+        private void cmbBRate_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cmbBRate.SelectedIndex)
+            {
+                case 0: SerialPort.BaudRate = (int)9600; break;
+                case 1: SerialPort.BaudRate = (int)14400; break;
+                case 2: SerialPort.BaudRate = (int)19200; break;
+                case 3: SerialPort.BaudRate = (int)38400; break;
+                case 4: SerialPort.BaudRate = (int)57600; break;
+                case 5: SerialPort.BaudRate = (int)115200; break;
+                default: SerialPort.BaudRate = (int)19200; break;
+            }
+        }
+        private void btnOpen_Click(object sender, EventArgs e)
+        {
+            board_connect();
+
+            if (SerialPort.IsOpen)
+            {
+                lbStatus.Text = "connected";
+                btnOpen.Visible = false;
+                btnPortClose.Visible = true;
+            }
+            else
+            {
+                lbStatus.Text = "fail";
+                lbStatus.ForeColor = Color.Red;
+            }
+        }
+        private void btnPortClose_Click(object sender, EventArgs e)
+        {
+            board_disconnect();
+
+            lbStatus.Text = "disconnected";
+            btnOpen.Visible = true;
+            btnPortClose.Visible = false;
+        }
+
         #endregion
 
-        private void button1_Click(object sender, EventArgs e)
+        #region GUI_event
+        private void getVersion_Click(object sender, EventArgs e)
         {
-            DataView_export((DataTable)dataGridView1.DataSource);
+            cmd_read_version();
         }
+        private void getBoardName_Click(object sender, EventArgs e)
+        {
+            cmd_read_BoardName();
+        }
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            byte[] sendbuf = new byte[100];
+
+            Msg_set_velocity msg_set_velocity = new Msg_set_velocity();
+            msg_set_velocity.ref_angular_velocity = (UInt16)numericUpDown1.Value;
+
+            MavlinkPacket mavlink_packet = new MavlinkPacket();
+            mavlink_packet.ComponentId = 121;
+            mavlink_packet.SystemId = 9;
+            mavlink_packet.Message = msg_set_velocity;
+
+            Mavlink mav_link = new Mavlink();
+            sendbuf = mav_link.Send(mavlink_packet);
+
+            // string result = System.Text.Encoding.UTF8.GetString(sendbuf);
+            string result = BitConverter.ToString(sendbuf);
+            rbText.Text += "\r\n" + "[" + SerialPort.PortName.ToString() + "] " + result;
+
+            if (SerialPort.IsOpen)
+            {
+                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+            }
+        }
+
+        private void ControlModeTextBoxStatusUpdate(bool en)
+        {
+            textBox_openDValue.Enabled = en;
+            textBox_openQValue.Enabled = en;
+            textBox_DeltaAngle.Enabled = en;
+        }
+
+        private void rdBtn_OpenLoop_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rdBtn_OpenLoop.Checked == true)
+            {
+                dataGridView1[1, 0].Value = "1";
+
+            }
+            else
+            {
+                dataGridView1[1, 0].Value = "0";
+            }
+
+            ControlModeTextBoxStatusUpdate(rdBtn_OpenLoop.Checked);
+        }
+        private void cmbEncoderMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dataGridView1[1, 1].Value = cmbEncoderMode.SelectedIndex;
+        }
+        private void btn_CSVExport_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+            //saveFileDialog1.InitialDirectory = @"C:\";
+            saveFileDialog1.Title = "Save CSV Files";
+            saveFileDialog1.CheckFileExists = true;
+            saveFileDialog1.CheckPathExists = true;
+            saveFileDialog1.DefaultExt = "txt";
+            saveFileDialog1.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                DataView_export((DataTable)dataGridView1.DataSource, saveFileDialog1.FileName);
+            }
+
+        }
+        private void btn_CSVImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            //openFileDialog1.InitialDirectory = @"C:\";
+            openFileDialog1.Title = "Browse CSV Files";
+            openFileDialog1.CheckFileExists = true;
+            openFileDialog1.CheckPathExists = true;
+            openFileDialog1.DefaultExt = "txt";
+            openFileDialog1.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+            openFileDialog1.FilterIndex = 2;
+            openFileDialog1.RestoreDirectory = true;
+            openFileDialog1.ReadOnlyChecked = true;
+            openFileDialog1.ShowReadOnly = true;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                dataGridView1.DataSource = DataView_import(openFileDialog1.FileName);
+            }
+
+
+        }
+        #endregion
 
     }
 }
