@@ -35,21 +35,21 @@
 
 //************** PWM and Control Timing Parameters **********
 #define PWMFREQ			16000		// PWM Frequency in Hertz
-#define PWMPEROID   	1.0f/PWMFREQ
+#define PWMPEROID   	(1.0f/PWMFREQ)
 
 #define CURR_CTRL_FREQ		8000		// current control Frequency in Hertz
-#define CURR_CTRL_PEROID   	1.0f/CURR_CTRL_FREQ
-#define CURR_CTRL_DIV   PWMFREQ/CURR_CTRL_FREQ
+#define CURR_CTRL_PEROID   	(1.0f/CURR_CTRL_FREQ)
+#define CURR_CTRL_DIV   (PWMFREQ/CURR_CTRL_FREQ)
 
 
 #define	SPD_CTRL_FREQ		1000		// speed control Frequency in Hertz
-#define SPD_CTRL_PEROID   	1.0f/SPD_CTRL_FREQ
-#define SPD_CTRL_DIV	PWMFREQ/SPD_CTRL_FREQ
+#define SPD_CTRL_PEROID   	(1.0f/SPD_CTRL_FREQ)
+#define SPD_CTRL_DIV	(PWMFREQ/SPD_CTRL_FREQ)
 
 
 #define	HALL_SENSOR_FREQ	1000		// hall sensor measure Frequency in Hertz
-#define HALL_SENSOR_PEROID  1.0f/HALL_SENSOR_FREQ
-#define HALL_SENSOR_DIV	PWMFREQ/HALL_SENSOR_FREQ
+#define HALL_SENSOR_PEROID  (1.0f/HALL_SENSOR_FREQ)
+#define HALL_SENSOR_DIV	(PWMFREQ/HALL_SENSOR_FREQ)
 
 
 

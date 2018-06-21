@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.rbText = new System.Windows.Forms.RichTextBox();
             this.btnPortClose = new System.Windows.Forms.Button();
             this.lbStatus = new System.Windows.Forms.Label();
@@ -47,8 +47,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.cmbEncoderMode = new System.Windows.Forms.ComboBox();
             this.groupBox_ControlMode = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.rdBtn_OpenLoop = new System.Windows.Forms.RadioButton();
             this.rdBtn_ClosedLoop = new System.Windows.Forms.RadioButton();
+            this.textBox_DeltaAngle = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBox_openDValue = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox_openQValue = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btn_CSVImport = new System.Windows.Forms.Button();
             this.btn_CSVExport = new System.Windows.Forms.Button();
@@ -57,12 +63,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btn_EEPROMWrite = new System.Windows.Forms.Button();
             this.btn_EEPROMRead = new System.Windows.Forms.Button();
-            this.textBox_openDValue = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox_openQValue = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textBox_DeltaAngle = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -284,6 +284,17 @@
             this.groupBox_ControlMode.TabStop = false;
             this.groupBox_ControlMode.Text = "Control Mode";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.Transparent;
+            this.label6.ForeColor = System.Drawing.Color.Black;
+            this.label6.Location = new System.Drawing.Point(7, 120);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(74, 14);
+            this.label6.TabIndex = 33;
+            this.label6.Text = "deltaAngle";
+            // 
             // rdBtn_OpenLoop
             // 
             this.rdBtn_OpenLoop.AutoSize = true;
@@ -308,6 +319,49 @@
             this.rdBtn_ClosedLoop.TabStop = true;
             this.rdBtn_ClosedLoop.Text = "ClosedLoop";
             this.rdBtn_ClosedLoop.UseVisualStyleBackColor = true;
+            // 
+            // textBox_DeltaAngle
+            // 
+            this.textBox_DeltaAngle.Location = new System.Drawing.Point(85, 116);
+            this.textBox_DeltaAngle.Name = "textBox_DeltaAngle";
+            this.textBox_DeltaAngle.Size = new System.Drawing.Size(100, 22);
+            this.textBox_DeltaAngle.TabIndex = 32;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.ForeColor = System.Drawing.Color.Black;
+            this.label4.Location = new System.Drawing.Point(36, 64);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(16, 14);
+            this.label4.TabIndex = 29;
+            this.label4.Text = "D";
+            // 
+            // textBox_openDValue
+            // 
+            this.textBox_openDValue.Location = new System.Drawing.Point(85, 60);
+            this.textBox_openDValue.Name = "textBox_openDValue";
+            this.textBox_openDValue.Size = new System.Drawing.Size(100, 22);
+            this.textBox_openDValue.TabIndex = 28;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.Transparent;
+            this.label5.ForeColor = System.Drawing.Color.Black;
+            this.label5.Location = new System.Drawing.Point(36, 92);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(17, 14);
+            this.label5.TabIndex = 31;
+            this.label5.Text = "Q";
+            // 
+            // textBox_openQValue
+            // 
+            this.textBox_openQValue.Location = new System.Drawing.Point(85, 88);
+            this.textBox_openQValue.Name = "textBox_openQValue";
+            this.textBox_openQValue.Size = new System.Drawing.Size(100, 22);
+            this.textBox_openQValue.TabIndex = 30;
             // 
             // tabPage2
             // 
@@ -346,20 +400,20 @@
             // 
             // dataGridView1
             // 
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(986, 445);
             this.dataGridView1.TabIndex = 0;
@@ -401,6 +455,7 @@
             this.btn_EEPROMWrite.TabIndex = 19;
             this.btn_EEPROMWrite.Text = "EEPROM Write";
             this.btn_EEPROMWrite.UseVisualStyleBackColor = true;
+            this.btn_EEPROMWrite.Click += new System.EventHandler(this.btn_EEPROMWrite_Click);
             // 
             // btn_EEPROMRead
             // 
@@ -411,60 +466,6 @@
             this.btn_EEPROMRead.TabIndex = 20;
             this.btn_EEPROMRead.Text = "EEPROM Read";
             this.btn_EEPROMRead.UseVisualStyleBackColor = true;
-            // 
-            // textBox_openDValue
-            // 
-            this.textBox_openDValue.Location = new System.Drawing.Point(85, 60);
-            this.textBox_openDValue.Name = "textBox_openDValue";
-            this.textBox_openDValue.Size = new System.Drawing.Size(100, 22);
-            this.textBox_openDValue.TabIndex = 28;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.ForeColor = System.Drawing.Color.Black;
-            this.label4.Location = new System.Drawing.Point(36, 64);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(16, 14);
-            this.label4.TabIndex = 29;
-            this.label4.Text = "D";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.BackColor = System.Drawing.Color.Transparent;
-            this.label5.ForeColor = System.Drawing.Color.Black;
-            this.label5.Location = new System.Drawing.Point(36, 92);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(17, 14);
-            this.label5.TabIndex = 31;
-            this.label5.Text = "Q";
-            // 
-            // textBox_openQValue
-            // 
-            this.textBox_openQValue.Location = new System.Drawing.Point(85, 88);
-            this.textBox_openQValue.Name = "textBox_openQValue";
-            this.textBox_openQValue.Size = new System.Drawing.Size(100, 22);
-            this.textBox_openQValue.TabIndex = 30;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.BackColor = System.Drawing.Color.Transparent;
-            this.label6.ForeColor = System.Drawing.Color.Black;
-            this.label6.Location = new System.Drawing.Point(7, 120);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(74, 14);
-            this.label6.TabIndex = 33;
-            this.label6.Text = "deltaAngle";
-            // 
-            // textBox_DeltaAngle
-            // 
-            this.textBox_DeltaAngle.Location = new System.Drawing.Point(85, 116);
-            this.textBox_DeltaAngle.Name = "textBox_DeltaAngle";
-            this.textBox_DeltaAngle.Size = new System.Drawing.Size(100, 22);
-            this.textBox_DeltaAngle.TabIndex = 32;
             // 
             // Form1
             // 

@@ -244,8 +244,11 @@ namespace Serial
         {
             SerialPort.Open();
 
-            cmd_read_BoardName();
-            cmd_read_version();
+            //cmd_read_BoardName(); Thread.Sleep(100);
+           // cmd_read_version(); Thread.Sleep(1000);
+
+            cmd_read_Tag(); Thread.Sleep(10);
+
 
         }
         private void board_disconnect()
@@ -334,8 +337,10 @@ namespace Serial
             else if (e.Message.GetType() == typeof(MavLink.Msg_debug_string))
             {
                 byte[] temp = (e.Message as MavLink.Msg_debug_string).dbg_str;
-                // Console.WriteLine(Encoding.Default.GetString(temp));
-                rbText.Text += DateTime.Now + " " + Encoding.Default.GetString(temp);
+                
+                Console.WriteLine(Encoding.Default.GetString(temp));
+                
+                rbText.Text += DateTime.Now + "     " + Encoding.Default.GetString(temp);
                 rbText.Text += "\r\n";
 
                 rbText.SelectionStart = rbText.TextLength;
@@ -343,7 +348,61 @@ namespace Serial
 
             }
         }
+        private bool cmd_read_Tag()
+        {
+            byte[] sendbuf = new byte[100];
 
+            Msg_read_tag msg_read_tag = new Msg_read_tag();
+            msg_read_tag.resp = (byte)1;
+            msg_read_tag.param = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+            MavlinkPacket mavlink_packet = new MavlinkPacket();
+            mavlink_packet.ComponentId = 121;
+            mavlink_packet.SystemId = 9;
+            mavlink_packet.Message = msg_read_tag;
+
+            Mavlink mav_link = new Mavlink();
+            sendbuf = mav_link.Send(mavlink_packet);
+
+            if (SerialPort.IsOpen)
+            {
+                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+
+                DateTime start = DateTime.Now;
+                int retrys = 3;
+
+                while (true)
+                {
+                    if (!(start.AddMilliseconds(200) > DateTime.Now))
+                    {
+                        if (retrys > 0)
+                        {
+                            if (SerialPort.IsOpen)
+                            {
+                                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+                            }
+                            start = DateTime.Now;
+                            retrys--;
+                            continue;
+                        }
+                        return false;
+                    }
+                    if (MsgAckHandler != null)
+                    {
+                        if (MsgAckHandler.Message.GetType() == typeof(MavLink.Msg_ack))
+                        {
+                            MsgAckHandler = null;
+                            return true;
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                return false;
+            }
+        }
         private bool cmd_read_version()
         {
             byte[] sendbuf = new byte[100];
@@ -482,6 +541,32 @@ namespace Serial
             // string result = System.Text.Encoding.UTF8.GetString(sendbuf);
             string result = BitConverter.ToString(sendbuf);
             rbText.Text += "\r\n" + "[" + SerialPort.PortName.ToString() + "] " + result;
+
+            if (SerialPort.IsOpen)
+            {
+                SerialPort.Write(sendbuf, 0, sendbuf.Length);
+            }
+        }
+
+        private void cmd_write_eeprom()
+        {
+            byte[] sendbuf = new byte[100];
+
+            Msg_write_eeprom msg_write_eeprom = new Msg_write_eeprom();
+            msg_write_eeprom.param = (Byte)10;
+
+            //sendbuf = mavlink_packet_gen(9, 121,(MavlinkPacket)msg_set_openloop);
+            MavlinkPacket mavlink_packet = new MavlinkPacket();
+            mavlink_packet.ComponentId = 121;
+            mavlink_packet.SystemId = 9;
+            mavlink_packet.Message = msg_write_eeprom;
+
+            Mavlink mav_link = new Mavlink();
+            sendbuf = mav_link.Send(mavlink_packet);
+
+            // string result = System.Text.Encoding.UTF8.GetString(sendbuf);
+            //string result = BitConverter.ToString(sendbuf);
+           // rbText.Text += "\r\n" + "[" + SerialPort.PortName.ToString() + "] " + result;
 
             if (SerialPort.IsOpen)
             {
@@ -714,7 +799,12 @@ namespace Serial
 
 
         }
-        #endregion
+      
 
+        private void btn_EEPROMWrite_Click(object sender, EventArgs e)
+        {
+            cmd_write_eeprom();
+        }
+  #endregion
     }
 }

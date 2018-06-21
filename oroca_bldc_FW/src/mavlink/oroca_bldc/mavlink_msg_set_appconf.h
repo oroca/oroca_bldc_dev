@@ -5,8 +5,8 @@
 
 MAVPACKED(
 typedef struct __mavlink_set_appconf_t {
- uint16_t data[128]; /*< */
- uint8_t resp; /*< 0:No Resp, 1:Resp*/
+ uint16_t data[128]; /*<  */
+ uint8_t resp; /*<  0:No Resp, 1:Resp*/
 }) mavlink_set_appconf_t;
 
 #define MAVLINK_MSG_ID_SET_APPCONF_LEN 257
@@ -44,8 +44,8 @@ typedef struct __mavlink_set_appconf_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
- * @param resp 0:No Resp, 1:Resp
- * @param data 
+ * @param resp  0:No Resp, 1:Resp
+ * @param data  
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_set_appconf_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
@@ -73,8 +73,8 @@ static inline uint16_t mavlink_msg_set_appconf_pack(uint8_t system_id, uint8_t c
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
- * @param resp 0:No Resp, 1:Resp
- * @param data 
+ * @param resp  0:No Resp, 1:Resp
+ * @param data  
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_set_appconf_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
@@ -128,8 +128,8 @@ static inline uint16_t mavlink_msg_set_appconf_encode_chan(uint8_t system_id, ui
  * @brief Send a set_appconf message
  * @param chan MAVLink channel to send the message
  *
- * @param resp 0:No Resp, 1:Resp
- * @param data 
+ * @param resp  0:No Resp, 1:Resp
+ * @param data  
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
@@ -194,7 +194,7 @@ static inline void mavlink_msg_set_appconf_send_buf(mavlink_message_t *msgbuf, m
 /**
  * @brief Get field resp from set_appconf message
  *
- * @return 0:No Resp, 1:Resp
+ * @return  0:No Resp, 1:Resp
  */
 static inline uint8_t mavlink_msg_set_appconf_get_resp(const mavlink_message_t* msg)
 {
@@ -204,7 +204,7 @@ static inline uint8_t mavlink_msg_set_appconf_get_resp(const mavlink_message_t* 
 /**
  * @brief Get field data from set_appconf message
  *
- * @return 
+ * @return  
  */
 static inline uint16_t mavlink_msg_set_appconf_get_data(const mavlink_message_t* msg, uint16_t *data)
 {

@@ -5,8 +5,8 @@
 
 MAVPACKED(
 typedef struct __mavlink_set_encodermode_t {
- uint8_t resp; /*< 0:No Resp, 1:Resp*/
- uint8_t encoderMode; /*< 0:none 1:ABI 2:AS50XX 3:AJALL */
+ uint8_t resp; /*<  0:No Resp, 1:Resp*/
+ uint8_t encoderMode; /*<  0:none 1:ABI 2:AS50XX 3:AJALL 4:PWM */
 }) mavlink_set_encodermode_t;
 
 #define MAVLINK_MSG_ID_SET_ENCODERMODE_LEN 2
@@ -44,8 +44,8 @@ typedef struct __mavlink_set_encodermode_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
- * @param resp 0:No Resp, 1:Resp
- * @param encoderMode 0:none 1:ABI 2:AS50XX 3:AJALL 
+ * @param resp  0:No Resp, 1:Resp
+ * @param encoderMode  0:none 1:ABI 2:AS50XX 3:AJALL 4:PWM 
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_set_encodermode_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
@@ -75,8 +75,8 @@ static inline uint16_t mavlink_msg_set_encodermode_pack(uint8_t system_id, uint8
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
- * @param resp 0:No Resp, 1:Resp
- * @param encoderMode 0:none 1:ABI 2:AS50XX 3:AJALL 
+ * @param resp  0:No Resp, 1:Resp
+ * @param encoderMode  0:none 1:ABI 2:AS50XX 3:AJALL 4:PWM 
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_set_encodermode_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
@@ -132,8 +132,8 @@ static inline uint16_t mavlink_msg_set_encodermode_encode_chan(uint8_t system_id
  * @brief Send a set_encodermode message
  * @param chan MAVLink channel to send the message
  *
- * @param resp 0:No Resp, 1:Resp
- * @param encoderMode 0:none 1:ABI 2:AS50XX 3:AJALL 
+ * @param resp  0:No Resp, 1:Resp
+ * @param encoderMode  0:none 1:ABI 2:AS50XX 3:AJALL 4:PWM 
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
@@ -202,7 +202,7 @@ static inline void mavlink_msg_set_encodermode_send_buf(mavlink_message_t *msgbu
 /**
  * @brief Get field resp from set_encodermode message
  *
- * @return 0:No Resp, 1:Resp
+ * @return  0:No Resp, 1:Resp
  */
 static inline uint8_t mavlink_msg_set_encodermode_get_resp(const mavlink_message_t* msg)
 {
@@ -212,7 +212,7 @@ static inline uint8_t mavlink_msg_set_encodermode_get_resp(const mavlink_message
 /**
  * @brief Get field encoderMode from set_encodermode message
  *
- * @return 0:none 1:ABI 2:AS50XX 3:AJALL 
+ * @return  0:none 1:ABI 2:AS50XX 3:AJALL 4:PWM 
  */
 static inline uint8_t mavlink_msg_set_encodermode_get_encoderMode(const mavlink_message_t* msg)
 {

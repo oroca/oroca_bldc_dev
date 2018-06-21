@@ -39,8 +39,11 @@
 #include "comm_usb.h"
 #include "comm_usb_serial.h"
 
-#include "mc_interface.h"
 #include "mavlink_proc.h"
+
+#include "mc_interface.h"
+#include "conf_general.h"
+
 
 const uint8_t  *board_name   = "BLDC R10";
 uint32_t boot_version        = 0x17020800;
@@ -109,7 +112,10 @@ void cmd_read_version( msg_handle_t *p_msg )
     mav_ack.data[7] = boot_revision>>24;
     mav_ack.length  = 8;
     resp_ack(p_msg->ch, &mav_ack);
+
   }
+
+
 }
 
 
@@ -126,8 +132,6 @@ void cmd_read_board_name( msg_handle_t *p_msg )
 
   mavlink_msg_read_board_name_decode(p_msg->p_msg, &mav_data);
 
-
-
   if( mav_data.resp == 1 )
   {
     mav_ack.msg_id   = p_msg->p_msg->msgid;
@@ -142,6 +146,7 @@ void cmd_read_board_name( msg_handle_t *p_msg )
     mav_ack.length  = i;
     resp_ack(p_msg->ch, &mav_ack);
   }
+  
 }
 
 
@@ -157,8 +162,6 @@ void cmd_read_tag( msg_handle_t *p_msg )
 
   mavlink_msg_read_tag_decode(p_msg->p_msg, &mav_data);
 
-
-
   if( mav_data.resp == 1 )
   {
     mav_ack.msg_id   = p_msg->p_msg->msgid;
@@ -167,6 +170,48 @@ void cmd_read_tag( msg_handle_t *p_msg )
     mav_ack.length  = 0;
     resp_ack(p_msg->ch, &mav_ack);
   }
+
+  	//mavlink_dbgString(0, (uint8_t *)"\x1b[2J\x1b[0;0H");
+	mavlink_dbgString(0, (uint8_t *)"MavLink ready...\r\n");
+
+	mavlink_dbgString(0, (uint8_t *)"Project : OROCA BLDC");
+	mavlink_dbgString(0, (uint8_t *)"HW ver : STM32F405_VESC_R180208");
+	mavlink_dbgString(0, (uint8_t *)"FW ver : dev...");
+	mavlink_dbgString(0, (uint8_t *)"by BakChaJang");
+	mavlink_dbgString(0, (uint8_t *)"date : 2018/06/21\r\n");
+}
+
+
+
+
+void cmd_write_eeprom( msg_handle_t *p_msg )
+{
+	err_code_t err_code = OK;
+	mavlink_ack_t	  mav_ack;
+	mavlink_read_tag_t mav_data;
+
+	mcConfiguration_t mcconf;
+	
+	mcconf = *mc_interface_get_configuration();
+	
+	mavlink_msg_write_eeprom_decode(p_msg->p_msg, &mav_data);
+		
+	if( mav_data.resp == 1 )
+	{
+	  mav_ack.msg_id   = p_msg->p_msg->msgid;
+	  mav_ack.err_code = err_code;
+	
+	  mav_ack.length  = 0;
+	  resp_ack(p_msg->ch, &mav_ack);
+	}
+		
+	//write eeprom
+	conf_general_store_mc_configuration(&mcconf);
+
+	chThdSleepMilliseconds(200);
+
+    return 0;
+
 }
 
 
@@ -284,7 +329,7 @@ void mavlink_msg_send(uint8_t ch, mavlink_message_t *p_msg)
 {
 	uint8_t buf[1024];	  
 
-	LED_RED_ON();
+	//LED_RED_ON();
 
 	int len = mavlink_msg_to_send_buffer(buf, p_msg);
 	
@@ -294,7 +339,7 @@ void mavlink_msg_send(uint8_t ch, mavlink_message_t *p_msg)
 	  case 1:		break;
 	}
 
-	LED_RED_OFF();	
+	//LED_RED_OFF();	
 	return;
 }
 
@@ -305,7 +350,7 @@ bool mavlink_msg_recv( uint8_t ch, uint8_t data , msg_handle_t *p_msg )
 	static mavlink_message_t msg[MSG_CH_MAX];
 	mavlink_status_t status[MSG_CH_MAX];
 
-	LED_RED_ON();
+	//LED_RED_ON();
 
 
 	p_msg->ch = ch;
@@ -327,7 +372,7 @@ bool mavlink_msg_recv( uint8_t ch, uint8_t data , msg_handle_t *p_msg )
 		}
 	}
 
-	LED_RED_OFF();
+	//LED_RED_OFF();
 	return ret;
 
 }
@@ -343,6 +388,9 @@ void  mavlink_msg_process_vcp( msg_handle_t* p_msg)
 		case MAVLINK_MSG_ID_READ_VERSION:		cmd_read_version(p_msg);					break;
 		case MAVLINK_MSG_ID_READ_BOARD_NAME:	cmd_read_board_name(p_msg);					break;
 		case MAVLINK_MSG_ID_READ_TAG:			cmd_read_tag(p_msg);						break;
+
+		case MAVLINK_MSG_ID_WRITE_EEPROM:		cmd_write_eeprom(p_msg);					break;
+		
 		case MAVLINK_MSG_ID_SET_MCCONF: 		cmd_set_mcconf(p_msg); 						break;
 		case MAVLINK_MSG_ID_SET_APPCONF : 		cmd_set_appconf(p_msg); 					break;
 		case MAVLINK_MSG_ID_SET_VELOCITY:		cmd_set_velocity(p_msg);					break;

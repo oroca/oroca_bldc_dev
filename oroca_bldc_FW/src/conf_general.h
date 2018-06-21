@@ -35,10 +35,10 @@
 #include <stdbool.h>
 
 #include "ch.h"
-
 #include "app.h"
-//#include "mcpwm.h"
-//#include "mc_interface.h"
+
+#include "mc_interface.h"
+
 
 #define PACKET_MAX_PL_LEN		1024
 
@@ -116,6 +116,8 @@
 //#define V_REG				(1.21 / ((float)ADC_Value[ADC_IND_VREFINT] / 4095.0))
 #define V_REG				3.3
 
+
+
 // Functions
 void conf_general_init(void);
 void conf_general_get_default_app_configuration(app_configuration *conf);
@@ -123,7 +125,7 @@ void conf_general_get_default_app_configuration(app_configuration *conf);
 void conf_general_read_app_configuration(app_configuration *conf);
 bool conf_general_store_app_configuration(app_configuration *conf);
 //void conf_general_read_mc_configuration(mcConfiguration_t *conf);
-//bool conf_general_store_mc_configuration(mcConfiguration_t *conf);
+bool conf_general_store_mc_configuration(mcConfiguration_t *conf);
 bool conf_general_detect_motor_param(float current, float min_rpm, float low_duty,
 		float *int_limit, float *bemf_coupling_k, int8_t *hall_table, int *hall_res);
 bool conf_general_measure_flux_linkage(float current, float duty,

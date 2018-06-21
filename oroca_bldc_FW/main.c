@@ -14,6 +14,8 @@
 #include <stdlib.h>
 
 #include "mc_interface.h"
+#include "conf_general.h"
+
 //#include "mcpwm.h"
 #include "ledpwm.h"
 #include "hw.h"
@@ -64,8 +66,6 @@ static THD_FUNCTION(periodic_thread, arg)
 
 	chRegSetThreadName("BLDC periodic");
 
-	chvprintf(&SDU1, (uint8_t *)"to main -> periodic_thread : LED blink 0.5s\r\n");
-
 	for(;;)
 	{
 		LED_GREEN_ON();		chThdSleepMilliseconds(50);
@@ -73,7 +73,7 @@ static THD_FUNCTION(periodic_thread, arg)
 		LED_GREEN_ON();		chThdSleepMilliseconds(50);
 		LED_GREEN_OFF();		chThdSleepMilliseconds(850);
 
-		//mavlink_dbgString(0,"test");
+		//mavlink_dbgString( 0, "test" );
 	}
 }
 
@@ -112,12 +112,12 @@ int main(void)
 
 	comm_usb_init();
 	chThdSleepMilliseconds(1000);
-	chvprintf(&SDU1, (uint8_t *)"\x1b[2J\x1b[0;0H");
-	chvprintf(&SDU1, (uint8_t *)"USB Serial ready...\r\n\r\n\r\n");
+	//chvprintf(&SDU1, (uint8_t *)"\x1b[2J\x1b[0;0H");
+	//chvprintf(&SDU1, (uint8_t *)"USB Serial ready...\r\n\r\n\r\n");
 
-	chvprintf(&SDU1, (uint8_t *)"Project : OROCA BLDC\r\n");
-	chvprintf(&SDU1, (uint8_t *)"by BakChaJang\r\n");
-	chvprintf(&SDU1, (uint8_t *)"date : 2017/11/15\r\n\r\n");
+	//chvprintf(&SDU1, (uint8_t *)"Project : OROCA BLDC\r\n");
+	//chvprintf(&SDU1, (uint8_t *)"by BakChaJang\r\n");
+	//chvprintf(&SDU1, (uint8_t *)"date : 2017/11/15\r\n\r\n");
 
 	mcConfiguration_t mcconf;
 	conf_general_read_mc_configuration(&mcconf);

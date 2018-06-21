@@ -54,6 +54,7 @@ namespace MavLink
 			{11, new MavPacketInfo(Deserialize_READ_VERSION, 166)},
 			{12, new MavPacketInfo(Deserialize_READ_BOARD_NAME, 140)},
 			{13, new MavPacketInfo(Deserialize_READ_TAG, 126)},
+			{20, new MavPacketInfo(Deserialize_WRITE_EEPROM, 235)},
 			{121, new MavPacketInfo(Deserialize_SET_MCCONF, 107)},
 			{122, new MavPacketInfo(Deserialize_SET_APPCONF, 33)},
 			{220, new MavPacketInfo(Deserialize_SET_VELOCITY, 249)},
@@ -105,6 +106,15 @@ namespace MavLink
 				resp = bytes[offset + 0],
 				type = bytes[offset + 1],
 				param =  ByteArrayUtil.ToUInt8(bytes, offset + 2, 8),
+			};
+		}
+
+		internal static MavlinkMessage Deserialize_WRITE_EEPROM(byte[] bytes, int offset)
+		{
+			return new Msg_write_eeprom
+			{
+				resp = bytes[offset + 0],
+				param = bytes[offset + 1],
 			};
 		}
 
@@ -211,6 +221,14 @@ namespace MavLink
 			ByteArrayUtil.ToByteArray(msg.param, bytes, offset + 2, 8);
 			offset += 10;
 			return 13;
+		}
+
+		internal static int Serialize_WRITE_EEPROM(this Msg_write_eeprom msg, byte[] bytes, ref int offset)
+		{
+			bytes[offset + 0] = msg.resp;
+			bytes[offset + 1] = msg.param;
+			offset += 2;
+			return 20;
 		}
 
 		internal static int Serialize_SET_MCCONF(this Msg_set_mcconf msg, byte[] bytes, ref int offset)

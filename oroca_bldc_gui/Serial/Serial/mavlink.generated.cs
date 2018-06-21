@@ -49,6 +49,10 @@ namespace MavLink
             }        
 	}
 
+
+	/// <summary>
+	/// test1
+	/// </summary>
 	public class Msg_ack : MavlinkMessage
     {
 
@@ -78,6 +82,10 @@ namespace MavLink
             }        
 	}
 
+
+	/// <summary>
+	/// test11
+	/// </summary>
 	public class Msg_read_version : MavlinkMessage
     {
 
@@ -97,6 +105,10 @@ namespace MavLink
             }        
 	}
 
+
+	/// <summary>
+	/// test12
+	/// </summary>
 	public class Msg_read_board_name : MavlinkMessage
     {
 
@@ -116,6 +128,10 @@ namespace MavLink
             }        
 	}
 
+
+	/// <summary>
+	/// test13
+	/// </summary>
 	public class Msg_read_tag : MavlinkMessage
     {
 
@@ -140,6 +156,33 @@ namespace MavLink
             }        
 	}
 
+
+	/// <summary>
+	/// test20
+	/// </summary>
+	public class Msg_write_eeprom : MavlinkMessage
+    {
+
+		/// <summary>
+		/// 0:No Resp, 1:Resp
+		/// </summary>
+		public byte resp;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public byte param;
+
+        public override int Serialize(byte[] bytes, ref int offset)
+            {
+                return MavLinkSerializer.Serialize_WRITE_EEPROM(this, bytes, ref offset);
+            }        
+	}
+
+
+	/// <summary>
+	/// test121
+	/// </summary>
 	public class Msg_set_mcconf : MavlinkMessage
     {
 
@@ -249,6 +292,10 @@ namespace MavLink
             }        
 	}
 
+
+	/// <summary>
+	/// test122
+	/// </summary>
 	public class Msg_set_appconf : MavlinkMessage
     {
 
@@ -268,6 +315,10 @@ namespace MavLink
             }        
 	}
 
+
+	/// <summary>
+	/// test220
+	/// </summary>
 	public class Msg_set_velocity : MavlinkMessage
     {
 
@@ -287,6 +338,10 @@ namespace MavLink
             }        
 	}
 
+
+	/// <summary>
+	/// test221
+	/// </summary>
 	public class Msg_set_openloop : MavlinkMessage
     {
 
@@ -306,6 +361,10 @@ namespace MavLink
             }        
 	}
 
+
+	/// <summary>
+	/// test222
+	/// </summary>
 	public class Msg_set_encodermode : MavlinkMessage
     {
 
@@ -315,7 +374,7 @@ namespace MavLink
 		public byte resp;
 
 		/// <summary>
-		/// 0:none 1:ABI 2:AS50XX 3:AJALL 
+		/// 0:none 1:ABI 2:AS50XX 3:AJALL 4:PWM 
 		/// </summary>
 		public byte encoderMode;
 

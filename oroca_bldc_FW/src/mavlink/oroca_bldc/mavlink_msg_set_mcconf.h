@@ -5,26 +5,26 @@
 
 MAVPACKED(
 typedef struct __mavlink_set_mcconf_t {
- uint16_t uRSHUNT; /*< x10^3 */
- uint16_t uPWMFREQUENCY; /*< x10^3 */
- uint16_t uDKP; /*< x10^3 */
- uint16_t uDKI; /*< x10^3 */
- uint16_t uDKC; /*< x10^3 */
- uint16_t uDOUTMAX; /*< x10^3 */
- uint16_t uQKP; /*< x10^3 */
- uint16_t uQKI; /*< x10^3 */
- uint16_t uQKC; /*< x10^3 */
- uint16_t uQOUTMAX; /*< x10^3 */
- uint16_t uWKP; /*< x10^3 */
- uint16_t uWKI; /*< x10^3 */
- uint16_t uWKC; /*< x10^3 */
- uint16_t uWOUTMAX; /*< x10^3 */
- uint16_t uPLLKP; /*< x10^3 */
- uint16_t uPLLKI; /*< x10^3 */
- uint16_t uPLLKC; /*< x10^3 */
- uint16_t uPLLOUTMAX; /*< x10^3 */
- uint8_t resp; /*< 0:No Resp, 1:Resp*/
- uint8_t uVDD; /*< x10^1 */
+ uint16_t uRSHUNT; /*<  x10^3 */
+ uint16_t uPWMFREQUENCY; /*<  x10^3 */
+ uint16_t uDKP; /*<  x10^3 */
+ uint16_t uDKI; /*<  x10^3 */
+ uint16_t uDKC; /*<  x10^3 */
+ uint16_t uDOUTMAX; /*<  x10^3 */
+ uint16_t uQKP; /*<  x10^3 */
+ uint16_t uQKI; /*<  x10^3 */
+ uint16_t uQKC; /*<  x10^3 */
+ uint16_t uQOUTMAX; /*<  x10^3 */
+ uint16_t uWKP; /*<  x10^3 */
+ uint16_t uWKI; /*<  x10^3 */
+ uint16_t uWKC; /*<  x10^3 */
+ uint16_t uWOUTMAX; /*<  x10^3 */
+ uint16_t uPLLKP; /*<  x10^3 */
+ uint16_t uPLLKI; /*<  x10^3 */
+ uint16_t uPLLKC; /*<  x10^3 */
+ uint16_t uPLLOUTMAX; /*<  x10^3 */
+ uint8_t resp; /*<  0:No Resp, 1:Resp*/
+ uint8_t uVDD; /*<  x10^1 */
 }) mavlink_set_mcconf_t;
 
 #define MAVLINK_MSG_ID_SET_MCCONF_LEN 38
@@ -98,26 +98,26 @@ typedef struct __mavlink_set_mcconf_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
- * @param resp 0:No Resp, 1:Resp
- * @param uVDD x10^1 
- * @param uRSHUNT x10^3 
- * @param uPWMFREQUENCY x10^3 
- * @param uDKP x10^3 
- * @param uDKI x10^3 
- * @param uDKC x10^3 
- * @param uDOUTMAX x10^3 
- * @param uQKP x10^3 
- * @param uQKI x10^3 
- * @param uQKC x10^3 
- * @param uQOUTMAX x10^3 
- * @param uWKP x10^3 
- * @param uWKI x10^3 
- * @param uWKC x10^3 
- * @param uWOUTMAX x10^3 
- * @param uPLLKP x10^3 
- * @param uPLLKI x10^3 
- * @param uPLLKC x10^3 
- * @param uPLLOUTMAX x10^3 
+ * @param resp  0:No Resp, 1:Resp
+ * @param uVDD  x10^1 
+ * @param uRSHUNT  x10^3 
+ * @param uPWMFREQUENCY  x10^3 
+ * @param uDKP  x10^3 
+ * @param uDKI  x10^3 
+ * @param uDKC  x10^3 
+ * @param uDOUTMAX  x10^3 
+ * @param uQKP  x10^3 
+ * @param uQKI  x10^3 
+ * @param uQKC  x10^3 
+ * @param uQOUTMAX  x10^3 
+ * @param uWKP  x10^3 
+ * @param uWKI  x10^3 
+ * @param uWKC  x10^3 
+ * @param uWOUTMAX  x10^3 
+ * @param uPLLKP  x10^3 
+ * @param uPLLKI  x10^3 
+ * @param uPLLKC  x10^3 
+ * @param uPLLOUTMAX  x10^3 
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_set_mcconf_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
@@ -183,26 +183,26 @@ static inline uint16_t mavlink_msg_set_mcconf_pack(uint8_t system_id, uint8_t co
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
- * @param resp 0:No Resp, 1:Resp
- * @param uVDD x10^1 
- * @param uRSHUNT x10^3 
- * @param uPWMFREQUENCY x10^3 
- * @param uDKP x10^3 
- * @param uDKI x10^3 
- * @param uDKC x10^3 
- * @param uDOUTMAX x10^3 
- * @param uQKP x10^3 
- * @param uQKI x10^3 
- * @param uQKC x10^3 
- * @param uQOUTMAX x10^3 
- * @param uWKP x10^3 
- * @param uWKI x10^3 
- * @param uWKC x10^3 
- * @param uWOUTMAX x10^3 
- * @param uPLLKP x10^3 
- * @param uPLLKI x10^3 
- * @param uPLLKC x10^3 
- * @param uPLLOUTMAX x10^3 
+ * @param resp  0:No Resp, 1:Resp
+ * @param uVDD  x10^1 
+ * @param uRSHUNT  x10^3 
+ * @param uPWMFREQUENCY  x10^3 
+ * @param uDKP  x10^3 
+ * @param uDKI  x10^3 
+ * @param uDKC  x10^3 
+ * @param uDOUTMAX  x10^3 
+ * @param uQKP  x10^3 
+ * @param uQKI  x10^3 
+ * @param uQKC  x10^3 
+ * @param uQOUTMAX  x10^3 
+ * @param uWKP  x10^3 
+ * @param uWKI  x10^3 
+ * @param uWKC  x10^3 
+ * @param uWOUTMAX  x10^3 
+ * @param uPLLKP  x10^3 
+ * @param uPLLKI  x10^3 
+ * @param uPLLKC  x10^3 
+ * @param uPLLOUTMAX  x10^3 
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_set_mcconf_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
@@ -294,26 +294,26 @@ static inline uint16_t mavlink_msg_set_mcconf_encode_chan(uint8_t system_id, uin
  * @brief Send a set_mcconf message
  * @param chan MAVLink channel to send the message
  *
- * @param resp 0:No Resp, 1:Resp
- * @param uVDD x10^1 
- * @param uRSHUNT x10^3 
- * @param uPWMFREQUENCY x10^3 
- * @param uDKP x10^3 
- * @param uDKI x10^3 
- * @param uDKC x10^3 
- * @param uDOUTMAX x10^3 
- * @param uQKP x10^3 
- * @param uQKI x10^3 
- * @param uQKC x10^3 
- * @param uQOUTMAX x10^3 
- * @param uWKP x10^3 
- * @param uWKI x10^3 
- * @param uWKC x10^3 
- * @param uWOUTMAX x10^3 
- * @param uPLLKP x10^3 
- * @param uPLLKI x10^3 
- * @param uPLLKC x10^3 
- * @param uPLLOUTMAX x10^3 
+ * @param resp  0:No Resp, 1:Resp
+ * @param uVDD  x10^1 
+ * @param uRSHUNT  x10^3 
+ * @param uPWMFREQUENCY  x10^3 
+ * @param uDKP  x10^3 
+ * @param uDKI  x10^3 
+ * @param uDKC  x10^3 
+ * @param uDOUTMAX  x10^3 
+ * @param uQKP  x10^3 
+ * @param uQKI  x10^3 
+ * @param uQKC  x10^3 
+ * @param uQOUTMAX  x10^3 
+ * @param uWKP  x10^3 
+ * @param uWKI  x10^3 
+ * @param uWKC  x10^3 
+ * @param uWOUTMAX  x10^3 
+ * @param uPLLKP  x10^3 
+ * @param uPLLKI  x10^3 
+ * @param uPLLKC  x10^3 
+ * @param uPLLOUTMAX  x10^3 
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
@@ -454,7 +454,7 @@ static inline void mavlink_msg_set_mcconf_send_buf(mavlink_message_t *msgbuf, ma
 /**
  * @brief Get field resp from set_mcconf message
  *
- * @return 0:No Resp, 1:Resp
+ * @return  0:No Resp, 1:Resp
  */
 static inline uint8_t mavlink_msg_set_mcconf_get_resp(const mavlink_message_t* msg)
 {
@@ -464,7 +464,7 @@ static inline uint8_t mavlink_msg_set_mcconf_get_resp(const mavlink_message_t* m
 /**
  * @brief Get field uVDD from set_mcconf message
  *
- * @return x10^1 
+ * @return  x10^1 
  */
 static inline uint8_t mavlink_msg_set_mcconf_get_uVDD(const mavlink_message_t* msg)
 {
@@ -474,7 +474,7 @@ static inline uint8_t mavlink_msg_set_mcconf_get_uVDD(const mavlink_message_t* m
 /**
  * @brief Get field uRSHUNT from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uRSHUNT(const mavlink_message_t* msg)
 {
@@ -484,7 +484,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uRSHUNT(const mavlink_message_
 /**
  * @brief Get field uPWMFREQUENCY from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uPWMFREQUENCY(const mavlink_message_t* msg)
 {
@@ -494,7 +494,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uPWMFREQUENCY(const mavlink_me
 /**
  * @brief Get field uDKP from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uDKP(const mavlink_message_t* msg)
 {
@@ -504,7 +504,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uDKP(const mavlink_message_t* 
 /**
  * @brief Get field uDKI from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uDKI(const mavlink_message_t* msg)
 {
@@ -514,7 +514,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uDKI(const mavlink_message_t* 
 /**
  * @brief Get field uDKC from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uDKC(const mavlink_message_t* msg)
 {
@@ -524,7 +524,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uDKC(const mavlink_message_t* 
 /**
  * @brief Get field uDOUTMAX from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uDOUTMAX(const mavlink_message_t* msg)
 {
@@ -534,7 +534,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uDOUTMAX(const mavlink_message
 /**
  * @brief Get field uQKP from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uQKP(const mavlink_message_t* msg)
 {
@@ -544,7 +544,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uQKP(const mavlink_message_t* 
 /**
  * @brief Get field uQKI from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uQKI(const mavlink_message_t* msg)
 {
@@ -554,7 +554,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uQKI(const mavlink_message_t* 
 /**
  * @brief Get field uQKC from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uQKC(const mavlink_message_t* msg)
 {
@@ -564,7 +564,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uQKC(const mavlink_message_t* 
 /**
  * @brief Get field uQOUTMAX from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uQOUTMAX(const mavlink_message_t* msg)
 {
@@ -574,7 +574,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uQOUTMAX(const mavlink_message
 /**
  * @brief Get field uWKP from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uWKP(const mavlink_message_t* msg)
 {
@@ -584,7 +584,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uWKP(const mavlink_message_t* 
 /**
  * @brief Get field uWKI from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uWKI(const mavlink_message_t* msg)
 {
@@ -594,7 +594,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uWKI(const mavlink_message_t* 
 /**
  * @brief Get field uWKC from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uWKC(const mavlink_message_t* msg)
 {
@@ -604,7 +604,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uWKC(const mavlink_message_t* 
 /**
  * @brief Get field uWOUTMAX from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uWOUTMAX(const mavlink_message_t* msg)
 {
@@ -614,7 +614,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uWOUTMAX(const mavlink_message
 /**
  * @brief Get field uPLLKP from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uPLLKP(const mavlink_message_t* msg)
 {
@@ -624,7 +624,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uPLLKP(const mavlink_message_t
 /**
  * @brief Get field uPLLKI from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uPLLKI(const mavlink_message_t* msg)
 {
@@ -634,7 +634,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uPLLKI(const mavlink_message_t
 /**
  * @brief Get field uPLLKC from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uPLLKC(const mavlink_message_t* msg)
 {
@@ -644,7 +644,7 @@ static inline uint16_t mavlink_msg_set_mcconf_get_uPLLKC(const mavlink_message_t
 /**
  * @brief Get field uPLLOUTMAX from set_mcconf message
  *
- * @return x10^3 
+ * @return  x10^3 
  */
 static inline uint16_t mavlink_msg_set_mcconf_get_uPLLOUTMAX(const mavlink_message_t* msg)
 {

@@ -364,6 +364,8 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 	(void)p;
 	(void)flags;
 
+	//LED_RED_ON();
+
 	MCCtrlCnt++;
 
 	if(MCCtrlCnt % HALL_SENSOR_DIV == 2) //speed ctrl
@@ -374,14 +376,14 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 	
 	if(MCCtrlCnt % SPD_CTRL_DIV == 1) //speed ctrl
 	{
-		//LED_GREEN_ON();
+		//LED_RED_ON();
 		// Execute the velocity control loop
 		PIParmW.qInMeas = smc1.Omega;
 		PIParmW.qInRef	= CtrlParm.qVelRef;
 		CalcPI(&PIParmW);
 		CtrlParm.qVqRef = PIParmW.qOut;
 		
-		//LED_GREEN_OFF();
+		//LED_RED_OFF();
 	}
 
 	if(MCCtrlCnt % CURR_CTRL_DIV == 0)//current ctrl
@@ -403,19 +405,24 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 		MeasCurrParm.CorrADC_c = -(MeasCurrParm.CorrADC_a + MeasCurrParm.CorrADC_b);
 
 		// Calculate control values
+		McCtrlBits.OpenLoop = 1;
 		if(McCtrlBits.OpenLoop)
 		{
+			//LED_RED_ON();
 
 			//ParkParm.qAngle = 0.0f;
 
-			ParkParm.qAngle -= 0.01f;
-			if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
+			//ParkParm.qAngle -= 0.01f;
+			//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
 			
-			//ParkParm.qAngle += 0.002f;
-			//if(2*PI <  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
+			ParkParm.qAngle += 0.002f;
+			if(2*PI <=  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
 
-			ParkParm.qVd = 0.5f;
+			ParkParm.qVd = 0.3f;
 			ParkParm.qVq = 0.0f;
+
+			//LED_RED_OFF();
+
 
 		}
 		else
@@ -450,8 +457,9 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 
 		// Reset the watchdog
 
-		//LED_RED_OFF();
+		
 	}
+	//LED_RED_OFF();
 
 	WWDG_SetCounter(100);
 
@@ -468,13 +476,13 @@ static THD_FUNCTION(timer_thread, arg) {
 
 	for(;;) {
 
-		LED_RED_ON();
+		//LED_RED_ON();
 		chThdSleepMilliseconds(250);
 
 		//Target DC Bus, without sign.
 		MeasSensorValue.InputVoltage = GET_INPUT_VOLTAGE();
 		MeasSensorValue.MotorTemp = NTC_TEMP(ADC_IND_TEMP_PCB);
-		LED_RED_OFF();
+		//LED_RED_OFF();
 
 		chThdSleepMilliseconds(750);
 		

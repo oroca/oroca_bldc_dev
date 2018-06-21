@@ -5,10 +5,10 @@
 
 MAVPACKED(
 typedef struct __mavlink_ack_t {
- uint16_t err_code; /*< */
- uint8_t msg_id; /*< */
- uint8_t length; /*< */
- uint8_t data[16]; /*< */
+ uint16_t err_code; /*<  */
+ uint8_t msg_id; /*<  */
+ uint8_t length; /*<  */
+ uint8_t data[16]; /*<  */
 }) mavlink_ack_t;
 
 #define MAVLINK_MSG_ID_ACK_LEN 20
@@ -50,10 +50,10 @@ typedef struct __mavlink_ack_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
- * @param msg_id 
- * @param err_code 
- * @param length 
- * @param data 
+ * @param msg_id  
+ * @param err_code  
+ * @param length  
+ * @param data  
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_ack_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
@@ -85,10 +85,10 @@ static inline uint16_t mavlink_msg_ack_pack(uint8_t system_id, uint8_t component
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
- * @param msg_id 
- * @param err_code 
- * @param length 
- * @param data 
+ * @param msg_id  
+ * @param err_code  
+ * @param length  
+ * @param data  
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_ack_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
@@ -146,10 +146,10 @@ static inline uint16_t mavlink_msg_ack_encode_chan(uint8_t system_id, uint8_t co
  * @brief Send a ack message
  * @param chan MAVLink channel to send the message
  *
- * @param msg_id 
- * @param err_code 
- * @param length 
- * @param data 
+ * @param msg_id  
+ * @param err_code  
+ * @param length  
+ * @param data  
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
@@ -222,7 +222,7 @@ static inline void mavlink_msg_ack_send_buf(mavlink_message_t *msgbuf, mavlink_c
 /**
  * @brief Get field msg_id from ack message
  *
- * @return 
+ * @return  
  */
 static inline uint8_t mavlink_msg_ack_get_msg_id(const mavlink_message_t* msg)
 {
@@ -232,7 +232,7 @@ static inline uint8_t mavlink_msg_ack_get_msg_id(const mavlink_message_t* msg)
 /**
  * @brief Get field err_code from ack message
  *
- * @return 
+ * @return  
  */
 static inline uint16_t mavlink_msg_ack_get_err_code(const mavlink_message_t* msg)
 {
@@ -242,7 +242,7 @@ static inline uint16_t mavlink_msg_ack_get_err_code(const mavlink_message_t* msg
 /**
  * @brief Get field length from ack message
  *
- * @return 
+ * @return  
  */
 static inline uint8_t mavlink_msg_ack_get_length(const mavlink_message_t* msg)
 {
@@ -252,7 +252,7 @@ static inline uint8_t mavlink_msg_ack_get_length(const mavlink_message_t* msg)
 /**
  * @brief Get field data from ack message
  *
- * @return 
+ * @return  
  */
 static inline uint16_t mavlink_msg_ack_get_data(const mavlink_message_t* msg, uint8_t *data)
 {

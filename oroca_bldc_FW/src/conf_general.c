@@ -25,6 +25,9 @@
 //#include "comm_usb.h"
 #include "comm_usb_serial.h"//for debug
 
+#include "mavlink_proc.h"
+
+
 
 // User defined default motor configuration file
 #ifdef MCCONF_DEFAULT_USER
@@ -287,7 +290,7 @@ void conf_general_read_app_configuration(app_configuration *conf) {
  */
 bool conf_general_store_app_configuration(app_configuration *conf) {
 	mc_interface_unlock();
-	mc_interface_release_motor();
+	//mc_interface_release_motor();
 
 	utils_sys_lock_cnt();
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, DISABLE);
@@ -341,7 +344,10 @@ void conf_general_read_mc_configuration(mcConfiguration_t *conf)
 		}
 	}
 
-	chvprintf(&SDU1, (uint8_t *)"to conf_general.c : conf_general_read_mc_configuration\r\n");
+	//chvprintf(&SDU1, (uint8_t *)"to conf_general.c : conf_general_read_mc_configuration\r\n");
+
+	mavlink_dbgString(0,(uint8_t *)"to conf_general.c : conf_general_read_mc_configuration\r\n");
+
 
 
 	if (!is_ok) 
@@ -350,7 +356,7 @@ void conf_general_read_mc_configuration(mcConfiguration_t *conf)
 		conf_general_get_default_mc_configuration(conf);
 	}
 
-	chvprintf(&SDU1, (uint8_t *)"%d\r\n", conf->motor_type);
+	//chvprintf(&SDU1, (uint8_t *)"%d\r\n", conf->motor_type);
 }
 
 /**
@@ -359,9 +365,14 @@ void conf_general_read_mc_configuration(mcConfiguration_t *conf)
  * @param conf
  * A pointer to the configuration that should be stored.
  */
-bool conf_general_store_mc_configuration(mcConfiguration_t *conf) {
+bool conf_general_store_mc_configuration(mcConfiguration_t *conf) 
+{
+
+	mavlink_dbgString(0,"conf_general_store_mc_configuration");
+
+
 	mc_interface_unlock();
-	mc_interface_release_motor();
+	//mc_interface_release_motor();
 
 	utils_sys_lock_cnt();
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, DISABLE);
@@ -370,14 +381,15 @@ bool conf_general_store_mc_configuration(mcConfiguration_t *conf) {
 	uint8_t *conf_addr = (uint8_t*)conf;
 	uint16_t var;
 
-	FLASH_ClearFlag(FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR |
-			FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
+	FLASH_ClearFlag(FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR |	FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
 
-	for (unsigned int i = 0;i < (sizeof(mcConfiguration_t) / 2);i++) {
+	for (unsigned int i = 0;i < (sizeof(mcConfiguration_t) / 2);i++) 
+	{
 		var = (conf_addr[2 * i] << 8) & 0xFF00;
 		var |= conf_addr[2 * i + 1] & 0xFF;
 
-		if (EE_WriteVariable(EEPROM_BASE_MCCONF + i, var) != FLASH_COMPLETE) {
+		if (EE_WriteVariable(EEPROM_BASE_MCCONF + i, var) != FLASH_COMPLETE) 
+		{
 			is_ok = false;
 			break;
 		}
@@ -386,6 +398,7 @@ bool conf_general_store_mc_configuration(mcConfiguration_t *conf) {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, ENABLE);
 	utils_sys_unlock_cnt();
 
+	mavlink_dbgString(0,"finish");
 	return is_ok;
 }
 

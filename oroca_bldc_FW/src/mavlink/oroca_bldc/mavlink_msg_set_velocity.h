@@ -5,8 +5,8 @@
 
 MAVPACKED(
 typedef struct __mavlink_set_velocity_t {
- uint16_t ref_angular_velocity; /*< velocity value*/
- uint8_t resp; /*< 0:No Resp, 1:Resp*/
+ uint16_t ref_angular_velocity; /*<  velocity value*/
+ uint8_t resp; /*<  0:No Resp, 1:Resp*/
 }) mavlink_set_velocity_t;
 
 #define MAVLINK_MSG_ID_SET_VELOCITY_LEN 3
@@ -44,8 +44,8 @@ typedef struct __mavlink_set_velocity_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
- * @param resp 0:No Resp, 1:Resp
- * @param ref_angular_velocity velocity value
+ * @param resp  0:No Resp, 1:Resp
+ * @param ref_angular_velocity  velocity value
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_set_velocity_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
@@ -75,8 +75,8 @@ static inline uint16_t mavlink_msg_set_velocity_pack(uint8_t system_id, uint8_t 
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
- * @param resp 0:No Resp, 1:Resp
- * @param ref_angular_velocity velocity value
+ * @param resp  0:No Resp, 1:Resp
+ * @param ref_angular_velocity  velocity value
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_set_velocity_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
@@ -132,8 +132,8 @@ static inline uint16_t mavlink_msg_set_velocity_encode_chan(uint8_t system_id, u
  * @brief Send a set_velocity message
  * @param chan MAVLink channel to send the message
  *
- * @param resp 0:No Resp, 1:Resp
- * @param ref_angular_velocity velocity value
+ * @param resp  0:No Resp, 1:Resp
+ * @param ref_angular_velocity  velocity value
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
@@ -202,7 +202,7 @@ static inline void mavlink_msg_set_velocity_send_buf(mavlink_message_t *msgbuf, 
 /**
  * @brief Get field resp from set_velocity message
  *
- * @return 0:No Resp, 1:Resp
+ * @return  0:No Resp, 1:Resp
  */
 static inline uint8_t mavlink_msg_set_velocity_get_resp(const mavlink_message_t* msg)
 {
@@ -212,7 +212,7 @@ static inline uint8_t mavlink_msg_set_velocity_get_resp(const mavlink_message_t*
 /**
  * @brief Get field ref_angular_velocity from set_velocity message
  *
- * @return velocity value
+ * @return  velocity value
  */
 static inline uint16_t mavlink_msg_set_velocity_get_ref_angular_velocity(const mavlink_message_t* msg)
 {

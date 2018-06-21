@@ -5,9 +5,9 @@
 
 MAVPACKED(
 typedef struct __mavlink_read_tag_t {
- uint8_t resp; /*< 0:No Resp, 1:Resp*/
- uint8_t type; /*< */
- uint8_t param[8]; /*< */
+ uint8_t resp; /*<  0:No Resp, 1:Resp*/
+ uint8_t type; /*<  */
+ uint8_t param[8]; /*<  */
 }) mavlink_read_tag_t;
 
 #define MAVLINK_MSG_ID_READ_TAG_LEN 10
@@ -47,9 +47,9 @@ typedef struct __mavlink_read_tag_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
- * @param resp 0:No Resp, 1:Resp
- * @param type 
- * @param param 
+ * @param resp  0:No Resp, 1:Resp
+ * @param type  
+ * @param param  
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_read_tag_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
@@ -79,9 +79,9 @@ static inline uint16_t mavlink_msg_read_tag_pack(uint8_t system_id, uint8_t comp
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
- * @param resp 0:No Resp, 1:Resp
- * @param type 
- * @param param 
+ * @param resp  0:No Resp, 1:Resp
+ * @param type  
+ * @param param  
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_read_tag_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
@@ -137,9 +137,9 @@ static inline uint16_t mavlink_msg_read_tag_encode_chan(uint8_t system_id, uint8
  * @brief Send a read_tag message
  * @param chan MAVLink channel to send the message
  *
- * @param resp 0:No Resp, 1:Resp
- * @param type 
- * @param param 
+ * @param resp  0:No Resp, 1:Resp
+ * @param type  
+ * @param param  
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
@@ -208,7 +208,7 @@ static inline void mavlink_msg_read_tag_send_buf(mavlink_message_t *msgbuf, mavl
 /**
  * @brief Get field resp from read_tag message
  *
- * @return 0:No Resp, 1:Resp
+ * @return  0:No Resp, 1:Resp
  */
 static inline uint8_t mavlink_msg_read_tag_get_resp(const mavlink_message_t* msg)
 {
@@ -218,7 +218,7 @@ static inline uint8_t mavlink_msg_read_tag_get_resp(const mavlink_message_t* msg
 /**
  * @brief Get field type from read_tag message
  *
- * @return 
+ * @return  
  */
 static inline uint8_t mavlink_msg_read_tag_get_type(const mavlink_message_t* msg)
 {
@@ -228,7 +228,7 @@ static inline uint8_t mavlink_msg_read_tag_get_type(const mavlink_message_t* msg
 /**
  * @brief Get field param from read_tag message
  *
- * @return 
+ * @return  
  */
 static inline uint16_t mavlink_msg_read_tag_get_param(const mavlink_message_t* msg, uint8_t *param)
 {

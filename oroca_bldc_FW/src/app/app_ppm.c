@@ -263,4 +263,37 @@ static THD_FUNCTION(ppm_thread, arg) {
 
 	}
 }
+
+#if 0
+static THD_FUNCTION(ppm_thread, arg)
+{
+	(void)arg;
+
+	chRegSetThreadName("APP_PPM");
+	ppm_tp = chThdGetSelfX();
+
+	//servodec_set_pulse_options(config.pulse_start, config.pulse_end, config.median_filter);
+	servodec_set_pulse_options(1.0f, 2.0f, false);
+	servodec_init(servodec_func);
+	is_running = true;
+
+	for(;;) {
+
+		chEvtWaitAny((eventmask_t) 1);
+
+		float servo_val = servodec_get_servo(0);
+
+		//--------------------------------------------------------------------------------
+		//test code
+		//Uart3_printf(&SD3, (uint8_t *)"servo : %f\r\n",(float)servo_val);    //170530
+		CtrlParm.qVelRef=servo_val/100.0f;
+		//--------------------------------------------------------------------------------
+
+		ui_events |= EVT_PPM;
+	}
+
+}
+#endif
+
+
 #endif

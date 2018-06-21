@@ -5,7 +5,7 @@
 
 MAVPACKED(
 typedef struct __mavlink_debug_string_t {
- char dbg_str[250]; /*< string*/
+ char dbg_str[250]; /*<  string*/
 }) mavlink_debug_string_t;
 
 #define MAVLINK_MSG_ID_DEBUG_STRING_LEN 250
@@ -41,7 +41,7 @@ typedef struct __mavlink_debug_string_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
- * @param dbg_str string
+ * @param dbg_str  string
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_debug_string_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
@@ -69,7 +69,7 @@ static inline uint16_t mavlink_msg_debug_string_pack(uint8_t system_id, uint8_t 
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
- * @param dbg_str string
+ * @param dbg_str  string
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_debug_string_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
@@ -123,7 +123,7 @@ static inline uint16_t mavlink_msg_debug_string_encode_chan(uint8_t system_id, u
  * @brief Send a debug_string message
  * @param chan MAVLink channel to send the message
  *
- * @param dbg_str string
+ * @param dbg_str  string
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
@@ -188,7 +188,7 @@ static inline void mavlink_msg_debug_string_send_buf(mavlink_message_t *msgbuf, 
 /**
  * @brief Get field dbg_str from debug_string message
  *
- * @return string
+ * @return  string
  */
 static inline uint16_t mavlink_msg_debug_string_get_dbg_str(const mavlink_message_t* msg, char *dbg_str)
 {

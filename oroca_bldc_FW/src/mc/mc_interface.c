@@ -31,7 +31,6 @@
 #include "mc_define.h"
 #include "mc_typedef.h"
 
-#include "mc_interface.h"
 #include "mc_control.h"
 #include "mc_sensor.h"
 #include "mc_pwm.h"
@@ -41,6 +40,12 @@
 #include "utils.h"
 
 #include "comm_usb_serial.h"
+
+#include "conf_general.h"
+#include "mc_interface.h"
+
+#include "mavlink_proc.h"
+
 
 
 // Global variables
@@ -125,7 +130,7 @@ void mc_interface_init(mcConfiguration_t *configuration)
 
 	chThdCreateStatic(sample_send_thread_wa, sizeof(sample_send_thread_wa), NORMALPRIO - 1, sample_send_thread, NULL);
 
-#if 0
+
 	// Initialize encoder
 #if !WS2811_ENABLE
 	switch (m_conf.m_sensor_port_mode) {
@@ -141,7 +146,7 @@ void mc_interface_init(mcConfiguration_t *configuration)
 			break;
 	}
 #endif
-#endif
+
 
 
 //	m_conf.motor_type = MOTOR_TYPE_BLDC;
