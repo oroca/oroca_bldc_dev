@@ -251,8 +251,8 @@ void conf_general_get_default_mc_configuration(mcConfiguration_t *conf) {
 	conf->m_duty_ramp_step = MCCONF_M_RAMP_STEP;
 	conf->m_duty_ramp_step_rpm_lim = MCCONF_M_RAMP_STEP_RPM_LIM;
 	conf->m_current_backoff_gain = MCCONF_M_CURRENT_BACKOFF_GAIN;
-	conf->m_encoder_counts = MCCONF_M_ENCODER_COUNTS;
-	conf->m_sensor_port_mode = MCCONF_M_SENSOR_PORT_MODE;*/
+	conf->m_encoder_counts = MCCONF_M_ENCODER_COUNTS;*/
+	conf->m_sensor_port_mode = MCCONF_M_SENSOR_PORT_MODE;
 }
 
 /**
@@ -346,17 +346,17 @@ void conf_general_read_mc_configuration(mcConfiguration_t *conf)
 
 	//chvprintf(&SDU1, (uint8_t *)"to conf_general.c : conf_general_read_mc_configuration\r\n");
 
-	mavlink_dbgString(0,(uint8_t *)"to conf_general.c : conf_general_read_mc_configuration\r\n");
+	//mavlink_dbgString(0,(uint8_t *)"to conf_general.c : conf_general_read_mc_configuration\r\n");
 
 
 
 	if (!is_ok) 
 	{
-		
+		//chvprintf(&SD1, (uint8_t *)"conf_ok\r\n");
 		conf_general_get_default_mc_configuration(conf);
 	}
 
-	//chvprintf(&SDU1, (uint8_t *)"%d\r\n", conf->motor_type);
+	
 }
 
 /**

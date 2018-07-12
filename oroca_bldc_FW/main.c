@@ -1,9 +1,8 @@
 ﻿/*
 	OROCA BLDC PROJECT.
-
-
-
 */
+
+
 #include "ch.h"
 #include "hal.h"
 #include "stm32f4xx_conf.h"
@@ -16,7 +15,6 @@
 #include "mc_interface.h"
 #include "conf_general.h"
 
-//#include "mcpwm.h"
 #include "ledpwm.h"
 #include "hw.h"
 #include "app.h"
@@ -33,6 +31,9 @@
 #include "comm_usb_serial.h"
 
 #include "mavlink_proc.h"
+
+#include "usart1_print.h"
+
 
 
 /*
@@ -66,6 +67,26 @@ static THD_FUNCTION(periodic_thread, arg)
 
 	chRegSetThreadName("BLDC periodic");
 
+
+/*
+if(mcconf.m_sensor_port_mode ==  SENSOR_PORT_MODE_ABI)
+{
+	mavlink_dbgString( 0, "SENSOR_PORT_MODE_ABI" );
+
+}
+else if(mcconf.m_sensor_port_mode ==  SENSOR_PORT_MODE_HALL)
+{
+	mavlink_dbgString( 0, "SENSOR_PORT_MODE_HALL" );
+
+}
+else if(mcconf.m_sensor_port_mode ==  SENSOR_PORT_MODE_AS5047_SPI)
+{
+	mavlink_dbgString( 0, "SENSOR_PORT_MODE_AS5047_SPI" );
+
+}
+*/
+	
+
 	for(;;)
 	{
 		LED_GREEN_ON();		chThdSleepMilliseconds(50);
@@ -74,6 +95,9 @@ static THD_FUNCTION(periodic_thread, arg)
 		LED_GREEN_OFF();		chThdSleepMilliseconds(850);
 
 		//mavlink_dbgString( 0, "test" );
+		//chvprintf(&SD1, (uint8_t *)"\x1b[2J\x1b[0;0H");
+		//chvprintf(&SD1, (uint8_t *)"%f/r/n",mc_interface_get_angle());
+
 	}
 }
 
@@ -82,7 +106,7 @@ static THD_FUNCTION(timer_thread, arg) {
 
 	chRegSetThreadName("msec_timer");
 
-	chvprintf(&SDU1, (uint8_t *)"to main -> timer_thread\r\n");
+	//chvprintf(&SD1, (uint8_t *)"to main -> timer_thread\r\n");
 
 	for(;;) {
 		//packet_timerfunc();
@@ -104,14 +128,14 @@ int main(void)
 	chThdSleepMilliseconds(1000);
 
 	hw_init_gpio();
-	LED_RED_OFF();
-	LED_GREEN_OFF();
 
 	conf_general_init();
 	ledpwm_init();
 
+#if USB_SERIAL_ENABLE
 	comm_usb_init();
 	chThdSleepMilliseconds(1000);
+	
 	//chvprintf(&SDU1, (uint8_t *)"\x1b[2J\x1b[0;0H");
 	//chvprintf(&SDU1, (uint8_t *)"USB Serial ready...\r\n\r\n\r\n");
 
@@ -119,20 +143,29 @@ int main(void)
 	//chvprintf(&SDU1, (uint8_t *)"by BakChaJang\r\n");
 	//chvprintf(&SDU1, (uint8_t *)"date : 2017/11/15\r\n\r\n");
 
+#endif
+
+#if CAN_ENABLE
+		comm_can_init();
+#endif
+
+
+	Usart1_print_init();
+
+	chvprintf(&SD1, (uint8_t *)"\x1b[2J\x1b[0;0H");
+	chvprintf(&SD1, (uint8_t *)"oroca_bldc\r\n");
+
 	mcConfiguration_t mcconf;
 	conf_general_read_mc_configuration(&mcconf);
 	mc_interface_init(&mcconf);
 
-	app_configuration appconf;
-	conf_general_read_app_configuration(&appconf);
-	app_init(&appconf);
+
+	//app_configuration appconf;
+	//conf_general_read_app_configuration(&appconf);
+	//app_init(&appconf);
 
 	timeout_init();
 	timeout_configure(1000);
-
-#if CAN_ENABLE
-	comm_can_init();
-#endif
 
 	// Threads
 	chThdCreateStatic(periodic_thread_wa, sizeof(periodic_thread_wa), NORMALPRIO, periodic_thread, NULL);

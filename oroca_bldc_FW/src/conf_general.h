@@ -77,9 +77,16 @@
 //#define USE_APP_STEN
 
 /*
+ * Enable usb-serial
+ */
+#define USB_SERIAL_ENABLE				0
+
+
+
+/*
  * Enable CAN-bus
  */
-#define CAN_ENABLE				1
+#define CAN_ENABLE				0
 
 /*
  * Settings for the external LEDs (hardcoded for now)
@@ -116,6 +123,9 @@
 //#define V_REG				(1.21 / ((float)ADC_Value[ADC_IND_VREFINT] / 4095.0))
 #define V_REG				3.3
 
+
+
+extern mcConfiguration_t mcconf;
 
 
 // Functions

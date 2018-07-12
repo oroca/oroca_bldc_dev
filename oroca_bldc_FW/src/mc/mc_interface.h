@@ -40,6 +40,9 @@
 #ifndef MCCONF_COMM_MODE
 #define MCCONF_COMM_MODE				COMM_MODE_INTEGRATE	// The commutation mode to use
 #endif
+#ifndef MCCONF_M_SENSOR_PORT_MODE
+#define MCCONF_M_SENSOR_PORT_MODE		SENSOR_PORT_MODE_HALL // The mode of the hall_encoder port
+#endif
 
 // Limits
 #ifndef MCCONF_L_CURRENT_MAX
@@ -125,5 +128,7 @@ void mc_interface_lock_override_once(void);
 //void mc_interface_fault_stop(mc_fault_code fault);
 
 void mc_setVelocity(uint16_t vel);
+float mc_interface_get_angle(void);
+
 
 #endif /* MC_INTERFACE_H_ */

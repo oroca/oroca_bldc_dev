@@ -29,7 +29,12 @@
 #include "mc_control.h"
 #include "mc_encoder.h"
 
+#include "usart1_print.h"
+
+
 // Defines
+#define AS5047_USE_HW_SPI_PINS		1
+
 #define AS5047P_READ_ANGLECOM		(0x3FFF | 0x4000 | 0x8000) // This is just ones
 #define AS5047_SAMPLE_RATE_HZ		20000
 
@@ -251,6 +256,8 @@ uint16_t pul1_width=0,pul1_period=0;
 void encoder_tim_isr(void) {
 	uint16_t pos;
 
+
+	LED_RED_ON();
 	if(mode == ENCODER_MODE_AS5047P_SPI)
 	{
 		spi_begin();
@@ -259,6 +266,9 @@ void encoder_tim_isr(void) {
 
 		pos &= 0x3FFF;
 		last_enc_angle = ((float)pos * 360.0) / 16384.0;
+
+		//Usart1_printf(&SD1, (uint8_t *)"%f\r\n",last_enc_angle);
+
 	}
 	else if(mode == ENCODER_MODE_PWM)
 	{
@@ -282,6 +292,10 @@ void encoder_tim_isr(void) {
 			}
 		}
 	}
+
+
+	LED_RED_OFF();
+
 	
 }
 
@@ -395,7 +409,7 @@ void encoder_init_pwm(void) {
 	/* Enable the TIM3 global Interrupt */
 	nvicEnableVector(HW_ENC_TIM_ISR_CH, 6);
 
-	mode = ENCODER_MODE_PWM;
+	mode = ENCODER_MODE_AS5047P_SPI;
 	index_found = true;
 }
 

@@ -166,6 +166,7 @@ CSRC = $(STARTUPSRC) \
 		$(APPSRC)/app_sten.c \
 		$(APPSRC)/app_uartcomm.c \
 		$(APPSRC)/app_nunchuk.c\
+		usart1_print.c\
        main.c
 
        

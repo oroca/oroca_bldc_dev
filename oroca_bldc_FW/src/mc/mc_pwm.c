@@ -55,6 +55,9 @@ static THD_FUNCTION(timer_thread, arg);
 void mcpwm_init(volatile mcConfiguration_t *configuration)
 {
 
+	chvprintf(&SD1, (uint8_t *)"to mc_interface -> mcpwm_init\r\n");
+
+
 	utils_sys_lock_cnt();
 
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
@@ -418,7 +421,7 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 			ParkParm.qAngle += 0.002f;
 			if(2*PI <=  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
 
-			ParkParm.qVd = 0.3f;
+			ParkParm.qVd = 0.5f;
 			ParkParm.qVq = 0.0f;
 
 			//LED_RED_OFF();
@@ -469,9 +472,12 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 static THD_FUNCTION(timer_thread, arg) {
 	(void)arg;
 
+	uint16_t pos;
+
+
 	chRegSetThreadName("mc_timer");
 
-	//chvprintf(&SDU1, (uint8_t *)"to mc_interface -> mcif timer\r\n");
+	chvprintf(&SD1, (uint8_t *)"to mc_interface -> timer_thread\r\n");
 
 
 	for(;;) {
@@ -485,7 +491,7 @@ static THD_FUNCTION(timer_thread, arg) {
 		//LED_RED_OFF();
 
 		chThdSleepMilliseconds(750);
-		
+	
 		
 	}
 }

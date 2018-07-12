@@ -47,6 +47,8 @@
 #include "mavlink_proc.h"
 
 
+#include "usart1_print.h"
+
 
 // Global variables
 volatile int ADC_curr_norm_value[3];
@@ -100,7 +102,7 @@ static thread_t *sample_send_tp;
 
 void mc_interface_init(mcConfiguration_t *configuration) 
 {
-	chvprintf(&SDU1, (uint8_t *)"mc_interface_init\r\n");
+	//chvprintf(&SD1, (uint8_t *)"mc_interface_init\r\n");
 	
 	m_conf = *configuration;
 	m_fault_now = FAULT_CODE_NONE;
@@ -126,10 +128,12 @@ void mc_interface_init(mcConfiguration_t *configuration)
 	m_sample_at_start = 0;
 	m_start_comm = 0;
 
+	m_conf.m_sensor_port_mode = SENSOR_PORT_MODE_AS5047_SPI;
+
+
 	// Start threads
-
 	chThdCreateStatic(sample_send_thread_wa, sizeof(sample_send_thread_wa), NORMALPRIO - 1, sample_send_thread, NULL);
-
+	
 
 	// Initialize encoder
 #if !WS2811_ENABLE
@@ -146,7 +150,6 @@ void mc_interface_init(mcConfiguration_t *configuration)
 			break;
 	}
 #endif
-
 
 
 //	m_conf.motor_type = MOTOR_TYPE_BLDC;
@@ -286,6 +289,8 @@ mc_fault_code mc_interface_get_fault(void) {
 }
 
 
+
+
 /**
  * Update the override limits for a configuration based on MOSFET temperature etc.
  *
@@ -414,6 +419,11 @@ void mc_interface_set_velocity(uint16_t vel)
 	CtrlParm.qVelRef = (float)vel/1000; 
 }
 
+float mc_interface_get_angle(void)
+{
+	return encoder_read_deg();  
+}
+
 
 static volatile mc_state state;
 static volatile mc_control_mode control_mode;
@@ -446,7 +456,7 @@ static THD_FUNCTION(sample_send_thread, arg) {
 
 	sample_send_tp = chThdGetSelfX();
 
-	chvprintf(&SDU1, (uint8_t *)"to mc_interface -> SampleSender\r\n");
+	//chvprintf(&SD1, (uint8_t *)"to mc_interface -> SampleSender\r\n");
 
 
 	for(;;) {
