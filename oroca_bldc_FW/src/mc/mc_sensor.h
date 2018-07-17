@@ -32,6 +32,7 @@ extern tMeasSensorValue MeasSensorValue;
 extern "C" {
 #endif
 
+	bool do_dc_cal(void);
 
 
 #ifdef __cplusplus

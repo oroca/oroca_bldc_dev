@@ -59,13 +59,13 @@
 #define VDD				3.3f	
 
 //************** PI Coefficients **************
-#define	DKP        0.02
-#define	DKI        0.05
+#define	DKP        0.01
+#define	DKI        0.005
 #define	DKC        0.99999
 #define	DOUTMAX    0.99999
 
-#define	QKP        0.02
-#define	QKI        0.05
+#define	QKP        0.01
+#define	QKI        0.005
 #define	QKC        0.99999
 #define	QOUTMAX    0.99999
 

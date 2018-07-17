@@ -257,7 +257,7 @@ void encoder_tim_isr(void) {
 	uint16_t pos;
 
 
-	LED_RED_ON();
+	//LED_RED_ON();
 	if(mode == ENCODER_MODE_AS5047P_SPI)
 	{
 		spi_begin();
@@ -294,7 +294,7 @@ void encoder_tim_isr(void) {
 	}
 
 
-	LED_RED_OFF();
+	//LED_RED_OFF();
 
 	
 }

@@ -73,8 +73,7 @@ void DoControl( void )
 
 	// PI control for D
 	PIParmD.qInMeas = ParkParm.qId;
-	//PIParmD.qInRef	= CtrlParm.qVdRef;
-	PIParmD.qInRef	= 0.0f;
+	PIParmD.qInRef	= CtrlParm.qVdRef;
 	CalcPI(&PIParmD);
 
 	//if(uGF.bit.EnVoltRipCo)

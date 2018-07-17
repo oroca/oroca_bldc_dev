@@ -203,8 +203,8 @@ typedef struct {
 	
 	int16_t	Offseta;
 	int16_t	Offsetb;
-	uint16_t curr0_sum;
-	uint16_t curr1_sum;
+	uint32_t curr0_sum;
+	uint32_t curr1_sum;
 	uint16_t curr_start_samples;
 } tMeasCurrParm;
 
@@ -356,6 +356,14 @@ typedef struct {
 
     } tSVGenParm;
 
+typedef struct
+	{
+    uint16_t OpenLoop:1;
+    uint16_t RunMotor:1;
+    uint16_t DcCalDone:1;
+}tMcCtrlBits __attribute__((packed));
+
+#if 0
 typedef struct {
 	union{
 		uint16_t OpenLoop:1;
@@ -365,7 +373,7 @@ typedef struct {
 
 	uint16_t Word;
 } tMcCtrlBits;
-
+#endif
 
 
 

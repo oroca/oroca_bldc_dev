@@ -395,72 +395,73 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 
 		TIM12->CNT = 0;
 
+		//calibration
 		if(!McCtrlBits.DcCalDone)
 		{
 			MeasCurrParm.curr_start_samples++;
 			MeasCurrParm.curr0_sum += ADC_Value[ADC_IND_CURR1] ;
 			MeasCurrParm.curr1_sum += ADC_Value[ADC_IND_CURR2] ;
 		}
-
-		// Calculate qIa,qIb
-		MeasCurrParm.CorrADC_a = ADC_Value[ADC_IND_CURR1] - MeasCurrParm.Offseta;
-		MeasCurrParm.CorrADC_b = ADC_Value[ADC_IND_CURR2] - MeasCurrParm.Offsetb;
-		MeasCurrParm.CorrADC_c = -(MeasCurrParm.CorrADC_a + MeasCurrParm.CorrADC_b);
-
-		// Calculate control values
-		McCtrlBits.OpenLoop = 1;
-		if(McCtrlBits.OpenLoop)
+		//control
+		else 
 		{
-			//LED_RED_ON();
 
-			//ParkParm.qAngle = 0.0f;
+			// Calculate qIa,qIb
+			MeasCurrParm.CorrADC_a = ADC_Value[ADC_IND_CURR1] - MeasCurrParm.Offseta;
+			MeasCurrParm.CorrADC_b = ADC_Value[ADC_IND_CURR2] - MeasCurrParm.Offsetb;
+			MeasCurrParm.CorrADC_c = -(MeasCurrParm.CorrADC_a + MeasCurrParm.CorrADC_b);
 
-			//ParkParm.qAngle -= 0.01f;
-			//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
-			
-			ParkParm.qAngle += 0.002f;
-			if(2*PI <=  ParkParm.qAngle)ParkParm.qAngle=2*PI - ParkParm.qAngle;
+			// Calculate control values
+			McCtrlBits.OpenLoop = 1;
+			if(McCtrlBits.OpenLoop)
+			{
 
-			ParkParm.qVd = 0.5f;
-			ParkParm.qVq = 0.0f;
+				//ParkParm.qAngle -= 0.01f;
+				//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
+				
+				ParkParm.qAngle += 0.002f;//from gui 
+				if(2*PI <=  ParkParm.qAngle)ParkParm.qAngle = 2*PI - ParkParm.qAngle;
 
-			//LED_RED_OFF();
+				//ParkParm.qVd = 0.5f;
+				//ParkParm.qVq = 0.0f;
+
+				CtrlParm.qVdRef = 0.0f;
+				CtrlParm.qVqRef = 0.5f; //from gui 
 
 
-		}
-		else
-		{
-			ParkParm.qAngle = smc1.Theta;
-		
+			}
+			else
+			{
+				CtrlParm.qVdRef = 0.0f;
+				ParkParm.qAngle = smc1.Theta;
+				
+			}
+
 			ParkParm.qIa = MeasCurrParm.qKa * (float)MeasCurrParm.CorrADC_a;
 			ParkParm.qIb = MeasCurrParm.qKb * (float)MeasCurrParm.CorrADC_b;
-
-			// Calculate qId,qIq from qSin,qCos,qIa,qIb
+			
 			ParkParm.qIalpha = ParkParm.qIa;
 			ParkParm.qIbeta = ParkParm.qIa*INV_SQRT3 + 2*ParkParm.qIb*INV_SQRT3;
-			// Ialpha and Ibeta have been calculated. Now do rotation.
-			// Get qSin, qCos from ParkParm structure
 			
 			ParkParm.qId = -ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
 			ParkParm.qIq = ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
-		
+			
 			DoControl();
-		}
 
-		// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
-		ParkParm.qValpha =  ParkParm.qVd*cosf(ParkParm.qAngle) - ParkParm.qVq*sinf(ParkParm.qAngle);
-		ParkParm.qVbeta  =  ParkParm.qVd*sinf(ParkParm.qAngle) + ParkParm.qVq*cosf(ParkParm.qAngle);
+			// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
+			ParkParm.qValpha =  ParkParm.qVd*cosf(ParkParm.qAngle) - ParkParm.qVq*sinf(ParkParm.qAngle);
+			ParkParm.qVbeta  =  ParkParm.qVd*sinf(ParkParm.qAngle) + ParkParm.qVq*cosf(ParkParm.qAngle);
 
-		// Calculate Vr1,Vr2,Vr3 from qValpha, qVbeta
-		SVGenParm.qVr1 = ParkParm.qVbeta;
-		SVGenParm.qVr2 = (-ParkParm.qVbeta + SQRT3 * ParkParm.qValpha)/2;
-		SVGenParm.qVr3 = (-ParkParm.qVbeta - SQRT3 * ParkParm.qValpha)/2;
+			// Calculate Vr1,Vr2,Vr3 from qValpha, qVbeta
+			SVGenParm.qVr1 = ParkParm.qVbeta;
+			SVGenParm.qVr2 = (-ParkParm.qVbeta + SQRT3 * ParkParm.qValpha)/2;
+			SVGenParm.qVr3 = (-ParkParm.qVbeta - SQRT3 * ParkParm.qValpha)/2;
 
-		CalcSVGen();
+			CalcSVGen();
 
 		// Reset the watchdog
 
-		
+		}
 	}
 	//LED_RED_OFF();
 
@@ -477,9 +478,6 @@ static THD_FUNCTION(timer_thread, arg) {
 
 	chRegSetThreadName("mc_timer");
 
-	chvprintf(&SD1, (uint8_t *)"to mc_interface -> timer_thread\r\n");
-
-
 	for(;;) {
 
 		//LED_RED_ON();
@@ -489,6 +487,9 @@ static THD_FUNCTION(timer_thread, arg) {
 		MeasSensorValue.InputVoltage = GET_INPUT_VOLTAGE();
 		MeasSensorValue.MotorTemp = NTC_TEMP(ADC_IND_TEMP_PCB);
 		//LED_RED_OFF();
+
+		//chvprintf(&SD1, (uint8_t *)"VIN: %f ",MeasSensorValue.InputVoltage);
+
 
 		chThdSleepMilliseconds(750);
 	

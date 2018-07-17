@@ -46,13 +46,6 @@ tMeasCurrParm MeasCurrParm;
 tMeasSensorValue MeasSensorValue;
 
 
-bool do_dc_cal(void);
-
-
-
-uint16_t curr0_sum;
-uint16_t curr1_sum;
-uint16_t curr_start_samples;
 bool do_dc_cal(void)
 {
 	uint16_t fault_cnt=0;
@@ -69,21 +62,29 @@ bool do_dc_cal(void)
 		chThdSleepMilliseconds(1000);
 	};
 	
-	curr0_sum = 0;
-	curr1_sum = 0;
-	curr_start_samples = 0;
+	MeasCurrParm.curr0_sum = 0;
+	MeasCurrParm.curr1_sum = 0;
+	MeasCurrParm.curr_start_samples = 0;
 	
 	chThdSleepMilliseconds(1000);
 
-	MeasCurrParm.Offseta = curr0_sum / curr_start_samples;
-	MeasCurrParm.Offsetb = curr1_sum / curr_start_samples;
+	MeasCurrParm.Offseta = MeasCurrParm.curr0_sum / MeasCurrParm.curr_start_samples;
+	MeasCurrParm.Offsetb = MeasCurrParm.curr1_sum / MeasCurrParm.curr_start_samples;
 
 	DCCAL_OFF();
-	
-	return true;
 
-	//Uart3_printf(&SD3, (uint8_t *)"curr0_offset : %u\r\n",curr0_offset);//170530  
-	//Uart3_printf(&SD3, (uint8_t *)"curr1_offset : %u\r\n",curr1_offset);//170530  
+//	chvprintf(&SD1, (uint8_t *)"do_dc_cal\r\n");
+
+	//chvprintf(&SD1, (uint8_t *)"curr_start_samples : %u\r\n",MeasCurrParm.curr_start_samples);
+
+	//chvprintf(&SD1, (uint8_t *)"curr0_sum : %u\r\n",MeasCurrParm.curr0_sum);
+	//chvprintf(&SD1, (uint8_t *)"curr1_sum : %u\r\n",MeasCurrParm.curr1_sum);
+
+
+	//chvprintf(&SD1, (uint8_t *)"curr0_offset : %u\r\n",MeasCurrParm.Offseta);
+	//chvprintf(&SD1, (uint8_t *)"curr1_offset : %u\r\n",MeasCurrParm.Offsetb);
+
+	return true;
 }
 
 
