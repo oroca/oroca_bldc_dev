@@ -277,6 +277,8 @@ typedef struct {
 	float cos3th;
 	float sin3th;
 
+	float Theta_offset	;
+
 	float Theta	 	;
 	float ThetaCal	;
 	float trueTheta	;

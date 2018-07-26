@@ -380,6 +380,11 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 	if(MCCtrlCnt % SPD_CTRL_DIV == 1) //speed ctrl
 	{
 		//LED_RED_ON();
+
+
+		CtrlParm.qVelRef = 0.0f;
+
+		
 		// Execute the velocity control loop
 		PIParmW.qInMeas = smc1.Omega;
 		PIParmW.qInRef	= CtrlParm.qVelRef;
@@ -406,11 +411,6 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 		else 
 		{
 
-			// Calculate qIa,qIb
-			MeasCurrParm.CorrADC_a = ADC_Value[ADC_IND_CURR1] - MeasCurrParm.Offseta;
-			MeasCurrParm.CorrADC_b = ADC_Value[ADC_IND_CURR2] - MeasCurrParm.Offsetb;
-			MeasCurrParm.CorrADC_c = -(MeasCurrParm.CorrADC_a + MeasCurrParm.CorrADC_b);
-
 			// Calculate control values
 			McCtrlBits.OpenLoop = 1;
 			if(McCtrlBits.OpenLoop)
@@ -422,11 +422,19 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 				ParkParm.qAngle += 0.002f;//from gui 
 				if(2*PI <=  ParkParm.qAngle)ParkParm.qAngle = 2*PI - ParkParm.qAngle;
 
-				//ParkParm.qVd = 0.5f;
+				//ParkParm.qAngle = 0.2f;
+
+				//ParkParm.qVd = 0.2f;
 				//ParkParm.qVq = 0.0f;
 
 				CtrlParm.qVdRef = 0.0f;
-				CtrlParm.qVqRef = 0.5f; //from gui 
+				CtrlParm.qVqRef = 0.2f; //from gui
+
+
+				
+				//smc1.Theta_offset = ParkParm.qAngle - smc1.Theta;
+
+				//smc1.Theta_offset = PI;
 
 
 			}
@@ -434,8 +442,13 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 			{
 				CtrlParm.qVdRef = 0.0f;
 				ParkParm.qAngle = smc1.Theta;
-				
+			
 			}
+
+			// Calculate qIa,qIb
+			MeasCurrParm.CorrADC_a = ADC_Value[ADC_IND_CURR1] - MeasCurrParm.Offseta;
+			MeasCurrParm.CorrADC_b = ADC_Value[ADC_IND_CURR2] - MeasCurrParm.Offsetb;
+			MeasCurrParm.CorrADC_c = -(MeasCurrParm.CorrADC_a + MeasCurrParm.CorrADC_b);
 
 			ParkParm.qIa = MeasCurrParm.qKa * (float)MeasCurrParm.CorrADC_a;
 			ParkParm.qIb = MeasCurrParm.qKb * (float)MeasCurrParm.CorrADC_b;
@@ -443,9 +456,9 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 			ParkParm.qIalpha = ParkParm.qIa;
 			ParkParm.qIbeta = ParkParm.qIa*INV_SQRT3 + 2*ParkParm.qIb*INV_SQRT3;
 			
-			ParkParm.qId = -ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
-			ParkParm.qIq = ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
-			
+			ParkParm.qId = ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
+			ParkParm.qIq = -ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
+
 			DoControl();
 
 			// Calculate qValpha, qVbeta from qSin,qCos,qVd,qVq
@@ -473,15 +486,28 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 static THD_FUNCTION(timer_thread, arg) {
 	(void)arg;
 
-	uint16_t pos;
+	int16_t print_a;
+	int16_t print_b;
+	int16_t print_c;
+	int16_t print_d;
+	int16_t print_e;
+	int16_t print_f;
+	int16_t print_g;
+	int16_t print_h;
+	int16_t print_i;
+	int16_t print_j;
+	int16_t print_k;
+	int16_t print_l;
 
 
 	chRegSetThreadName("mc_timer");
 
+	//Usart1_printf(&SD1, (uint8_t *)"%u	%u\r\n\r\n\r\n",MeasCurrParm.Offseta,MeasCurrParm.Offsetb);
+
 	for(;;) {
 
 		//LED_RED_ON();
-		chThdSleepMilliseconds(250);
+		chThdSleepMilliseconds(100);
 
 		//Target DC Bus, without sign.
 		MeasSensorValue.InputVoltage = GET_INPUT_VOLTAGE();
@@ -491,7 +517,49 @@ static THD_FUNCTION(timer_thread, arg) {
 		//chvprintf(&SD1, (uint8_t *)"VIN: %f ",MeasSensorValue.InputVoltage);
 
 
-		chThdSleepMilliseconds(750);
+		//chThdSleepMilliseconds(750);
+			
+			print_a = ParkParm.qIa * 100;
+			print_b = ParkParm.qIb * 100;
+
+			print_c = ParkParm.qIalpha * 100;
+			print_d = ParkParm.qIbeta * 100;
+
+			print_e = ParkParm.qId * 100;
+			print_f = ParkParm.qIq * 100;
+
+			print_g = ParkParm.qVd * 100;
+			print_h = ParkParm.qVq * 100;
+
+			print_i = ParkParm.qValpha * 100;
+			print_j = ParkParm.qVbeta * 100;
+
+			//print_a = smc1.Theta * 180 / PI;
+			//print_b = ParkParm.qAngle * 180 / PI;
+
+			//print_k = smc1.Theta*100;
+			//print_l = ParkParm.qAngle*100;
+			print_k = sin(smc1.Theta)*100;
+			print_l = sin(ParkParm.qAngle)*100;
+
+			
+
+			Usart1_printf(&SD1, (uint8_t *)"%d	%d	",print_a,print_b);
+			Usart1_printf(&SD1, (uint8_t *)"%d	%d	",print_c,print_d);
+			Usart1_printf(&SD1, (uint8_t *)"%d	%d	",print_e,print_f);
+			Usart1_printf(&SD1, (uint8_t *)"%d	%d	",print_g,print_h);
+			Usart1_printf(&SD1, (uint8_t *)"%d	%d	",print_i,print_j);
+			Usart1_printf(&SD1, (uint8_t *)"%d	%d\r\n",print_k,print_l);
+
+			//Usart1_printf(&SD1, (uint8_t *)"%d\r\n",smc1.Theta_offset*1000);
+
+
+			//Usart1_printf(&SD1, (uint8_t *)"%d\r\n",smc1.Omega*100.0f);
+
+
+			//Usart1_printf(&SD1, (uint8_t *)"%u	%u\r\n",ADC_Value[ADC_IND_CURR1],ADC_Value[ADC_IND_CURR2]);
+			//Usart1_printf(&SD1, (uint8_t *)"%d	%d\r\n",MeasCurrParm.CorrADC_a,MeasCurrParm.CorrADC_b);
+			//Usart1_printf(&SD1, (uint8_t *)"%f	%f\r\n",ParkParm.qIalpha,ParkParm.qIbeta);
 	
 		
 	}

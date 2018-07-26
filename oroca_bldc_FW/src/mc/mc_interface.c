@@ -427,7 +427,7 @@ float mc_interface_get_angle(void)
 
 static volatile mc_state state;
 static volatile mc_control_mode control_mode;
-void mcpwm_setConfiguration(mcConfiguration_t configuration)
+void mc_setConfiguration(mcConfiguration_t configuration)
 {
 	// Stop everything first to be safe
 	control_mode = CONTROL_MODE_NONE;
@@ -441,12 +441,24 @@ void mcpwm_setConfiguration(mcConfiguration_t configuration)
 	utils_sys_unlock_cnt();
 }
 
-mcConfiguration_t mcpwm_getConfiguration(void)
+mcConfiguration_t mc_getConfiguration(void)
 {
 	stop_pwm_hw();//stop_pwm_ll();
 	
  	return m_conf;
 }
+
+float mc_rpm_to_omega(uint16_t RPM)
+{
+	//return RPM * 2.0f * PI / 60.0f;
+	return (float)RPM * 0.104719755f;
+}
+
+float mc_rpm_to_freq(uint16_t RPM)
+{
+	return (float)RPM / 60.0f;
+}
+
 
 
 static THD_FUNCTION(sample_send_thread, arg) {

@@ -59,18 +59,18 @@
 #define VDD				3.3f	
 
 //************** PI Coefficients **************
-#define	DKP        0.01
-#define	DKI        0.005
+#define	DKP        1.5
+#define	DKI        0.001
 #define	DKC        0.99999
 #define	DOUTMAX    0.99999
 
-#define	QKP        0.01
-#define	QKI        0.005
+#define	QKP        1.5
+#define	QKI        0.001
 #define	QKC        0.99999
 #define	QOUTMAX    0.99999
 
-#define	WKP       12.0
-#define	WKI        2.0
+#define	WKP       0.05
+#define	WKI        0.0025
 #define	WKC        0.99999
 #define	WOUTMAX    0.95
 
@@ -84,6 +84,8 @@
 
 //************** Derived Parameters ****************
 #define	PI				3.14159265358979f
+#define	TWOPI				6.283185307f
+
 #define	SQRT2			1.414213562f
 #define	SQRT3			1.732050808f
 #define	INV_SQRT3		(float)(1./SQRT3)

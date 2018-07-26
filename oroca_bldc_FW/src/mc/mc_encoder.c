@@ -31,6 +31,8 @@
 
 #include "usart1_print.h"
 
+#include <math.h>
+
 
 // Defines
 #define AS5047_USE_HW_SPI_PINS		1
@@ -253,9 +255,17 @@ void encoder_reset(void) {
  */
 uint16_t cap1_cnt=0, cap1_r_new=0, cap1_r_old=0, cap1_f=0;
 uint16_t pul1_width=0,pul1_period=0;
+uint16_t print_cnt=0;
+
 void encoder_tim_isr(void) {
 	uint16_t pos;
 
+	float theta_rad;
+	float theta_rad_new;
+	float mod_pos;
+
+
+	print_cnt++;
 
 	//LED_RED_ON();
 	if(mode == ENCODER_MODE_AS5047P_SPI)
@@ -267,7 +277,17 @@ void encoder_tim_isr(void) {
 		pos &= 0x3FFF;
 		last_enc_angle = ((float)pos * 360.0) / 16384.0;
 
-		//Usart1_printf(&SD1, (uint8_t *)"%f\r\n",last_enc_angle);
+		//smc1.Theta = ((float)pos * TWOPI) / 16384.0f ;
+		mod_pos = fmodf((float)pos, 2340.571429f);
+		theta_rad = mod_pos * TWOPI / 2340.571429f;
+		
+		//theta_rad_new = theta_rad - smc1.Theta_offset;
+		//theta_rad_new = theta_rad - PI + 0.349066f;
+		theta_rad_new = theta_rad - PI + 0.349066f;
+
+		
+		smc1.Omega = (theta_rad_new - smc1.Theta)/20000.0f;  //20k timer
+		smc1.Theta = theta_rad_new;
 
 	}
 	else if(mode == ENCODER_MODE_PWM)
