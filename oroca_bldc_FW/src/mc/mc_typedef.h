@@ -72,11 +72,10 @@ typedef enum {
 } mc_fault_code;
 
 typedef enum {
-	CONTROL_MODE_DUTY = 0,
-	CONTROL_MODE_SPEED,
+	CONTROL_MODE_SETUP = 0,
 	CONTROL_MODE_CURRENT,
-	CONTROL_MODE_CURRENT_BRAKE,
-	CONTROL_MODE_POS,
+	CONTROL_MODE_SPEED,
+	CONTROL_MODE_POSITION,
 	CONTROL_MODE_NONE
 } mc_control_mode;
 
@@ -95,7 +94,6 @@ typedef enum {
 	SENSOR_PORT_MODE_ABI,
 	SENSOR_PORT_MODE_AS5047_SPI
 } sensor_port_mode;
-
 
 // Logged fault data
 typedef struct {
@@ -277,14 +275,16 @@ typedef struct {
 	float cos3th;
 	float sin3th;
 
+	float Theta 	;
+	float Theta_old	;
 	float Theta_offset	;
-
-	float Theta	 	;
 	float ThetaCal	;
-	float trueTheta	;
-	float Futi	 	;
-	float Omega;     	// Output: Rotor speed
-	float rpm;     	// Output: Rotor speed
+
+	float angle;
+	float angleCal;
+	float Futi		;
+	float Omega;  
+	float rpm; 
 } tSMC;
 
 typedef struct {
@@ -365,17 +365,6 @@ typedef struct
     uint16_t DcCalDone:1;
 }tMcCtrlBits __attribute__((packed));
 
-#if 0
-typedef struct {
-	union{
-		uint16_t OpenLoop:1;
-		uint16_t RunMotor:1;
-		uint16_t DcCalDone:1;
-		};
-
-	uint16_t Word;
-} tMcCtrlBits;
-#endif
 
 
 

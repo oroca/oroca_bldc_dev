@@ -25,6 +25,18 @@
 #include <stdbool.h>
 
 extern tSMC smc1;
+//extern float last_enc_angle;
+
+typedef enum {
+	ENCODER_MODE_NONE = 0,
+	ENCODER_MODE_ABI,
+	ENCODER_MODE_AS5047P_SPI,
+	ENCODER_MODE_AHALL,
+	ENCODER_MODE_PWM
+} encoder_mode;
+
+extern encoder_mode EncMode;
+
 
 // Functions
 void encoder_deinit(void);

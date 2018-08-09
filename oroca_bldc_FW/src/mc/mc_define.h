@@ -47,7 +47,7 @@
 #define SPD_CTRL_DIV	(PWMFREQ/SPD_CTRL_FREQ)
 
 
-#define	HALL_SENSOR_FREQ	1000		// hall sensor measure Frequency in Hertz
+#define	HALL_SENSOR_FREQ	20000		// hall sensor measure Frequency in Hertz
 #define HALL_SENSOR_PEROID  (1.0f/HALL_SENSOR_FREQ)
 #define HALL_SENSOR_DIV	(PWMFREQ/HALL_SENSOR_FREQ)
 
@@ -69,8 +69,8 @@
 #define	QKC        0.99999
 #define	QOUTMAX    0.99999
 
-#define	WKP       0.05
-#define	WKI        0.0025
+#define	WKP        0.1
+#define	WKI        0.01
 #define	WKC        0.99999
 #define	WOUTMAX    0.95
 

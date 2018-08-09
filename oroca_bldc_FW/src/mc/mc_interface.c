@@ -74,13 +74,6 @@ static volatile float m_position_set;
 #define ADC_SAMPLE_MAX_LEN		2000
 static volatile int16_t m_curr0_samples[ADC_SAMPLE_MAX_LEN];
 static volatile int16_t m_curr1_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t m_ph1_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t m_ph2_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t m_ph3_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t m_vzero_samples[ADC_SAMPLE_MAX_LEN];
-static volatile uint8_t m_status_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t m_curr_fir_samples[ADC_SAMPLE_MAX_LEN];
-static volatile int16_t m_f_sw_samples[ADC_SAMPLE_MAX_LEN];
 static volatile int m_sample_len;
 static volatile int m_sample_int;
 static volatile int m_sample_ready;
@@ -426,12 +419,9 @@ float mc_interface_get_angle(void)
 
 
 static volatile mc_state state;
-static volatile mc_control_mode control_mode;
+
 void mc_setConfiguration(mcConfiguration_t configuration)
 {
-	// Stop everything first to be safe
-	control_mode = CONTROL_MODE_NONE;
-
 	stop_pwm_hw();//stop_pwm_ll();
 
 	utils_sys_lock_cnt();

@@ -76,7 +76,9 @@ extern tFdWeakParm FdWeakParm;
 extern "C" {
 #endif
 
-	void DoControl( void );
+	void SpeedControl( void );
+	void CurrentControl( void );
+
 
 
 #ifdef __cplusplus

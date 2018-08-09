@@ -38,7 +38,7 @@
 #define AS5047_USE_HW_SPI_PINS		1
 
 #define AS5047P_READ_ANGLECOM		(0x3FFF | 0x4000 | 0x8000) // This is just ones
-#define AS5047_SAMPLE_RATE_HZ		20000
+#define AS5047_SAMPLE_RATE_HZ		10000
 
 #if AS5047_USE_HW_SPI_PINS
 #ifdef HW_SPI_DEV
@@ -71,19 +71,13 @@
 #endif
 
 // Private types
-typedef enum {
-	ENCODER_MODE_NONE = 0,
-	ENCODER_MODE_ABI,
-	ENCODER_MODE_AS5047P_SPI,
-	ENCODER_MODE_AHALL,
-	ENCODER_MODE_PWM
-} encoder_mode;
+
 
 // Private variables
 static bool index_found = false;
 static uint32_t enc_counts = 10000;
-static encoder_mode mode = ENCODER_MODE_NONE;
-static float last_enc_angle = 0.0;
+encoder_mode EncMode = ENCODER_MODE_NONE;
+//float last_enc_angle = 0.0;
 
 tSMC smc1;
 
@@ -108,8 +102,8 @@ void encoder_deinit(void) {
 	palSetPadMode(HW_HALL_ENC_GPIO2, HW_HALL_ENC_PIN2, PAL_MODE_INPUT_PULLUP);
 
 	index_found = false;
-	mode = ENCODER_MODE_NONE;
-	last_enc_angle = 0.0;
+	EncMode = ENCODER_MODE_NONE;
+	//last_enc_angle = 0.0;
 }
 
 void encoder_init_abi(uint32_t counts) {
@@ -153,7 +147,7 @@ void encoder_init_abi(uint32_t counts) {
 	// Enable and set EXTI Line Interrupt to the highest priority
 	nvicEnableVector(HW_ENC_EXTI_CH, 0);
 
-	mode = ENCODER_MODE_ABI;
+	EncMode = ENCODER_MODE_ABI;
 }
 
 void encoder_init_as5047p_spi(void) {
@@ -188,24 +182,24 @@ void encoder_init_as5047p_spi(void) {
 
 	nvicEnableVector(HW_ENC_TIM_ISR_CH, 6);
 
-	mode = ENCODER_MODE_AS5047P_SPI;
+	EncMode = ENCODER_MODE_AS5047P_SPI;
 	index_found = true;
 }
 
 bool encoder_is_configured(void) {
-	return mode != ENCODER_MODE_NONE;
+	return EncMode != ENCODER_MODE_NONE;
 }
 
 float encoder_read_deg(void) {
 	static float angle = 0.0;
 
-	switch (mode) {
+	switch (EncMode) {
 	case ENCODER_MODE_ABI:
 		angle = ((float)HW_ENC_TIM->CNT * 360.0) / (float)enc_counts;
 		break;
 
 	case ENCODER_MODE_AS5047P_SPI:
-		angle = last_enc_angle;
+		angle = smc1.angle;
 		break;
 
 	default:
@@ -255,42 +249,74 @@ void encoder_reset(void) {
  */
 uint16_t cap1_cnt=0, cap1_r_new=0, cap1_r_old=0, cap1_f=0;
 uint16_t pul1_width=0,pul1_period=0;
-uint16_t print_cnt=0;
+int16_t encpos=0,encpos1=0;
+float enc_sum = 0.0f;
+uint16_t enc_sum_cnt=0;
+
+
 
 void encoder_tim_isr(void) {
 	uint16_t pos;
+	float vecpos;
 
-	float theta_rad;
-	float theta_rad_new;
-	float mod_pos;
-
-
-	print_cnt++;
+	int16_t delta_pos;
+	float Theta_cal_tmp;
 
 	//LED_RED_ON();
-	if(mode == ENCODER_MODE_AS5047P_SPI)
+	if(EncMode == ENCODER_MODE_AS5047P_SPI)
 	{
 		spi_begin();
 		spi_transfer(&pos, 0, 1);
 		spi_end();
 
 		pos &= 0x3FFF;
-		last_enc_angle = ((float)pos * 360.0) / 16384.0;
+		vecpos = fmodf((float)pos, 2340.428571f);
+		smc1.angle = ((float)pos * TWOPI) / 16383.0f;
+					
+		smc1.Theta = ((float)vecpos * TWOPI) / 2340.428571f;
+		//Theta_cal_tmp = smc1.Theta - PI + 0.653026396f;//setup mode
+		//Theta_cal_tmp = smc1.Theta - PI - 1.495928396f;//current mode
 
-		//smc1.Theta = ((float)pos * TWOPI) / 16384.0f ;
-		mod_pos = fmodf((float)pos, 2340.571429f);
-		theta_rad = mod_pos * TWOPI / 2340.571429f;
+		Theta_cal_tmp = smc1.Theta - PI - 0.785398163f; // +135deg ok
 		
-		//theta_rad_new = theta_rad - smc1.Theta_offset;
-		//theta_rad_new = theta_rad - PI + 0.349066f;
-		theta_rad_new = theta_rad - PI + 0.349066f;
+		if(Theta_cal_tmp < 0) smc1.ThetaCal = TWOPI + Theta_cal_tmp;
+		else smc1.ThetaCal = Theta_cal_tmp;
+				
+		smc1.Theta_old = smc1.Theta;
+
+		encpos = (int16_t)pos;
+		delta_pos = encpos - encpos1;
+		encpos1 = encpos;
+
+		if(0x3FFF < abs(delta_pos))
+		{
+			if( delta_pos < 0)delta_pos = (int16_t)0x3FFF + delta_pos;
+			else if( 0 < delta_pos)delta_pos = delta_pos - (int16_t)0x3FFF;
+		}
+		//smc1.Omega = (float)encpos/100;
+
+		//smc1.Omega = (float)delta_pos / 100.0f;
+		//smc1.Omega += (float)delta_pos / 100.0f;
+
+		smc1.Omega = (float)delta_pos * TWOPI / 16384.0f * (float)AS5047_SAMPLE_RATE_HZ / 7.0f;
+		//smc1.Omega = (float)delta_pos * 1.095700563f;
+			
+		//smc1.Omega = (sinf(smc1.Theta)*cosf(smc1.Theta_old) - cosf(smc1.Theta)*sinf(smc1.Theta_old)) * 20000.0f;  //20k timer
+
+		enc_sum_cnt ++;
+
+		enc_sum += (float)delta_pos * 1.095700563f;
+		if(100 < enc_sum_cnt)
+		{
+		//	smc1.Omega = enc_sum / enc_sum_cnt;
+			enc_sum_cnt = 0;
+			enc_sum = 0.0f;
+		}
 
 		
-		smc1.Omega = (theta_rad_new - smc1.Theta)/20000.0f;  //20k timer
-		smc1.Theta = theta_rad_new;
 
 	}
-	else if(mode == ENCODER_MODE_PWM)
+	else if(EncMode == ENCODER_MODE_PWM)
 	{
 		if((TIM4->SR & TIM_IT_CC1)&&(TIM4->DIER & TIM_IT_CC1))
 		{
@@ -311,6 +337,10 @@ void encoder_tim_isr(void) {
 				TIM4->CCER |= TIM_CCER_CC1P;	// to rising edge
 			}
 		}
+	}
+	else if (EncMode == ENCODER_MODE_AHALL)
+	{
+		encoder_AnalogHallEstimation (&smc1);
 	}
 
 
@@ -429,7 +459,7 @@ void encoder_init_pwm(void) {
 	/* Enable the TIM3 global Interrupt */
 	nvicEnableVector(HW_ENC_TIM_ISR_CH, 6);
 
-	mode = ENCODER_MODE_AS5047P_SPI;
+	EncMode = ENCODER_MODE_AS5047P_SPI;
 	index_found = true;
 }
 
@@ -523,9 +553,6 @@ void encoder_AnalogHallEstimation_filtered (tSMC *s)
 #else
 void encoder_AnalogHallEstimation (tSMC *s)
 {
-	s->HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
-	s->HallPLLB = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
-
 	s->costh = cosf(s->Theta);
 	s->sinth = sinf(s->Theta);
 	
@@ -539,50 +566,22 @@ void encoder_AnalogHallEstimation (tSMC *s)
 	s->Hall_PIout += ((tmp_kpi * err) - (tmp_kp * s->Hall_Err0)); 					
 	s->Hall_PIout = Bound_limit(s->Hall_PIout, 10.0f);						
 	s->Hall_Err0= err;									
-	
-	s->Theta += s->Hall_PIout ;
-	if((2.0f * PI) < s->Theta) s->Theta = s->Theta - (2.0f * PI);
-	else if(s->Theta < 0.0f) s->Theta = (2.0f * PI) + s->Theta;
-
-	s->ThetaCal= s->Theta + 0.3f;
-
-	if((2.0f * PI) < s->ThetaCal) s->ThetaCal = s->ThetaCal - (2.0f * PI);
-	else if(s->ThetaCal < 0.0f) s->ThetaCal = (2.0f * PI) + s->ThetaCal;
 
 	s->Omega = s->Hall_PIout;
 
+	s->angle += s->Hall_PIout ;
+	if(TWOPI < s->angle) s->angle = s->angle - TWOPI;
+	else if(s->angle < 0.0f) s->angle = TWOPI + s->angle;
 
-	s->trueTheta += (s->Hall_PIout /7.0f) ;
-	if((2.0f * PI) < s->trueTheta) s->trueTheta = s->trueTheta - (2.0f * PI);
-	else if(s->trueTheta < 0.0f) s->trueTheta = (2.0f * PI) + s->trueTheta;
+	s->angleCal= s->angle + 0.3f;
 
-	s->Futi   = s->Hall_PIout / (2.0f * PI) * HALL_SENSOR_FREQ;
+	s->ThetaCal += (s->Hall_PIout /7.0f) ;
+	if(TWOPI < s->ThetaCal) s->ThetaCal = s->ThetaCal -TWOPI;
+	else if(s->ThetaCal < 0.0f) s->ThetaCal = TWOPI + s->ThetaCal;
+
+	s->Futi   = s->Hall_PIout / TWOPI * HALL_SENSOR_FREQ;
 	s->rpm = 120.0f * s->Futi / 7.0f;
-	
 
-	//spi_dac_write_A((HallPLLA+ 1.0f) * 200.0f);
-	//spi_dac_write_B((HallPLLB+ 1.0f) * 200.0f);
-
-	//spi_dac_write_A((costh + 1.0f) * 2000.0f);
-	//spi_dac_write_B((sinth + 1.0f) * 2047.0f);
-
-	//spi_dac_write_A( (Hall_SinCos+ 1.0f) * 2048.0f);
-	//spi_dac_write_B( (Hall_CosSin+ 1.0f) * 2048.0f);
-
-	//spi_dac_write_A( (Hall_err+ 1.0f) * 2048.0f);
-	//spi_dac_write_B( (Theta * 200.0f) );
-
-	//spi_dac_write_B( Hall_PIout * 100.0f);
-
-
-	//spi_dac_write_A( (ParkParm.qAngle * 200.0f) );
-	//spi_dac_write_B( (smc1.Theta * 200.0f) );
-
-
-	//s->Omega = Wpll;
-	//s->Theta =Theta;
-
-	//DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
 }
 
 #endif

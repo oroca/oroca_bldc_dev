@@ -33,6 +33,7 @@
 #include "mc_interface.h"
 #include "mc_control.h"
 #include "mc_sensor.h"
+#include "mc_encoder.h"
 #include "mc_pwm.h"
 
 
@@ -64,7 +65,7 @@ void CalcSVGen( void );
 // Executes one PI itteration for each of the three loops Id,Iq,Speed,
 float qVdSquared = 0.0f;
 
-void DoControl( void )
+void CurrentControl( void )
 {
 	//if (uGF.bit.EnTorqueMod)
 	//	CtrlParm.qVqRef = CtrlParm.qVelRef;
@@ -97,6 +98,15 @@ void DoControl( void )
 	//else
 		ParkParm.qVq = PIParmQ.qOut;
 
+}
+
+void SpeedControl( void )
+{
+	// Execute the velocity control loop
+	PIParmW.qInMeas = smc1.Omega;
+	PIParmW.qInRef	= CtrlParm.qVelRef;
+	CalcPI(&PIParmW);
+	//CtrlParm.qVqRef = PIParmW.qOut;
 }
 
 void InitPI( tPIParm *pParm)
@@ -140,8 +150,6 @@ void SetupControlParameters(void)
 	CtrlParm.qVelRef = 0.0f;
 	CtrlParm.qVdRef = 0.0f;
 	CtrlParm.qVqRef = 0.0f;
-
-	McCtrlBits.OpenLoop = false;
 
 	// ============= PI D Term ===============
 	PIParmD.qKp = DKP;
