@@ -250,6 +250,8 @@ void encoder_reset(void) {
 uint16_t cap1_cnt=0, cap1_r_new=0, cap1_r_old=0, cap1_f=0;
 uint16_t pul1_width=0,pul1_period=0;
 int16_t encpos=0,encpos1=0;
+int16_t delta_pos=0,delta_pos1=0;
+
 float enc_sum = 0.0f;
 uint16_t enc_sum_cnt=0;
 
@@ -258,8 +260,7 @@ uint16_t enc_sum_cnt=0;
 void encoder_tim_isr(void) {
 	uint16_t pos;
 	float vecpos;
-
-	int16_t delta_pos;
+	
 	float Theta_cal_tmp;
 
 	//LED_RED_ON();
@@ -270,49 +271,73 @@ void encoder_tim_isr(void) {
 		spi_end();
 
 		pos &= 0x3FFF;
-		vecpos = fmodf((float)pos, 2340.428571f);
-		smc1.angle = ((float)pos * TWOPI) / 16383.0f;
-					
-		smc1.Theta = ((float)vecpos * TWOPI) / 2340.428571f;
-		//Theta_cal_tmp = smc1.Theta - PI + 0.653026396f;//setup mode
-		//Theta_cal_tmp = smc1.Theta - PI - 1.495928396f;//current mode
 
-		Theta_cal_tmp = smc1.Theta - PI - 0.785398163f; // +135deg ok
-		
-		if(Theta_cal_tmp < 0) smc1.ThetaCal = TWOPI + Theta_cal_tmp;
-		else smc1.ThetaCal = Theta_cal_tmp;
-				
-		smc1.Theta_old = smc1.Theta;
-
+#if 0
 		encpos = (int16_t)pos;
+
 		delta_pos = encpos - encpos1;
-		encpos1 = encpos;
 
-		if(0x3FFF < abs(delta_pos))
+
+		if(390 < abs(delta_pos))
 		{
-			if( delta_pos < 0)delta_pos = (int16_t)0x3FFF + delta_pos;
-			else if( 0 < delta_pos)delta_pos = delta_pos - (int16_t)0x3FFF;
+			if(delta_pos < 0)
+			{
+				if(0 < delta_pos1)	delta_pos = (int16_t)0x3FFF + delta_pos;
+			}
+			else if(0 < delta_pos)
+			{
+				if(delta_pos1 < 0) delta_pos = delta_pos - (int16_t)0x3FFF;
+			}
 		}
-		//smc1.Omega = (float)encpos/100;
 
-		//smc1.Omega = (float)delta_pos / 100.0f;
-		//smc1.Omega += (float)delta_pos / 100.0f;
+		encpos1 = encpos;
+		delta_pos1 = delta_pos;
+
+		smc1.angle = ((float)pos * TWOPI) / 16383.0f;
 
 		smc1.Omega = (float)delta_pos * TWOPI / 16384.0f * (float)AS5047_SAMPLE_RATE_HZ / 7.0f;
-		//smc1.Omega = (float)delta_pos * 1.095700563f;
-			
-		//smc1.Omega = (sinf(smc1.Theta)*cosf(smc1.Theta_old) - cosf(smc1.Theta)*sinf(smc1.Theta_old)) * 20000.0f;  //20k timer
+		
+		vecpos = fmodf((float)pos, 2340.428571f);
+		smc1.Theta = ((float)vecpos * TWOPI) / 2340.428571f;
+		Theta_cal_tmp = smc1.Theta - PI - (0.017453293f * 25.0f);
 
-		enc_sum_cnt ++;
+		//positive (0 ~ 2PI)
+		//if(Theta_cal_tmp < 0) smc1.ThetaCal = TWOPI + Theta_cal_tmp;
+		//else smc1.ThetaCal = Theta_cal_tmp;
+		smc1.ThetaCal = Theta_cal_tmp;
+		smc1.Theta_old = smc1.Theta;
+#else
 
-		enc_sum += (float)delta_pos * 1.095700563f;
-		if(100 < enc_sum_cnt)
-		{
-		//	smc1.Omega = enc_sum / enc_sum_cnt;
-			enc_sum_cnt = 0;
-			enc_sum = 0.0f;
-		}
+	vecpos = fmodf((float)pos, 2340.428571f);
+	smc1.Theta = ((float)vecpos * TWOPI) / 2340.428571f;
+	Theta_cal_tmp = smc1.Theta - PI - (0.017453293f * 25.0f);
+	smc1.ThetaCal = Theta_cal_tmp;
 
+	smc1.HallPLLA = sinf(smc1.ThetaCal);
+	smc1.HallPLLB = cosf(smc1.ThetaCal);
+
+	smc1.costh = cosf(smc1.Theta_old);
+	smc1.sinth = sinf(smc1.Theta_old);
+	
+	smc1.Hall_SinCos = smc1.HallPLLA * smc1.costh;
+	smc1.Hall_CosSin = smc1.HallPLLB * smc1.sinth;
+
+	float err, tmp_kp, tmp_kpi; 									
+	//tmp_kp = PIParmPLL.qKp;
+	//tmp_kpi = (PIParmPLL.qKp + 1.0f / (float)AS5047_SAMPLE_RATE_HZ);//(kp+ki)err
+
+	tmp_kp = 10.0f;
+	tmp_kpi = (10.0f + 1.0f / (float)AS5047_SAMPLE_RATE_HZ);//(kp+ki)err
+	err = smc1.Hall_SinCos -smc1.Hall_CosSin; 											
+	smc1.Hall_PIout += ((tmp_kpi * err) - (tmp_kp * smc1.Hall_Err0)); 					
+	smc1.Hall_PIout = Bound_limit(smc1.Hall_PIout, 10.0f);						
+	smc1.Hall_Err0= err;									
+
+	smc1.Omega = smc1.Hall_PIout;
+	smc1.Theta_old = smc1.ThetaCal;
+
+
+#endif
 		
 
 	}

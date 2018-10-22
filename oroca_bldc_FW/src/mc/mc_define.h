@@ -70,7 +70,7 @@
 #define	QOUTMAX    0.99999
 
 #define	WKP        0.1
-#define	WKI        0.01
+#define	WKI        0.0025
 #define	WKC        0.99999
 #define	WOUTMAX    0.95
 
