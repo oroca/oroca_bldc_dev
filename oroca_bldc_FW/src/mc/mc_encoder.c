@@ -260,8 +260,6 @@ uint16_t enc_sum_cnt=0;
 void encoder_tim_isr(void) {
 	uint16_t pos;
 	float vecpos;
-	
-	float Theta_cal_tmp;
 
 	//LED_RED_ON();
 	if(EncMode == ENCODER_MODE_AS5047P_SPI)
@@ -271,75 +269,27 @@ void encoder_tim_isr(void) {
 		spi_end();
 
 		pos &= 0x3FFF;
-
-#if 0
-		encpos = (int16_t)pos;
-
-		delta_pos = encpos - encpos1;
-
-
-		if(390 < abs(delta_pos))
-		{
-			if(delta_pos < 0)
-			{
-				if(0 < delta_pos1)	delta_pos = (int16_t)0x3FFF + delta_pos;
-			}
-			else if(0 < delta_pos)
-			{
-				if(delta_pos1 < 0) delta_pos = delta_pos - (int16_t)0x3FFF;
-			}
-		}
-
-		encpos1 = encpos;
-		delta_pos1 = delta_pos;
-
-		smc1.angle = ((float)pos * TWOPI) / 16383.0f;
-
-		smc1.Omega = (float)delta_pos * TWOPI / 16384.0f * (float)AS5047_SAMPLE_RATE_HZ / 7.0f;
-		
 		vecpos = fmodf((float)pos, 2340.428571f);
-		smc1.Theta = ((float)vecpos * TWOPI) / 2340.428571f;
-		Theta_cal_tmp = smc1.Theta - PI - (0.017453293f * 25.0f);
+		smc1.ThetaMeas = ((float)vecpos * TWOPI) / 2340.428571f;
 
-		//positive (0 ~ 2PI)
-		//if(Theta_cal_tmp < 0) smc1.ThetaCal = TWOPI + Theta_cal_tmp;
-		//else smc1.ThetaCal = Theta_cal_tmp;
-		smc1.ThetaCal = Theta_cal_tmp;
-		smc1.Theta_old = smc1.Theta;
-#else
+		smc1.AlphaMeas = sinf(smc1.ThetaMeas);
+		smc1.BetaMeas = cosf(smc1.ThetaMeas);
 
-	vecpos = fmodf((float)pos, 2340.428571f);
-	smc1.Theta = ((float)vecpos * TWOPI) / 2340.428571f;
-	Theta_cal_tmp = smc1.Theta - PI - (0.017453293f * 25.0f);
-	smc1.ThetaCal = Theta_cal_tmp;
+		encoder_PLLThetaEstimation(&smc1);
 
-	smc1.HallPLLA = sinf(smc1.ThetaCal);
-	smc1.HallPLLB = cosf(smc1.ThetaCal);
+		smc1.Theta  = smc1.ThetaEst - PI - (0.017453293f * 25.0f);
 
-	smc1.costh = cosf(smc1.Theta_old);
-	smc1.sinth = sinf(smc1.Theta_old);
+	}
+	else if (EncMode == ENCODER_MODE_AHALL)
+	{
+		smc1.AlphaMeas = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
+		smc1.BetaMeas = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
 	
-	smc1.Hall_SinCos = smc1.HallPLLA * smc1.costh;
-	smc1.Hall_CosSin = smc1.HallPLLB * smc1.sinth;
+		encoder_PLLThetaEstimation(&smc1);
 
-	float err, tmp_kp, tmp_kpi; 									
-	//tmp_kp = PIParmPLL.qKp;
-	//tmp_kpi = (PIParmPLL.qKp + 1.0f / (float)AS5047_SAMPLE_RATE_HZ);//(kp+ki)err
-
-	tmp_kp = 10.0f;
-	tmp_kpi = (10.0f + 1.0f / (float)AS5047_SAMPLE_RATE_HZ);//(kp+ki)err
-	err = smc1.Hall_SinCos -smc1.Hall_CosSin; 											
-	smc1.Hall_PIout += ((tmp_kpi * err) - (tmp_kp * smc1.Hall_Err0)); 					
-	smc1.Hall_PIout = Bound_limit(smc1.Hall_PIout, 10.0f);						
-	smc1.Hall_Err0= err;									
-
-	smc1.Omega = smc1.Hall_PIout;
-	smc1.Theta_old = smc1.ThetaCal;
-
-
-#endif
-		
-
+		smc1.Theta = smc1.ThetaEst + 0.3f;
+		smc1.Futi  = smc1.pll_PIout / TWOPI * HALL_SENSOR_FREQ;
+		smc1.rpm 	= 120.0f * smc1.Futi / 7.0f;
 	}
 	else if(EncMode == ENCODER_MODE_PWM)
 	{
@@ -363,10 +313,7 @@ void encoder_tim_isr(void) {
 			}
 		}
 	}
-	else if (EncMode == ENCODER_MODE_AHALL)
-	{
-		encoder_AnalogHallEstimation (&smc1);
-	}
+
 
 
 	//LED_RED_OFF();
@@ -491,123 +438,71 @@ void encoder_init_pwm(void) {
 
 
 
-/********************************PLL loop **********************************/	
 
-#if 0
-void encoder_AnalogHallEstimation_filtered (tSMC *s)
+void encoder_3HarmonicFilter(tSMC *s)
 {
+	s->cos3th = cosf(3.0f * s->Theta);
+	s->sin3th = sinf(3.0f * s->Theta);
 
-	HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
-	HallPLLB = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
-
-	cos3th = cosf(3.0f * Theta);
-	sin3th = sinf(3.0f * Theta);
-
-	HallPLLA_sin3th = HallPLLA * sin3th * Gamma;
-	HallPLLA_cos3th = HallPLLA * cos3th * Gamma;
+	s->pllA_sin3th = s->AlphaMeas * s->sin3th * s->Gamma;
+	s->pllA_cos3th = s->AlphaMeas * s->cos3th * s->Gamma;
 	
-	HallPLLB_cos3th = HallPLLB* cos3th * Gamma;
-	HallPLLB_sin3th = HallPLLB * sin3th * Gamma;
+	s->pllB_cos3th = s->BetaMeas * s->cos3th * s->Gamma;
+	s->pllB_sin3th = s->BetaMeas * s->sin3th * s->Gamma;
 
-	HallPLLA_cos3th_Integral += HallPLLA_cos3th;
-	HallPLLA_sin3th_Integral += HallPLLA_sin3th;
+	s->pllA_cos3th_Integral += s->pllA_cos3th;
+	s->pllA_sin3th_Integral += s->pllA_sin3th;
 	
-	HallPLLB_sin3th_Integral += HallPLLB_sin3th;
-	HallPLLB_cos3th_Integral += HallPLLB_cos3th;
+	s->pllB_sin3th_Integral += s->pllB_sin3th;
+	s->pllB_cos3th_Integral += s->pllB_cos3th;
 
-	Asin3th= HallPLLA_sin3th_Integral * sin3th;
-	Acos3th= HallPLLA_cos3th_Integral * cos3th;
+	s->Asin3th= s->pllA_sin3th_Integral * s->sin3th;
+	s->Acos3th= s->pllA_cos3th_Integral * s->cos3th;
 
-	Bsin3th= HallPLLB_sin3th_Integral * sin3th;
-	Bcos3th= HallPLLB_cos3th_Integral * cos3th;
+	s->Bsin3th= s->pllB_sin3th_Integral * s->sin3th;
+	s->Bcos3th= s->pllB_cos3th_Integral * s->cos3th;
 
-	ANF_PLLA = HallPLLA - Asin3th - Acos3th;
-	ANF_PLLB = HallPLLB - Bsin3th - Bcos3th;
+	s->ANF_PLLA = s->AlphaMeas - s->Asin3th - s->Acos3th;
+	s->ANF_PLLB = s->BetaMeas - s->Bsin3th - s->Bcos3th;
 	
-	costh = cosf(Theta);
-	sinth = sinf(Theta);
-	
-	Hall_SinCos = ANF_PLLA * costh;
-	Hall_CosSin = ANF_PLLB * sinth;
-
-	float err, tmp_kp, tmp_kpi; 									
-	tmp_kp = 1.0f;
-	tmp_kpi = (1.0f + 1.0f * Tsamp);
-	err = Hall_SinCos - Hall_CosSin; 											
-	Hall_PIout += ((tmp_kpi * err) - (tmp_kp * Hall_Err0)); 					
-	Hall_PIout = Bound_limit(Hall_PIout, 10.0f);						
-	Hall_Err0= err;									
-	
-	Theta += Hall_PIout ;
-	if((2.0f * PI) < Theta) Theta = Theta - (2.0f * PI);
-	else if(Theta < 0.0f) Theta = (2.0f * PI) + Theta;
-
-	s->Theta= Theta + 0.3f;
-
-	if((2.0f * PI) < s->Theta) s->Theta = s->Theta - (2.0f * PI);
-	else if(s->Theta < 0.0f) s->Theta = (2.0f * PI) + s->Theta;
-
-	s->Omega = Hall_PIout;
-	//Futi   = Hall_PIout / (2.* PI) *Fsamp;
-
-	//spi_dac_write_A((HallPLLA+ 1.0f) * 200.0f);
-	//spi_dac_write_B((HallPLLB+ 1.0f) * 200.0f);
-
-	//spi_dac_write_A((costh + 1.0f) * 2000.0f);
-	//spi_dac_write_B((sinth + 1.0f) * 2047.0f);
-
-	//spi_dac_write_A( (Hall_SinCos+ 1.0f) * 2048.0f);
-	//spi_dac_write_B( (Hall_CosSin+ 1.0f) * 2048.0f);
-
-	//spi_dac_write_A( (Hall_err+ 1.0f) * 2048.0f);
-	//spi_dac_write_B( (Theta * 200.0f) );
-
-	//spi_dac_write_B( Hall_PIout * 100.0f);
-
-
-	//spi_dac_write_A( (ParkParm.qAngle * 200.0f) );
-	//spi_dac_write_B( (smc1.Theta * 200.0f) );
-
-
-	//s->Omega = Wpll;
-	//s->Theta =Theta;
-
-	//DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
-}
-
-#else
-void encoder_AnalogHallEstimation (tSMC *s)
-{
 	s->costh = cosf(s->Theta);
 	s->sinth = sinf(s->Theta);
 	
-	s->Hall_SinCos = s->HallPLLA * s->costh;
-	s->Hall_CosSin = s->HallPLLB * s->sinth;
-
-	float err, tmp_kp, tmp_kpi; 									
-	tmp_kp = 1.0f;
-	tmp_kpi = (1.0f + 1.0f * HALL_SENSOR_PEROID);
-	err = s->Hall_SinCos - s->Hall_CosSin; 											
-	s->Hall_PIout += ((tmp_kpi * err) - (tmp_kp * s->Hall_Err0)); 					
-	s->Hall_PIout = Bound_limit(s->Hall_PIout, 10.0f);						
-	s->Hall_Err0= err;									
-
-	s->Omega = s->Hall_PIout;
-
-	s->angle += s->Hall_PIout ;
-	if(TWOPI < s->angle) s->angle = s->angle - TWOPI;
-	else if(s->angle < 0.0f) s->angle = TWOPI + s->angle;
-
-	s->angleCal= s->angle + 0.3f;
-
-	s->ThetaCal += (s->Hall_PIout /7.0f) ;
-	if(TWOPI < s->ThetaCal) s->ThetaCal = s->ThetaCal -TWOPI;
-	else if(s->ThetaCal < 0.0f) s->ThetaCal = TWOPI + s->ThetaCal;
-
-	s->Futi   = s->Hall_PIout / TWOPI * HALL_SENSOR_FREQ;
-	s->rpm = 120.0f * s->Futi / 7.0f;
+	s->SinCosTheta = s->ANF_PLLA * s->costh;
+	s->CosSinTheta = s->ANF_PLLB * s->sinth;
 
 }
 
-#endif
+
+
+
+void encoder_PLLThetaEstimation(tSMC *s)
+{
+	s->Kpll =  2.0f;     	;
+	s->Ipll =  1.0f / (float)AS5047_SAMPLE_RATE_HZ;
+
+	s->costh = cosf(s->ThetaEst0);
+	s->sinth = sinf(s->ThetaEst0);
+	
+	s->SinCosTheta = s->AlphaMeas * s->costh;
+	s->CosSinTheta = s->BetaMeas * s->sinth;
+	
+	float err, tmp_kp, tmp_kpi; 									
+	tmp_kp = s->Kpll;
+	tmp_kpi = s->Kpll + s->Ipll;//(kp+ki)err
+	err = s->SinCosTheta - s->CosSinTheta;											
+	s->pll_PIout += ((tmp_kpi * err) - (tmp_kp * s->pll_Err0));					
+	s->pll_PIout = Bound_limit(s->pll_PIout, 10.0f);						
+	s->pll_Err0= err;									
+	
+	s->Omega = s->pll_PIout;
+	
+	s->ThetaEst += s->Omega ;
+	if(TWOPI <s->ThetaEst) s->ThetaEst = s->ThetaEst - TWOPI;
+	else if(s->ThetaEst < 0.0f) s->ThetaEst = TWOPI + s->ThetaEst;
+	
+	s->ThetaEst0 = s->ThetaEst; 
+
+}
+
 

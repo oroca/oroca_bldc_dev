@@ -49,8 +49,8 @@ void encoder_tim_isr(void);
 void encoder_set_counts(uint32_t counts);
 bool encoder_index_found(void);
 
-void encoder_AnalogHallEstimation (tSMC *s);
-
+void encoder_3HarmonicFilter(tSMC *s);
+void encoder_PLLThetaEstimation(tSMC *s);
 
 
 #endif /* ENCODER_H_ */

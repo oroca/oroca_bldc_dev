@@ -375,8 +375,8 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 
 	if (EncMode == ENCODER_MODE_AHALL)
 	{
-		smc1.HallPLLA = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
-		smc1.HallPLLB = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
+		smc1.AlphaMeas = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
+		smc1.BetaMeas = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
 		
 	}
 	
@@ -405,7 +405,7 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 		//control
 		else 
 		{
-			control_mode = CONTROL_MODE_SETUP;
+			control_mode = CONTROL_MODE_SPEED;
 
 			// Calculate control values
 			if(control_mode == CONTROL_MODE_SETUP)
@@ -413,7 +413,7 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 				//ParkParm.qAngle -= 0.001f;
 				//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
 				
-				ParkParm.qAngle += 0.002f;//from gui 
+				ParkParm.qAngle += 0.0002f;//from gui 
 				if(TWOPI <=  ParkParm.qAngle)ParkParm.qAngle = TWOPI - ParkParm.qAngle;
 
 				//ParkParm.qAngle = 0.0f;
@@ -437,12 +437,12 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 			else if(control_mode == CONTROL_MODE_SPEED)//operate speed controller
 			{
 
-				CtrlParm.qVelRef = 0.1f;
+				CtrlParm.qVelRef = 0.001f;
 				CtrlParm.qVdRef = 0.0f;
 				CtrlParm.qVqRef = PIParmW.qOut; 
 				//CtrlParm.qVqRef = 0.5f; 
 				
-				ParkParm.qAngle = smc1.ThetaCal;
+				ParkParm.qAngle = smc1.Theta;
 			
 			}
 			else if(control_mode == CONTROL_MODE_POSITION)//operate positon controller
@@ -524,7 +524,7 @@ static THD_FUNCTION(timer_thread, arg) {
 	for(;;) {
 
 		//LED_RED_ON();
-		chThdSleepMilliseconds(10);
+		chThdSleepMilliseconds(100);
 
 		//Target DC Bus, without sign.
 		MeasSensorValue.InputVoltage = GET_INPUT_VOLTAGE();
@@ -568,11 +568,10 @@ static THD_FUNCTION(timer_thread, arg) {
 			print_i = ParkParm.qValpha * 100;
 			print_j = ParkParm.qVbeta * 100;
 
-			print_k = smc1.ThetaCal*100;
-			print_l = ParkParm.qAngle*100;
-			//print_l = smc1.angle;
+			print_k = ParkParm.qAngle*100;
+			print_l = smc1.Theta *100;
 
-			print_m = smc1.Omega*100;
+			print_m = smc1.Omega *100;
 			//print_m = sinf(smc1.ThetaCal)*100;
 			//print_m = print_l - print_k ;
 

@@ -214,51 +214,35 @@ typedef struct {
 
 
 typedef struct {
-	float HallPLLlead  ;
-	float HallPLLlead1 ;
-	float HallPLLlead2 ;
-	float HallPLLqe    ;
-	float HallPLLde    ;
-	float HallPLLde1   ;
-	float HallPLLdef   ;
-	float HallPLLdef1  ;
 
-	float Wpll	 		;
-	float Wpll1	 		;
-	float Wpllp	 		;
-	float Wplli	 		;
+	float Kpll      	;
+	float Ipll       	;
 
-	float Kpll      	;	// = 0.428;
-	float Ipll       	;	//= 28.83;
+	float pll_PIout 	;	
+	float pll_Err0 	;	
 
-	float Hall_KA 		;	
-	float Hall_KB 		;	
+	float AlphaMeas	;	
+	float BetaMeas	;
+	float ThetaMeas;
 	
-	float Hall_PIout 	;	
-	float Hall_Err0 	;	
+	float SinCosTheta;
+	float CosSinTheta;
 
-	float HallPLLA	;	
-	float HallPLLA1 ;
-	float HallPLLB	;
+	float pllA_cos3th;
+	float pllA_sin3th;
+	float pllB_sin3th;
+	float pllB_cos3th;
 
-	float HallPLLA_cos3th;
-	float HallPLLA_sin3th;
-	float HallPLLB_sin3th;
-	float HallPLLB_cos3th;
+	float pllA_cos3th_Integral;
+	float pllA_sin3th_Integral;
+	float pllB_sin3th_Integral;
+	float pllB_cos3th_Integral;
 
-	float HallPLLA_cos3th_Integral;
-	float HallPLLA_sin3th_Integral;
-	float HallPLLB_sin3th_Integral;
-	float HallPLLB_cos3th_Integral;
+	float pllA_old ;
+	float pllB_old ;
 
-	float HallPLLA_old ;
-	float HallPLLB_old ;
-
-	float HallPLLA_filtered;
-	float HallPLLB_filtered;
-
-	float Hall_SinCos;
-	float Hall_CosSin;
+	float pllA_filtered;
+	float pllB_filtered;
 
 	float Gamma; //= 1.0f;
 
@@ -275,14 +259,13 @@ typedef struct {
 	float cos3th;
 	float sin3th;
 
-	float Theta 	;
-	float Theta_old	;
-	float Theta_offset	;
-	float ThetaCal	;
+	float Theta	;
+	float ThetaEst;
+	float ThetaEst0	;
+	float ThetaOffset;
 
 	float angle;
-	float angleCal;
-	float Futi		;
+	float Futi;
 	float Omega;  
 	float rpm; 
 } tSMC;
