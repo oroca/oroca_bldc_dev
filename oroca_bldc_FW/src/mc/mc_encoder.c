@@ -39,6 +39,8 @@
 
 #define AS5047P_READ_ANGLECOM		(0x3FFF | 0x4000 | 0x8000) // This is just ones
 #define AS5047_SAMPLE_RATE_HZ		10000
+#define AS5047_SAMPLE_PRIOD			(1.0f/10000.0f)
+
 
 #if AS5047_USE_HW_SPI_PINS
 #ifdef HW_SPI_DEV
@@ -148,6 +150,7 @@ void encoder_init_abi(uint32_t counts) {
 	nvicEnableVector(HW_ENC_EXTI_CH, 0);
 
 	EncMode = ENCODER_MODE_ABI;
+	
 }
 
 void encoder_init_as5047p_spi(void) {
@@ -433,6 +436,8 @@ void encoder_init_pwm(void) {
 
 	EncMode = ENCODER_MODE_AS5047P_SPI;
 	index_found = true;
+
+	
 }
 
 
@@ -474,12 +479,146 @@ void encoder_3HarmonicFilter(tSMC *s)
 }
 
 
+/**********************************************************
+/EKF by 오라머니
+function x_hat = fcn(theta_en)
+
+persistent Pk xk firstRun
+
+if isempty(firstRun)      % 초기값들 설정 
+    xk = [1 0 0]＇;
+    Pk = 100*eye(3);//3by3 단위행렬
+    firstRun = 1;
+End
+
+% 파라미터터 설정
+Q = 1*eye(3);            % 논문에서는 높이면 빨리 수렴한다는데 꼭 그렇진 않은듯
+R = 0.1;                 % R을 낮추면 응답 빨라짐 대신 노이즈도 같이 심해짐
+wb = 1;                  % 왠만하면 1유지
+Tsc = 0.01;              % 샘플링시간에 맞추면 됨
+
+% 실제 출력값
+y = [cos(theta_en), sin(theta_en)]＇;
+
+% 예측값
+x_p = [xk(1)*cos(wb*Tsc*xk(3))-xk(2)*sin(wb*Tsc*xk(3)) ....
+      ;xk(1)*sin(wb*Tsc*xk(3))+xk(2)*cos(wb*Tsc*xk(3)) ....
+      ;                       xk(3)                      ];
+y_p = [x_p(1), x_p(2)]＇;
+
+% 자코비안 계산
+F = [cos(wb*Tsc*xk(3)), -sin(wb*Tsc*xk(3)), wb*Tsc*(-xk(1)*sin(wb*Tsc*xk(3))-xk(2)*cos(wb*Tsc*xk(3))) ....
+    ;sin(wb*Tsc*xk(3)),  cos(wb*Tsc*xk(3)), wb*Tsc*( xk(1)*cos(wb*Tsc*xk(3))+xk(2)*sin(wb*Tsc*xk(3))) ....
+    ;                0,                  0, 1 ];
+H = [1,0,0;0,1,0];
+
+% 칼만 필터 알고리즘
+P_p = F*Pk*F＇+Q;
+K = P_p*H＇/(H*P_p*H＇+R*eye(2));
+xk = x_p + K*(y-y_p);
+Pk = (eye(3)-K*H)*P_p/R;         % Pk부분 개조함: forgetting factor
+
+% 추정값 출력
+x_hat = xk;
+
+**********************************************************/
+void encoder_ExpendedKalmanFilter(tSMC *s)
+{
+	float tmp11, tmp12, tmp13,
+		  tmp21, tmp22, tmp23,
+		  tmp31, tmp32, tmp33;
+
+		  
+	float _tmp11, _tmp12, _tmp13,
+		  _tmp21, _tmp22, _tmp23,
+		  _tmp31, _tmp32, _tmp33;
+
+	float __tmp11, __tmp12, __tmp13,
+		  __tmp21, __tmp22, __tmp23,
+		  __tmp31, __tmp32, __tmp33;
+
+
+	//실제 출력값
+	s->y1 = s->AlphaMeas;
+	s->y2 = s->BetaMeas;
+
+	//% 예측값
+	s->xp1 = s->xk1 * cosf(s->wb * s->Tsc * s->xk3) - s->xk2 * sinf(s->wb * s->Tsc * s->xk3);
+	s->xp2 = s->xk1 * sinf(s->wb * s->Tsc * s->xk3) + s->xk2 * cosf(s->wb * s->Tsc * s->xk3);
+	s->xp3 = s->xk3;
+
+	s->yp1 = s->xp1;
+	s->yp2 = s->xp2;
+	
+	//% 자코비안 계산
+	s->F11 =  cosf(s->wb * s->Tsc * s->xk3); 
+	s->F12 = -sinf(s->wb * s->Tsc * s->xk3); 
+	s->F13 = s->wb * s->Tsc * (-s->xk1 * sinf(s->wb * s->Tsc * s->xk3) - s->xk2 * cosf(s->wb * s->Tsc * s->xk3));
+	s->F21 =  sinf(s->wb * s->Tsc * s->xk3); 
+	s->F22 =  cosf(s->wb * s->Tsc * s->xk3); 
+	s->F23 = s->wb * s->Tsc * ( s->xk1 * cosf(s->wb * s->Tsc * s->xk3) + s->xk2 * sinf(s->wb * s->Tsc * s->xk3));
+	s->F31 =  0.0f; 
+	s->F32 =  0.0f; 
+	s->F33 =  1.0f;
+
+	//% 칼만 필터 알고리즘
+	//P_p = F*Pk*F＇+Q;
+	tmp11 = s->F11 * s->Pk11;  tmp12 = s->F12 * s->Pk12; tmp13 = s->F13 * s->Pk13;
+	tmp21 = s->F21 * s->Pk21;  tmp22 = s->F22 * s->Pk22; tmp23 = s->F23 * s->Pk23;
+	tmp31 = s->F31 * s->Pk31;  tmp32 = s->F32 * s->Pk32; tmp33 = s->F33 * s->Pk33;
+
+	s->Pp11 = tmp11*s->F11 + tmp12*s->F12 + tmp13*s->F13;
+	s->Pp12 = tmp11*s->F21 + tmp12*s->F22 + tmp13*s->F23;
+	s->Pp13 = tmp11*s->F31 + tmp12*s->F32 + tmp13*s->F33;
+
+	s->Pp21 = tmp21*s->F11 + tmp22*s->F12 + tmp23*s->F13;
+	s->Pp22 = tmp21*s->F21 + tmp22*s->F22 + tmp23*s->F23;
+	s->Pp23 = tmp21*s->F31 + tmp22*s->F32 + tmp23*s->F33;
+
+	s->Pp31 = tmp31*s->F11 + tmp32*s->F12 + tmp33*s->F13;
+	s->Pp32 = tmp31*s->F21 + tmp32*s->F22 + tmp33*s->F23;
+	s->Pp33 = tmp31*s->F31 + tmp32*s->F32 + tmp33*s->F33;
+	
+	s->Pp11 = s->Pp11 + s->Q11; s->Pp12 = s->Pp12 + s->Q12; s->Pp13 = s->Pp13 + s->Q13;
+	s->Pp21 = s->Pp21 + s->Q21; s->Pp22 = s->Pp22 + s->Q22; s->Pp23 = s->Pp23 + s->Q23;
+	s->Pp31 = s->Pp31 + s->Q31; s->Pp32 = s->Pp32 + s->Q32; s->Pp33 = s->Pp33 + s->Q33;
+	
+	//K = P_p*H＇/(H*P_p*H＇+ R*eye(2));
+	tmp11 = s->Pp11*s->H11 + s->Pp12*s->H12 + s->Pp13*s->H13;	tmp12 = s->Pp11*s->H21 + s->Pp12*s->H22 + s->Pp13*s->H23;
+	tmp21 = s->Pp21*s->H11 + s->Pp22*s->H12 + s->Pp23*s->H13;	tmp22 = s->Pp21*s->H21 + s->Pp22*s->H22 + s->Pp23*s->H23;
+	tmp31 = s->Pp31*s->H11 + s->Pp32*s->H12 + s->Pp33*s->H13;	tmp32 = s->Pp31*s->H21 + s->Pp32*s->H22 + s->Pp33*s->H23;
+
+	_tmp11 = s->H11 * s->Pp11;  _tmp12 = s->H12 * s->Pp12; _tmp13 = s->H13 * s->Pp13;
+	_tmp21 = s->H21 * s->Pp21;  _tmp22 = s->H22 * s->Pp22; _tmp23 = s->H23 * s->Pp23;
+
+	__tmp11 = _tmp11*s->H11 + _tmp12*s->H12 + _tmp13*s->H13;	__tmp12 = _tmp11*s->H21 + _tmp12*s->H22 + _tmp13*s->H23;
+	__tmp21 = _tmp21*s->H11 + _tmp22*s->H12 + _tmp23*s->H13;	__tmp22 = _tmp21*s->H21 + _tmp22*s->H22 + _tmp23*s->H23;
+	__tmp31 = _tmp31*s->H11 + _tmp32*s->H12 + _tmp33*s->H13;	__tmp32 = _tmp31*s->H21 + _tmp32*s->H22 + _tmp33*s->H23;
+
+	_tmp11 = __tmp11 + s->R;	_tmp12 = __tmp12;
+	_tmp21 = __tmp21;	_tmp22 = __tmp22 + s->R;
+
+	s->K11 = tmp11 / _tmp11;	s->K12 = tmp12 / _tmp12;
+	s->K21 = tmp21 / _tmp21;	s->K22 = tmp22 / _tmp22;
+
+	//xk = x_p + K*(y-y_p);
+	float y_err1 = s->y1 - s->yp1;
+	float y_err2 = s->y2 - s->yp2;
+
+	s->xk1 = s->xp1 + (s->K11 * y_err1 + s->K12 * y_err2);
+	s->xk2 = s->xp2 + (s->K21 * y_err1 + s->K22 * y_err2);
+	s->xk3 = s->xp3;
+
+	//Pk = (eye(3)-K*H)*P_p/R; 
+	
+	
+}
+
+
 
 
 void encoder_PLLThetaEstimation(tSMC *s)
 {
-	s->Kpll =  2.0f;     	;
-	s->Ipll =  1.0f / (float)AS5047_SAMPLE_RATE_HZ;
 
 	s->costh = cosf(s->ThetaEst0);
 	s->sinth = sinf(s->ThetaEst0);
@@ -503,6 +642,30 @@ void encoder_PLLThetaEstimation(tSMC *s)
 	
 	s->ThetaEst0 = s->ThetaEst; 
 
+}
+
+
+void encoder_tSMCInit(tSMC *s)
+{
+	s->Kpll =  2.0f;     	;
+	s->Ipll =  1.0f / (float)AS5047_SAMPLE_RATE_HZ;
+
+	s->xk1 = 1.0f; s->xk2 = 1.0f; s->xk3 = 1.0f;
+
+	s->Pk11 = 100.0f; s->Pk12 = 0.0f;   s->Pk12 = 0.0f;
+	s->Pk21 = 0.0f;   s->Pk22 = 100.0f; s->Pk22 = 0.0f;
+	s->Pk31 = 0.0f;   s->Pk32 = 0.0f;   s->Pk32 = 100.0f;
+
+	s->Q11 = 1.0f; s->Q12 = 0.0f; s->Q12 = 0.0f;
+	s->Q21 = 0.0f; s->Q22 = 1.0f; s->Q22 = 0.0f;
+	s->Q31 = 0.0f; s->Q32 = 0.0f; s->Q32 = 1.0f;
+
+	s->R = 0.1f;
+	s->wb = 1.0f;
+	s->Tsc = AS5047_SAMPLE_PRIOD;
+
+	s->H11= 1.0f;s->H12= 0.0f;s->H13= 0.0f;
+	s->H21= 0.0f;s->H22= 1.0f;s->H23= 0.0f;
 }
 
 

@@ -51,6 +51,7 @@ bool encoder_index_found(void);
 
 void encoder_3HarmonicFilter(tSMC *s);
 void encoder_PLLThetaEstimation(tSMC *s);
+void encoder_tSMCInit(tSMC *s);
 
 
 #endif /* ENCODER_H_ */

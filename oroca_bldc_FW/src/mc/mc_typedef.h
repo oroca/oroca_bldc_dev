@@ -214,19 +214,40 @@ typedef struct {
 
 
 typedef struct {
-
-	float Kpll      	;
-	float Ipll       	;
-
-	float pll_PIout 	;	
-	float pll_Err0 	;	
-
+	//------------------------------------
+	//for measure
 	float AlphaMeas	;	
 	float BetaMeas	;
 	float ThetaMeas;
+
+	//------------------------------------
+	//for pll
+	float costh;
+	float sinth;
+	
+	float Kpll      	;
+	float Ipll       	;
+
+	float pll_PIout ;	
+	float pll_Err0 	;	
 	
 	float SinCosTheta;
 	float CosSinTheta;
+
+	float Theta ; // 0 ~ 2PI (vector)
+	float ThetaEst;
+	float ThetaEst0	;
+	float ThetaOffset;
+
+	//------------------------------------
+	//for 3phase hamony filter
+	
+	float Asin3th	;// = 0.0f;
+	float Acos3th	;// = 0.0f;
+	float Bsin3th	;//= 0.0f;
+	float Bcos3th	;//= 0.0f;
+	float ANF_PLLA	;//= 0.0f;
+	float ANF_PLLB	;//= 0.0f;
 
 	float pllA_cos3th;
 	float pllA_sin3th;
@@ -238,33 +259,47 @@ typedef struct {
 	float pllB_sin3th_Integral;
 	float pllB_cos3th_Integral;
 
-	float pllA_old ;
-	float pllB_old ;
-
-	float pllA_filtered;
-	float pllB_filtered;
-
-	float Gamma; //= 1.0f;
-
-	float costh;
-	float sinth;
-
-	float Asin3th	;// = 0.0f;
-	float Acos3th	;// = 0.0f;
-	float Bsin3th	;//= 0.0f;
-	float Bcos3th	;//= 0.0f;
-	float ANF_PLLA	;//= 0.0f;
-	float ANF_PLLB	;//= 0.0f;
-
 	float cos3th;
 	float sin3th;
 
-	float Theta	;
-	float ThetaEst;
-	float ThetaEst0	;
-	float ThetaOffset;
+	float Gamma; //= 1.0f;
+	//------------------------------------
+	//for EKF
+	float xk1,xk2,xk3;
+	float Pk11,Pk12,Pk13,
+		  Pk21,Pk22,Pk23,
+		  Pk31,Pk32,Pk33;
 
-	float angle;
+	float Q11,Q12,Q13,
+	      Q21,Q22,Q23,
+	      Q31,Q32,Q33;	  
+
+	float R;
+	float wb;
+
+	float Tsc; 
+	float y1,y2;
+	float xp1,xp2,xp3;
+
+	float yp1,yp2;
+
+	float F11,F12,F13,
+	      F21,F22,F23,
+	      F31,F32,F33;
+	
+	float H11,H12,H13,
+	      H21,H22,H23;
+
+	float Pp11,Pp12,Pp13,
+	      Pp21,Pp22,Pp23,
+	      Pp31,Pp32,Pp33;	
+
+	float K11,K12,
+	      K21,K22;
+
+	//------------------------------------
+	//common
+	float angle; // 0 ~ 2PI
 	float Futi;
 	float Omega;  
 	float rpm; 
