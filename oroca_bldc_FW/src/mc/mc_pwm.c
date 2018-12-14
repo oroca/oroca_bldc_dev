@@ -405,7 +405,7 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 		//control
 		else 
 		{
-			control_mode = CONTROL_MODE_SPEED;
+			control_mode = CONTROL_MODE_SETUP;
 
 			// Calculate control values
 			if(control_mode == CONTROL_MODE_SETUP)
@@ -413,7 +413,7 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 				//ParkParm.qAngle -= 0.001f;
 				//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
 				
-				ParkParm.qAngle += 0.0002f;//from gui 
+				ParkParm.qAngle += 0.0002f;//from gui
 				if(TWOPI <=  ParkParm.qAngle)ParkParm.qAngle = TWOPI - ParkParm.qAngle;
 
 				//ParkParm.qAngle = 0.0f;
@@ -569,9 +569,9 @@ static THD_FUNCTION(timer_thread, arg) {
 			print_j = ParkParm.qVbeta * 100;
 
 			print_k = ParkParm.qAngle*100;
-			print_l = smc1.Theta *100;
+			print_l = smc1.ThetaMeas *100;
 
-			print_m = smc1.Omega *100;
+			print_m = smc1.ThetaEst *100;
 			//print_m = sinf(smc1.ThetaCal)*100;
 			//print_m = print_l - print_k ;
 

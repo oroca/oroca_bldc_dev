@@ -185,6 +185,8 @@ void encoder_init_as5047p_spi(void) {
 
 	nvicEnableVector(HW_ENC_TIM_ISR_CH, 6);
 
+	encoder_tSMCInit(&smc1);
+
 	EncMode = ENCODER_MODE_AS5047P_SPI;
 	index_found = true;
 }
@@ -485,7 +487,7 @@ function x_hat = fcn(theta_en)
 
 persistent Pk xk firstRun
 
-if isempty(firstRun)      % 초기값들 설정 
+if isempty(firstRun)      % 초기값들 설정
     xk = [1 0 0]＇;
     Pk = 100*eye(3);//3by3 단위행렬
     firstRun = 1;
@@ -615,8 +617,6 @@ void encoder_ExpendedKalmanFilter(tSMC *s)
 }
 
 
-
-
 void encoder_PLLThetaEstimation(tSMC *s)
 {
 
@@ -647,7 +647,7 @@ void encoder_PLLThetaEstimation(tSMC *s)
 
 void encoder_tSMCInit(tSMC *s)
 {
-	s->Kpll =  2.0f;     	;
+	s->Kpll =  1.0f;     	;
 	s->Ipll =  1.0f / (float)AS5047_SAMPLE_RATE_HZ;
 
 	s->xk1 = 1.0f; s->xk2 = 1.0f; s->xk3 = 1.0f;

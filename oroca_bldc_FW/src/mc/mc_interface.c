@@ -144,7 +144,6 @@ void mc_interface_init(mcConfiguration_t *configuration)
 	}
 #endif
 
-
 //	m_conf.motor_type = MOTOR_TYPE_BLDC;
 	mcpwm_init(&m_conf);
 
