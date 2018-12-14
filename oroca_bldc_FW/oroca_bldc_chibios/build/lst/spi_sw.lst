@@ -1,0 +1,3354 @@
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 1
+   4              		.eabi_attribute 28, 1
+   5              		.fpu fpv4-sp-d16
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 2
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.thumb
+  16              		.syntax unified
+  17              		.file	"spi_sw.c"
+  18              		.text
+  19              	.Ltext0:
+  20              		.cfi_sections	.debug_frame
+  21              		.section	.text.spi_sw_init,"ax",%progbits
+  22              		.align	2
+  23              		.p2align 4,,15
+  24              		.global	spi_sw_init
+  25              		.thumb
+  26              		.thumb_func
+  27              		.type	spi_sw_init, %function
+  28              	spi_sw_init:
+  29              	.LFB256:
+  30              		.file 1 "src/core/spi_sw.c"
+  31              		.loc 1 29 0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 0
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35 0000 38B5     		push	{r3, r4, r5, lr}
+  36              		.cfi_def_cfa_offset 16
+  37              		.cfi_offset 3, -16
+  38              		.cfi_offset 4, -12
+  39              		.cfi_offset 5, -8
+  40              		.cfi_offset 14, -4
+  41              		.loc 1 30 0
+  42 0002 0F4D     		ldr	r5, .L5
+  43 0004 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+  44 0006 CAB9     		cbnz	r2, .L1
+  45              		.loc 1 31 0
+  46 0008 0E4C     		ldr	r4, .L5+4
+  47 000a 4021     		movs	r1, #64
+  48 000c 2046     		mov	r0, r4
+  49 000e FFF7FEFF 		bl	_pal_lld_setgroupmode
+  50              	.LVL0:
+  51              		.loc 1 32 0
+  52 0012 2046     		mov	r0, r4
+  53 0014 0122     		movs	r2, #1
+  54 0016 1021     		movs	r1, #16
+  55 0018 FFF7FEFF 		bl	_pal_lld_setgroupmode
+  56              	.LVL1:
+  57              		.loc 1 33 0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 2
+
+
+  58 001c 2046     		mov	r0, r4
+  59 001e 0122     		movs	r2, #1
+  60 0020 2021     		movs	r1, #32
+  61 0022 FFF7FEFF 		bl	_pal_lld_setgroupmode
+  62              	.LVL2:
+  63              		.loc 1 34 0
+  64 0026 0122     		movs	r2, #1
+  65 0028 8021     		movs	r1, #128
+  66 002a 2046     		mov	r0, r4
+  67 002c FFF7FEFF 		bl	_pal_lld_setgroupmode
+  68              	.LVL3:
+  69              		.loc 1 36 0
+  70 0030 1021     		movs	r1, #16
+  71              		.loc 1 37 0
+  72 0032 2022     		movs	r2, #32
+  73              		.loc 1 38 0
+  74 0034 0123     		movs	r3, #1
+  75              		.loc 1 36 0
+  76 0036 2183     		strh	r1, [r4, #24]	@ movhi
+  77              		.loc 1 37 0
+  78 0038 6283     		strh	r2, [r4, #26]	@ movhi
+  79              		.loc 1 38 0
+  80 003a 2B70     		strb	r3, [r5]
+  81              	.L1:
+  82 003c 38BD     		pop	{r3, r4, r5, pc}
+  83              	.L6:
+  84 003e 00BF     		.align	2
+  85              	.L5:
+  86 0040 00000000 		.word	.LANCHOR0
+  87 0044 00000240 		.word	1073872896
+  88              		.cfi_endproc
+  89              	.LFE256:
+  90              		.size	spi_sw_init, .-spi_sw_init
+  91              		.section	.text.spi_sw_transfer,"ax",%progbits
+  92              		.align	2
+  93              		.p2align 4,,15
+  94              		.global	spi_sw_transfer
+  95              		.thumb
+  96              		.thumb_func
+  97              		.type	spi_sw_transfer, %function
+  98              	spi_sw_transfer:
+  99              	.LFB257:
+ 100              		.loc 1 42 0
+ 101              		.cfi_startproc
+ 102              		@ args = 0, pretend = 0, frame = 16
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104              	.LVL4:
+ 105 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 106              		.cfi_def_cfa_offset 32
+ 107              		.cfi_offset 4, -32
+ 108              		.cfi_offset 5, -28
+ 109              		.cfi_offset 6, -24
+ 110              		.cfi_offset 7, -20
+ 111              		.cfi_offset 8, -16
+ 112              		.cfi_offset 9, -12
+ 113              		.cfi_offset 10, -8
+ 114              		.cfi_offset 14, -4
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 3
+
+
+ 115              		.loc 1 43 0
+ 116 0004 2E4C     		ldr	r4, .L40
+ 117              		.loc 1 42 0
+ 118 0006 84B0     		sub	sp, sp, #16
+ 119              		.cfi_def_cfa_offset 48
+ 120              	.LBB33:
+ 121              	.LBB34:
+ 122              		.loc 1 83 0
+ 123 0008 0023     		movs	r3, #0
+ 124              	.LBE34:
+ 125              	.LBE33:
+ 126              		.loc 1 43 0
+ 127 000a 2025     		movs	r5, #32
+ 128 000c 6583     		strh	r5, [r4, #26]	@ movhi
+ 129              	.LBB39:
+ 130              	.LBB37:
+ 131              		.loc 1 83 0
+ 132 000e 0193     		str	r3, [sp, #4]
+ 133 0010 019B     		ldr	r3, [sp, #4]
+ 134 0012 042B     		cmp	r3, #4
+ 135              	.LBE37:
+ 136              	.LBE39:
+ 137              		.loc 1 42 0
+ 138 0014 8846     		mov	r8, r1
+ 139              	.LBB40:
+ 140              	.LBB38:
+ 141              		.loc 1 83 0
+ 142 0016 06DC     		bgt	.L11
+ 143              	.L30:
+ 144              	.LBB35:
+ 145              	.LBB36:
+ 146              		.file 2 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmInstr.h"
+ 147              		.loc 2 327 0
+ 148              		.syntax unified
+ 149              	@ 327 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmInstr.h" 1
+ 150 0018 00BF     		nop
+ 151              	@ 0 "" 2
+ 152              		.thumb
+ 153              		.syntax unified
+ 154              	.LBE36:
+ 155              	.LBE35:
+ 156              		.loc 1 83 0
+ 157 001a 019B     		ldr	r3, [sp, #4]
+ 158 001c 0133     		adds	r3, r3, #1
+ 159 001e 0193     		str	r3, [sp, #4]
+ 160 0020 019B     		ldr	r3, [sp, #4]
+ 161 0022 042B     		cmp	r3, #4
+ 162 0024 F8DD     		ble	.L30
+ 163              	.L11:
+ 164              	.LVL5:
+ 165              	.LBE38:
+ 166              	.LBE40:
+ 167              	.LBB41:
+ 168              		.loc 1 46 0
+ 169 0026 002A     		cmp	r2, #0
+ 170 0028 45DD     		ble	.L7
+ 171              	.LBB42:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 4
+
+
+ 172              	.LBB43:
+ 173              		.loc 1 51 0
+ 174 002a 254D     		ldr	r5, .L40
+ 175 002c 00EB0209 		add	r9, r0, r2
+ 176 0030 8646     		mov	lr, r0
+ 177 0032 C446     		mov	ip, r8
+ 178              	.LBB44:
+ 179              	.LBB45:
+ 180              		.loc 1 83 0
+ 181 0034 0021     		movs	r1, #0
+ 182              	.LVL6:
+ 183              	.L23:
+ 184              	.LBE45:
+ 185              	.LBE44:
+ 186              	.LBE43:
+ 187              		.loc 1 47 0
+ 188 0036 B8F1000F 		cmp	r8, #0
+ 189 003a 3FD0     		beq	.L24
+ 190              		.loc 1 47 0 is_stmt 0 discriminator 1
+ 191 003c 9CF80040 		ldrb	r4, [ip]	@ zero_extendqisi2
+ 192              	.L12:
+ 193              	.LVL7:
+ 194 0040 0826     		movs	r6, #8
+ 195 0042 0022     		movs	r2, #0
+ 196              	.LBB58:
+ 197              		.loc 1 61 0 is_stmt 1 discriminator 1
+ 198 0044 4FF02007 		mov	r7, #32	@ movhi
+ 199              	.LVL8:
+ 200              	.L19:
+ 201              		.loc 1 51 0
+ 202 0048 C4F3C71A 		ubfx	r10, r4, #7, #8
+ 203 004c BAF1000F 		cmp	r10, #0
+ 204 0050 0CBF     		ite	eq
+ 205 0052 4FF40003 		moveq	r3, #8388608
+ 206 0056 0023     		movne	r3, #0
+ 207 0058 43EACA13 		orr	r3, r3, r10, lsl #7
+ 208 005c AB61     		str	r3, [r5, #24]
+ 209              	.LBB51:
+ 210              	.LBB48:
+ 211              		.loc 1 83 0
+ 212 005e 0291     		str	r1, [sp, #8]
+ 213 0060 029B     		ldr	r3, [sp, #8]
+ 214              	.LBE48:
+ 215              	.LBE51:
+ 216              		.loc 1 52 0
+ 217 0062 6400     		lsls	r4, r4, #1
+ 218              	.LVL9:
+ 219              	.LBB52:
+ 220              	.LBB49:
+ 221              		.loc 1 83 0
+ 222 0064 042B     		cmp	r3, #4
+ 223              	.LBE49:
+ 224              	.LBE52:
+ 225              		.loc 1 52 0
+ 226 0066 E4B2     		uxtb	r4, r4
+ 227              	.LVL10:
+ 228              	.LBB53:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 5
+
+
+ 229              	.LBB50:
+ 230              		.loc 1 83 0
+ 231 0068 06DC     		bgt	.L17
+ 232              	.L29:
+ 233              	.LBB46:
+ 234              	.LBB47:
+ 235              		.loc 2 327 0
+ 236              		.syntax unified
+ 237              	@ 327 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmInstr.h" 1
+ 238 006a 00BF     		nop
+ 239              	@ 0 "" 2
+ 240              		.thumb
+ 241              		.syntax unified
+ 242              	.LBE47:
+ 243              	.LBE46:
+ 244              		.loc 1 83 0
+ 245 006c 029B     		ldr	r3, [sp, #8]
+ 246 006e 0133     		adds	r3, r3, #1
+ 247 0070 0293     		str	r3, [sp, #8]
+ 248 0072 029B     		ldr	r3, [sp, #8]
+ 249 0074 042B     		cmp	r3, #4
+ 250 0076 F8DD     		ble	.L29
+ 251              	.L17:
+ 252              	.LBE50:
+ 253              	.LBE53:
+ 254              		.loc 1 57 0
+ 255 0078 2B69     		ldr	r3, [r5, #16]
+ 256              		.loc 1 56 0
+ 257 007a 5200     		lsls	r2, r2, #1
+ 258              	.LVL11:
+ 259              		.loc 1 57 0
+ 260 007c 5B06     		lsls	r3, r3, #25
+ 261              		.loc 1 56 0
+ 262 007e D2B2     		uxtb	r2, r2
+ 263              	.LVL12:
+ 264              		.loc 1 57 0
+ 265 0080 01D5     		bpl	.L16
+ 266              		.loc 1 58 0
+ 267 0082 42F00102 		orr	r2, r2, #1
+ 268              	.LVL13:
+ 269              	.L16:
+ 270              		.loc 1 61 0 discriminator 2
+ 271 0086 2F83     		strh	r7, [r5, #24]	@ movhi
+ 272              	.LBB54:
+ 273              	.LBB55:
+ 274              		.loc 1 83 0 discriminator 2
+ 275 0088 0391     		str	r1, [sp, #12]
+ 276 008a 039B     		ldr	r3, [sp, #12]
+ 277 008c 042B     		cmp	r3, #4
+ 278 008e 06DC     		bgt	.L21
+ 279              	.L28:
+ 280              	.LBB56:
+ 281              	.LBB57:
+ 282              		.loc 2 327 0
+ 283              		.syntax unified
+ 284              	@ 327 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmInstr.h" 1
+ 285 0090 00BF     		nop
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 6
+
+
+ 286              	@ 0 "" 2
+ 287              		.thumb
+ 288              		.syntax unified
+ 289              	.LBE57:
+ 290              	.LBE56:
+ 291              		.loc 1 83 0
+ 292 0092 039B     		ldr	r3, [sp, #12]
+ 293 0094 0133     		adds	r3, r3, #1
+ 294 0096 0393     		str	r3, [sp, #12]
+ 295 0098 039B     		ldr	r3, [sp, #12]
+ 296 009a 042B     		cmp	r3, #4
+ 297 009c F8DD     		ble	.L28
+ 298              	.L21:
+ 299              	.LBE55:
+ 300              	.LBE54:
+ 301              		.loc 1 50 0
+ 302 009e 013E     		subs	r6, r6, #1
+ 303              	.LVL14:
+ 304              		.loc 1 63 0
+ 305 00a0 6F83     		strh	r7, [r5, #26]	@ movhi
+ 306              	.LVL15:
+ 307              		.loc 1 50 0
+ 308 00a2 D1D1     		bne	.L19
+ 309              	.LBE58:
+ 310              		.loc 1 66 0
+ 311 00a4 08B1     		cbz	r0, .L22
+ 312              		.loc 1 67 0
+ 313 00a6 8EF80020 		strb	r2, [lr]
+ 314              	.L22:
+ 315 00aa 0EF1010E 		add	lr, lr, #1
+ 316              	.LBE42:
+ 317              		.loc 1 46 0 discriminator 2
+ 318 00ae F145     		cmp	r9, lr
+ 319 00b0 0CF1010C 		add	ip, ip, #1
+ 320 00b4 BFD1     		bne	.L23
+ 321              	.LVL16:
+ 322              	.L7:
+ 323              	.LBE41:
+ 324              		.loc 1 70 0
+ 325 00b6 04B0     		add	sp, sp, #16
+ 326              		.cfi_remember_state
+ 327              		.cfi_def_cfa_offset 32
+ 328              		@ sp needed
+ 329 00b8 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 330              	.LVL17:
+ 331              	.L24:
+ 332              		.cfi_restore_state
+ 333              	.LBB60:
+ 334              	.LBB59:
+ 335              		.loc 1 47 0
+ 336 00bc 4446     		mov	r4, r8
+ 337 00be BFE7     		b	.L12
+ 338              	.L41:
+ 339              		.align	2
+ 340              	.L40:
+ 341 00c0 00000240 		.word	1073872896
+ 342              	.LBE59:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 7
+
+
+ 343              	.LBE60:
+ 344              		.cfi_endproc
+ 345              	.LFE257:
+ 346              		.size	spi_sw_transfer, .-spi_sw_transfer
+ 347              		.section	.text.spi_sw_begin,"ax",%progbits
+ 348              		.align	2
+ 349              		.p2align 4,,15
+ 350              		.global	spi_sw_begin
+ 351              		.thumb
+ 352              		.thumb_func
+ 353              		.type	spi_sw_begin, %function
+ 354              	spi_sw_begin:
+ 355              	.LFB258:
+ 356              		.loc 1 72 0
+ 357              		.cfi_startproc
+ 358              		@ args = 0, pretend = 0, frame = 8
+ 359              		@ frame_needed = 0, uses_anonymous_args = 0
+ 360              		@ link register save eliminated.
+ 361 0000 82B0     		sub	sp, sp, #8
+ 362              		.cfi_def_cfa_offset 8
+ 363              		.loc 1 73 0
+ 364 0002 084A     		ldr	r2, .L48
+ 365              	.LBB61:
+ 366              	.LBB62:
+ 367              		.loc 1 83 0
+ 368 0004 0023     		movs	r3, #0
+ 369              	.LBE62:
+ 370              	.LBE61:
+ 371              		.loc 1 73 0
+ 372 0006 1021     		movs	r1, #16
+ 373 0008 5183     		strh	r1, [r2, #26]	@ movhi
+ 374              	.LBB66:
+ 375              	.LBB65:
+ 376              		.loc 1 83 0
+ 377 000a 0193     		str	r3, [sp, #4]
+ 378 000c 019B     		ldr	r3, [sp, #4]
+ 379 000e 042B     		cmp	r3, #4
+ 380 0010 06DC     		bgt	.L42
+ 381              	.L45:
+ 382              	.LBB63:
+ 383              	.LBB64:
+ 384              		.loc 2 327 0
+ 385              		.syntax unified
+ 386              	@ 327 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmInstr.h" 1
+ 387 0012 00BF     		nop
+ 388              	@ 0 "" 2
+ 389              		.thumb
+ 390              		.syntax unified
+ 391              	.LBE64:
+ 392              	.LBE63:
+ 393              		.loc 1 83 0
+ 394 0014 019B     		ldr	r3, [sp, #4]
+ 395 0016 0133     		adds	r3, r3, #1
+ 396 0018 0193     		str	r3, [sp, #4]
+ 397 001a 019B     		ldr	r3, [sp, #4]
+ 398 001c 042B     		cmp	r3, #4
+ 399 001e F8DD     		ble	.L45
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 8
+
+
+ 400              	.L42:
+ 401              	.LBE65:
+ 402              	.LBE66:
+ 403              		.loc 1 75 0
+ 404 0020 02B0     		add	sp, sp, #8
+ 405              		.cfi_def_cfa_offset 0
+ 406              		@ sp needed
+ 407 0022 7047     		bx	lr
+ 408              	.L49:
+ 409              		.align	2
+ 410              	.L48:
+ 411 0024 00000240 		.word	1073872896
+ 412              		.cfi_endproc
+ 413              	.LFE258:
+ 414              		.size	spi_sw_begin, .-spi_sw_begin
+ 415              		.section	.text.spi_sw_end,"ax",%progbits
+ 416              		.align	2
+ 417              		.p2align 4,,15
+ 418              		.global	spi_sw_end
+ 419              		.thumb
+ 420              		.thumb_func
+ 421              		.type	spi_sw_end, %function
+ 422              	spi_sw_end:
+ 423              	.LFB259:
+ 424              		.loc 1 77 0
+ 425              		.cfi_startproc
+ 426              		@ args = 0, pretend = 0, frame = 8
+ 427              		@ frame_needed = 0, uses_anonymous_args = 0
+ 428              		@ link register save eliminated.
+ 429 0000 82B0     		sub	sp, sp, #8
+ 430              		.cfi_def_cfa_offset 8
+ 431              	.LBB67:
+ 432              	.LBB68:
+ 433              		.loc 1 83 0
+ 434 0002 0023     		movs	r3, #0
+ 435 0004 0193     		str	r3, [sp, #4]
+ 436 0006 019B     		ldr	r3, [sp, #4]
+ 437 0008 042B     		cmp	r3, #4
+ 438 000a 06DC     		bgt	.L52
+ 439              	.L53:
+ 440              	.LBB69:
+ 441              	.LBB70:
+ 442              		.loc 2 327 0
+ 443              		.syntax unified
+ 444              	@ 327 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmInstr.h" 1
+ 445 000c 00BF     		nop
+ 446              	@ 0 "" 2
+ 447              		.thumb
+ 448              		.syntax unified
+ 449              	.LBE70:
+ 450              	.LBE69:
+ 451              		.loc 1 83 0
+ 452 000e 019B     		ldr	r3, [sp, #4]
+ 453 0010 0133     		adds	r3, r3, #1
+ 454 0012 0193     		str	r3, [sp, #4]
+ 455 0014 019B     		ldr	r3, [sp, #4]
+ 456 0016 042B     		cmp	r3, #4
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 9
+
+
+ 457 0018 F8DD     		ble	.L53
+ 458              	.L52:
+ 459              	.LBE68:
+ 460              	.LBE67:
+ 461              		.loc 1 79 0
+ 462 001a 024B     		ldr	r3, .L57
+ 463 001c 1022     		movs	r2, #16
+ 464 001e 1A83     		strh	r2, [r3, #24]	@ movhi
+ 465              		.loc 1 80 0
+ 466 0020 02B0     		add	sp, sp, #8
+ 467              		.cfi_def_cfa_offset 0
+ 468              		@ sp needed
+ 469 0022 7047     		bx	lr
+ 470              	.L58:
+ 471              		.align	2
+ 472              	.L57:
+ 473 0024 00000240 		.word	1073872896
+ 474              		.cfi_endproc
+ 475              	.LFE259:
+ 476              		.size	spi_sw_end, .-spi_sw_end
+ 477              		.section	.bss.init_done,"aw",%nobits
+ 478              		.set	.LANCHOR0,. + 0
+ 479              		.type	init_done, %object
+ 480              		.size	init_done, 1
+ 481              	init_done:
+ 482 0000 00       		.space	1
+ 483              		.text
+ 484              	.Letext0:
+ 485              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\5.4 2016q3\\arm-none-eabi\\include\\mach
+ 486              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\5.4 2016q3\\arm-none-eabi\\include\\sys\
+ 487              		.file 5 "c:\\program files (x86)\\gnu tools arm embedded\\5.4 2016q3\\lib\\gcc\\arm-none-eabi\\5.4
+ 488              		.file 6 "src/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h"
+ 489              		.file 7 "src/ChibiOS_3.0.2/os/rt/include/chsystypes.h"
+ 490              		.file 8 "src/ChibiOS_3.0.2/os/rt/include/chschd.h"
+ 491              		.file 9 "src/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore.h"
+ 492              		.file 10 "src/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore_v7m.h"
+ 493              		.file 11 "src/ChibiOS_3.0.2/os/rt/include/chtm.h"
+ 494              		.file 12 "src/ChibiOS_3.0.2/os/rt/include/chsem.h"
+ 495              		.file 13 "src/ChibiOS_3.0.2/os/rt/include/chmtx.h"
+ 496              		.file 14 "src/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/GPIOv2/pal_lld.h"
+ 497              		.file 15 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cm4.h"
+ 498              		.section	.debug_info,"",%progbits
+ 499              	.Ldebug_info0:
+ 500 0000 B10A0000 		.4byte	0xab1
+ 501 0004 0400     		.2byte	0x4
+ 502 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 503 000a 04       		.byte	0x4
+ 504 000b 01       		.uleb128 0x1
+ 505 000c 1B050000 		.4byte	.LASF131
+ 506 0010 0C       		.byte	0xc
+ 507 0011 96030000 		.4byte	.LASF132
+ 508 0015 23020000 		.4byte	.LASF133
+ 509 0019 A8000000 		.4byte	.Ldebug_ranges0+0xa8
+ 510 001d 00000000 		.4byte	0
+ 511 0021 00000000 		.4byte	.Ldebug_line0
+ 512 0025 02       		.uleb128 0x2
+ 513 0026 01       		.byte	0x1
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 10
+
+
+ 514 0027 06       		.byte	0x6
+ 515 0028 DA000000 		.4byte	.LASF0
+ 516 002c 03       		.uleb128 0x3
+ 517 002d 45000000 		.4byte	.LASF3
+ 518 0031 03       		.byte	0x3
+ 519 0032 1D       		.byte	0x1d
+ 520 0033 37000000 		.4byte	0x37
+ 521 0037 02       		.uleb128 0x2
+ 522 0038 01       		.byte	0x1
+ 523 0039 08       		.byte	0x8
+ 524 003a 88030000 		.4byte	.LASF1
+ 525 003e 02       		.uleb128 0x2
+ 526 003f 02       		.byte	0x2
+ 527 0040 05       		.byte	0x5
+ 528 0041 B2030000 		.4byte	.LASF2
+ 529 0045 03       		.uleb128 0x3
+ 530 0046 77040000 		.4byte	.LASF4
+ 531 004a 03       		.byte	0x3
+ 532 004b 2B       		.byte	0x2b
+ 533 004c 50000000 		.4byte	0x50
+ 534 0050 02       		.uleb128 0x2
+ 535 0051 02       		.byte	0x2
+ 536 0052 07       		.byte	0x7
+ 537 0053 00020000 		.4byte	.LASF5
+ 538 0057 03       		.uleb128 0x3
+ 539 0058 8F020000 		.4byte	.LASF6
+ 540 005c 03       		.byte	0x3
+ 541 005d 3F       		.byte	0x3f
+ 542 005e 62000000 		.4byte	0x62
+ 543 0062 02       		.uleb128 0x2
+ 544 0063 04       		.byte	0x4
+ 545 0064 05       		.byte	0x5
+ 546 0065 33010000 		.4byte	.LASF7
+ 547 0069 03       		.uleb128 0x3
+ 548 006a B0040000 		.4byte	.LASF8
+ 549 006e 03       		.byte	0x3
+ 550 006f 41       		.byte	0x41
+ 551 0070 74000000 		.4byte	0x74
+ 552 0074 02       		.uleb128 0x2
+ 553 0075 04       		.byte	0x4
+ 554 0076 07       		.byte	0x7
+ 555 0077 4F040000 		.4byte	.LASF9
+ 556 007b 02       		.uleb128 0x2
+ 557 007c 08       		.byte	0x8
+ 558 007d 05       		.byte	0x5
+ 559 007e CC000000 		.4byte	.LASF10
+ 560 0082 03       		.uleb128 0x3
+ 561 0083 28030000 		.4byte	.LASF11
+ 562 0087 03       		.byte	0x3
+ 563 0088 5B       		.byte	0x5b
+ 564 0089 8D000000 		.4byte	0x8d
+ 565 008d 02       		.uleb128 0x2
+ 566 008e 08       		.byte	0x8
+ 567 008f 07       		.byte	0x7
+ 568 0090 6F000000 		.4byte	.LASF12
+ 569 0094 04       		.uleb128 0x4
+ 570 0095 04       		.byte	0x4
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 11
+
+
+ 571 0096 05       		.byte	0x5
+ 572 0097 696E7400 		.ascii	"int\000"
+ 573 009b 02       		.uleb128 0x2
+ 574 009c 04       		.byte	0x4
+ 575 009d 07       		.byte	0x7
+ 576 009e B2010000 		.4byte	.LASF13
+ 577 00a2 03       		.uleb128 0x3
+ 578 00a3 45060000 		.4byte	.LASF14
+ 579 00a7 04       		.byte	0x4
+ 580 00a8 18       		.byte	0x18
+ 581 00a9 2C000000 		.4byte	0x2c
+ 582 00ad 03       		.uleb128 0x3
+ 583 00ae 45010000 		.4byte	.LASF15
+ 584 00b2 04       		.byte	0x4
+ 585 00b3 24       		.byte	0x24
+ 586 00b4 45000000 		.4byte	0x45
+ 587 00b8 03       		.uleb128 0x3
+ 588 00b9 80030000 		.4byte	.LASF16
+ 589 00bd 04       		.byte	0x4
+ 590 00be 2C       		.byte	0x2c
+ 591 00bf 57000000 		.4byte	0x57
+ 592 00c3 03       		.uleb128 0x3
+ 593 00c4 1C040000 		.4byte	.LASF17
+ 594 00c8 04       		.byte	0x4
+ 595 00c9 30       		.byte	0x30
+ 596 00ca 69000000 		.4byte	0x69
+ 597 00ce 03       		.uleb128 0x3
+ 598 00cf 35000000 		.4byte	.LASF18
+ 599 00d3 04       		.byte	0x4
+ 600 00d4 3C       		.byte	0x3c
+ 601 00d5 82000000 		.4byte	0x82
+ 602 00d9 02       		.uleb128 0x2
+ 603 00da 04       		.byte	0x4
+ 604 00db 07       		.byte	0x7
+ 605 00dc 4D060000 		.4byte	.LASF19
+ 606 00e0 05       		.uleb128 0x5
+ 607 00e1 C3000000 		.4byte	0xc3
+ 608 00e5 03       		.uleb128 0x3
+ 609 00e6 1A000000 		.4byte	.LASF20
+ 610 00ea 05       		.byte	0x5
+ 611 00eb D8       		.byte	0xd8
+ 612 00ec 9B000000 		.4byte	0x9b
+ 613 00f0 05       		.uleb128 0x5
+ 614 00f1 B8000000 		.4byte	0xb8
+ 615 00f5 03       		.uleb128 0x3
+ 616 00f6 A4020000 		.4byte	.LASF21
+ 617 00fa 06       		.byte	0x6
+ 618 00fb 45       		.byte	0x45
+ 619 00fc C3000000 		.4byte	0xc3
+ 620 0100 03       		.uleb128 0x3
+ 621 0101 6D020000 		.4byte	.LASF22
+ 622 0105 06       		.byte	0x6
+ 623 0106 48       		.byte	0x48
+ 624 0107 A2000000 		.4byte	0xa2
+ 625 010b 03       		.uleb128 0x3
+ 626 010c 3C010000 		.4byte	.LASF23
+ 627 0110 06       		.byte	0x6
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 12
+
+
+ 628 0111 49       		.byte	0x49
+ 629 0112 A2000000 		.4byte	0xa2
+ 630 0116 03       		.uleb128 0x3
+ 631 0117 43030000 		.4byte	.LASF24
+ 632 011b 06       		.byte	0x6
+ 633 011c 4A       		.byte	0x4a
+ 634 011d A2000000 		.4byte	0xa2
+ 635 0121 03       		.uleb128 0x3
+ 636 0122 13010000 		.4byte	.LASF25
+ 637 0126 06       		.byte	0x6
+ 638 0127 4B       		.byte	0x4b
+ 639 0128 A2000000 		.4byte	0xa2
+ 640 012c 03       		.uleb128 0x3
+ 641 012d 62030000 		.4byte	.LASF26
+ 642 0131 06       		.byte	0x6
+ 643 0132 4C       		.byte	0x4c
+ 644 0133 C3000000 		.4byte	0xc3
+ 645 0137 03       		.uleb128 0x3
+ 646 0138 1D020000 		.4byte	.LASF27
+ 647 013c 06       		.byte	0x6
+ 648 013d 4D       		.byte	0x4d
+ 649 013e B8000000 		.4byte	0xb8
+ 650 0142 03       		.uleb128 0x3
+ 651 0143 83020000 		.4byte	.LASF28
+ 652 0147 06       		.byte	0x6
+ 653 0148 4F       		.byte	0x4f
+ 654 0149 C3000000 		.4byte	0xc3
+ 655 014d 03       		.uleb128 0x3
+ 656 014e AC010000 		.4byte	.LASF29
+ 657 0152 06       		.byte	0x6
+ 658 0153 51       		.byte	0x51
+ 659 0154 B8000000 		.4byte	0xb8
+ 660 0158 03       		.uleb128 0x3
+ 661 0159 92040000 		.4byte	.LASF30
+ 662 015d 07       		.byte	0x7
+ 663 015e 33       		.byte	0x33
+ 664 015f C3000000 		.4byte	0xc3
+ 665 0163 03       		.uleb128 0x3
+ 666 0164 82040000 		.4byte	.LASF31
+ 667 0168 07       		.byte	0x7
+ 668 0169 3F       		.byte	0x3f
+ 669 016a 6E010000 		.4byte	0x16e
+ 670 016e 06       		.uleb128 0x6
+ 671 016f 13020000 		.4byte	.LASF53
+ 672 0173 48       		.byte	0x48
+ 673 0174 08       		.byte	0x8
+ 674 0175 C2       		.byte	0xc2
+ 675 0176 73020000 		.4byte	0x273
+ 676 017a 07       		.uleb128 0x7
+ 677 017b DC030000 		.4byte	.LASF32
+ 678 017f 08       		.byte	0x8
+ 679 0180 C3       		.byte	0xc3
+ 680 0181 7E020000 		.4byte	0x27e
+ 681 0185 00       		.byte	0
+ 682 0186 07       		.uleb128 0x7
+ 683 0187 5B030000 		.4byte	.LASF33
+ 684 018b 08       		.byte	0x8
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 13
+
+
+ 685 018c C5       		.byte	0xc5
+ 686 018d 7E020000 		.4byte	0x27e
+ 687 0191 04       		.byte	0x4
+ 688 0192 07       		.uleb128 0x7
+ 689 0193 C5000000 		.4byte	.LASF34
+ 690 0197 08       		.byte	0x8
+ 691 0198 C7       		.byte	0xc7
+ 692 0199 2C010000 		.4byte	0x12c
+ 693 019d 08       		.byte	0x8
+ 694 019e 07       		.uleb128 0x7
+ 695 019f 8F060000 		.4byte	.LASF35
+ 696 01a3 08       		.byte	0x8
+ 697 01a4 C8       		.byte	0xc8
+ 698 01a5 A7040000 		.4byte	0x4a7
+ 699 01a9 0C       		.byte	0xc
+ 700 01aa 07       		.uleb128 0x7
+ 701 01ab 4E010000 		.4byte	.LASF36
+ 702 01af 08       		.byte	0x8
+ 703 01b0 CA       		.byte	0xca
+ 704 01b1 7E020000 		.4byte	0x27e
+ 705 01b5 10       		.byte	0x10
+ 706 01b6 07       		.uleb128 0x7
+ 707 01b7 E9020000 		.4byte	.LASF37
+ 708 01bb 08       		.byte	0x8
+ 709 01bc CB       		.byte	0xcb
+ 710 01bd 7E020000 		.4byte	0x27e
+ 711 01c1 14       		.byte	0x14
+ 712 01c2 07       		.uleb128 0x7
+ 713 01c3 5F060000 		.4byte	.LASF38
+ 714 01c7 08       		.byte	0x8
+ 715 01c8 D2       		.byte	0xd2
+ 716 01c9 EC060000 		.4byte	0x6ec
+ 717 01cd 18       		.byte	0x18
+ 718 01ce 07       		.uleb128 0x7
+ 719 01cf BC030000 		.4byte	.LASF39
+ 720 01d3 08       		.byte	0x8
+ 721 01d4 DD       		.byte	0xdd
+ 722 01d5 0B010000 		.4byte	0x10b
+ 723 01d9 1C       		.byte	0x1c
+ 724 01da 07       		.uleb128 0x7
+ 725 01db E3030000 		.4byte	.LASF40
+ 726 01df 08       		.byte	0x8
+ 727 01e0 E1       		.byte	0xe1
+ 728 01e1 00010000 		.4byte	0x100
+ 729 01e5 1D       		.byte	0x1d
+ 730 01e6 07       		.uleb128 0x7
+ 731 01e7 04050000 		.4byte	.LASF41
+ 732 01eb 08       		.byte	0x8
+ 733 01ec E6       		.byte	0xe6
+ 734 01ed 16010000 		.4byte	0x116
+ 735 01f1 1E       		.byte	0x1e
+ 736 01f2 07       		.uleb128 0x7
+ 737 01f3 C4030000 		.4byte	.LASF42
+ 738 01f7 08       		.byte	0x8
+ 739 01f8 EC       		.byte	0xec
+ 740 01f9 21010000 		.4byte	0x121
+ 741 01fd 1F       		.byte	0x1f
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 14
+
+
+ 742 01fe 07       		.uleb128 0x7
+ 743 01ff C7010000 		.4byte	.LASF43
+ 744 0203 08       		.byte	0x8
+ 745 0204 F3       		.byte	0xf3
+ 746 0205 FE060000 		.4byte	0x6fe
+ 747 0209 20       		.byte	0x20
+ 748 020a 08       		.uleb128 0x8
+ 749 020b 705F7500 		.ascii	"p_u\000"
+ 750 020f 08       		.byte	0x8
+ 751 0210 3101     		.2byte	0x131
+ 752 0212 27060000 		.4byte	0x627
+ 753 0216 24       		.byte	0x24
+ 754 0217 09       		.uleb128 0x9
+ 755 0218 95060000 		.4byte	.LASF44
+ 756 021c 08       		.byte	0x8
+ 757 021d 3601     		.2byte	0x136
+ 758 021f 84020000 		.4byte	0x284
+ 759 0223 28       		.byte	0x28
+ 760 0224 09       		.uleb128 0x9
+ 761 0225 E2040000 		.4byte	.LASF45
+ 762 0229 08       		.byte	0x8
+ 763 022a 3C01     		.2byte	0x13c
+ 764 022c A8020000 		.4byte	0x2a8
+ 765 0230 2C       		.byte	0x2c
+ 766 0231 09       		.uleb128 0x9
+ 767 0232 75060000 		.4byte	.LASF46
+ 768 0236 08       		.byte	0x8
+ 769 0237 4001     		.2byte	0x140
+ 770 0239 37010000 		.4byte	0x137
+ 771 023d 34       		.byte	0x34
+ 772 023e 09       		.uleb128 0x9
+ 773 023f 09040000 		.4byte	.LASF47
+ 774 0243 08       		.byte	0x8
+ 775 0244 4601     		.2byte	0x146
+ 776 0246 42010000 		.4byte	0x142
+ 777 024a 38       		.byte	0x38
+ 778 024b 09       		.uleb128 0x9
+ 779 024c A8030000 		.4byte	.LASF48
+ 780 0250 08       		.byte	0x8
+ 781 0251 4D01     		.2byte	0x14d
+ 782 0253 E6060000 		.4byte	0x6e6
+ 783 0257 3C       		.byte	0x3c
+ 784 0258 09       		.uleb128 0x9
+ 785 0259 9C040000 		.4byte	.LASF49
+ 786 025d 08       		.byte	0x8
+ 787 025e 5101     		.2byte	0x151
+ 788 0260 2C010000 		.4byte	0x12c
+ 789 0264 40       		.byte	0x40
+ 790 0265 09       		.uleb128 0x9
+ 791 0266 FC000000 		.4byte	.LASF50
+ 792 026a 08       		.byte	0x8
+ 793 026b 5801     		.2byte	0x158
+ 794 026d 5B030000 		.4byte	0x35b
+ 795 0271 44       		.byte	0x44
+ 796 0272 00       		.byte	0
+ 797 0273 03       		.uleb128 0x3
+ 798 0274 AC020000 		.4byte	.LASF51
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 15
+
+
+ 799 0278 07       		.byte	0x7
+ 800 0279 44       		.byte	0x44
+ 801 027a 7E020000 		.4byte	0x27e
+ 802 027e 0A       		.uleb128 0xa
+ 803 027f 04       		.byte	0x4
+ 804 0280 63010000 		.4byte	0x163
+ 805 0284 03       		.uleb128 0x3
+ 806 0285 66060000 		.4byte	.LASF52
+ 807 0289 07       		.byte	0x7
+ 808 028a 49       		.byte	0x49
+ 809 028b 8F020000 		.4byte	0x28f
+ 810 028f 06       		.uleb128 0x6
+ 811 0290 3F040000 		.4byte	.LASF54
+ 812 0294 04       		.byte	0x4
+ 813 0295 08       		.byte	0x8
+ 814 0296 B0       		.byte	0xb0
+ 815 0297 A8020000 		.4byte	0x2a8
+ 816 029b 07       		.uleb128 0x7
+ 817 029c DC030000 		.4byte	.LASF32
+ 818 02a0 08       		.byte	0x8
+ 819 02a1 B1       		.byte	0xb1
+ 820 02a2 7E020000 		.4byte	0x27e
+ 821 02a6 00       		.byte	0
+ 822 02a7 00       		.byte	0
+ 823 02a8 03       		.uleb128 0x3
+ 824 02a9 F4040000 		.4byte	.LASF55
+ 825 02ad 07       		.byte	0x7
+ 826 02ae 50       		.byte	0x50
+ 827 02af B3020000 		.4byte	0x2b3
+ 828 02b3 06       		.uleb128 0x6
+ 829 02b4 B4000000 		.4byte	.LASF56
+ 830 02b8 08       		.byte	0x8
+ 831 02b9 08       		.byte	0x8
+ 832 02ba B7       		.byte	0xb7
+ 833 02bb D8020000 		.4byte	0x2d8
+ 834 02bf 07       		.uleb128 0x7
+ 835 02c0 DC030000 		.4byte	.LASF32
+ 836 02c4 08       		.byte	0x8
+ 837 02c5 B8       		.byte	0xb8
+ 838 02c6 7E020000 		.4byte	0x27e
+ 839 02ca 00       		.byte	0
+ 840 02cb 07       		.uleb128 0x7
+ 841 02cc 5B030000 		.4byte	.LASF33
+ 842 02d0 08       		.byte	0x8
+ 843 02d1 B9       		.byte	0xb9
+ 844 02d2 7E020000 		.4byte	0x27e
+ 845 02d6 04       		.byte	0x4
+ 846 02d7 00       		.byte	0
+ 847 02d8 03       		.uleb128 0x3
+ 848 02d9 0D000000 		.4byte	.LASF57
+ 849 02dd 07       		.byte	0x7
+ 850 02de 57       		.byte	0x57
+ 851 02df E3020000 		.4byte	0x2e3
+ 852 02e3 0B       		.uleb128 0xb
+ 853 02e4 75020000 		.4byte	.LASF58
+ 854 02e8 1C       		.byte	0x1c
+ 855 02e9 08       		.byte	0x8
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 16
+
+
+ 856 02ea 9001     		.2byte	0x190
+ 857 02ec 3F030000 		.4byte	0x33f
+ 858 02f0 09       		.uleb128 0x9
+ 859 02f1 2C040000 		.4byte	.LASF59
+ 860 02f5 08       		.byte	0x8
+ 861 02f6 9101     		.2byte	0x191
+ 862 02f8 A8020000 		.4byte	0x2a8
+ 863 02fc 00       		.byte	0
+ 864 02fd 09       		.uleb128 0x9
+ 865 02fe CE030000 		.4byte	.LASF60
+ 866 0302 08       		.byte	0x8
+ 867 0303 9201     		.2byte	0x192
+ 868 0305 2C010000 		.4byte	0x12c
+ 869 0309 08       		.byte	0x8
+ 870 030a 09       		.uleb128 0x9
+ 871 030b F1020000 		.4byte	.LASF61
+ 872 030f 08       		.byte	0x8
+ 873 0310 9401     		.2byte	0x194
+ 874 0312 A7040000 		.4byte	0x4a7
+ 875 0316 0C       		.byte	0xc
+ 876 0317 09       		.uleb128 0x9
+ 877 0318 6F010000 		.4byte	.LASF62
+ 878 031c 08       		.byte	0x8
+ 879 031d 9701     		.2byte	0x197
+ 880 031f 7E020000 		.4byte	0x27e
+ 881 0323 10       		.byte	0x10
+ 882 0324 09       		.uleb128 0x9
+ 883 0325 1A030000 		.4byte	.LASF63
+ 884 0329 08       		.byte	0x8
+ 885 032a 9801     		.2byte	0x198
+ 886 032c 7E020000 		.4byte	0x27e
+ 887 0330 14       		.byte	0x14
+ 888 0331 09       		.uleb128 0x9
+ 889 0332 10030000 		.4byte	.LASF64
+ 890 0336 08       		.byte	0x8
+ 891 0337 9B01     		.2byte	0x19b
+ 892 0339 7E020000 		.4byte	0x27e
+ 893 033d 18       		.byte	0x18
+ 894 033e 00       		.byte	0
+ 895 033f 03       		.uleb128 0x3
+ 896 0340 A7040000 		.4byte	.LASF65
+ 897 0344 07       		.byte	0x7
+ 898 0345 5C       		.byte	0x5c
+ 899 0346 4A030000 		.4byte	0x34a
+ 900 034a 0A       		.uleb128 0xa
+ 901 034b 04       		.byte	0x4
+ 902 034c 50030000 		.4byte	0x350
+ 903 0350 0C       		.uleb128 0xc
+ 904 0351 5B030000 		.4byte	0x35b
+ 905 0355 0D       		.uleb128 0xd
+ 906 0356 5B030000 		.4byte	0x35b
+ 907 035a 00       		.byte	0
+ 908 035b 0E       		.uleb128 0xe
+ 909 035c 04       		.byte	0x4
+ 910 035d 03       		.uleb128 0x3
+ 911 035e 4B030000 		.4byte	.LASF66
+ 912 0362 07       		.byte	0x7
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 17
+
+
+ 913 0363 61       		.byte	0x61
+ 914 0364 68030000 		.4byte	0x368
+ 915 0368 0B       		.uleb128 0xb
+ 916 0369 EB030000 		.4byte	.LASF67
+ 917 036d 14       		.byte	0x14
+ 918 036e 08       		.byte	0x8
+ 919 036f 6B01     		.2byte	0x16b
+ 920 0371 B7030000 		.4byte	0x3b7
+ 921 0375 09       		.uleb128 0x9
+ 922 0376 BF010000 		.4byte	.LASF68
+ 923 037a 08       		.byte	0x8
+ 924 037b 6C01     		.2byte	0x16c
+ 925 037d 03070000 		.4byte	0x703
+ 926 0381 00       		.byte	0
+ 927 0382 09       		.uleb128 0x9
+ 928 0383 80010000 		.4byte	.LASF69
+ 929 0387 08       		.byte	0x8
+ 930 0388 6D01     		.2byte	0x16d
+ 931 038a 03070000 		.4byte	0x703
+ 932 038e 04       		.byte	0x4
+ 933 038f 09       		.uleb128 0x9
+ 934 0390 D5010000 		.4byte	.LASF70
+ 935 0394 08       		.byte	0x8
+ 936 0395 6E01     		.2byte	0x16e
+ 937 0397 58010000 		.4byte	0x158
+ 938 039b 08       		.byte	0x8
+ 939 039c 09       		.uleb128 0x9
+ 940 039d DC020000 		.4byte	.LASF71
+ 941 03a1 08       		.byte	0x8
+ 942 03a2 6F01     		.2byte	0x16f
+ 943 03a4 3F030000 		.4byte	0x33f
+ 944 03a8 0C       		.byte	0xc
+ 945 03a9 09       		.uleb128 0x9
+ 946 03aa ED040000 		.4byte	.LASF72
+ 947 03ae 08       		.byte	0x8
+ 948 03af 7101     		.2byte	0x171
+ 949 03b1 5B030000 		.4byte	0x35b
+ 950 03b5 10       		.byte	0x10
+ 951 03b6 00       		.byte	0
+ 952 03b7 03       		.uleb128 0x3
+ 953 03b8 91000000 		.4byte	.LASF73
+ 954 03bc 07       		.byte	0x7
+ 955 03bd 66       		.byte	0x66
+ 956 03be C2030000 		.4byte	0x3c2
+ 957 03c2 0B       		.uleb128 0xb
+ 958 03c3 BF020000 		.4byte	.LASF74
+ 959 03c7 10       		.byte	0x10
+ 960 03c8 08       		.byte	0x8
+ 961 03c9 7B01     		.2byte	0x17b
+ 962 03cb 04040000 		.4byte	0x404
+ 963 03cf 09       		.uleb128 0x9
+ 964 03d0 BF010000 		.4byte	.LASF68
+ 965 03d4 08       		.byte	0x8
+ 966 03d5 7C01     		.2byte	0x17c
+ 967 03d7 03070000 		.4byte	0x703
+ 968 03db 00       		.byte	0
+ 969 03dc 09       		.uleb128 0x9
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 18
+
+
+ 970 03dd 80010000 		.4byte	.LASF69
+ 971 03e1 08       		.byte	0x8
+ 972 03e2 7E01     		.2byte	0x17e
+ 973 03e4 03070000 		.4byte	0x703
+ 974 03e8 04       		.byte	0x4
+ 975 03e9 09       		.uleb128 0x9
+ 976 03ea D5010000 		.4byte	.LASF70
+ 977 03ee 08       		.byte	0x8
+ 978 03ef 8001     		.2byte	0x180
+ 979 03f1 58010000 		.4byte	0x158
+ 980 03f5 08       		.byte	0x8
+ 981 03f6 09       		.uleb128 0x9
+ 982 03f7 34040000 		.4byte	.LASF75
+ 983 03fb 08       		.byte	0x8
+ 984 03fc 8201     		.2byte	0x182
+ 985 03fe FE060000 		.4byte	0x6fe
+ 986 0402 0C       		.byte	0xc
+ 987 0403 00       		.byte	0
+ 988 0404 03       		.uleb128 0x3
+ 989 0405 DE010000 		.4byte	.LASF76
+ 990 0409 07       		.byte	0x7
+ 991 040a 6B       		.byte	0x6b
+ 992 040b 0F040000 		.4byte	0x40f
+ 993 040f 0B       		.uleb128 0xb
+ 994 0410 6A030000 		.4byte	.LASF77
+ 995 0414 04       		.byte	0x4
+ 996 0415 08       		.byte	0x8
+ 997 0416 A201     		.2byte	0x1a2
+ 998 0418 2A040000 		.4byte	0x42a
+ 999 041c 09       		.uleb128 0x9
+ 1000 041d BB040000 		.4byte	.LASF78
+ 1001 0421 08       		.byte	0x8
+ 1002 0422 AA01     		.2byte	0x1aa
+ 1003 0424 09070000 		.4byte	0x709
+ 1004 0428 00       		.byte	0
+ 1005 0429 00       		.byte	0
+ 1006 042a 03       		.uleb128 0x3
+ 1007 042b 5A020000 		.4byte	.LASF79
+ 1008 042f 07       		.byte	0x7
+ 1009 0430 70       		.byte	0x70
+ 1010 0431 35040000 		.4byte	0x435
+ 1011 0435 0F       		.uleb128 0xf
+ 1012 0436 29010000 		.4byte	.LASF80
+ 1013 043a 5802     		.2byte	0x258
+ 1014 043c 08       		.byte	0x8
+ 1015 043d C201     		.2byte	0x1c2
+ 1016 043f 91040000 		.4byte	0x491
+ 1017 0443 09       		.uleb128 0x9
+ 1018 0444 3F060000 		.4byte	.LASF81
+ 1019 0448 08       		.byte	0x8
+ 1020 0449 C601     		.2byte	0x1c6
+ 1021 044b D8020000 		.4byte	0x2d8
+ 1022 044f 00       		.byte	0
+ 1023 0450 09       		.uleb128 0x9
+ 1024 0451 5B000000 		.4byte	.LASF82
+ 1025 0455 08       		.byte	0x8
+ 1026 0456 CA01     		.2byte	0x1ca
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 19
+
+
+ 1027 0458 B7030000 		.4byte	0x3b7
+ 1028 045c 1C       		.byte	0x1c
+ 1029 045d 08       		.uleb128 0x8
+ 1030 045e 64626700 		.ascii	"dbg\000"
+ 1031 0462 08       		.byte	0x8
+ 1032 0463 CE01     		.2byte	0x1ce
+ 1033 0465 04040000 		.4byte	0x404
+ 1034 0469 2C       		.byte	0x2c
+ 1035 046a 09       		.uleb128 0x9
+ 1036 046b 86000000 		.4byte	.LASF83
+ 1037 046f 08       		.byte	0x8
+ 1038 0470 D201     		.2byte	0x1d2
+ 1039 0472 63010000 		.4byte	0x163
+ 1040 0476 30       		.byte	0x30
+ 1041 0477 08       		.uleb128 0x8
+ 1042 0478 746D00   		.ascii	"tm\000"
+ 1043 047b 08       		.byte	0x8
+ 1044 047c D701     		.2byte	0x1d7
+ 1045 047e 1C060000 		.4byte	0x61c
+ 1046 0482 78       		.byte	0x78
+ 1047 0483 09       		.uleb128 0x9
+ 1048 0484 9D010000 		.4byte	.LASF84
+ 1049 0488 08       		.byte	0x8
+ 1050 0489 E301     		.2byte	0x1e3
+ 1051 048b 0E070000 		.4byte	0x70e
+ 1052 048f 80       		.byte	0x80
+ 1053 0490 00       		.byte	0
+ 1054 0491 03       		.uleb128 0x3
+ 1055 0492 77010000 		.4byte	.LASF85
+ 1056 0496 09       		.byte	0x9
+ 1057 0497 65       		.byte	0x65
+ 1058 0498 5B030000 		.4byte	0x35b
+ 1059 049c 03       		.uleb128 0x3
+ 1060 049d 99020000 		.4byte	.LASF86
+ 1061 04a1 09       		.byte	0x9
+ 1062 04a2 6D       		.byte	0x6d
+ 1063 04a3 CE000000 		.4byte	0xce
+ 1064 04a7 06       		.uleb128 0x6
+ 1065 04a8 F8010000 		.4byte	.LASF87
+ 1066 04ac 04       		.byte	0x4
+ 1067 04ad 09       		.byte	0x9
+ 1068 04ae 89       		.byte	0x89
+ 1069 04af C0040000 		.4byte	0x4c0
+ 1070 04b3 10       		.uleb128 0x10
+ 1071 04b4 72313300 		.ascii	"r13\000"
+ 1072 04b8 09       		.byte	0x9
+ 1073 04b9 8A       		.byte	0x8a
+ 1074 04ba 01060000 		.4byte	0x601
+ 1075 04be 00       		.byte	0
+ 1076 04bf 00       		.byte	0
+ 1077 04c0 06       		.uleb128 0x6
+ 1078 04c1 4F000000 		.4byte	.LASF88
+ 1079 04c5 64       		.byte	0x64
+ 1080 04c6 0A       		.byte	0xa
+ 1081 04c7 F4       		.byte	0xf4
+ 1082 04c8 01060000 		.4byte	0x601
+ 1083 04cc 10       		.uleb128 0x10
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 20
+
+
+ 1084 04cd 73313600 		.ascii	"s16\000"
+ 1085 04d1 0A       		.byte	0xa
+ 1086 04d2 F6       		.byte	0xf6
+ 1087 04d3 91040000 		.4byte	0x491
+ 1088 04d7 00       		.byte	0
+ 1089 04d8 10       		.uleb128 0x10
+ 1090 04d9 73313700 		.ascii	"s17\000"
+ 1091 04dd 0A       		.byte	0xa
+ 1092 04de F7       		.byte	0xf7
+ 1093 04df 91040000 		.4byte	0x491
+ 1094 04e3 04       		.byte	0x4
+ 1095 04e4 10       		.uleb128 0x10
+ 1096 04e5 73313800 		.ascii	"s18\000"
+ 1097 04e9 0A       		.byte	0xa
+ 1098 04ea F8       		.byte	0xf8
+ 1099 04eb 91040000 		.4byte	0x491
+ 1100 04ef 08       		.byte	0x8
+ 1101 04f0 10       		.uleb128 0x10
+ 1102 04f1 73313900 		.ascii	"s19\000"
+ 1103 04f5 0A       		.byte	0xa
+ 1104 04f6 F9       		.byte	0xf9
+ 1105 04f7 91040000 		.4byte	0x491
+ 1106 04fb 0C       		.byte	0xc
+ 1107 04fc 10       		.uleb128 0x10
+ 1108 04fd 73323000 		.ascii	"s20\000"
+ 1109 0501 0A       		.byte	0xa
+ 1110 0502 FA       		.byte	0xfa
+ 1111 0503 91040000 		.4byte	0x491
+ 1112 0507 10       		.byte	0x10
+ 1113 0508 10       		.uleb128 0x10
+ 1114 0509 73323100 		.ascii	"s21\000"
+ 1115 050d 0A       		.byte	0xa
+ 1116 050e FB       		.byte	0xfb
+ 1117 050f 91040000 		.4byte	0x491
+ 1118 0513 14       		.byte	0x14
+ 1119 0514 10       		.uleb128 0x10
+ 1120 0515 73323200 		.ascii	"s22\000"
+ 1121 0519 0A       		.byte	0xa
+ 1122 051a FC       		.byte	0xfc
+ 1123 051b 91040000 		.4byte	0x491
+ 1124 051f 18       		.byte	0x18
+ 1125 0520 10       		.uleb128 0x10
+ 1126 0521 73323300 		.ascii	"s23\000"
+ 1127 0525 0A       		.byte	0xa
+ 1128 0526 FD       		.byte	0xfd
+ 1129 0527 91040000 		.4byte	0x491
+ 1130 052b 1C       		.byte	0x1c
+ 1131 052c 10       		.uleb128 0x10
+ 1132 052d 73323400 		.ascii	"s24\000"
+ 1133 0531 0A       		.byte	0xa
+ 1134 0532 FE       		.byte	0xfe
+ 1135 0533 91040000 		.4byte	0x491
+ 1136 0537 20       		.byte	0x20
+ 1137 0538 10       		.uleb128 0x10
+ 1138 0539 73323500 		.ascii	"s25\000"
+ 1139 053d 0A       		.byte	0xa
+ 1140 053e FF       		.byte	0xff
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 21
+
+
+ 1141 053f 91040000 		.4byte	0x491
+ 1142 0543 24       		.byte	0x24
+ 1143 0544 08       		.uleb128 0x8
+ 1144 0545 73323600 		.ascii	"s26\000"
+ 1145 0549 0A       		.byte	0xa
+ 1146 054a 0001     		.2byte	0x100
+ 1147 054c 91040000 		.4byte	0x491
+ 1148 0550 28       		.byte	0x28
+ 1149 0551 08       		.uleb128 0x8
+ 1150 0552 73323700 		.ascii	"s27\000"
+ 1151 0556 0A       		.byte	0xa
+ 1152 0557 0101     		.2byte	0x101
+ 1153 0559 91040000 		.4byte	0x491
+ 1154 055d 2C       		.byte	0x2c
+ 1155 055e 08       		.uleb128 0x8
+ 1156 055f 73323800 		.ascii	"s28\000"
+ 1157 0563 0A       		.byte	0xa
+ 1158 0564 0201     		.2byte	0x102
+ 1159 0566 91040000 		.4byte	0x491
+ 1160 056a 30       		.byte	0x30
+ 1161 056b 08       		.uleb128 0x8
+ 1162 056c 73323900 		.ascii	"s29\000"
+ 1163 0570 0A       		.byte	0xa
+ 1164 0571 0301     		.2byte	0x103
+ 1165 0573 91040000 		.4byte	0x491
+ 1166 0577 34       		.byte	0x34
+ 1167 0578 08       		.uleb128 0x8
+ 1168 0579 73333000 		.ascii	"s30\000"
+ 1169 057d 0A       		.byte	0xa
+ 1170 057e 0401     		.2byte	0x104
+ 1171 0580 91040000 		.4byte	0x491
+ 1172 0584 38       		.byte	0x38
+ 1173 0585 08       		.uleb128 0x8
+ 1174 0586 73333100 		.ascii	"s31\000"
+ 1175 058a 0A       		.byte	0xa
+ 1176 058b 0501     		.2byte	0x105
+ 1177 058d 91040000 		.4byte	0x491
+ 1178 0591 3C       		.byte	0x3c
+ 1179 0592 08       		.uleb128 0x8
+ 1180 0593 723400   		.ascii	"r4\000"
+ 1181 0596 0A       		.byte	0xa
+ 1182 0597 0701     		.2byte	0x107
+ 1183 0599 91040000 		.4byte	0x491
+ 1184 059d 40       		.byte	0x40
+ 1185 059e 08       		.uleb128 0x8
+ 1186 059f 723500   		.ascii	"r5\000"
+ 1187 05a2 0A       		.byte	0xa
+ 1188 05a3 0801     		.2byte	0x108
+ 1189 05a5 91040000 		.4byte	0x491
+ 1190 05a9 44       		.byte	0x44
+ 1191 05aa 08       		.uleb128 0x8
+ 1192 05ab 723600   		.ascii	"r6\000"
+ 1193 05ae 0A       		.byte	0xa
+ 1194 05af 0901     		.2byte	0x109
+ 1195 05b1 91040000 		.4byte	0x491
+ 1196 05b5 48       		.byte	0x48
+ 1197 05b6 08       		.uleb128 0x8
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 22
+
+
+ 1198 05b7 723700   		.ascii	"r7\000"
+ 1199 05ba 0A       		.byte	0xa
+ 1200 05bb 0A01     		.2byte	0x10a
+ 1201 05bd 91040000 		.4byte	0x491
+ 1202 05c1 4C       		.byte	0x4c
+ 1203 05c2 08       		.uleb128 0x8
+ 1204 05c3 723800   		.ascii	"r8\000"
+ 1205 05c6 0A       		.byte	0xa
+ 1206 05c7 0B01     		.2byte	0x10b
+ 1207 05c9 91040000 		.4byte	0x491
+ 1208 05cd 50       		.byte	0x50
+ 1209 05ce 08       		.uleb128 0x8
+ 1210 05cf 723900   		.ascii	"r9\000"
+ 1211 05d2 0A       		.byte	0xa
+ 1212 05d3 0C01     		.2byte	0x10c
+ 1213 05d5 91040000 		.4byte	0x491
+ 1214 05d9 54       		.byte	0x54
+ 1215 05da 08       		.uleb128 0x8
+ 1216 05db 72313000 		.ascii	"r10\000"
+ 1217 05df 0A       		.byte	0xa
+ 1218 05e0 0D01     		.2byte	0x10d
+ 1219 05e2 91040000 		.4byte	0x491
+ 1220 05e6 58       		.byte	0x58
+ 1221 05e7 08       		.uleb128 0x8
+ 1222 05e8 72313100 		.ascii	"r11\000"
+ 1223 05ec 0A       		.byte	0xa
+ 1224 05ed 0E01     		.2byte	0x10e
+ 1225 05ef 91040000 		.4byte	0x491
+ 1226 05f3 5C       		.byte	0x5c
+ 1227 05f4 08       		.uleb128 0x8
+ 1228 05f5 6C7200   		.ascii	"lr\000"
+ 1229 05f8 0A       		.byte	0xa
+ 1230 05f9 0F01     		.2byte	0x10f
+ 1231 05fb 91040000 		.4byte	0x491
+ 1232 05ff 60       		.byte	0x60
+ 1233 0600 00       		.byte	0
+ 1234 0601 0A       		.uleb128 0xa
+ 1235 0602 04       		.byte	0x4
+ 1236 0603 C0040000 		.4byte	0x4c0
+ 1237 0607 11       		.uleb128 0x11
+ 1238 0608 04       		.byte	0x4
+ 1239 0609 0B       		.byte	0xb
+ 1240 060a 38       		.byte	0x38
+ 1241 060b 1C060000 		.4byte	0x61c
+ 1242 060f 07       		.uleb128 0x7
+ 1243 0610 C5040000 		.4byte	.LASF89
+ 1244 0614 0B       		.byte	0xb
+ 1245 0615 3C       		.byte	0x3c
+ 1246 0616 F5000000 		.4byte	0xf5
+ 1247 061a 00       		.byte	0
+ 1248 061b 00       		.byte	0
+ 1249 061c 03       		.uleb128 0x3
+ 1250 061d F7020000 		.4byte	.LASF90
+ 1251 0621 0B       		.byte	0xb
+ 1252 0622 3D       		.byte	0x3d
+ 1253 0623 07060000 		.4byte	0x607
+ 1254 0627 12       		.uleb128 0x12
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 23
+
+
+ 1255 0628 04       		.byte	0x4
+ 1256 0629 08       		.byte	0x8
+ 1257 062a FA       		.byte	0xfa
+ 1258 062b 84060000 		.4byte	0x684
+ 1259 062f 13       		.uleb128 0x13
+ 1260 0630 21000000 		.4byte	.LASF91
+ 1261 0634 08       		.byte	0x8
+ 1262 0635 0101     		.2byte	0x101
+ 1263 0637 37010000 		.4byte	0x137
+ 1264 063b 13       		.uleb128 0x13
+ 1265 063c 5E010000 		.4byte	.LASF92
+ 1266 0640 08       		.byte	0x8
+ 1267 0641 0801     		.2byte	0x108
+ 1268 0643 37010000 		.4byte	0x137
+ 1269 0647 13       		.uleb128 0x13
+ 1270 0648 0C010000 		.4byte	.LASF93
+ 1271 064c 08       		.byte	0x8
+ 1272 064d 0F01     		.2byte	0x10f
+ 1273 064f 5B030000 		.4byte	0x35b
+ 1274 0653 13       		.uleb128 0x13
+ 1275 0654 23010000 		.4byte	.LASF94
+ 1276 0658 08       		.byte	0x8
+ 1277 0659 1601     		.2byte	0x116
+ 1278 065b 84060000 		.4byte	0x684
+ 1279 065f 13       		.uleb128 0x13
+ 1280 0660 CE010000 		.4byte	.LASF95
+ 1281 0664 08       		.byte	0x8
+ 1282 0665 1E01     		.2byte	0x11e
+ 1283 0667 AF060000 		.4byte	0x6af
+ 1284 066b 13       		.uleb128 0x13
+ 1285 066c 25040000 		.4byte	.LASF96
+ 1286 0670 08       		.byte	0x8
+ 1287 0671 2701     		.2byte	0x127
+ 1288 0673 E6060000 		.4byte	0x6e6
+ 1289 0677 13       		.uleb128 0x13
+ 1290 0678 D5030000 		.4byte	.LASF97
+ 1291 067c 08       		.byte	0x8
+ 1292 067d 2F01     		.2byte	0x12f
+ 1293 067f 42010000 		.4byte	0x142
+ 1294 0683 00       		.byte	0
+ 1295 0684 0A       		.uleb128 0xa
+ 1296 0685 04       		.byte	0x4
+ 1297 0686 73020000 		.4byte	0x273
+ 1298 068a 06       		.uleb128 0x6
+ 1299 068b FC030000 		.4byte	.LASF98
+ 1300 068f 0C       		.byte	0xc
+ 1301 0690 0C       		.byte	0xc
+ 1302 0691 34       		.byte	0x34
+ 1303 0692 AF060000 		.4byte	0x6af
+ 1304 0696 07       		.uleb128 0x7
+ 1305 0697 56010000 		.4byte	.LASF99
+ 1306 069b 0C       		.byte	0xc
+ 1307 069c 35       		.byte	0x35
+ 1308 069d A8020000 		.4byte	0x2a8
+ 1309 06a1 00       		.byte	0
+ 1310 06a2 07       		.uleb128 0x7
+ 1311 06a3 F2010000 		.4byte	.LASF100
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 24
+
+
+ 1312 06a7 0C       		.byte	0xc
+ 1313 06a8 37       		.byte	0x37
+ 1314 06a9 4D010000 		.4byte	0x14d
+ 1315 06ad 08       		.byte	0x8
+ 1316 06ae 00       		.byte	0
+ 1317 06af 0A       		.uleb128 0xa
+ 1318 06b0 04       		.byte	0x4
+ 1319 06b1 8A060000 		.4byte	0x68a
+ 1320 06b5 06       		.uleb128 0x6
+ 1321 06b6 56060000 		.4byte	.LASF101
+ 1322 06ba 10       		.byte	0x10
+ 1323 06bb 0D       		.byte	0xd
+ 1324 06bc 39       		.byte	0x39
+ 1325 06bd E6060000 		.4byte	0x6e6
+ 1326 06c1 07       		.uleb128 0x7
+ 1327 06c2 04010000 		.4byte	.LASF102
+ 1328 06c6 0D       		.byte	0xd
+ 1329 06c7 3A       		.byte	0x3a
+ 1330 06c8 A8020000 		.4byte	0x2a8
+ 1331 06cc 00       		.byte	0
+ 1332 06cd 07       		.uleb128 0x7
+ 1333 06ce 87060000 		.4byte	.LASF103
+ 1334 06d2 0D       		.byte	0xd
+ 1335 06d3 3C       		.byte	0x3c
+ 1336 06d4 7E020000 		.4byte	0x27e
+ 1337 06d8 08       		.byte	0x8
+ 1338 06d9 07       		.uleb128 0x7
+ 1339 06da 8B040000 		.4byte	.LASF104
+ 1340 06de 0D       		.byte	0xd
+ 1341 06df 3E       		.byte	0x3e
+ 1342 06e0 29070000 		.4byte	0x729
+ 1343 06e4 0C       		.byte	0xc
+ 1344 06e5 00       		.byte	0
+ 1345 06e6 0A       		.uleb128 0xa
+ 1346 06e7 04       		.byte	0x4
+ 1347 06e8 B5060000 		.4byte	0x6b5
+ 1348 06ec 0A       		.uleb128 0xa
+ 1349 06ed 04       		.byte	0x4
+ 1350 06ee F9060000 		.4byte	0x6f9
+ 1351 06f2 02       		.uleb128 0x2
+ 1352 06f3 01       		.byte	0x1
+ 1353 06f4 08       		.byte	0x8
+ 1354 06f5 68040000 		.4byte	.LASF105
+ 1355 06f9 14       		.uleb128 0x14
+ 1356 06fa F2060000 		.4byte	0x6f2
+ 1357 06fe 05       		.uleb128 0x5
+ 1358 06ff 58010000 		.4byte	0x158
+ 1359 0703 0A       		.uleb128 0xa
+ 1360 0704 04       		.byte	0x4
+ 1361 0705 5D030000 		.4byte	0x35d
+ 1362 0709 05       		.uleb128 0x5
+ 1363 070a EC060000 		.4byte	0x6ec
+ 1364 070e 15       		.uleb128 0x15
+ 1365 070f 9C040000 		.4byte	0x49c
+ 1366 0713 1E070000 		.4byte	0x71e
+ 1367 0717 16       		.uleb128 0x16
+ 1368 0718 D9000000 		.4byte	0xd9
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 25
+
+
+ 1369 071c 3A       		.byte	0x3a
+ 1370 071d 00       		.byte	0
+ 1371 071e 03       		.uleb128 0x3
+ 1372 071f 95010000 		.4byte	.LASF106
+ 1373 0723 0D       		.byte	0xd
+ 1374 0724 34       		.byte	0x34
+ 1375 0725 B5060000 		.4byte	0x6b5
+ 1376 0729 0A       		.uleb128 0xa
+ 1377 072a 04       		.byte	0x4
+ 1378 072b 1E070000 		.4byte	0x71e
+ 1379 072f 02       		.uleb128 0x2
+ 1380 0730 01       		.byte	0x1
+ 1381 0731 02       		.byte	0x2
+ 1382 0732 7A030000 		.4byte	.LASF107
+ 1383 0736 02       		.uleb128 0x2
+ 1384 0737 04       		.byte	0x4
+ 1385 0738 04       		.byte	0x4
+ 1386 0739 38030000 		.4byte	.LASF108
+ 1387 073d 11       		.uleb128 0x11
+ 1388 073e 04       		.byte	0x4
+ 1389 073f 0E       		.byte	0xe
+ 1390 0740 B3       		.byte	0xb3
+ 1391 0741 5E070000 		.4byte	0x75e
+ 1392 0745 10       		.uleb128 0x10
+ 1393 0746 73657400 		.ascii	"set\000"
+ 1394 074a 0E       		.byte	0xe
+ 1395 074b B4       		.byte	0xb4
+ 1396 074c AD000000 		.4byte	0xad
+ 1397 0750 00       		.byte	0
+ 1398 0751 07       		.uleb128 0x7
+ 1399 0752 D6020000 		.4byte	.LASF109
+ 1400 0756 0E       		.byte	0xe
+ 1401 0757 B5       		.byte	0xb5
+ 1402 0758 AD000000 		.4byte	0xad
+ 1403 075c 02       		.byte	0x2
+ 1404 075d 00       		.byte	0
+ 1405 075e 12       		.uleb128 0x12
+ 1406 075f 04       		.byte	0x4
+ 1407 0760 0E       		.byte	0xe
+ 1408 0761 B1       		.byte	0xb1
+ 1409 0762 79070000 		.4byte	0x779
+ 1410 0766 17       		.uleb128 0x17
+ 1411 0767 5700     		.ascii	"W\000"
+ 1412 0769 0E       		.byte	0xe
+ 1413 076a B2       		.byte	0xb2
+ 1414 076b C3000000 		.4byte	0xc3
+ 1415 076f 17       		.uleb128 0x17
+ 1416 0770 4800     		.ascii	"H\000"
+ 1417 0772 0E       		.byte	0xe
+ 1418 0773 B6       		.byte	0xb6
+ 1419 0774 3D070000 		.4byte	0x73d
+ 1420 0778 00       		.byte	0
+ 1421 0779 11       		.uleb128 0x11
+ 1422 077a 2C       		.byte	0x2c
+ 1423 077b 0E       		.byte	0xe
+ 1424 077c A9       		.byte	0xa9
+ 1425 077d 06080000 		.4byte	0x806
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 26
+
+
+ 1426 0781 07       		.uleb128 0x7
+ 1427 0782 22030000 		.4byte	.LASF110
+ 1428 0786 0E       		.byte	0xe
+ 1429 0787 AB       		.byte	0xab
+ 1430 0788 E0000000 		.4byte	0xe0
+ 1431 078c 00       		.byte	0
+ 1432 078d 07       		.uleb128 0x7
+ 1433 078e 3E000000 		.4byte	.LASF111
+ 1434 0792 0E       		.byte	0xe
+ 1435 0793 AC       		.byte	0xac
+ 1436 0794 E0000000 		.4byte	0xe0
+ 1437 0798 04       		.byte	0x4
+ 1438 0799 07       		.uleb128 0x7
+ 1439 079a 67010000 		.4byte	.LASF112
+ 1440 079e 0E       		.byte	0xe
+ 1441 079f AD       		.byte	0xad
+ 1442 07a0 E0000000 		.4byte	0xe0
+ 1443 07a4 08       		.byte	0x8
+ 1444 07a5 07       		.uleb128 0x7
+ 1445 07a6 1D010000 		.4byte	.LASF113
+ 1446 07aa 0E       		.byte	0xe
+ 1447 07ab AE       		.byte	0xae
+ 1448 07ac E0000000 		.4byte	0xe0
+ 1449 07b0 0C       		.byte	0xc
+ 1450 07b1 10       		.uleb128 0x10
+ 1451 07b2 49445200 		.ascii	"IDR\000"
+ 1452 07b6 0E       		.byte	0xe
+ 1453 07b7 AF       		.byte	0xaf
+ 1454 07b8 E0000000 		.4byte	0xe0
+ 1455 07bc 10       		.byte	0x10
+ 1456 07bd 10       		.uleb128 0x10
+ 1457 07be 4F445200 		.ascii	"ODR\000"
+ 1458 07c2 0E       		.byte	0xe
+ 1459 07c3 B0       		.byte	0xb0
+ 1460 07c4 E0000000 		.4byte	0xe0
+ 1461 07c8 14       		.byte	0x14
+ 1462 07c9 07       		.uleb128 0x7
+ 1463 07ca EC000000 		.4byte	.LASF114
+ 1464 07ce 0E       		.byte	0xe
+ 1465 07cf B7       		.byte	0xb7
+ 1466 07d0 06080000 		.4byte	0x806
+ 1467 07d4 18       		.byte	0x18
+ 1468 07d5 07       		.uleb128 0x7
+ 1469 07d6 ED010000 		.4byte	.LASF115
+ 1470 07da 0E       		.byte	0xe
+ 1471 07db B8       		.byte	0xb8
+ 1472 07dc E0000000 		.4byte	0xe0
+ 1473 07e0 1C       		.byte	0x1c
+ 1474 07e1 07       		.uleb128 0x7
+ 1475 07e2 3E030000 		.4byte	.LASF116
+ 1476 07e6 0E       		.byte	0xe
+ 1477 07e7 B9       		.byte	0xb9
+ 1478 07e8 E0000000 		.4byte	0xe0
+ 1479 07ec 20       		.byte	0x20
+ 1480 07ed 07       		.uleb128 0x7
+ 1481 07ee 33030000 		.4byte	.LASF117
+ 1482 07f2 0E       		.byte	0xe
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 27
+
+
+ 1483 07f3 BA       		.byte	0xba
+ 1484 07f4 E0000000 		.4byte	0xe0
+ 1485 07f8 24       		.byte	0x24
+ 1486 07f9 10       		.uleb128 0x10
+ 1487 07fa 42525200 		.ascii	"BRR\000"
+ 1488 07fe 0E       		.byte	0xe
+ 1489 07ff BB       		.byte	0xbb
+ 1490 0800 E0000000 		.4byte	0xe0
+ 1491 0804 28       		.byte	0x28
+ 1492 0805 00       		.byte	0
+ 1493 0806 05       		.uleb128 0x5
+ 1494 0807 5E070000 		.4byte	0x75e
+ 1495 080b 03       		.uleb128 0x3
+ 1496 080c 88010000 		.4byte	.LASF118
+ 1497 0810 0E       		.byte	0xe
+ 1498 0811 BC       		.byte	0xbc
+ 1499 0812 79070000 		.4byte	0x779
+ 1500 0816 18       		.uleb128 0x18
+ 1501 0817 62000000 		.4byte	.LASF119
+ 1502 081b 0E       		.byte	0xe
+ 1503 081c 0E01     		.2byte	0x10e
+ 1504 081e C3000000 		.4byte	0xc3
+ 1505 0822 19       		.uleb128 0x19
+ 1506 0823 E6000000 		.4byte	.LASF134
+ 1507 0827 02       		.byte	0x2
+ 1508 0828 4501     		.2byte	0x145
+ 1509 082a 03       		.byte	0x3
+ 1510 082b 1A       		.uleb128 0x1a
+ 1511 082c 00000000 		.4byte	.LASF135
+ 1512 0830 01       		.byte	0x1
+ 1513 0831 52       		.byte	0x52
+ 1514 0832 01       		.byte	0x1
+ 1515 0833 43080000 		.4byte	0x843
+ 1516 0837 1B       		.uleb128 0x1b
+ 1517 0838 1C       		.uleb128 0x1c
+ 1518 0839 6900     		.ascii	"i\000"
+ 1519 083b 01       		.byte	0x1
+ 1520 083c 53       		.byte	0x53
+ 1521 083d 43080000 		.4byte	0x843
+ 1522 0841 00       		.byte	0
+ 1523 0842 00       		.byte	0
+ 1524 0843 05       		.uleb128 0x5
+ 1525 0844 94000000 		.4byte	0x94
+ 1526 0848 1D       		.uleb128 0x1d
+ 1527 0849 7B060000 		.4byte	.LASF120
+ 1528 084d 01       		.byte	0x1
+ 1529 084e 1D       		.byte	0x1d
+ 1530 084f 00000000 		.4byte	.LFB256
+ 1531 0853 48000000 		.4byte	.LFE256-.LFB256
+ 1532 0857 01       		.uleb128 0x1
+ 1533 0858 9C       		.byte	0x9c
+ 1534 0859 D0080000 		.4byte	0x8d0
+ 1535 085d 1E       		.uleb128 0x1e
+ 1536 085e 12000000 		.4byte	.LVL0
+ 1537 0862 A80A0000 		.4byte	0xaa8
+ 1538 0866 77080000 		.4byte	0x877
+ 1539 086a 1F       		.uleb128 0x1f
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 28
+
+
+ 1540 086b 01       		.uleb128 0x1
+ 1541 086c 50       		.byte	0x50
+ 1542 086d 02       		.uleb128 0x2
+ 1543 086e 74       		.byte	0x74
+ 1544 086f 00       		.sleb128 0
+ 1545 0870 1F       		.uleb128 0x1f
+ 1546 0871 01       		.uleb128 0x1
+ 1547 0872 51       		.byte	0x51
+ 1548 0873 02       		.uleb128 0x2
+ 1549 0874 08       		.byte	0x8
+ 1550 0875 40       		.byte	0x40
+ 1551 0876 00       		.byte	0
+ 1552 0877 1E       		.uleb128 0x1e
+ 1553 0878 1C000000 		.4byte	.LVL1
+ 1554 087c A80A0000 		.4byte	0xaa8
+ 1555 0880 95080000 		.4byte	0x895
+ 1556 0884 1F       		.uleb128 0x1f
+ 1557 0885 01       		.uleb128 0x1
+ 1558 0886 50       		.byte	0x50
+ 1559 0887 02       		.uleb128 0x2
+ 1560 0888 74       		.byte	0x74
+ 1561 0889 00       		.sleb128 0
+ 1562 088a 1F       		.uleb128 0x1f
+ 1563 088b 01       		.uleb128 0x1
+ 1564 088c 51       		.byte	0x51
+ 1565 088d 01       		.uleb128 0x1
+ 1566 088e 40       		.byte	0x40
+ 1567 088f 1F       		.uleb128 0x1f
+ 1568 0890 01       		.uleb128 0x1
+ 1569 0891 52       		.byte	0x52
+ 1570 0892 01       		.uleb128 0x1
+ 1571 0893 31       		.byte	0x31
+ 1572 0894 00       		.byte	0
+ 1573 0895 1E       		.uleb128 0x1e
+ 1574 0896 26000000 		.4byte	.LVL2
+ 1575 089a A80A0000 		.4byte	0xaa8
+ 1576 089e B4080000 		.4byte	0x8b4
+ 1577 08a2 1F       		.uleb128 0x1f
+ 1578 08a3 01       		.uleb128 0x1
+ 1579 08a4 50       		.byte	0x50
+ 1580 08a5 02       		.uleb128 0x2
+ 1581 08a6 74       		.byte	0x74
+ 1582 08a7 00       		.sleb128 0
+ 1583 08a8 1F       		.uleb128 0x1f
+ 1584 08a9 01       		.uleb128 0x1
+ 1585 08aa 51       		.byte	0x51
+ 1586 08ab 02       		.uleb128 0x2
+ 1587 08ac 08       		.byte	0x8
+ 1588 08ad 20       		.byte	0x20
+ 1589 08ae 1F       		.uleb128 0x1f
+ 1590 08af 01       		.uleb128 0x1
+ 1591 08b0 52       		.byte	0x52
+ 1592 08b1 01       		.uleb128 0x1
+ 1593 08b2 31       		.byte	0x31
+ 1594 08b3 00       		.byte	0
+ 1595 08b4 20       		.uleb128 0x20
+ 1596 08b5 30000000 		.4byte	.LVL3
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 29
+
+
+ 1597 08b9 A80A0000 		.4byte	0xaa8
+ 1598 08bd 1F       		.uleb128 0x1f
+ 1599 08be 01       		.uleb128 0x1
+ 1600 08bf 50       		.byte	0x50
+ 1601 08c0 02       		.uleb128 0x2
+ 1602 08c1 74       		.byte	0x74
+ 1603 08c2 00       		.sleb128 0
+ 1604 08c3 1F       		.uleb128 0x1f
+ 1605 08c4 01       		.uleb128 0x1
+ 1606 08c5 51       		.byte	0x51
+ 1607 08c6 02       		.uleb128 0x2
+ 1608 08c7 08       		.byte	0x8
+ 1609 08c8 80       		.byte	0x80
+ 1610 08c9 1F       		.uleb128 0x1f
+ 1611 08ca 01       		.uleb128 0x1
+ 1612 08cb 52       		.byte	0x52
+ 1613 08cc 01       		.uleb128 0x1
+ 1614 08cd 31       		.byte	0x31
+ 1615 08ce 00       		.byte	0
+ 1616 08cf 00       		.byte	0
+ 1617 08d0 1D       		.uleb128 0x1d
+ 1618 08d1 0B050000 		.4byte	.LASF121
+ 1619 08d5 01       		.byte	0x1
+ 1620 08d6 2A       		.byte	0x2a
+ 1621 08d7 00000000 		.4byte	.LFB257
+ 1622 08db C4000000 		.4byte	.LFE257-.LFB257
+ 1623 08df 01       		.uleb128 0x1
+ 1624 08e0 9C       		.byte	0x9c
+ 1625 08e1 F0090000 		.4byte	0x9f0
+ 1626 08e5 21       		.uleb128 0x21
+ 1627 08e6 66020000 		.4byte	.LASF122
+ 1628 08ea 01       		.byte	0x1
+ 1629 08eb 2A       		.byte	0x2a
+ 1630 08ec F0090000 		.4byte	0x9f0
+ 1631 08f0 01       		.uleb128 0x1
+ 1632 08f1 50       		.byte	0x50
+ 1633 08f2 22       		.uleb128 0x22
+ 1634 08f3 08030000 		.4byte	.LASF123
+ 1635 08f7 01       		.byte	0x1
+ 1636 08f8 2A       		.byte	0x2a
+ 1637 08f9 EC060000 		.4byte	0x6ec
+ 1638 08fd 00000000 		.4byte	.LLST0
+ 1639 0901 22       		.uleb128 0x22
+ 1640 0902 61040000 		.4byte	.LASF124
+ 1641 0906 01       		.byte	0x1
+ 1642 0907 2A       		.byte	0x2a
+ 1643 0908 94000000 		.4byte	0x94
+ 1644 090c 1E000000 		.4byte	.LLST1
+ 1645 0910 23       		.uleb128 0x23
+ 1646 0911 2B080000 		.4byte	0x82b
+ 1647 0915 08000000 		.4byte	.LBB33
+ 1648 0919 00000000 		.4byte	.Ldebug_ranges0+0
+ 1649 091d 01       		.byte	0x1
+ 1650 091e 2C       		.byte	0x2c
+ 1651 091f 41090000 		.4byte	0x941
+ 1652 0923 24       		.uleb128 0x24
+ 1653 0924 00000000 		.4byte	.Ldebug_ranges0+0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 30
+
+
+ 1654 0928 25       		.uleb128 0x25
+ 1655 0929 38080000 		.4byte	0x838
+ 1656 092d 02       		.uleb128 0x2
+ 1657 092e 91       		.byte	0x91
+ 1658 092f 54       		.sleb128 -44
+ 1659 0930 26       		.uleb128 0x26
+ 1660 0931 22080000 		.4byte	0x822
+ 1661 0935 18000000 		.4byte	.LBB35
+ 1662 0939 02000000 		.4byte	.LBE35-.LBB35
+ 1663 093d 01       		.byte	0x1
+ 1664 093e 54       		.byte	0x54
+ 1665 093f 00       		.byte	0
+ 1666 0940 00       		.byte	0
+ 1667 0941 24       		.uleb128 0x24
+ 1668 0942 20000000 		.4byte	.Ldebug_ranges0+0x20
+ 1669 0946 27       		.uleb128 0x27
+ 1670 0947 6900     		.ascii	"i\000"
+ 1671 0949 01       		.byte	0x1
+ 1672 094a 2E       		.byte	0x2e
+ 1673 094b 94000000 		.4byte	0x94
+ 1674 094f 3F000000 		.4byte	.LLST2
+ 1675 0953 24       		.uleb128 0x24
+ 1676 0954 38000000 		.4byte	.Ldebug_ranges0+0x38
+ 1677 0958 28       		.uleb128 0x28
+ 1678 0959 E4020000 		.4byte	.LASF125
+ 1679 095d 01       		.byte	0x1
+ 1680 095e 2F       		.byte	0x2f
+ 1681 095f 37000000 		.4byte	0x37
+ 1682 0963 53000000 		.4byte	.LLST3
+ 1683 0967 28       		.uleb128 0x28
+ 1684 0968 14040000 		.4byte	.LASF126
+ 1685 096c 01       		.byte	0x1
+ 1686 096d 30       		.byte	0x30
+ 1687 096e 37000000 		.4byte	0x37
+ 1688 0972 71000000 		.4byte	.LLST4
+ 1689 0976 24       		.uleb128 0x24
+ 1690 0977 50000000 		.4byte	.Ldebug_ranges0+0x50
+ 1691 097b 27       		.uleb128 0x27
+ 1692 097c 62697400 		.ascii	"bit\000"
+ 1693 0980 01       		.byte	0x1
+ 1694 0981 32       		.byte	0x32
+ 1695 0982 94000000 		.4byte	0x94
+ 1696 0986 9B000000 		.4byte	.LLST5
+ 1697 098a 23       		.uleb128 0x23
+ 1698 098b 2B080000 		.4byte	0x82b
+ 1699 098f 34000000 		.4byte	.LBB44
+ 1700 0993 68000000 		.4byte	.Ldebug_ranges0+0x68
+ 1701 0997 01       		.byte	0x1
+ 1702 0998 36       		.byte	0x36
+ 1703 0999 BB090000 		.4byte	0x9bb
+ 1704 099d 24       		.uleb128 0x24
+ 1705 099e 68000000 		.4byte	.Ldebug_ranges0+0x68
+ 1706 09a2 25       		.uleb128 0x25
+ 1707 09a3 38080000 		.4byte	0x838
+ 1708 09a7 02       		.uleb128 0x2
+ 1709 09a8 91       		.byte	0x91
+ 1710 09a9 58       		.sleb128 -40
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 31
+
+
+ 1711 09aa 26       		.uleb128 0x26
+ 1712 09ab 22080000 		.4byte	0x822
+ 1713 09af 6A000000 		.4byte	.LBB46
+ 1714 09b3 02000000 		.4byte	.LBE46-.LBB46
+ 1715 09b7 01       		.byte	0x1
+ 1716 09b8 54       		.byte	0x54
+ 1717 09b9 00       		.byte	0
+ 1718 09ba 00       		.byte	0
+ 1719 09bb 29       		.uleb128 0x29
+ 1720 09bc 2B080000 		.4byte	0x82b
+ 1721 09c0 88000000 		.4byte	.LBB54
+ 1722 09c4 16000000 		.4byte	.LBE54-.LBB54
+ 1723 09c8 01       		.byte	0x1
+ 1724 09c9 3E       		.byte	0x3e
+ 1725 09ca 2A       		.uleb128 0x2a
+ 1726 09cb 88000000 		.4byte	.LBB55
+ 1727 09cf 16000000 		.4byte	.LBE55-.LBB55
+ 1728 09d3 25       		.uleb128 0x25
+ 1729 09d4 38080000 		.4byte	0x838
+ 1730 09d8 02       		.uleb128 0x2
+ 1731 09d9 91       		.byte	0x91
+ 1732 09da 5C       		.sleb128 -36
+ 1733 09db 26       		.uleb128 0x26
+ 1734 09dc 22080000 		.4byte	0x822
+ 1735 09e0 90000000 		.4byte	.LBB56
+ 1736 09e4 02000000 		.4byte	.LBE56-.LBB56
+ 1737 09e8 01       		.byte	0x1
+ 1738 09e9 54       		.byte	0x54
+ 1739 09ea 00       		.byte	0
+ 1740 09eb 00       		.byte	0
+ 1741 09ec 00       		.byte	0
+ 1742 09ed 00       		.byte	0
+ 1743 09ee 00       		.byte	0
+ 1744 09ef 00       		.byte	0
+ 1745 09f0 0A       		.uleb128 0xa
+ 1746 09f1 04       		.byte	0x4
+ 1747 09f2 F2060000 		.4byte	0x6f2
+ 1748 09f6 1D       		.uleb128 0x1d
+ 1749 09f7 28000000 		.4byte	.LASF127
+ 1750 09fb 01       		.byte	0x1
+ 1751 09fc 48       		.byte	0x48
+ 1752 09fd 00000000 		.4byte	.LFB258
+ 1753 0a01 28000000 		.4byte	.LFE258-.LFB258
+ 1754 0a05 01       		.uleb128 0x1
+ 1755 0a06 9C       		.byte	0x9c
+ 1756 0a07 390A0000 		.4byte	0xa39
+ 1757 0a0b 2B       		.uleb128 0x2b
+ 1758 0a0c 2B080000 		.4byte	0x82b
+ 1759 0a10 04000000 		.4byte	.LBB61
+ 1760 0a14 90000000 		.4byte	.Ldebug_ranges0+0x90
+ 1761 0a18 01       		.byte	0x1
+ 1762 0a19 4A       		.byte	0x4a
+ 1763 0a1a 24       		.uleb128 0x24
+ 1764 0a1b 90000000 		.4byte	.Ldebug_ranges0+0x90
+ 1765 0a1f 25       		.uleb128 0x25
+ 1766 0a20 38080000 		.4byte	0x838
+ 1767 0a24 02       		.uleb128 0x2
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 32
+
+
+ 1768 0a25 91       		.byte	0x91
+ 1769 0a26 7C       		.sleb128 -4
+ 1770 0a27 26       		.uleb128 0x26
+ 1771 0a28 22080000 		.4byte	0x822
+ 1772 0a2c 12000000 		.4byte	.LBB63
+ 1773 0a30 02000000 		.4byte	.LBE63-.LBB63
+ 1774 0a34 01       		.byte	0x1
+ 1775 0a35 54       		.byte	0x54
+ 1776 0a36 00       		.byte	0
+ 1777 0a37 00       		.byte	0
+ 1778 0a38 00       		.byte	0
+ 1779 0a39 1D       		.uleb128 0x1d
+ 1780 0a3a F1000000 		.4byte	.LASF128
+ 1781 0a3e 01       		.byte	0x1
+ 1782 0a3f 4D       		.byte	0x4d
+ 1783 0a40 00000000 		.4byte	.LFB259
+ 1784 0a44 28000000 		.4byte	.LFE259-.LFB259
+ 1785 0a48 01       		.uleb128 0x1
+ 1786 0a49 9C       		.byte	0x9c
+ 1787 0a4a 800A0000 		.4byte	0xa80
+ 1788 0a4e 29       		.uleb128 0x29
+ 1789 0a4f 2B080000 		.4byte	0x82b
+ 1790 0a53 02000000 		.4byte	.LBB67
+ 1791 0a57 18000000 		.4byte	.LBE67-.LBB67
+ 1792 0a5b 01       		.byte	0x1
+ 1793 0a5c 4E       		.byte	0x4e
+ 1794 0a5d 2A       		.uleb128 0x2a
+ 1795 0a5e 02000000 		.4byte	.LBB68
+ 1796 0a62 18000000 		.4byte	.LBE68-.LBB68
+ 1797 0a66 25       		.uleb128 0x25
+ 1798 0a67 38080000 		.4byte	0x838
+ 1799 0a6b 02       		.uleb128 0x2
+ 1800 0a6c 91       		.byte	0x91
+ 1801 0a6d 7C       		.sleb128 -4
+ 1802 0a6e 26       		.uleb128 0x26
+ 1803 0a6f 22080000 		.4byte	0x822
+ 1804 0a73 0C000000 		.4byte	.LBB69
+ 1805 0a77 02000000 		.4byte	.LBE69-.LBB69
+ 1806 0a7b 01       		.byte	0x1
+ 1807 0a7c 54       		.byte	0x54
+ 1808 0a7d 00       		.byte	0
+ 1809 0a7e 00       		.byte	0
+ 1810 0a7f 00       		.byte	0
+ 1811 0a80 2C       		.uleb128 0x2c
+ 1812 0a81 6D040000 		.4byte	.LASF129
+ 1813 0a85 01       		.byte	0x1
+ 1814 0a86 18       		.byte	0x18
+ 1815 0a87 2F070000 		.4byte	0x72f
+ 1816 0a8b 05       		.uleb128 0x5
+ 1817 0a8c 03       		.byte	0x3
+ 1818 0a8d 00000000 		.4byte	init_done
+ 1819 0a91 2D       		.uleb128 0x2d
+ 1820 0a92 A7000000 		.4byte	.LASF130
+ 1821 0a96 0F       		.byte	0xf
+ 1822 0a97 A706     		.2byte	0x6a7
+ 1823 0a99 F0000000 		.4byte	0xf0
+ 1824 0a9d 2E       		.uleb128 0x2e
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 33
+
+
+ 1825 0a9e 636800   		.ascii	"ch\000"
+ 1826 0aa1 08       		.byte	0x8
+ 1827 0aa2 0902     		.2byte	0x209
+ 1828 0aa4 2A040000 		.4byte	0x42a
+ 1829 0aa8 2F       		.uleb128 0x2f
+ 1830 0aa9 CC040000 		.4byte	.LASF136
+ 1831 0aad CC040000 		.4byte	.LASF136
+ 1832 0ab1 0E       		.byte	0xe
+ 1833 0ab2 E001     		.2byte	0x1e0
+ 1834 0ab4 00       		.byte	0
+ 1835              		.section	.debug_abbrev,"",%progbits
+ 1836              	.Ldebug_abbrev0:
+ 1837 0000 01       		.uleb128 0x1
+ 1838 0001 11       		.uleb128 0x11
+ 1839 0002 01       		.byte	0x1
+ 1840 0003 25       		.uleb128 0x25
+ 1841 0004 0E       		.uleb128 0xe
+ 1842 0005 13       		.uleb128 0x13
+ 1843 0006 0B       		.uleb128 0xb
+ 1844 0007 03       		.uleb128 0x3
+ 1845 0008 0E       		.uleb128 0xe
+ 1846 0009 1B       		.uleb128 0x1b
+ 1847 000a 0E       		.uleb128 0xe
+ 1848 000b 55       		.uleb128 0x55
+ 1849 000c 17       		.uleb128 0x17
+ 1850 000d 11       		.uleb128 0x11
+ 1851 000e 01       		.uleb128 0x1
+ 1852 000f 10       		.uleb128 0x10
+ 1853 0010 17       		.uleb128 0x17
+ 1854 0011 00       		.byte	0
+ 1855 0012 00       		.byte	0
+ 1856 0013 02       		.uleb128 0x2
+ 1857 0014 24       		.uleb128 0x24
+ 1858 0015 00       		.byte	0
+ 1859 0016 0B       		.uleb128 0xb
+ 1860 0017 0B       		.uleb128 0xb
+ 1861 0018 3E       		.uleb128 0x3e
+ 1862 0019 0B       		.uleb128 0xb
+ 1863 001a 03       		.uleb128 0x3
+ 1864 001b 0E       		.uleb128 0xe
+ 1865 001c 00       		.byte	0
+ 1866 001d 00       		.byte	0
+ 1867 001e 03       		.uleb128 0x3
+ 1868 001f 16       		.uleb128 0x16
+ 1869 0020 00       		.byte	0
+ 1870 0021 03       		.uleb128 0x3
+ 1871 0022 0E       		.uleb128 0xe
+ 1872 0023 3A       		.uleb128 0x3a
+ 1873 0024 0B       		.uleb128 0xb
+ 1874 0025 3B       		.uleb128 0x3b
+ 1875 0026 0B       		.uleb128 0xb
+ 1876 0027 49       		.uleb128 0x49
+ 1877 0028 13       		.uleb128 0x13
+ 1878 0029 00       		.byte	0
+ 1879 002a 00       		.byte	0
+ 1880 002b 04       		.uleb128 0x4
+ 1881 002c 24       		.uleb128 0x24
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 34
+
+
+ 1882 002d 00       		.byte	0
+ 1883 002e 0B       		.uleb128 0xb
+ 1884 002f 0B       		.uleb128 0xb
+ 1885 0030 3E       		.uleb128 0x3e
+ 1886 0031 0B       		.uleb128 0xb
+ 1887 0032 03       		.uleb128 0x3
+ 1888 0033 08       		.uleb128 0x8
+ 1889 0034 00       		.byte	0
+ 1890 0035 00       		.byte	0
+ 1891 0036 05       		.uleb128 0x5
+ 1892 0037 35       		.uleb128 0x35
+ 1893 0038 00       		.byte	0
+ 1894 0039 49       		.uleb128 0x49
+ 1895 003a 13       		.uleb128 0x13
+ 1896 003b 00       		.byte	0
+ 1897 003c 00       		.byte	0
+ 1898 003d 06       		.uleb128 0x6
+ 1899 003e 13       		.uleb128 0x13
+ 1900 003f 01       		.byte	0x1
+ 1901 0040 03       		.uleb128 0x3
+ 1902 0041 0E       		.uleb128 0xe
+ 1903 0042 0B       		.uleb128 0xb
+ 1904 0043 0B       		.uleb128 0xb
+ 1905 0044 3A       		.uleb128 0x3a
+ 1906 0045 0B       		.uleb128 0xb
+ 1907 0046 3B       		.uleb128 0x3b
+ 1908 0047 0B       		.uleb128 0xb
+ 1909 0048 01       		.uleb128 0x1
+ 1910 0049 13       		.uleb128 0x13
+ 1911 004a 00       		.byte	0
+ 1912 004b 00       		.byte	0
+ 1913 004c 07       		.uleb128 0x7
+ 1914 004d 0D       		.uleb128 0xd
+ 1915 004e 00       		.byte	0
+ 1916 004f 03       		.uleb128 0x3
+ 1917 0050 0E       		.uleb128 0xe
+ 1918 0051 3A       		.uleb128 0x3a
+ 1919 0052 0B       		.uleb128 0xb
+ 1920 0053 3B       		.uleb128 0x3b
+ 1921 0054 0B       		.uleb128 0xb
+ 1922 0055 49       		.uleb128 0x49
+ 1923 0056 13       		.uleb128 0x13
+ 1924 0057 38       		.uleb128 0x38
+ 1925 0058 0B       		.uleb128 0xb
+ 1926 0059 00       		.byte	0
+ 1927 005a 00       		.byte	0
+ 1928 005b 08       		.uleb128 0x8
+ 1929 005c 0D       		.uleb128 0xd
+ 1930 005d 00       		.byte	0
+ 1931 005e 03       		.uleb128 0x3
+ 1932 005f 08       		.uleb128 0x8
+ 1933 0060 3A       		.uleb128 0x3a
+ 1934 0061 0B       		.uleb128 0xb
+ 1935 0062 3B       		.uleb128 0x3b
+ 1936 0063 05       		.uleb128 0x5
+ 1937 0064 49       		.uleb128 0x49
+ 1938 0065 13       		.uleb128 0x13
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 35
+
+
+ 1939 0066 38       		.uleb128 0x38
+ 1940 0067 0B       		.uleb128 0xb
+ 1941 0068 00       		.byte	0
+ 1942 0069 00       		.byte	0
+ 1943 006a 09       		.uleb128 0x9
+ 1944 006b 0D       		.uleb128 0xd
+ 1945 006c 00       		.byte	0
+ 1946 006d 03       		.uleb128 0x3
+ 1947 006e 0E       		.uleb128 0xe
+ 1948 006f 3A       		.uleb128 0x3a
+ 1949 0070 0B       		.uleb128 0xb
+ 1950 0071 3B       		.uleb128 0x3b
+ 1951 0072 05       		.uleb128 0x5
+ 1952 0073 49       		.uleb128 0x49
+ 1953 0074 13       		.uleb128 0x13
+ 1954 0075 38       		.uleb128 0x38
+ 1955 0076 0B       		.uleb128 0xb
+ 1956 0077 00       		.byte	0
+ 1957 0078 00       		.byte	0
+ 1958 0079 0A       		.uleb128 0xa
+ 1959 007a 0F       		.uleb128 0xf
+ 1960 007b 00       		.byte	0
+ 1961 007c 0B       		.uleb128 0xb
+ 1962 007d 0B       		.uleb128 0xb
+ 1963 007e 49       		.uleb128 0x49
+ 1964 007f 13       		.uleb128 0x13
+ 1965 0080 00       		.byte	0
+ 1966 0081 00       		.byte	0
+ 1967 0082 0B       		.uleb128 0xb
+ 1968 0083 13       		.uleb128 0x13
+ 1969 0084 01       		.byte	0x1
+ 1970 0085 03       		.uleb128 0x3
+ 1971 0086 0E       		.uleb128 0xe
+ 1972 0087 0B       		.uleb128 0xb
+ 1973 0088 0B       		.uleb128 0xb
+ 1974 0089 3A       		.uleb128 0x3a
+ 1975 008a 0B       		.uleb128 0xb
+ 1976 008b 3B       		.uleb128 0x3b
+ 1977 008c 05       		.uleb128 0x5
+ 1978 008d 01       		.uleb128 0x1
+ 1979 008e 13       		.uleb128 0x13
+ 1980 008f 00       		.byte	0
+ 1981 0090 00       		.byte	0
+ 1982 0091 0C       		.uleb128 0xc
+ 1983 0092 15       		.uleb128 0x15
+ 1984 0093 01       		.byte	0x1
+ 1985 0094 27       		.uleb128 0x27
+ 1986 0095 19       		.uleb128 0x19
+ 1987 0096 01       		.uleb128 0x1
+ 1988 0097 13       		.uleb128 0x13
+ 1989 0098 00       		.byte	0
+ 1990 0099 00       		.byte	0
+ 1991 009a 0D       		.uleb128 0xd
+ 1992 009b 05       		.uleb128 0x5
+ 1993 009c 00       		.byte	0
+ 1994 009d 49       		.uleb128 0x49
+ 1995 009e 13       		.uleb128 0x13
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 36
+
+
+ 1996 009f 00       		.byte	0
+ 1997 00a0 00       		.byte	0
+ 1998 00a1 0E       		.uleb128 0xe
+ 1999 00a2 0F       		.uleb128 0xf
+ 2000 00a3 00       		.byte	0
+ 2001 00a4 0B       		.uleb128 0xb
+ 2002 00a5 0B       		.uleb128 0xb
+ 2003 00a6 00       		.byte	0
+ 2004 00a7 00       		.byte	0
+ 2005 00a8 0F       		.uleb128 0xf
+ 2006 00a9 13       		.uleb128 0x13
+ 2007 00aa 01       		.byte	0x1
+ 2008 00ab 03       		.uleb128 0x3
+ 2009 00ac 0E       		.uleb128 0xe
+ 2010 00ad 0B       		.uleb128 0xb
+ 2011 00ae 05       		.uleb128 0x5
+ 2012 00af 3A       		.uleb128 0x3a
+ 2013 00b0 0B       		.uleb128 0xb
+ 2014 00b1 3B       		.uleb128 0x3b
+ 2015 00b2 05       		.uleb128 0x5
+ 2016 00b3 01       		.uleb128 0x1
+ 2017 00b4 13       		.uleb128 0x13
+ 2018 00b5 00       		.byte	0
+ 2019 00b6 00       		.byte	0
+ 2020 00b7 10       		.uleb128 0x10
+ 2021 00b8 0D       		.uleb128 0xd
+ 2022 00b9 00       		.byte	0
+ 2023 00ba 03       		.uleb128 0x3
+ 2024 00bb 08       		.uleb128 0x8
+ 2025 00bc 3A       		.uleb128 0x3a
+ 2026 00bd 0B       		.uleb128 0xb
+ 2027 00be 3B       		.uleb128 0x3b
+ 2028 00bf 0B       		.uleb128 0xb
+ 2029 00c0 49       		.uleb128 0x49
+ 2030 00c1 13       		.uleb128 0x13
+ 2031 00c2 38       		.uleb128 0x38
+ 2032 00c3 0B       		.uleb128 0xb
+ 2033 00c4 00       		.byte	0
+ 2034 00c5 00       		.byte	0
+ 2035 00c6 11       		.uleb128 0x11
+ 2036 00c7 13       		.uleb128 0x13
+ 2037 00c8 01       		.byte	0x1
+ 2038 00c9 0B       		.uleb128 0xb
+ 2039 00ca 0B       		.uleb128 0xb
+ 2040 00cb 3A       		.uleb128 0x3a
+ 2041 00cc 0B       		.uleb128 0xb
+ 2042 00cd 3B       		.uleb128 0x3b
+ 2043 00ce 0B       		.uleb128 0xb
+ 2044 00cf 01       		.uleb128 0x1
+ 2045 00d0 13       		.uleb128 0x13
+ 2046 00d1 00       		.byte	0
+ 2047 00d2 00       		.byte	0
+ 2048 00d3 12       		.uleb128 0x12
+ 2049 00d4 17       		.uleb128 0x17
+ 2050 00d5 01       		.byte	0x1
+ 2051 00d6 0B       		.uleb128 0xb
+ 2052 00d7 0B       		.uleb128 0xb
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 37
+
+
+ 2053 00d8 3A       		.uleb128 0x3a
+ 2054 00d9 0B       		.uleb128 0xb
+ 2055 00da 3B       		.uleb128 0x3b
+ 2056 00db 0B       		.uleb128 0xb
+ 2057 00dc 01       		.uleb128 0x1
+ 2058 00dd 13       		.uleb128 0x13
+ 2059 00de 00       		.byte	0
+ 2060 00df 00       		.byte	0
+ 2061 00e0 13       		.uleb128 0x13
+ 2062 00e1 0D       		.uleb128 0xd
+ 2063 00e2 00       		.byte	0
+ 2064 00e3 03       		.uleb128 0x3
+ 2065 00e4 0E       		.uleb128 0xe
+ 2066 00e5 3A       		.uleb128 0x3a
+ 2067 00e6 0B       		.uleb128 0xb
+ 2068 00e7 3B       		.uleb128 0x3b
+ 2069 00e8 05       		.uleb128 0x5
+ 2070 00e9 49       		.uleb128 0x49
+ 2071 00ea 13       		.uleb128 0x13
+ 2072 00eb 00       		.byte	0
+ 2073 00ec 00       		.byte	0
+ 2074 00ed 14       		.uleb128 0x14
+ 2075 00ee 26       		.uleb128 0x26
+ 2076 00ef 00       		.byte	0
+ 2077 00f0 49       		.uleb128 0x49
+ 2078 00f1 13       		.uleb128 0x13
+ 2079 00f2 00       		.byte	0
+ 2080 00f3 00       		.byte	0
+ 2081 00f4 15       		.uleb128 0x15
+ 2082 00f5 01       		.uleb128 0x1
+ 2083 00f6 01       		.byte	0x1
+ 2084 00f7 49       		.uleb128 0x49
+ 2085 00f8 13       		.uleb128 0x13
+ 2086 00f9 01       		.uleb128 0x1
+ 2087 00fa 13       		.uleb128 0x13
+ 2088 00fb 00       		.byte	0
+ 2089 00fc 00       		.byte	0
+ 2090 00fd 16       		.uleb128 0x16
+ 2091 00fe 21       		.uleb128 0x21
+ 2092 00ff 00       		.byte	0
+ 2093 0100 49       		.uleb128 0x49
+ 2094 0101 13       		.uleb128 0x13
+ 2095 0102 2F       		.uleb128 0x2f
+ 2096 0103 0B       		.uleb128 0xb
+ 2097 0104 00       		.byte	0
+ 2098 0105 00       		.byte	0
+ 2099 0106 17       		.uleb128 0x17
+ 2100 0107 0D       		.uleb128 0xd
+ 2101 0108 00       		.byte	0
+ 2102 0109 03       		.uleb128 0x3
+ 2103 010a 08       		.uleb128 0x8
+ 2104 010b 3A       		.uleb128 0x3a
+ 2105 010c 0B       		.uleb128 0xb
+ 2106 010d 3B       		.uleb128 0x3b
+ 2107 010e 0B       		.uleb128 0xb
+ 2108 010f 49       		.uleb128 0x49
+ 2109 0110 13       		.uleb128 0x13
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 38
+
+
+ 2110 0111 00       		.byte	0
+ 2111 0112 00       		.byte	0
+ 2112 0113 18       		.uleb128 0x18
+ 2113 0114 16       		.uleb128 0x16
+ 2114 0115 00       		.byte	0
+ 2115 0116 03       		.uleb128 0x3
+ 2116 0117 0E       		.uleb128 0xe
+ 2117 0118 3A       		.uleb128 0x3a
+ 2118 0119 0B       		.uleb128 0xb
+ 2119 011a 3B       		.uleb128 0x3b
+ 2120 011b 05       		.uleb128 0x5
+ 2121 011c 49       		.uleb128 0x49
+ 2122 011d 13       		.uleb128 0x13
+ 2123 011e 00       		.byte	0
+ 2124 011f 00       		.byte	0
+ 2125 0120 19       		.uleb128 0x19
+ 2126 0121 2E       		.uleb128 0x2e
+ 2127 0122 00       		.byte	0
+ 2128 0123 03       		.uleb128 0x3
+ 2129 0124 0E       		.uleb128 0xe
+ 2130 0125 3A       		.uleb128 0x3a
+ 2131 0126 0B       		.uleb128 0xb
+ 2132 0127 3B       		.uleb128 0x3b
+ 2133 0128 05       		.uleb128 0x5
+ 2134 0129 27       		.uleb128 0x27
+ 2135 012a 19       		.uleb128 0x19
+ 2136 012b 20       		.uleb128 0x20
+ 2137 012c 0B       		.uleb128 0xb
+ 2138 012d 00       		.byte	0
+ 2139 012e 00       		.byte	0
+ 2140 012f 1A       		.uleb128 0x1a
+ 2141 0130 2E       		.uleb128 0x2e
+ 2142 0131 01       		.byte	0x1
+ 2143 0132 03       		.uleb128 0x3
+ 2144 0133 0E       		.uleb128 0xe
+ 2145 0134 3A       		.uleb128 0x3a
+ 2146 0135 0B       		.uleb128 0xb
+ 2147 0136 3B       		.uleb128 0x3b
+ 2148 0137 0B       		.uleb128 0xb
+ 2149 0138 27       		.uleb128 0x27
+ 2150 0139 19       		.uleb128 0x19
+ 2151 013a 20       		.uleb128 0x20
+ 2152 013b 0B       		.uleb128 0xb
+ 2153 013c 01       		.uleb128 0x1
+ 2154 013d 13       		.uleb128 0x13
+ 2155 013e 00       		.byte	0
+ 2156 013f 00       		.byte	0
+ 2157 0140 1B       		.uleb128 0x1b
+ 2158 0141 0B       		.uleb128 0xb
+ 2159 0142 01       		.byte	0x1
+ 2160 0143 00       		.byte	0
+ 2161 0144 00       		.byte	0
+ 2162 0145 1C       		.uleb128 0x1c
+ 2163 0146 34       		.uleb128 0x34
+ 2164 0147 00       		.byte	0
+ 2165 0148 03       		.uleb128 0x3
+ 2166 0149 08       		.uleb128 0x8
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 39
+
+
+ 2167 014a 3A       		.uleb128 0x3a
+ 2168 014b 0B       		.uleb128 0xb
+ 2169 014c 3B       		.uleb128 0x3b
+ 2170 014d 0B       		.uleb128 0xb
+ 2171 014e 49       		.uleb128 0x49
+ 2172 014f 13       		.uleb128 0x13
+ 2173 0150 00       		.byte	0
+ 2174 0151 00       		.byte	0
+ 2175 0152 1D       		.uleb128 0x1d
+ 2176 0153 2E       		.uleb128 0x2e
+ 2177 0154 01       		.byte	0x1
+ 2178 0155 3F       		.uleb128 0x3f
+ 2179 0156 19       		.uleb128 0x19
+ 2180 0157 03       		.uleb128 0x3
+ 2181 0158 0E       		.uleb128 0xe
+ 2182 0159 3A       		.uleb128 0x3a
+ 2183 015a 0B       		.uleb128 0xb
+ 2184 015b 3B       		.uleb128 0x3b
+ 2185 015c 0B       		.uleb128 0xb
+ 2186 015d 27       		.uleb128 0x27
+ 2187 015e 19       		.uleb128 0x19
+ 2188 015f 11       		.uleb128 0x11
+ 2189 0160 01       		.uleb128 0x1
+ 2190 0161 12       		.uleb128 0x12
+ 2191 0162 06       		.uleb128 0x6
+ 2192 0163 40       		.uleb128 0x40
+ 2193 0164 18       		.uleb128 0x18
+ 2194 0165 9742     		.uleb128 0x2117
+ 2195 0167 19       		.uleb128 0x19
+ 2196 0168 01       		.uleb128 0x1
+ 2197 0169 13       		.uleb128 0x13
+ 2198 016a 00       		.byte	0
+ 2199 016b 00       		.byte	0
+ 2200 016c 1E       		.uleb128 0x1e
+ 2201 016d 898201   		.uleb128 0x4109
+ 2202 0170 01       		.byte	0x1
+ 2203 0171 11       		.uleb128 0x11
+ 2204 0172 01       		.uleb128 0x1
+ 2205 0173 31       		.uleb128 0x31
+ 2206 0174 13       		.uleb128 0x13
+ 2207 0175 01       		.uleb128 0x1
+ 2208 0176 13       		.uleb128 0x13
+ 2209 0177 00       		.byte	0
+ 2210 0178 00       		.byte	0
+ 2211 0179 1F       		.uleb128 0x1f
+ 2212 017a 8A8201   		.uleb128 0x410a
+ 2213 017d 00       		.byte	0
+ 2214 017e 02       		.uleb128 0x2
+ 2215 017f 18       		.uleb128 0x18
+ 2216 0180 9142     		.uleb128 0x2111
+ 2217 0182 18       		.uleb128 0x18
+ 2218 0183 00       		.byte	0
+ 2219 0184 00       		.byte	0
+ 2220 0185 20       		.uleb128 0x20
+ 2221 0186 898201   		.uleb128 0x4109
+ 2222 0189 01       		.byte	0x1
+ 2223 018a 11       		.uleb128 0x11
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 40
+
+
+ 2224 018b 01       		.uleb128 0x1
+ 2225 018c 31       		.uleb128 0x31
+ 2226 018d 13       		.uleb128 0x13
+ 2227 018e 00       		.byte	0
+ 2228 018f 00       		.byte	0
+ 2229 0190 21       		.uleb128 0x21
+ 2230 0191 05       		.uleb128 0x5
+ 2231 0192 00       		.byte	0
+ 2232 0193 03       		.uleb128 0x3
+ 2233 0194 0E       		.uleb128 0xe
+ 2234 0195 3A       		.uleb128 0x3a
+ 2235 0196 0B       		.uleb128 0xb
+ 2236 0197 3B       		.uleb128 0x3b
+ 2237 0198 0B       		.uleb128 0xb
+ 2238 0199 49       		.uleb128 0x49
+ 2239 019a 13       		.uleb128 0x13
+ 2240 019b 02       		.uleb128 0x2
+ 2241 019c 18       		.uleb128 0x18
+ 2242 019d 00       		.byte	0
+ 2243 019e 00       		.byte	0
+ 2244 019f 22       		.uleb128 0x22
+ 2245 01a0 05       		.uleb128 0x5
+ 2246 01a1 00       		.byte	0
+ 2247 01a2 03       		.uleb128 0x3
+ 2248 01a3 0E       		.uleb128 0xe
+ 2249 01a4 3A       		.uleb128 0x3a
+ 2250 01a5 0B       		.uleb128 0xb
+ 2251 01a6 3B       		.uleb128 0x3b
+ 2252 01a7 0B       		.uleb128 0xb
+ 2253 01a8 49       		.uleb128 0x49
+ 2254 01a9 13       		.uleb128 0x13
+ 2255 01aa 02       		.uleb128 0x2
+ 2256 01ab 17       		.uleb128 0x17
+ 2257 01ac 00       		.byte	0
+ 2258 01ad 00       		.byte	0
+ 2259 01ae 23       		.uleb128 0x23
+ 2260 01af 1D       		.uleb128 0x1d
+ 2261 01b0 01       		.byte	0x1
+ 2262 01b1 31       		.uleb128 0x31
+ 2263 01b2 13       		.uleb128 0x13
+ 2264 01b3 52       		.uleb128 0x52
+ 2265 01b4 01       		.uleb128 0x1
+ 2266 01b5 55       		.uleb128 0x55
+ 2267 01b6 17       		.uleb128 0x17
+ 2268 01b7 58       		.uleb128 0x58
+ 2269 01b8 0B       		.uleb128 0xb
+ 2270 01b9 59       		.uleb128 0x59
+ 2271 01ba 0B       		.uleb128 0xb
+ 2272 01bb 01       		.uleb128 0x1
+ 2273 01bc 13       		.uleb128 0x13
+ 2274 01bd 00       		.byte	0
+ 2275 01be 00       		.byte	0
+ 2276 01bf 24       		.uleb128 0x24
+ 2277 01c0 0B       		.uleb128 0xb
+ 2278 01c1 01       		.byte	0x1
+ 2279 01c2 55       		.uleb128 0x55
+ 2280 01c3 17       		.uleb128 0x17
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 41
+
+
+ 2281 01c4 00       		.byte	0
+ 2282 01c5 00       		.byte	0
+ 2283 01c6 25       		.uleb128 0x25
+ 2284 01c7 34       		.uleb128 0x34
+ 2285 01c8 00       		.byte	0
+ 2286 01c9 31       		.uleb128 0x31
+ 2287 01ca 13       		.uleb128 0x13
+ 2288 01cb 02       		.uleb128 0x2
+ 2289 01cc 18       		.uleb128 0x18
+ 2290 01cd 00       		.byte	0
+ 2291 01ce 00       		.byte	0
+ 2292 01cf 26       		.uleb128 0x26
+ 2293 01d0 1D       		.uleb128 0x1d
+ 2294 01d1 00       		.byte	0
+ 2295 01d2 31       		.uleb128 0x31
+ 2296 01d3 13       		.uleb128 0x13
+ 2297 01d4 11       		.uleb128 0x11
+ 2298 01d5 01       		.uleb128 0x1
+ 2299 01d6 12       		.uleb128 0x12
+ 2300 01d7 06       		.uleb128 0x6
+ 2301 01d8 58       		.uleb128 0x58
+ 2302 01d9 0B       		.uleb128 0xb
+ 2303 01da 59       		.uleb128 0x59
+ 2304 01db 0B       		.uleb128 0xb
+ 2305 01dc 00       		.byte	0
+ 2306 01dd 00       		.byte	0
+ 2307 01de 27       		.uleb128 0x27
+ 2308 01df 34       		.uleb128 0x34
+ 2309 01e0 00       		.byte	0
+ 2310 01e1 03       		.uleb128 0x3
+ 2311 01e2 08       		.uleb128 0x8
+ 2312 01e3 3A       		.uleb128 0x3a
+ 2313 01e4 0B       		.uleb128 0xb
+ 2314 01e5 3B       		.uleb128 0x3b
+ 2315 01e6 0B       		.uleb128 0xb
+ 2316 01e7 49       		.uleb128 0x49
+ 2317 01e8 13       		.uleb128 0x13
+ 2318 01e9 02       		.uleb128 0x2
+ 2319 01ea 17       		.uleb128 0x17
+ 2320 01eb 00       		.byte	0
+ 2321 01ec 00       		.byte	0
+ 2322 01ed 28       		.uleb128 0x28
+ 2323 01ee 34       		.uleb128 0x34
+ 2324 01ef 00       		.byte	0
+ 2325 01f0 03       		.uleb128 0x3
+ 2326 01f1 0E       		.uleb128 0xe
+ 2327 01f2 3A       		.uleb128 0x3a
+ 2328 01f3 0B       		.uleb128 0xb
+ 2329 01f4 3B       		.uleb128 0x3b
+ 2330 01f5 0B       		.uleb128 0xb
+ 2331 01f6 49       		.uleb128 0x49
+ 2332 01f7 13       		.uleb128 0x13
+ 2333 01f8 02       		.uleb128 0x2
+ 2334 01f9 17       		.uleb128 0x17
+ 2335 01fa 00       		.byte	0
+ 2336 01fb 00       		.byte	0
+ 2337 01fc 29       		.uleb128 0x29
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 42
+
+
+ 2338 01fd 1D       		.uleb128 0x1d
+ 2339 01fe 01       		.byte	0x1
+ 2340 01ff 31       		.uleb128 0x31
+ 2341 0200 13       		.uleb128 0x13
+ 2342 0201 11       		.uleb128 0x11
+ 2343 0202 01       		.uleb128 0x1
+ 2344 0203 12       		.uleb128 0x12
+ 2345 0204 06       		.uleb128 0x6
+ 2346 0205 58       		.uleb128 0x58
+ 2347 0206 0B       		.uleb128 0xb
+ 2348 0207 59       		.uleb128 0x59
+ 2349 0208 0B       		.uleb128 0xb
+ 2350 0209 00       		.byte	0
+ 2351 020a 00       		.byte	0
+ 2352 020b 2A       		.uleb128 0x2a
+ 2353 020c 0B       		.uleb128 0xb
+ 2354 020d 01       		.byte	0x1
+ 2355 020e 11       		.uleb128 0x11
+ 2356 020f 01       		.uleb128 0x1
+ 2357 0210 12       		.uleb128 0x12
+ 2358 0211 06       		.uleb128 0x6
+ 2359 0212 00       		.byte	0
+ 2360 0213 00       		.byte	0
+ 2361 0214 2B       		.uleb128 0x2b
+ 2362 0215 1D       		.uleb128 0x1d
+ 2363 0216 01       		.byte	0x1
+ 2364 0217 31       		.uleb128 0x31
+ 2365 0218 13       		.uleb128 0x13
+ 2366 0219 52       		.uleb128 0x52
+ 2367 021a 01       		.uleb128 0x1
+ 2368 021b 55       		.uleb128 0x55
+ 2369 021c 17       		.uleb128 0x17
+ 2370 021d 58       		.uleb128 0x58
+ 2371 021e 0B       		.uleb128 0xb
+ 2372 021f 59       		.uleb128 0x59
+ 2373 0220 0B       		.uleb128 0xb
+ 2374 0221 00       		.byte	0
+ 2375 0222 00       		.byte	0
+ 2376 0223 2C       		.uleb128 0x2c
+ 2377 0224 34       		.uleb128 0x34
+ 2378 0225 00       		.byte	0
+ 2379 0226 03       		.uleb128 0x3
+ 2380 0227 0E       		.uleb128 0xe
+ 2381 0228 3A       		.uleb128 0x3a
+ 2382 0229 0B       		.uleb128 0xb
+ 2383 022a 3B       		.uleb128 0x3b
+ 2384 022b 0B       		.uleb128 0xb
+ 2385 022c 49       		.uleb128 0x49
+ 2386 022d 13       		.uleb128 0x13
+ 2387 022e 02       		.uleb128 0x2
+ 2388 022f 18       		.uleb128 0x18
+ 2389 0230 00       		.byte	0
+ 2390 0231 00       		.byte	0
+ 2391 0232 2D       		.uleb128 0x2d
+ 2392 0233 34       		.uleb128 0x34
+ 2393 0234 00       		.byte	0
+ 2394 0235 03       		.uleb128 0x3
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 43
+
+
+ 2395 0236 0E       		.uleb128 0xe
+ 2396 0237 3A       		.uleb128 0x3a
+ 2397 0238 0B       		.uleb128 0xb
+ 2398 0239 3B       		.uleb128 0x3b
+ 2399 023a 05       		.uleb128 0x5
+ 2400 023b 49       		.uleb128 0x49
+ 2401 023c 13       		.uleb128 0x13
+ 2402 023d 3F       		.uleb128 0x3f
+ 2403 023e 19       		.uleb128 0x19
+ 2404 023f 3C       		.uleb128 0x3c
+ 2405 0240 19       		.uleb128 0x19
+ 2406 0241 00       		.byte	0
+ 2407 0242 00       		.byte	0
+ 2408 0243 2E       		.uleb128 0x2e
+ 2409 0244 34       		.uleb128 0x34
+ 2410 0245 00       		.byte	0
+ 2411 0246 03       		.uleb128 0x3
+ 2412 0247 08       		.uleb128 0x8
+ 2413 0248 3A       		.uleb128 0x3a
+ 2414 0249 0B       		.uleb128 0xb
+ 2415 024a 3B       		.uleb128 0x3b
+ 2416 024b 05       		.uleb128 0x5
+ 2417 024c 49       		.uleb128 0x49
+ 2418 024d 13       		.uleb128 0x13
+ 2419 024e 3F       		.uleb128 0x3f
+ 2420 024f 19       		.uleb128 0x19
+ 2421 0250 3C       		.uleb128 0x3c
+ 2422 0251 19       		.uleb128 0x19
+ 2423 0252 00       		.byte	0
+ 2424 0253 00       		.byte	0
+ 2425 0254 2F       		.uleb128 0x2f
+ 2426 0255 2E       		.uleb128 0x2e
+ 2427 0256 00       		.byte	0
+ 2428 0257 3F       		.uleb128 0x3f
+ 2429 0258 19       		.uleb128 0x19
+ 2430 0259 3C       		.uleb128 0x3c
+ 2431 025a 19       		.uleb128 0x19
+ 2432 025b 6E       		.uleb128 0x6e
+ 2433 025c 0E       		.uleb128 0xe
+ 2434 025d 03       		.uleb128 0x3
+ 2435 025e 0E       		.uleb128 0xe
+ 2436 025f 3A       		.uleb128 0x3a
+ 2437 0260 0B       		.uleb128 0xb
+ 2438 0261 3B       		.uleb128 0x3b
+ 2439 0262 05       		.uleb128 0x5
+ 2440 0263 00       		.byte	0
+ 2441 0264 00       		.byte	0
+ 2442 0265 00       		.byte	0
+ 2443              		.section	.debug_loc,"",%progbits
+ 2444              	.Ldebug_loc0:
+ 2445              	.LLST0:
+ 2446 0000 00000000 		.4byte	.LVL4
+ 2447 0004 36000000 		.4byte	.LVL6
+ 2448 0008 0100     		.2byte	0x1
+ 2449 000a 51       		.byte	0x51
+ 2450 000b 36000000 		.4byte	.LVL6
+ 2451 000f C4000000 		.4byte	.LFE257
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 44
+
+
+ 2452 0013 0100     		.2byte	0x1
+ 2453 0015 58       		.byte	0x58
+ 2454 0016 00000000 		.4byte	0
+ 2455 001a 00000000 		.4byte	0
+ 2456              	.LLST1:
+ 2457 001e 00000000 		.4byte	.LVL4
+ 2458 0022 36000000 		.4byte	.LVL6
+ 2459 0026 0100     		.2byte	0x1
+ 2460 0028 52       		.byte	0x52
+ 2461 0029 36000000 		.4byte	.LVL6
+ 2462 002d C4000000 		.4byte	.LFE257
+ 2463 0031 0400     		.2byte	0x4
+ 2464 0033 F3       		.byte	0xf3
+ 2465 0034 01       		.uleb128 0x1
+ 2466 0035 52       		.byte	0x52
+ 2467 0036 9F       		.byte	0x9f
+ 2468 0037 00000000 		.4byte	0
+ 2469 003b 00000000 		.4byte	0
+ 2470              	.LLST2:
+ 2471 003f 26000000 		.4byte	.LVL5
+ 2472 0043 36000000 		.4byte	.LVL6
+ 2473 0047 0200     		.2byte	0x2
+ 2474 0049 30       		.byte	0x30
+ 2475 004a 9F       		.byte	0x9f
+ 2476 004b 00000000 		.4byte	0
+ 2477 004f 00000000 		.4byte	0
+ 2478              	.LLST3:
+ 2479 0053 40000000 		.4byte	.LVL7
+ 2480 0057 64000000 		.4byte	.LVL9
+ 2481 005b 0100     		.2byte	0x1
+ 2482 005d 54       		.byte	0x54
+ 2483 005e 68000000 		.4byte	.LVL10
+ 2484 0062 B6000000 		.4byte	.LVL16
+ 2485 0066 0100     		.2byte	0x1
+ 2486 0068 54       		.byte	0x54
+ 2487 0069 00000000 		.4byte	0
+ 2488 006d 00000000 		.4byte	0
+ 2489              	.LLST4:
+ 2490 0071 40000000 		.4byte	.LVL7
+ 2491 0075 48000000 		.4byte	.LVL8
+ 2492 0079 0200     		.2byte	0x2
+ 2493 007b 30       		.byte	0x30
+ 2494 007c 9F       		.byte	0x9f
+ 2495 007d 48000000 		.4byte	.LVL8
+ 2496 0081 7C000000 		.4byte	.LVL11
+ 2497 0085 0100     		.2byte	0x1
+ 2498 0087 52       		.byte	0x52
+ 2499 0088 80000000 		.4byte	.LVL12
+ 2500 008c B6000000 		.4byte	.LVL16
+ 2501 0090 0100     		.2byte	0x1
+ 2502 0092 52       		.byte	0x52
+ 2503 0093 00000000 		.4byte	0
+ 2504 0097 00000000 		.4byte	0
+ 2505              	.LLST5:
+ 2506 009b 40000000 		.4byte	.LVL7
+ 2507 009f 48000000 		.4byte	.LVL8
+ 2508 00a3 0200     		.2byte	0x2
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 45
+
+
+ 2509 00a5 30       		.byte	0x30
+ 2510 00a6 9F       		.byte	0x9f
+ 2511 00a7 48000000 		.4byte	.LVL8
+ 2512 00ab A0000000 		.4byte	.LVL14
+ 2513 00af 0500     		.2byte	0x5
+ 2514 00b1 38       		.byte	0x38
+ 2515 00b2 76       		.byte	0x76
+ 2516 00b3 00       		.sleb128 0
+ 2517 00b4 1C       		.byte	0x1c
+ 2518 00b5 9F       		.byte	0x9f
+ 2519 00b6 A0000000 		.4byte	.LVL14
+ 2520 00ba A2000000 		.4byte	.LVL15
+ 2521 00be 0500     		.2byte	0x5
+ 2522 00c0 37       		.byte	0x37
+ 2523 00c1 76       		.byte	0x76
+ 2524 00c2 00       		.sleb128 0
+ 2525 00c3 1C       		.byte	0x1c
+ 2526 00c4 9F       		.byte	0x9f
+ 2527 00c5 00000000 		.4byte	0
+ 2528 00c9 00000000 		.4byte	0
+ 2529              		.section	.debug_aranges,"",%progbits
+ 2530 0000 34000000 		.4byte	0x34
+ 2531 0004 0200     		.2byte	0x2
+ 2532 0006 00000000 		.4byte	.Ldebug_info0
+ 2533 000a 04       		.byte	0x4
+ 2534 000b 00       		.byte	0
+ 2535 000c 0000     		.2byte	0
+ 2536 000e 0000     		.2byte	0
+ 2537 0010 00000000 		.4byte	.LFB256
+ 2538 0014 48000000 		.4byte	.LFE256-.LFB256
+ 2539 0018 00000000 		.4byte	.LFB257
+ 2540 001c C4000000 		.4byte	.LFE257-.LFB257
+ 2541 0020 00000000 		.4byte	.LFB258
+ 2542 0024 28000000 		.4byte	.LFE258-.LFB258
+ 2543 0028 00000000 		.4byte	.LFB259
+ 2544 002c 28000000 		.4byte	.LFE259-.LFB259
+ 2545 0030 00000000 		.4byte	0
+ 2546 0034 00000000 		.4byte	0
+ 2547              		.section	.debug_ranges,"",%progbits
+ 2548              	.Ldebug_ranges0:
+ 2549 0000 08000000 		.4byte	.LBB33
+ 2550 0004 0A000000 		.4byte	.LBE33
+ 2551 0008 0E000000 		.4byte	.LBB39
+ 2552 000c 14000000 		.4byte	.LBE39
+ 2553 0010 16000000 		.4byte	.LBB40
+ 2554 0014 26000000 		.4byte	.LBE40
+ 2555 0018 00000000 		.4byte	0
+ 2556 001c 00000000 		.4byte	0
+ 2557 0020 26000000 		.4byte	.LBB41
+ 2558 0024 B6000000 		.4byte	.LBE41
+ 2559 0028 BC000000 		.4byte	.LBB60
+ 2560 002c C4000000 		.4byte	.LBE60
+ 2561 0030 00000000 		.4byte	0
+ 2562 0034 00000000 		.4byte	0
+ 2563 0038 2A000000 		.4byte	.LBB42
+ 2564 003c AE000000 		.4byte	.LBE42
+ 2565 0040 BC000000 		.4byte	.LBB59
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 46
+
+
+ 2566 0044 C4000000 		.4byte	.LBE59
+ 2567 0048 00000000 		.4byte	0
+ 2568 004c 00000000 		.4byte	0
+ 2569 0050 2A000000 		.4byte	.LBB43
+ 2570 0054 36000000 		.4byte	.LBE43
+ 2571 0058 44000000 		.4byte	.LBB58
+ 2572 005c A4000000 		.4byte	.LBE58
+ 2573 0060 00000000 		.4byte	0
+ 2574 0064 00000000 		.4byte	0
+ 2575 0068 34000000 		.4byte	.LBB44
+ 2576 006c 36000000 		.4byte	.LBE44
+ 2577 0070 5E000000 		.4byte	.LBB51
+ 2578 0074 62000000 		.4byte	.LBE51
+ 2579 0078 64000000 		.4byte	.LBB52
+ 2580 007c 66000000 		.4byte	.LBE52
+ 2581 0080 68000000 		.4byte	.LBB53
+ 2582 0084 78000000 		.4byte	.LBE53
+ 2583 0088 00000000 		.4byte	0
+ 2584 008c 00000000 		.4byte	0
+ 2585 0090 04000000 		.4byte	.LBB61
+ 2586 0094 06000000 		.4byte	.LBE61
+ 2587 0098 0A000000 		.4byte	.LBB66
+ 2588 009c 20000000 		.4byte	.LBE66
+ 2589 00a0 00000000 		.4byte	0
+ 2590 00a4 00000000 		.4byte	0
+ 2591 00a8 00000000 		.4byte	.LFB256
+ 2592 00ac 48000000 		.4byte	.LFE256
+ 2593 00b0 00000000 		.4byte	.LFB257
+ 2594 00b4 C4000000 		.4byte	.LFE257
+ 2595 00b8 00000000 		.4byte	.LFB258
+ 2596 00bc 28000000 		.4byte	.LFE258
+ 2597 00c0 00000000 		.4byte	.LFB259
+ 2598 00c4 28000000 		.4byte	.LFE259
+ 2599 00c8 00000000 		.4byte	0
+ 2600 00cc 00000000 		.4byte	0
+ 2601              		.section	.debug_line,"",%progbits
+ 2602              	.Ldebug_line0:
+ 2603 0000 C1030000 		.section	.debug_str,"MS",%progbits,1
+ 2603      0200BD02 
+ 2603      00000201 
+ 2603      FB0E0D00 
+ 2603      01010101 
+ 2604              	.LASF135:
+ 2605 0000 7370695F 		.ascii	"spi_sw_delay\000"
+ 2605      73775F64 
+ 2605      656C6179 
+ 2605      00
+ 2606              	.LASF57:
+ 2607 000d 72656164 		.ascii	"ready_list_t\000"
+ 2607      795F6C69 
+ 2607      73745F74 
+ 2607      00
+ 2608              	.LASF20:
+ 2609 001a 73697A65 		.ascii	"size_t\000"
+ 2609      5F7400
+ 2610              	.LASF91:
+ 2611 0021 7264796D 		.ascii	"rdymsg\000"
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 47
+
+
+ 2611      736700
+ 2612              	.LASF127:
+ 2613 0028 7370695F 		.ascii	"spi_sw_begin\000"
+ 2613      73775F62 
+ 2613      6567696E 
+ 2613      00
+ 2614              	.LASF18:
+ 2615 0035 75696E74 		.ascii	"uint64_t\000"
+ 2615      36345F74 
+ 2615      00
+ 2616              	.LASF111:
+ 2617 003e 4F545950 		.ascii	"OTYPER\000"
+ 2617      455200
+ 2618              	.LASF3:
+ 2619 0045 5F5F7569 		.ascii	"__uint8_t\000"
+ 2619      6E74385F 
+ 2619      7400
+ 2620              	.LASF88:
+ 2621 004f 706F7274 		.ascii	"port_intctx\000"
+ 2621      5F696E74 
+ 2621      63747800 
+ 2622              	.LASF82:
+ 2623 005b 76746C69 		.ascii	"vtlist\000"
+ 2623      737400
+ 2624              	.LASF119:
+ 2625 0062 696F706F 		.ascii	"ioportmask_t\000"
+ 2625      72746D61 
+ 2625      736B5F74 
+ 2625      00
+ 2626              	.LASF12:
+ 2627 006f 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2627      206C6F6E 
+ 2627      6720756E 
+ 2627      7369676E 
+ 2627      65642069 
+ 2628              	.LASF83:
+ 2629 0086 6D61696E 		.ascii	"mainthread\000"
+ 2629      74687265 
+ 2629      616400
+ 2630              	.LASF73:
+ 2631 0091 76697274 		.ascii	"virtual_timers_list_t\000"
+ 2631      75616C5F 
+ 2631      74696D65 
+ 2631      72735F6C 
+ 2631      6973745F 
+ 2632              	.LASF130:
+ 2633 00a7 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 2633      52784275 
+ 2633      66666572 
+ 2633      00
+ 2634              	.LASF56:
+ 2635 00b4 63685F74 		.ascii	"ch_threads_queue\000"
+ 2635      68726561 
+ 2635      64735F71 
+ 2635      75657565 
+ 2635      00
+ 2636              	.LASF34:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 48
+
+
+ 2637 00c5 705F7072 		.ascii	"p_prio\000"
+ 2637      696F00
+ 2638              	.LASF10:
+ 2639 00cc 6C6F6E67 		.ascii	"long long int\000"
+ 2639      206C6F6E 
+ 2639      6720696E 
+ 2639      7400
+ 2640              	.LASF0:
+ 2641 00da 7369676E 		.ascii	"signed char\000"
+ 2641      65642063 
+ 2641      68617200 
+ 2642              	.LASF134:
+ 2643 00e6 5F5F4E4F 		.ascii	"__NOP\000"
+ 2643      5000
+ 2644              	.LASF114:
+ 2645 00ec 42535252 		.ascii	"BSRR\000"
+ 2645      00
+ 2646              	.LASF128:
+ 2647 00f1 7370695F 		.ascii	"spi_sw_end\000"
+ 2647      73775F65 
+ 2647      6E6400
+ 2648              	.LASF50:
+ 2649 00fc 705F6D70 		.ascii	"p_mpool\000"
+ 2649      6F6F6C00 
+ 2650              	.LASF102:
+ 2651 0104 6D5F7175 		.ascii	"m_queue\000"
+ 2651      65756500 
+ 2652              	.LASF93:
+ 2653 010c 77746F62 		.ascii	"wtobjp\000"
+ 2653      6A7000
+ 2654              	.LASF25:
+ 2655 0113 74736C69 		.ascii	"tslices_t\000"
+ 2655      6365735F 
+ 2655      7400
+ 2656              	.LASF113:
+ 2657 011d 50555044 		.ascii	"PUPDR\000"
+ 2657      5200
+ 2658              	.LASF94:
+ 2659 0123 77747472 		.ascii	"wttrp\000"
+ 2659      7000
+ 2660              	.LASF80:
+ 2661 0129 63685F73 		.ascii	"ch_system\000"
+ 2661      79737465 
+ 2661      6D00
+ 2662              	.LASF7:
+ 2663 0133 6C6F6E67 		.ascii	"long int\000"
+ 2663      20696E74 
+ 2663      00
+ 2664              	.LASF23:
+ 2665 013c 74737461 		.ascii	"tstate_t\000"
+ 2665      74655F74 
+ 2665      00
+ 2666              	.LASF15:
+ 2667 0145 75696E74 		.ascii	"uint16_t\000"
+ 2667      31365F74 
+ 2667      00
+ 2668              	.LASF36:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 49
+
+
+ 2669 014e 705F6E65 		.ascii	"p_newer\000"
+ 2669      77657200 
+ 2670              	.LASF99:
+ 2671 0156 735F7175 		.ascii	"s_queue\000"
+ 2671      65756500 
+ 2672              	.LASF92:
+ 2673 015e 65786974 		.ascii	"exitcode\000"
+ 2673      636F6465 
+ 2673      00
+ 2674              	.LASF112:
+ 2675 0167 4F535045 		.ascii	"OSPEEDR\000"
+ 2675      45445200 
+ 2676              	.LASF62:
+ 2677 016f 725F6E65 		.ascii	"r_newer\000"
+ 2677      77657200 
+ 2678              	.LASF85:
+ 2679 0177 72656761 		.ascii	"regarm_t\000"
+ 2679      726D5F74 
+ 2679      00
+ 2680              	.LASF69:
+ 2681 0180 76745F70 		.ascii	"vt_prev\000"
+ 2681      72657600 
+ 2682              	.LASF118:
+ 2683 0188 73746D33 		.ascii	"stm32_gpio_t\000"
+ 2683      325F6770 
+ 2683      696F5F74 
+ 2683      00
+ 2684              	.LASF106:
+ 2685 0195 6D757465 		.ascii	"mutex_t\000"
+ 2685      785F7400 
+ 2686              	.LASF84:
+ 2687 019d 69646C65 		.ascii	"idle_thread_wa\000"
+ 2687      5F746872 
+ 2687      6561645F 
+ 2687      776100
+ 2688              	.LASF29:
+ 2689 01ac 636E745F 		.ascii	"cnt_t\000"
+ 2689      7400
+ 2690              	.LASF13:
+ 2691 01b2 756E7369 		.ascii	"unsigned int\000"
+ 2691      676E6564 
+ 2691      20696E74 
+ 2691      00
+ 2692              	.LASF68:
+ 2693 01bf 76745F6E 		.ascii	"vt_next\000"
+ 2693      65787400 
+ 2694              	.LASF43:
+ 2695 01c7 705F7469 		.ascii	"p_time\000"
+ 2695      6D6500
+ 2696              	.LASF95:
+ 2697 01ce 77747365 		.ascii	"wtsemp\000"
+ 2697      6D7000
+ 2698              	.LASF70:
+ 2699 01d5 76745F64 		.ascii	"vt_delta\000"
+ 2699      656C7461 
+ 2699      00
+ 2700              	.LASF76:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 50
+
+
+ 2701 01de 73797374 		.ascii	"system_debug_t\000"
+ 2701      656D5F64 
+ 2701      65627567 
+ 2701      5F7400
+ 2702              	.LASF115:
+ 2703 01ed 4C434B52 		.ascii	"LCKR\000"
+ 2703      00
+ 2704              	.LASF100:
+ 2705 01f2 735F636E 		.ascii	"s_cnt\000"
+ 2705      7400
+ 2706              	.LASF87:
+ 2707 01f8 636F6E74 		.ascii	"context\000"
+ 2707      65787400 
+ 2708              	.LASF5:
+ 2709 0200 73686F72 		.ascii	"short unsigned int\000"
+ 2709      7420756E 
+ 2709      7369676E 
+ 2709      65642069 
+ 2709      6E7400
+ 2710              	.LASF53:
+ 2711 0213 63685F74 		.ascii	"ch_thread\000"
+ 2711      68726561 
+ 2711      6400
+ 2712              	.LASF27:
+ 2713 021d 6D73675F 		.ascii	"msg_t\000"
+ 2713      7400
+ 2714              	.LASF133:
+ 2715 0223 443A5C67 		.ascii	"D:\\git\\oroca_bldc_dev\\oroca_bldc_fw\\oroca_bldc_"
+ 2715      69745C6F 
+ 2715      726F6361 
+ 2715      5F626C64 
+ 2715      635F6465 
+ 2716 0252 63686962 		.ascii	"chibios\000"
+ 2716      696F7300 
+ 2717              	.LASF79:
+ 2718 025a 63685F73 		.ascii	"ch_system_t\000"
+ 2718      79737465 
+ 2718      6D5F7400 
+ 2719              	.LASF122:
+ 2720 0266 696E5F62 		.ascii	"in_buf\000"
+ 2720      756600
+ 2721              	.LASF22:
+ 2722 026d 746D6F64 		.ascii	"tmode_t\000"
+ 2722      655F7400 
+ 2723              	.LASF58:
+ 2724 0275 63685F72 		.ascii	"ch_ready_list\000"
+ 2724      65616479 
+ 2724      5F6C6973 
+ 2724      7400
+ 2725              	.LASF28:
+ 2726 0283 6576656E 		.ascii	"eventmask_t\000"
+ 2726      746D6173 
+ 2726      6B5F7400 
+ 2727              	.LASF6:
+ 2728 028f 5F5F696E 		.ascii	"__int32_t\000"
+ 2728      7433325F 
+ 2728      7400
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 51
+
+
+ 2729              	.LASF86:
+ 2730 0299 73746B61 		.ascii	"stkalign_t\000"
+ 2730      6C69676E 
+ 2730      5F7400
+ 2731              	.LASF21:
+ 2732 02a4 7274636E 		.ascii	"rtcnt_t\000"
+ 2732      745F7400 
+ 2733              	.LASF51:
+ 2734 02ac 74687265 		.ascii	"thread_reference_t\000"
+ 2734      61645F72 
+ 2734      65666572 
+ 2734      656E6365 
+ 2734      5F7400
+ 2735              	.LASF74:
+ 2736 02bf 63685F76 		.ascii	"ch_virtual_timers_list\000"
+ 2736      69727475 
+ 2736      616C5F74 
+ 2736      696D6572 
+ 2736      735F6C69 
+ 2737              	.LASF109:
+ 2738 02d6 636C6561 		.ascii	"clear\000"
+ 2738      7200
+ 2739              	.LASF71:
+ 2740 02dc 76745F66 		.ascii	"vt_func\000"
+ 2740      756E6300 
+ 2741              	.LASF125:
+ 2742 02e4 73656E64 		.ascii	"send\000"
+ 2742      00
+ 2743              	.LASF37:
+ 2744 02e9 705F6F6C 		.ascii	"p_older\000"
+ 2744      64657200 
+ 2745              	.LASF61:
+ 2746 02f1 725F6374 		.ascii	"r_ctx\000"
+ 2746      7800
+ 2747              	.LASF90:
+ 2748 02f7 746D5F63 		.ascii	"tm_calibration_t\000"
+ 2748      616C6962 
+ 2748      72617469 
+ 2748      6F6E5F74 
+ 2748      00
+ 2749              	.LASF123:
+ 2750 0308 6F75745F 		.ascii	"out_buf\000"
+ 2750      62756600 
+ 2751              	.LASF64:
+ 2752 0310 725F6375 		.ascii	"r_current\000"
+ 2752      7272656E 
+ 2752      7400
+ 2753              	.LASF63:
+ 2754 031a 725F6F6C 		.ascii	"r_older\000"
+ 2754      64657200 
+ 2755              	.LASF110:
+ 2756 0322 4D4F4445 		.ascii	"MODER\000"
+ 2756      5200
+ 2757              	.LASF11:
+ 2758 0328 5F5F7569 		.ascii	"__uint64_t\000"
+ 2758      6E743634 
+ 2758      5F7400
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 52
+
+
+ 2759              	.LASF117:
+ 2760 0333 41465248 		.ascii	"AFRH\000"
+ 2760      00
+ 2761              	.LASF108:
+ 2762 0338 666C6F61 		.ascii	"float\000"
+ 2762      7400
+ 2763              	.LASF116:
+ 2764 033e 4146524C 		.ascii	"AFRL\000"
+ 2764      00
+ 2765              	.LASF24:
+ 2766 0343 74726566 		.ascii	"trefs_t\000"
+ 2766      735F7400 
+ 2767              	.LASF66:
+ 2768 034b 76697274 		.ascii	"virtual_timer_t\000"
+ 2768      75616C5F 
+ 2768      74696D65 
+ 2768      725F7400 
+ 2769              	.LASF33:
+ 2770 035b 705F7072 		.ascii	"p_prev\000"
+ 2770      657600
+ 2771              	.LASF26:
+ 2772 0362 74707269 		.ascii	"tprio_t\000"
+ 2772      6F5F7400 
+ 2773              	.LASF77:
+ 2774 036a 63685F73 		.ascii	"ch_system_debug\000"
+ 2774      79737465 
+ 2774      6D5F6465 
+ 2774      62756700 
+ 2775              	.LASF107:
+ 2776 037a 5F426F6F 		.ascii	"_Bool\000"
+ 2776      6C00
+ 2777              	.LASF16:
+ 2778 0380 696E7433 		.ascii	"int32_t\000"
+ 2778      325F7400 
+ 2779              	.LASF1:
+ 2780 0388 756E7369 		.ascii	"unsigned char\000"
+ 2780      676E6564 
+ 2780      20636861 
+ 2780      7200
+ 2781              	.LASF132:
+ 2782 0396 7372632F 		.ascii	"src/core/spi_sw.c\000"
+ 2782      636F7265 
+ 2782      2F737069 
+ 2782      5F73772E 
+ 2782      6300
+ 2783              	.LASF48:
+ 2784 03a8 705F6D74 		.ascii	"p_mtxlist\000"
+ 2784      786C6973 
+ 2784      7400
+ 2785              	.LASF2:
+ 2786 03b2 73686F72 		.ascii	"short int\000"
+ 2786      7420696E 
+ 2786      7400
+ 2787              	.LASF39:
+ 2788 03bc 705F7374 		.ascii	"p_state\000"
+ 2788      61746500 
+ 2789              	.LASF42:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 53
+
+
+ 2790 03c4 705F7072 		.ascii	"p_preempt\000"
+ 2790      65656D70 
+ 2790      7400
+ 2791              	.LASF60:
+ 2792 03ce 725F7072 		.ascii	"r_prio\000"
+ 2792      696F00
+ 2793              	.LASF97:
+ 2794 03d5 65776D61 		.ascii	"ewmask\000"
+ 2794      736B00
+ 2795              	.LASF32:
+ 2796 03dc 705F6E65 		.ascii	"p_next\000"
+ 2796      787400
+ 2797              	.LASF40:
+ 2798 03e3 705F666C 		.ascii	"p_flags\000"
+ 2798      61677300 
+ 2799              	.LASF67:
+ 2800 03eb 63685F76 		.ascii	"ch_virtual_timer\000"
+ 2800      69727475 
+ 2800      616C5F74 
+ 2800      696D6572 
+ 2800      00
+ 2801              	.LASF98:
+ 2802 03fc 63685F73 		.ascii	"ch_semaphore\000"
+ 2802      656D6170 
+ 2802      686F7265 
+ 2802      00
+ 2803              	.LASF47:
+ 2804 0409 705F6570 		.ascii	"p_epending\000"
+ 2804      656E6469 
+ 2804      6E6700
+ 2805              	.LASF126:
+ 2806 0414 72656369 		.ascii	"recieve\000"
+ 2806      65766500 
+ 2807              	.LASF17:
+ 2808 041c 75696E74 		.ascii	"uint32_t\000"
+ 2808      33325F74 
+ 2808      00
+ 2809              	.LASF96:
+ 2810 0425 77746D74 		.ascii	"wtmtxp\000"
+ 2810      787000
+ 2811              	.LASF59:
+ 2812 042c 725F7175 		.ascii	"r_queue\000"
+ 2812      65756500 
+ 2813              	.LASF75:
+ 2814 0434 76745F73 		.ascii	"vt_systime\000"
+ 2814      79737469 
+ 2814      6D6500
+ 2815              	.LASF54:
+ 2816 043f 63685F74 		.ascii	"ch_threads_list\000"
+ 2816      68726561 
+ 2816      64735F6C 
+ 2816      69737400 
+ 2817              	.LASF9:
+ 2818 044f 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2818      20756E73 
+ 2818      69676E65 
+ 2818      6420696E 
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 54
+
+
+ 2818      7400
+ 2819              	.LASF124:
+ 2820 0461 6C656E67 		.ascii	"length\000"
+ 2820      746800
+ 2821              	.LASF105:
+ 2822 0468 63686172 		.ascii	"char\000"
+ 2822      00
+ 2823              	.LASF129:
+ 2824 046d 696E6974 		.ascii	"init_done\000"
+ 2824      5F646F6E 
+ 2824      6500
+ 2825              	.LASF4:
+ 2826 0477 5F5F7569 		.ascii	"__uint16_t\000"
+ 2826      6E743136 
+ 2826      5F7400
+ 2827              	.LASF31:
+ 2828 0482 74687265 		.ascii	"thread_t\000"
+ 2828      61645F74 
+ 2828      00
+ 2829              	.LASF104:
+ 2830 048b 6D5F6E65 		.ascii	"m_next\000"
+ 2830      787400
+ 2831              	.LASF30:
+ 2832 0492 73797374 		.ascii	"systime_t\000"
+ 2832      696D655F 
+ 2832      7400
+ 2833              	.LASF49:
+ 2834 049c 705F7265 		.ascii	"p_realprio\000"
+ 2834      616C7072 
+ 2834      696F00
+ 2835              	.LASF65:
+ 2836 04a7 76746675 		.ascii	"vtfunc_t\000"
+ 2836      6E635F74 
+ 2836      00
+ 2837              	.LASF8:
+ 2838 04b0 5F5F7569 		.ascii	"__uint32_t\000"
+ 2838      6E743332 
+ 2838      5F7400
+ 2839              	.LASF78:
+ 2840 04bb 70616E69 		.ascii	"panic_msg\000"
+ 2840      635F6D73 
+ 2840      6700
+ 2841              	.LASF89:
+ 2842 04c5 6F666673 		.ascii	"offset\000"
+ 2842      657400
+ 2843              	.LASF136:
+ 2844 04cc 5F70616C 		.ascii	"_pal_lld_setgroupmode\000"
+ 2844      5F6C6C64 
+ 2844      5F736574 
+ 2844      67726F75 
+ 2844      706D6F64 
+ 2845              	.LASF45:
+ 2846 04e2 705F6D73 		.ascii	"p_msgqueue\000"
+ 2846      67717565 
+ 2846      756500
+ 2847              	.LASF72:
+ 2848 04ed 76745F70 		.ascii	"vt_par\000"
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 55
+
+
+ 2848      617200
+ 2849              	.LASF55:
+ 2850 04f4 74687265 		.ascii	"threads_queue_t\000"
+ 2850      6164735F 
+ 2850      71756575 
+ 2850      655F7400 
+ 2851              	.LASF41:
+ 2852 0504 705F7265 		.ascii	"p_refs\000"
+ 2852      667300
+ 2853              	.LASF121:
+ 2854 050b 7370695F 		.ascii	"spi_sw_transfer\000"
+ 2854      73775F74 
+ 2854      72616E73 
+ 2854      66657200 
+ 2855              	.LASF131:
+ 2856 051b 474E5520 		.ascii	"GNU C99 5.4.1 20160919 (release) [ARM/embedded-5-br"
+ 2856      43393920 
+ 2856      352E342E 
+ 2856      31203230 
+ 2856      31363039 
+ 2857 054e 616E6368 		.ascii	"anch revision 240496] -mcpu=cortex-m4 -mfloat-abi=h"
+ 2857      20726576 
+ 2857      6973696F 
+ 2857      6E203234 
+ 2857      30343936 
+ 2858 0581 61726420 		.ascii	"ard -mfpu=fpv4-sp-d16 -mno-thumb-interwork -mthumb "
+ 2858      2D6D6670 
+ 2858      753D6670 
+ 2858      76342D73 
+ 2858      702D6431 
+ 2859 05b4 2D676764 		.ascii	"-ggdb -O2 -std=gnu99 -fomit-frame-pointer -falign-f"
+ 2859      62202D4F 
+ 2859      32202D73 
+ 2859      74643D67 
+ 2859      6E753939 
+ 2860 05e7 756E6374 		.ascii	"unctions=16 -ffunction-sections -fdata-sections -fn"
+ 2860      696F6E73 
+ 2860      3D313620 
+ 2860      2D666675 
+ 2860      6E637469 
+ 2861 061a 6F2D636F 		.ascii	"o-common -fsingle-precision-constant\000"
+ 2861      6D6D6F6E 
+ 2861      202D6673 
+ 2861      696E676C 
+ 2861      652D7072 
+ 2862              	.LASF81:
+ 2863 063f 726C6973 		.ascii	"rlist\000"
+ 2863      7400
+ 2864              	.LASF14:
+ 2865 0645 75696E74 		.ascii	"uint8_t\000"
+ 2865      385F7400 
+ 2866              	.LASF19:
+ 2867 064d 73697A65 		.ascii	"sizetype\000"
+ 2867      74797065 
+ 2867      00
+ 2868              	.LASF101:
+ 2869 0656 63685F6D 		.ascii	"ch_mutex\000"
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 56
+
+
+ 2869      75746578 
+ 2869      00
+ 2870              	.LASF38:
+ 2871 065f 705F6E61 		.ascii	"p_name\000"
+ 2871      6D6500
+ 2872              	.LASF52:
+ 2873 0666 74687265 		.ascii	"threads_list_t\000"
+ 2873      6164735F 
+ 2873      6C697374 
+ 2873      5F7400
+ 2874              	.LASF46:
+ 2875 0675 705F6D73 		.ascii	"p_msg\000"
+ 2875      6700
+ 2876              	.LASF120:
+ 2877 067b 7370695F 		.ascii	"spi_sw_init\000"
+ 2877      73775F69 
+ 2877      6E697400 
+ 2878              	.LASF103:
+ 2879 0687 6D5F6F77 		.ascii	"m_owner\000"
+ 2879      6E657200 
+ 2880              	.LASF35:
+ 2881 068f 705F6374 		.ascii	"p_ctx\000"
+ 2881      7800
+ 2882              	.LASF44:
+ 2883 0695 705F7761 		.ascii	"p_waiting\000"
+ 2883      6974696E 
+ 2883      6700
+ 2884              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160919 (release) [ARM/embedded-5-bran
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s 			page 57
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 spi_sw.c
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:22     .text.spi_sw_init:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:28     .text.spi_sw_init:00000000 spi_sw_init
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:86     .text.spi_sw_init:00000040 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:92     .text.spi_sw_transfer:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:98     .text.spi_sw_transfer:00000000 spi_sw_transfer
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:341    .text.spi_sw_transfer:000000c0 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:348    .text.spi_sw_begin:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:354    .text.spi_sw_begin:00000000 spi_sw_begin
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:411    .text.spi_sw_begin:00000024 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:416    .text.spi_sw_end:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:422    .text.spi_sw_end:00000000 spi_sw_end
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:473    .text.spi_sw_end:00000024 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:481    .bss.init_done:00000000 init_done
+C:\Users\IDONNO~1\AppData\Local\Temp\ccJIOTQC.s:482    .bss.init_done:00000000 $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+_pal_lld_setgroupmode

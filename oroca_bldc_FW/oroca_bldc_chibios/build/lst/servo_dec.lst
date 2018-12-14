@@ -1,0 +1,4768 @@
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 1
+   4              		.eabi_attribute 28, 1
+   5              		.fpu fpv4-sp-d16
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 2
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.thumb
+  16              		.syntax unified
+  17              		.file	"servo_dec.c"
+  18              		.text
+  19              	.Ltext0:
+  20              		.cfi_sections	.debug_frame
+  21              		.section	.text.icuperiodcb,"ax",%progbits
+  22              		.align	2
+  23              		.p2align 4,,15
+  24              		.thumb
+  25              		.thumb_func
+  26              		.type	icuperiodcb, %function
+  27              	icuperiodcb:
+  28              	.LFB257:
+  29              		.file 1 "src/core/servo_dec.c"
+  30              		.loc 1 93 0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  35              	.LVL0:
+  36 0000 7047     		bx	lr
+  37              		.cfi_endproc
+  38              	.LFE257:
+  39              		.size	icuperiodcb, .-icuperiodcb
+  40 0002 00BF     		.section	.text.icuwidthcb,"ax",%progbits
+  41              		.align	2
+  42              		.p2align 4,,15
+  43              		.thumb
+  44              		.thumb_func
+  45              		.type	icuwidthcb, %function
+  46              	icuwidthcb:
+  47              	.LFB256:
+  48              		.loc 1 49 0
+  49              		.cfi_startproc
+  50              		@ args = 0, pretend = 0, frame = 0
+  51              		@ frame_needed = 0, uses_anonymous_args = 0
+  52              	.LVL1:
+  53              		.loc 1 50 0
+  54 0000 0369     		ldr	r3, [r0, #16]
+  55 0002 DFED3F6A 		vldr.32	s13, .L25
+  56 0006 1B68     		ldr	r3, [r3]
+  57 0008 3E49     		ldr	r1, .L25+4
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 2
+
+
+  58              		.loc 1 51 0
+  59 000a 3F4A     		ldr	r2, .L25+8
+  60              		.loc 1 52 0
+  61 000c 3F48     		ldr	r0, .L25+12
+  62              	.LVL2:
+  63              		.loc 1 50 0
+  64 000e 0133     		adds	r3, r3, #1
+  65 0010 07EE903A 		vmov	s15, r3	@ int
+  66 0014 F8EE677A 		vcvt.f32.u32	s15, s15
+  67              		.loc 1 49 0
+  68 0018 70B5     		push	{r4, r5, r6, lr}
+  69              		.cfi_def_cfa_offset 16
+  70              		.cfi_offset 4, -16
+  71              		.cfi_offset 5, -12
+  72              		.cfi_offset 6, -8
+  73              		.cfi_offset 14, -4
+  74              		.loc 1 50 0
+  75 001a 87EEA67A 		vdiv.f32	s14, s15, s13
+  76              		.loc 1 49 0
+  77 001e 2DED028B 		vpush.64	{d8}
+  78              		.cfi_def_cfa_offset 24
+  79              		.cfi_offset 80, -24
+  80              		.cfi_offset 81, -20
+  81              		.loc 1 50 0
+  82 0022 81ED007A 		vstr.32	s14, [r1]
+  83              		.loc 1 51 0
+  84 0026 D1ED007A 		vldr.32	s15, [r1]
+  85 002a 92ED006A 		vldr.32	s12, [r2]
+  86              		.loc 1 52 0
+  87 002e 90ED007A 		vldr.32	s14, [r0]
+  88 0032 D2ED006A 		vldr.32	s13, [r2]
+  89              		.loc 1 51 0
+  90 0036 77EEC67A 		vsub.f32	s15, s15, s12
+  91              	.LVL3:
+  92              		.loc 1 52 0
+  93 003a 37EE667A 		vsub.f32	s14, s14, s13
+  94              	.LVL4:
+  95              		.loc 1 54 0
+  96 003e F4EEC77A 		vcmpe.f32	s15, s14
+  97 0042 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  98 0046 2DDD     		ble	.L21
+  99              		.loc 1 55 0
+ 100 0048 DFED316A 		vldr.32	s13, .L25+16
+ 101 004c 67EE266A 		vmul.f32	s13, s14, s13
+ 102 0050 F4EEE67A 		vcmpe.f32	s15, s13
+ 103 0054 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 104 0058 3BD5     		bpl	.L2
+ 105              		.loc 1 56 0
+ 106 005a F0EE477A 		vmov.f32	s15, s14
+ 107              	.LVL5:
+ 108              	.L5:
+ 109              		.loc 1 70 0
+ 110 005e F5EEC07A 		vcmpe.f32	s15, #0
+ 111 0062 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 112 0066 34DB     		blt	.L2
+ 113 0068 77EEA77A 		vadd.f32	s15, s15, s15
+ 114              	.LVL6:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 3
+
+
+ 115              	.L8:
+ 116              		.loc 1 71 0
+ 117 006c 294B     		ldr	r3, .L25+20
+ 118 006e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 119              	.LBB46:
+ 120              		.loc 1 72 0
+ 121 0070 77EEC77A 		vsub.f32	s15, s15, s14
+ 122              	.LBE46:
+ 123              		.loc 1 71 0
+ 124 0074 83BB     		cbnz	r3, .L24
+ 125              		.loc 1 82 0
+ 126 0076 C7EE876A 		vdiv.f32	s13, s15, s14
+ 127 007a 274B     		ldr	r3, .L25+24
+ 128 007c C3ED006A 		vstr.32	s13, [r3]
+ 129              	.LVL7:
+ 130              	.L12:
+ 131              	.LBB47:
+ 132              	.LBB48:
+ 133              	.LBB49:
+ 134              	.LBB50:
+ 135              	.LBB51:
+ 136              	.LBB52:
+ 137              		.file 2 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmFunc.h"
+ 138              		.loc 2 546 0
+ 139 0080 2023     		movs	r3, #32
+ 140              		.syntax unified
+ 141              	@ 546 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmFunc.h" 1
+ 142 0082 83F31188 		MSR basepri, r3
+ 143              	@ 0 "" 2
+ 144              	.LVL8:
+ 145              		.thumb
+ 146              		.syntax unified
+ 147              	.LBE52:
+ 148              	.LBE51:
+ 149              	.LBE50:
+ 150              	.LBE49:
+ 151              	.LBB53:
+ 152              	.LBB54:
+ 153              		.file 3 "src/ChibiOS_3.0.2/os/rt/include/chvt.h"
+ 154              		.loc 3 231 0
+ 155 0086 254A     		ldr	r2, .L25+28
+ 156              	.LBE54:
+ 157              	.LBE53:
+ 158              	.LBB56:
+ 159              	.LBB57:
+ 160              	.LBB58:
+ 161              	.LBB59:
+ 162              	.LBB60:
+ 163              		.loc 2 546 0
+ 164 0088 0023     		movs	r3, #0
+ 165              	.LBE60:
+ 166              	.LBE59:
+ 167              	.LBE58:
+ 168              	.LBE57:
+ 169              	.LBE56:
+ 170              	.LBB65:
+ 171              	.LBB55:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 4
+
+
+ 172              		.loc 3 231 0
+ 173 008a 916A     		ldr	r1, [r2, #40]
+ 174              	.LVL9:
+ 175              	.LBE55:
+ 176              	.LBE65:
+ 177              	.LBB66:
+ 178              	.LBB64:
+ 179              	.LBB63:
+ 180              	.LBB62:
+ 181              	.LBB61:
+ 182              		.loc 2 546 0
+ 183              		.syntax unified
+ 184              	@ 546 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cmFunc.h" 1
+ 185 008c 83F31188 		MSR basepri, r3
+ 186              	@ 0 "" 2
+ 187              	.LVL10:
+ 188              		.thumb
+ 189              		.syntax unified
+ 190              	.LBE61:
+ 191              	.LBE62:
+ 192              	.LBE63:
+ 193              	.LBE64:
+ 194              	.LBE66:
+ 195              	.LBE48:
+ 196              	.LBE47:
+ 197              		.loc 1 87 0
+ 198 0090 234B     		ldr	r3, .L25+32
+ 199              		.loc 1 85 0
+ 200 0092 244A     		ldr	r2, .L25+36
+ 201              		.loc 1 87 0
+ 202 0094 1B68     		ldr	r3, [r3]
+ 203              		.loc 1 85 0
+ 204 0096 1160     		str	r1, [r2]
+ 205              		.loc 1 87 0
+ 206 0098 DBB1     		cbz	r3, .L2
+ 207              		.loc 1 91 0
+ 208 009a BDEC028B 		vldm	sp!, {d8}
+ 209              		.cfi_remember_state
+ 210              		.cfi_restore 80
+ 211              		.cfi_restore 81
+ 212              		.cfi_def_cfa_offset 16
+ 213 009e BDE87040 		pop	{r4, r5, r6, lr}
+ 214              		.cfi_restore 14
+ 215              		.cfi_restore 6
+ 216              		.cfi_restore 5
+ 217              		.cfi_restore 4
+ 218              		.cfi_def_cfa_offset 0
+ 219              		.loc 1 88 0
+ 220 00a2 1847     		bx	r3	@ indirect register sibling call
+ 221              	.LVL11:
+ 222              	.L21:
+ 223              		.cfi_restore_state
+ 224              		.loc 1 61 0
+ 225 00a4 F5EEC07A 		vcmpe.f32	s15, #0
+ 226 00a8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 227 00ac D7D5     		bpl	.L5
+ 228              		.loc 1 62 0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 5
+
+
+ 229 00ae D2ED005A 		vldr.32	s11, [r2]
+ 230 00b2 9FED1D6A 		vldr.32	s12, .L25+40
+ 231 00b6 D2ED006A 		vldr.32	s13, [r2]
+ 232 00ba 77EEA57A 		vadd.f32	s15, s15, s11
+ 233              	.LVL12:
+ 234 00be 66EE866A 		vmul.f32	s13, s13, s12
+ 235 00c2 F4EEE67A 		vcmpe.f32	s15, s13
+ 236 00c6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 237 00ca 02DD     		ble	.L2
+ 238 00cc DFED177A 		vldr.32	s15, .L25+44
+ 239 00d0 CCE7     		b	.L8
+ 240              	.LVL13:
+ 241              	.L2:
+ 242              		.loc 1 91 0
+ 243 00d2 BDEC028B 		vldm	sp!, {d8}
+ 244              		.cfi_remember_state
+ 245              		.cfi_restore 80
+ 246              		.cfi_restore 81
+ 247              		.cfi_def_cfa_offset 16
+ 248 00d6 70BD     		pop	{r4, r5, r6, pc}
+ 249              	.LVL14:
+ 250              	.L24:
+ 251              		.cfi_restore_state
+ 252              	.LBB67:
+ 253              		.loc 1 72 0
+ 254 00d8 87EE878A 		vdiv.f32	s16, s15, s14
+ 255              	.LVL15:
+ 256              		.loc 1 75 0
+ 257 00dc 144C     		ldr	r4, .L25+48
+ 258 00de 154D     		ldr	r5, .L25+52
+ 259 00e0 D4ED000A 		vldr.32	s1, [r4]
+ 260 00e4 95ED001A 		vldr.32	s2, [r5]
+ 261 00e8 B0EE480A 		vmov.f32	s0, s16
+ 262 00ec FFF7FEFF 		bl	utils_middle_of_3
+ 263              	.LVL16:
+ 264              		.loc 1 80 0
+ 265 00f0 094B     		ldr	r3, .L25+24
+ 266              		.loc 1 77 0
+ 267 00f2 2268     		ldr	r2, [r4]	@ float
+ 268 00f4 2A60     		str	r2, [r5]	@ float
+ 269              		.loc 1 78 0
+ 270 00f6 84ED008A 		vstr.32	s16, [r4]
+ 271              		.loc 1 80 0
+ 272 00fa 83ED000A 		vstr.32	s0, [r3]
+ 273              	.LBE67:
+ 274 00fe BFE7     		b	.L12
+ 275              	.L26:
+ 276              		.align	2
+ 277              	.L25:
+ 278 0100 00007A44 		.word	1148846080
+ 279 0104 00000000 		.word	.LANCHOR0
+ 280 0108 00000000 		.word	.LANCHOR1
+ 281 010c 00000000 		.word	.LANCHOR2
+ 282 0110 9A99993F 		.word	1067030938
+ 283 0114 00000000 		.word	.LANCHOR3
+ 284 0118 00000000 		.word	.LANCHOR6
+ 285 011c 00000000 		.word	ch
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 6
+
+
+ 286 0120 00000000 		.word	.LANCHOR8
+ 287 0124 00000000 		.word	.LANCHOR7
+ 288 0128 CDCC4C3F 		.word	1061997773
+ 289 012c 00000000 		.word	0
+ 290 0130 00000000 		.word	.LANCHOR5
+ 291 0134 00000000 		.word	.LANCHOR4
+ 292              		.cfi_endproc
+ 293              	.LFE256:
+ 294              		.size	icuwidthcb, .-icuwidthcb
+ 295              		.section	.text.servodec_init,"ax",%progbits
+ 296              		.align	2
+ 297              		.p2align 4,,15
+ 298              		.global	servodec_init
+ 299              		.thumb
+ 300              		.thumb_func
+ 301              		.type	servodec_init, %function
+ 302              	servodec_init:
+ 303              	.LFB258:
+ 304              		.loc 1 114 0
+ 305              		.cfi_startproc
+ 306              		@ args = 0, pretend = 0, frame = 0
+ 307              		@ frame_needed = 0, uses_anonymous_args = 0
+ 308              	.LVL17:
+ 309 0000 38B5     		push	{r3, r4, r5, lr}
+ 310              		.cfi_def_cfa_offset 16
+ 311              		.cfi_offset 3, -16
+ 312              		.cfi_offset 4, -12
+ 313              		.cfi_offset 5, -8
+ 314              		.cfi_offset 14, -4
+ 315              		.loc 1 115 0
+ 316 0002 0D4C     		ldr	r4, .L29
+ 317 0004 0D49     		ldr	r1, .L29+4
+ 318              		.loc 1 114 0
+ 319 0006 0546     		mov	r5, r0
+ 320              		.loc 1 115 0
+ 321 0008 2046     		mov	r0, r4
+ 322              	.LVL18:
+ 323 000a FFF7FEFF 		bl	icuStart
+ 324              	.LVL19:
+ 325              		.loc 1 116 0
+ 326 000e 4FF48172 		mov	r2, #258
+ 327 0012 2021     		movs	r1, #32
+ 328 0014 0A48     		ldr	r0, .L29+8
+ 329 0016 FFF7FEFF 		bl	_pal_lld_setgroupmode
+ 330              	.LVL20:
+ 331              		.loc 1 117 0
+ 332 001a 2046     		mov	r0, r4
+ 333 001c FFF7FEFF 		bl	icuStartCapture
+ 334              	.LVL21:
+ 335              		.loc 1 118 0
+ 336 0020 2046     		mov	r0, r4
+ 337 0022 FFF7FEFF 		bl	icuEnableNotifications
+ 338              	.LVL22:
+ 339              		.loc 1 126 0
+ 340 0026 0748     		ldr	r0, .L29+12
+ 341              	.LBB68:
+ 342              		.loc 1 121 0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 7
+
+
+ 343 0028 0749     		ldr	r1, .L29+16
+ 344              		.loc 1 122 0
+ 345 002a 084A     		ldr	r2, .L29+20
+ 346              	.LBE68:
+ 347              		.loc 1 126 0
+ 348 002c 0560     		str	r5, [r0]
+ 349              	.LBB69:
+ 350              		.loc 1 121 0
+ 351 002e 0023     		movs	r3, #0
+ 352 0030 0B60     		str	r3, [r1]	@ float
+ 353              		.loc 1 122 0
+ 354 0032 1360     		str	r3, [r2]	@ float
+ 355              	.LVL23:
+ 356 0034 38BD     		pop	{r3, r4, r5, pc}
+ 357              	.LVL24:
+ 358              	.L30:
+ 359 0036 00BF     		.align	2
+ 360              	.L29:
+ 361 0038 00000000 		.word	ICUD3
+ 362 003c 00000000 		.word	.LANCHOR9
+ 363 0040 00040240 		.word	1073873920
+ 364 0044 00000000 		.word	.LANCHOR8
+ 365 0048 00000000 		.word	.LANCHOR6
+ 366 004c 00000000 		.word	.LANCHOR0
+ 367              	.LBE69:
+ 368              		.cfi_endproc
+ 369              	.LFE258:
+ 370              		.size	servodec_init, .-servodec_init
+ 371              		.section	.text.servodec_set_pulse_options,"ax",%progbits
+ 372              		.align	2
+ 373              		.p2align 4,,15
+ 374              		.global	servodec_set_pulse_options
+ 375              		.thumb
+ 376              		.thumb_func
+ 377              		.type	servodec_set_pulse_options, %function
+ 378              	servodec_set_pulse_options:
+ 379              	.LFB259:
+ 380              		.loc 1 138 0
+ 381              		.cfi_startproc
+ 382              		@ args = 0, pretend = 0, frame = 0
+ 383              		@ frame_needed = 0, uses_anonymous_args = 0
+ 384              		@ link register save eliminated.
+ 385              	.LVL25:
+ 386              		.loc 1 139 0
+ 387 0000 0449     		ldr	r1, .L32
+ 388              		.loc 1 140 0
+ 389 0002 054A     		ldr	r2, .L32+4
+ 390              		.loc 1 141 0
+ 391 0004 054B     		ldr	r3, .L32+8
+ 392              		.loc 1 139 0
+ 393 0006 81ED000A 		vstr.32	s0, [r1]
+ 394              		.loc 1 140 0
+ 395 000a C2ED000A 		vstr.32	s1, [r2]
+ 396              		.loc 1 141 0
+ 397 000e 1870     		strb	r0, [r3]
+ 398 0010 7047     		bx	lr
+ 399              	.L33:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 8
+
+
+ 400 0012 00BF     		.align	2
+ 401              	.L32:
+ 402 0014 00000000 		.word	.LANCHOR1
+ 403 0018 00000000 		.word	.LANCHOR2
+ 404 001c 00000000 		.word	.LANCHOR3
+ 405              		.cfi_endproc
+ 406              	.LFE259:
+ 407              		.size	servodec_set_pulse_options, .-servodec_set_pulse_options
+ 408              		.section	.text.servodec_get_servo,"ax",%progbits
+ 409              		.align	2
+ 410              		.p2align 4,,15
+ 411              		.global	servodec_get_servo
+ 412              		.thumb
+ 413              		.thumb_func
+ 414              		.type	servodec_get_servo, %function
+ 415              	servodec_get_servo:
+ 416              	.LFB260:
+ 417              		.loc 1 153 0
+ 418              		.cfi_startproc
+ 419              		@ args = 0, pretend = 0, frame = 0
+ 420              		@ frame_needed = 0, uses_anonymous_args = 0
+ 421              		@ link register save eliminated.
+ 422              	.LVL26:
+ 423              		.loc 1 154 0
+ 424 0000 0028     		cmp	r0, #0
+ 425              		.loc 1 155 0
+ 426 0002 DDBF     		ittte	le
+ 427 0004 034B     		ldrle	r3, .L37
+ 428 0006 03EB8000 		addle	r0, r3, r0, lsl #2
+ 429              	.LVL27:
+ 430 000a 90ED000A 		vldrle.32	s0, [r0]
+ 431              		.loc 1 157 0
+ 432 000e 9FED020A 		vldrgt.32	s0, .L37+4
+ 433              		.loc 1 159 0
+ 434 0012 7047     		bx	lr
+ 435              	.L38:
+ 436              		.align	2
+ 437              	.L37:
+ 438 0014 00000000 		.word	.LANCHOR6
+ 439 0018 00000000 		.word	0
+ 440              		.cfi_endproc
+ 441              	.LFE260:
+ 442              		.size	servodec_get_servo, .-servodec_get_servo
+ 443              		.section	.text.servodec_get_time_since_update,"ax",%progbits
+ 444              		.align	2
+ 445              		.p2align 4,,15
+ 446              		.global	servodec_get_time_since_update
+ 447              		.thumb
+ 448              		.thumb_func
+ 449              		.type	servodec_get_time_since_update, %function
+ 450              	servodec_get_time_since_update:
+ 451              	.LFB261:
+ 452              		.loc 1 168 0
+ 453              		.cfi_startproc
+ 454              		@ args = 0, pretend = 0, frame = 0
+ 455              		@ frame_needed = 0, uses_anonymous_args = 0
+ 456              		@ link register save eliminated.
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 9
+
+
+ 457              		.loc 1 169 0
+ 458 0000 044A     		ldr	r2, .L40
+ 459              	.LBB70:
+ 460              	.LBB71:
+ 461              	.LBB72:
+ 462              	.LBB73:
+ 463              		.loc 3 231 0
+ 464 0002 054B     		ldr	r3, .L40+4
+ 465              	.LBE73:
+ 466              	.LBE72:
+ 467              	.LBE71:
+ 468              	.LBE70:
+ 469              		.loc 1 169 0
+ 470 0004 1068     		ldr	r0, [r2]
+ 471              	.LVL28:
+ 472              	.LBB77:
+ 473              	.LBB76:
+ 474              	.LBB75:
+ 475              	.LBB74:
+ 476              		.loc 3 231 0
+ 477 0006 9B6A     		ldr	r3, [r3, #40]
+ 478              	.LVL29:
+ 479              	.LBE74:
+ 480              	.LBE75:
+ 481              	.LBE76:
+ 482              	.LBE77:
+ 483              		.loc 1 169 0
+ 484 0008 044A     		ldr	r2, .L40+8
+ 485 000a 181A     		subs	r0, r3, r0
+ 486 000c A2FB0030 		umull	r3, r0, r2, r0
+ 487              		.loc 1 170 0
+ 488 0010 C008     		lsrs	r0, r0, #3
+ 489 0012 7047     		bx	lr
+ 490              	.L41:
+ 491              		.align	2
+ 492              	.L40:
+ 493 0014 00000000 		.word	.LANCHOR7
+ 494 0018 00000000 		.word	ch
+ 495 001c CDCCCCCC 		.word	-858993459
+ 496              		.cfi_endproc
+ 497              	.LFE261:
+ 498              		.size	servodec_get_time_since_update, .-servodec_get_time_since_update
+ 499              		.section	.text.servodec_get_last_pulse_len,"ax",%progbits
+ 500              		.align	2
+ 501              		.p2align 4,,15
+ 502              		.global	servodec_get_last_pulse_len
+ 503              		.thumb
+ 504              		.thumb_func
+ 505              		.type	servodec_get_last_pulse_len, %function
+ 506              	servodec_get_last_pulse_len:
+ 507              	.LFB262:
+ 508              		.loc 1 181 0
+ 509              		.cfi_startproc
+ 510              		@ args = 0, pretend = 0, frame = 0
+ 511              		@ frame_needed = 0, uses_anonymous_args = 0
+ 512              		@ link register save eliminated.
+ 513              	.LVL30:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 10
+
+
+ 514              		.loc 1 182 0
+ 515 0000 0028     		cmp	r0, #0
+ 516              		.loc 1 183 0
+ 517 0002 DDBF     		ittte	le
+ 518 0004 034B     		ldrle	r3, .L45
+ 519 0006 03EB8000 		addle	r0, r3, r0, lsl #2
+ 520              	.LVL31:
+ 521 000a 90ED000A 		vldrle.32	s0, [r0]
+ 522              		.loc 1 185 0
+ 523 000e 9FED020A 		vldrgt.32	s0, .L45+4
+ 524              		.loc 1 187 0
+ 525 0012 7047     		bx	lr
+ 526              	.L46:
+ 527              		.align	2
+ 528              	.L45:
+ 529 0014 00000000 		.word	.LANCHOR0
+ 530 0018 00000000 		.word	0
+ 531              		.cfi_endproc
+ 532              	.LFE262:
+ 533              		.size	servodec_get_last_pulse_len, .-servodec_get_last_pulse_len
+ 534              		.section	.bss.servo_pos,"aw",%nobits
+ 535              		.align	2
+ 536              		.set	.LANCHOR6,. + 0
+ 537              		.type	servo_pos, %object
+ 538              		.size	servo_pos, 4
+ 539              	servo_pos:
+ 540 0000 00000000 		.space	4
+ 541              		.section	.data.c1.9477,"aw",%progbits
+ 542              		.align	2
+ 543              		.set	.LANCHOR5,. + 0
+ 544              		.type	c1.9477, %object
+ 545              		.size	c1.9477, 4
+ 546              	c1.9477:
+ 547 0000 0000003F 		.word	1056964608
+ 548              		.section	.data.pulse_end,"aw",%progbits
+ 549              		.align	2
+ 550              		.set	.LANCHOR2,. + 0
+ 551              		.type	pulse_end, %object
+ 552              		.size	pulse_end, 4
+ 553              	pulse_end:
+ 554 0000 00000040 		.word	1073741824
+ 555              		.section	.bss.last_update_time,"aw",%nobits
+ 556              		.align	2
+ 557              		.set	.LANCHOR7,. + 0
+ 558              		.type	last_update_time, %object
+ 559              		.size	last_update_time, 4
+ 560              	last_update_time:
+ 561 0000 00000000 		.space	4
+ 562              		.section	.data.c2.9478,"aw",%progbits
+ 563              		.align	2
+ 564              		.set	.LANCHOR4,. + 0
+ 565              		.type	c2.9478, %object
+ 566              		.size	c2.9478, 4
+ 567              	c2.9478:
+ 568 0000 0000003F 		.word	1056964608
+ 569              		.section	.bss.last_len_received,"aw",%nobits
+ 570              		.align	2
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 11
+
+
+ 571              		.set	.LANCHOR0,. + 0
+ 572              		.type	last_len_received, %object
+ 573              		.size	last_len_received, 4
+ 574              	last_len_received:
+ 575 0000 00000000 		.space	4
+ 576              		.section	.bss.use_median_filter,"aw",%nobits
+ 577              		.set	.LANCHOR3,. + 0
+ 578              		.type	use_median_filter, %object
+ 579              		.size	use_median_filter, 1
+ 580              	use_median_filter:
+ 581 0000 00       		.space	1
+ 582              		.section	.data.pulse_start,"aw",%progbits
+ 583              		.align	2
+ 584              		.set	.LANCHOR1,. + 0
+ 585              		.type	pulse_start, %object
+ 586              		.size	pulse_start, 4
+ 587              	pulse_start:
+ 588 0000 0000803F 		.word	1065353216
+ 589              		.section	.bss.done_func,"aw",%nobits
+ 590              		.align	2
+ 591              		.set	.LANCHOR8,. + 0
+ 592              		.type	done_func, %object
+ 593              		.size	done_func, 4
+ 594              	done_func:
+ 595 0000 00000000 		.space	4
+ 596              		.section	.data.icucfg,"aw",%progbits
+ 597              		.align	2
+ 598              		.set	.LANCHOR9,. + 0
+ 599              		.type	icucfg, %object
+ 600              		.size	icucfg, 28
+ 601              	icucfg:
+ 602 0000 00       		.byte	0
+ 603 0001 000000   		.space	3
+ 604 0004 40420F00 		.word	1000000
+ 605 0008 00000000 		.word	icuwidthcb
+ 606 000c 00000000 		.word	icuperiodcb
+ 607 0010 00000000 		.word	0
+ 608 0014 01       		.byte	1
+ 609 0015 000000   		.space	3
+ 610 0018 00000000 		.word	0
+ 611              		.text
+ 612              	.Letext0:
+ 613              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\5.4 2016q3\\arm-none-eabi\\include\\mach
+ 614              		.file 5 "c:\\program files (x86)\\gnu tools arm embedded\\5.4 2016q3\\arm-none-eabi\\include\\sys\
+ 615              		.file 6 "c:\\program files (x86)\\gnu tools arm embedded\\5.4 2016q3\\lib\\gcc\\arm-none-eabi\\5.4
+ 616              		.file 7 "src/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h"
+ 617              		.file 8 "src/ChibiOS_3.0.2/os/rt/include/chsystypes.h"
+ 618              		.file 9 "src/ChibiOS_3.0.2/os/rt/include/chschd.h"
+ 619              		.file 10 "src/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore.h"
+ 620              		.file 11 "src/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore_v7m.h"
+ 621              		.file 12 "src/ChibiOS_3.0.2/os/rt/include/chtm.h"
+ 622              		.file 13 "src/ChibiOS_3.0.2/os/rt/include/chsem.h"
+ 623              		.file 14 "src/ChibiOS_3.0.2/os/rt/include/chmtx.h"
+ 624              		.file 15 "src/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/GPIOv2/pal_lld.h"
+ 625              		.file 16 "src/ChibiOS_3.0.2/os/hal/include/icu.h"
+ 626              		.file 17 "src/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/TIMv1/icu_lld.h"
+ 627              		.file 18 "src/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/TIMv1/stm32_tim.h"
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 12
+
+
+ 628              		.file 19 "src/ChibiOS_3.0.2/os/rt/include/chsys.h"
+ 629              		.file 20 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cm4.h"
+ 630              		.file 21 "src/core/utils.h"
+ 631              		.section	.debug_info,"",%progbits
+ 632              	.Ldebug_info0:
+ 633 0000 9D0F0000 		.4byte	0xf9d
+ 634 0004 0400     		.2byte	0x4
+ 635 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 636 000a 04       		.byte	0x4
+ 637 000b 01       		.uleb128 0x1
+ 638 000c DB020000 		.4byte	.LASF194
+ 639 0010 0C       		.byte	0xc
+ 640 0011 BF040000 		.4byte	.LASF195
+ 641 0015 0B040000 		.4byte	.LASF196
+ 642 0019 90000000 		.4byte	.Ldebug_ranges0+0x90
+ 643 001d 00000000 		.4byte	0
+ 644 0021 00000000 		.4byte	.Ldebug_line0
+ 645 0025 02       		.uleb128 0x2
+ 646 0026 04       		.byte	0x4
+ 647 0027 04       		.byte	0x4
+ 648 0028 AC010000 		.4byte	.LASF0
+ 649 002c 02       		.uleb128 0x2
+ 650 002d 01       		.byte	0x1
+ 651 002e 06       		.byte	0x6
+ 652 002f FD080000 		.4byte	.LASF1
+ 653 0033 03       		.uleb128 0x3
+ 654 0034 98070000 		.4byte	.LASF4
+ 655 0038 04       		.byte	0x4
+ 656 0039 1D       		.byte	0x1d
+ 657 003a 3E000000 		.4byte	0x3e
+ 658 003e 02       		.uleb128 0x2
+ 659 003f 01       		.byte	0x1
+ 660 0040 08       		.byte	0x8
+ 661 0041 32080000 		.4byte	.LASF2
+ 662 0045 02       		.uleb128 0x2
+ 663 0046 02       		.byte	0x2
+ 664 0047 05       		.byte	0x5
+ 665 0048 C1060000 		.4byte	.LASF3
+ 666 004c 03       		.uleb128 0x3
+ 667 004d 20020000 		.4byte	.LASF5
+ 668 0051 04       		.byte	0x4
+ 669 0052 2B       		.byte	0x2b
+ 670 0053 57000000 		.4byte	0x57
+ 671 0057 02       		.uleb128 0x2
+ 672 0058 02       		.byte	0x2
+ 673 0059 07       		.byte	0x7
+ 674 005a 14090000 		.4byte	.LASF6
+ 675 005e 03       		.uleb128 0x3
+ 676 005f C3000000 		.4byte	.LASF7
+ 677 0063 04       		.byte	0x4
+ 678 0064 3F       		.byte	0x3f
+ 679 0065 69000000 		.4byte	0x69
+ 680 0069 02       		.uleb128 0x2
+ 681 006a 04       		.byte	0x4
+ 682 006b 05       		.byte	0x5
+ 683 006c F1060000 		.4byte	.LASF8
+ 684 0070 03       		.uleb128 0x3
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 13
+
+
+ 685 0071 40080000 		.4byte	.LASF9
+ 686 0075 04       		.byte	0x4
+ 687 0076 41       		.byte	0x41
+ 688 0077 7B000000 		.4byte	0x7b
+ 689 007b 02       		.uleb128 0x2
+ 690 007c 04       		.byte	0x4
+ 691 007d 07       		.byte	0x7
+ 692 007e E6070000 		.4byte	.LASF10
+ 693 0082 02       		.uleb128 0x2
+ 694 0083 08       		.byte	0x8
+ 695 0084 05       		.byte	0x5
+ 696 0085 DD040000 		.4byte	.LASF11
+ 697 0089 03       		.uleb128 0x3
+ 698 008a 76040000 		.4byte	.LASF12
+ 699 008e 04       		.byte	0x4
+ 700 008f 5B       		.byte	0x5b
+ 701 0090 94000000 		.4byte	0x94
+ 702 0094 02       		.uleb128 0x2
+ 703 0095 08       		.byte	0x8
+ 704 0096 07       		.byte	0x7
+ 705 0097 EA010000 		.4byte	.LASF13
+ 706 009b 04       		.uleb128 0x4
+ 707 009c 04       		.byte	0x4
+ 708 009d 05       		.byte	0x5
+ 709 009e 696E7400 		.ascii	"int\000"
+ 710 00a2 02       		.uleb128 0x2
+ 711 00a3 04       		.byte	0x4
+ 712 00a4 07       		.byte	0x7
+ 713 00a5 87000000 		.4byte	.LASF14
+ 714 00a9 03       		.uleb128 0x3
+ 715 00aa FB040000 		.4byte	.LASF15
+ 716 00ae 05       		.byte	0x5
+ 717 00af 18       		.byte	0x18
+ 718 00b0 33000000 		.4byte	0x33
+ 719 00b4 03       		.uleb128 0x3
+ 720 00b5 2E060000 		.4byte	.LASF16
+ 721 00b9 05       		.byte	0x5
+ 722 00ba 24       		.byte	0x24
+ 723 00bb 4C000000 		.4byte	0x4c
+ 724 00bf 03       		.uleb128 0x3
+ 725 00c0 05080000 		.4byte	.LASF17
+ 726 00c4 05       		.byte	0x5
+ 727 00c5 2C       		.byte	0x2c
+ 728 00c6 5E000000 		.4byte	0x5e
+ 729 00ca 03       		.uleb128 0x3
+ 730 00cb 73010000 		.4byte	.LASF18
+ 731 00cf 05       		.byte	0x5
+ 732 00d0 30       		.byte	0x30
+ 733 00d1 70000000 		.4byte	0x70
+ 734 00d5 03       		.uleb128 0x3
+ 735 00d6 79070000 		.4byte	.LASF19
+ 736 00da 05       		.byte	0x5
+ 737 00db 3C       		.byte	0x3c
+ 738 00dc 89000000 		.4byte	0x89
+ 739 00e0 03       		.uleb128 0x3
+ 740 00e1 AE020000 		.4byte	.LASF20
+ 741 00e5 06       		.byte	0x6
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 14
+
+
+ 742 00e6 D8       		.byte	0xd8
+ 743 00e7 A2000000 		.4byte	0xa2
+ 744 00eb 05       		.uleb128 0x5
+ 745 00ec BF000000 		.4byte	0xbf
+ 746 00f0 05       		.uleb128 0x5
+ 747 00f1 CA000000 		.4byte	0xca
+ 748 00f5 03       		.uleb128 0x3
+ 749 00f6 61060000 		.4byte	.LASF21
+ 750 00fa 07       		.byte	0x7
+ 751 00fb 45       		.byte	0x45
+ 752 00fc CA000000 		.4byte	0xca
+ 753 0100 03       		.uleb128 0x3
+ 754 0101 06060000 		.4byte	.LASF22
+ 755 0105 07       		.byte	0x7
+ 756 0106 48       		.byte	0x48
+ 757 0107 A9000000 		.4byte	0xa9
+ 758 010b 03       		.uleb128 0x3
+ 759 010c D4040000 		.4byte	.LASF23
+ 760 0110 07       		.byte	0x7
+ 761 0111 49       		.byte	0x49
+ 762 0112 A9000000 		.4byte	0xa9
+ 763 0116 03       		.uleb128 0x3
+ 764 0117 CC070000 		.4byte	.LASF24
+ 765 011b 07       		.byte	0x7
+ 766 011c 4A       		.byte	0x4a
+ 767 011d A9000000 		.4byte	0xa9
+ 768 0121 03       		.uleb128 0x3
+ 769 0122 EE050000 		.4byte	.LASF25
+ 770 0126 07       		.byte	0x7
+ 771 0127 4B       		.byte	0x4b
+ 772 0128 A9000000 		.4byte	0xa9
+ 773 012c 03       		.uleb128 0x3
+ 774 012d BF010000 		.4byte	.LASF26
+ 775 0131 07       		.byte	0x7
+ 776 0132 4C       		.byte	0x4c
+ 777 0133 CA000000 		.4byte	0xca
+ 778 0137 03       		.uleb128 0x3
+ 779 0138 95050000 		.4byte	.LASF27
+ 780 013c 07       		.byte	0x7
+ 781 013d 4D       		.byte	0x4d
+ 782 013e BF000000 		.4byte	0xbf
+ 783 0142 03       		.uleb128 0x3
+ 784 0143 7E050000 		.4byte	.LASF28
+ 785 0147 07       		.byte	0x7
+ 786 0148 4F       		.byte	0x4f
+ 787 0149 CA000000 		.4byte	0xca
+ 788 014d 03       		.uleb128 0x3
+ 789 014e 2B020000 		.4byte	.LASF29
+ 790 0152 07       		.byte	0x7
+ 791 0153 51       		.byte	0x51
+ 792 0154 BF000000 		.4byte	0xbf
+ 793 0158 03       		.uleb128 0x3
+ 794 0159 5F000000 		.4byte	.LASF30
+ 795 015d 08       		.byte	0x8
+ 796 015e 33       		.byte	0x33
+ 797 015f CA000000 		.4byte	0xca
+ 798 0163 03       		.uleb128 0x3
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 15
+
+
+ 799 0164 8F020000 		.4byte	.LASF31
+ 800 0168 08       		.byte	0x8
+ 801 0169 3F       		.byte	0x3f
+ 802 016a 6E010000 		.4byte	0x16e
+ 803 016e 06       		.uleb128 0x6
+ 804 016f 26050000 		.4byte	.LASF53
+ 805 0173 48       		.byte	0x48
+ 806 0174 09       		.byte	0x9
+ 807 0175 C2       		.byte	0xc2
+ 808 0176 73020000 		.4byte	0x273
+ 809 017a 07       		.uleb128 0x7
+ 810 017b 6A070000 		.4byte	.LASF32
+ 811 017f 09       		.byte	0x9
+ 812 0180 C3       		.byte	0xc3
+ 813 0181 7E020000 		.4byte	0x27e
+ 814 0185 00       		.byte	0
+ 815 0186 07       		.uleb128 0x7
+ 816 0187 BC070000 		.4byte	.LASF33
+ 817 018b 09       		.byte	0x9
+ 818 018c C5       		.byte	0xc5
+ 819 018d 7E020000 		.4byte	0x27e
+ 820 0191 04       		.byte	0x4
+ 821 0192 07       		.uleb128 0x7
+ 822 0193 42000000 		.4byte	.LASF34
+ 823 0197 09       		.byte	0x9
+ 824 0198 C7       		.byte	0xc7
+ 825 0199 2C010000 		.4byte	0x12c
+ 826 019d 08       		.byte	0x8
+ 827 019e 07       		.uleb128 0x7
+ 828 019f 82070000 		.4byte	.LASF35
+ 829 01a3 09       		.byte	0x9
+ 830 01a4 C8       		.byte	0xc8
+ 831 01a5 CE040000 		.4byte	0x4ce
+ 832 01a9 0C       		.byte	0xc
+ 833 01aa 07       		.uleb128 0x7
+ 834 01ab 6A020000 		.4byte	.LASF36
+ 835 01af 09       		.byte	0x9
+ 836 01b0 CA       		.byte	0xca
+ 837 01b1 7E020000 		.4byte	0x27e
+ 838 01b5 10       		.byte	0x10
+ 839 01b6 07       		.uleb128 0x7
+ 840 01b7 EB040000 		.4byte	.LASF37
+ 841 01bb 09       		.byte	0x9
+ 842 01bc CB       		.byte	0xcb
+ 843 01bd 7E020000 		.4byte	0x27e
+ 844 01c1 14       		.byte	0x14
+ 845 01c2 07       		.uleb128 0x7
+ 846 01c3 9C040000 		.4byte	.LASF38
+ 847 01c7 09       		.byte	0x9
+ 848 01c8 D2       		.byte	0xd2
+ 849 01c9 13070000 		.4byte	0x713
+ 850 01cd 18       		.byte	0x18
+ 851 01ce 07       		.uleb128 0x7
+ 852 01cf F3040000 		.4byte	.LASF39
+ 853 01d3 09       		.byte	0x9
+ 854 01d4 DD       		.byte	0xdd
+ 855 01d5 0B010000 		.4byte	0x10b
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 16
+
+
+ 856 01d9 1C       		.byte	0x1c
+ 857 01da 07       		.uleb128 0x7
+ 858 01db B0050000 		.4byte	.LASF40
+ 859 01df 09       		.byte	0x9
+ 860 01e0 E1       		.byte	0xe1
+ 861 01e1 00010000 		.4byte	0x100
+ 862 01e5 1D       		.byte	0x1d
+ 863 01e6 07       		.uleb128 0x7
+ 864 01e7 61080000 		.4byte	.LASF41
+ 865 01eb 09       		.byte	0x9
+ 866 01ec E6       		.byte	0xe6
+ 867 01ed 16010000 		.4byte	0x116
+ 868 01f1 1E       		.byte	0x1e
+ 869 01f2 07       		.uleb128 0x7
+ 870 01f3 72080000 		.4byte	.LASF42
+ 871 01f7 09       		.byte	0x9
+ 872 01f8 EC       		.byte	0xec
+ 873 01f9 21010000 		.4byte	0x121
+ 874 01fd 1F       		.byte	0x1f
+ 875 01fe 07       		.uleb128 0x7
+ 876 01ff 28000000 		.4byte	.LASF43
+ 877 0203 09       		.byte	0x9
+ 878 0204 F3       		.byte	0xf3
+ 879 0205 25070000 		.4byte	0x725
+ 880 0209 20       		.byte	0x20
+ 881 020a 08       		.uleb128 0x8
+ 882 020b 705F7500 		.ascii	"p_u\000"
+ 883 020f 09       		.byte	0x9
+ 884 0210 3101     		.2byte	0x131
+ 885 0212 4E060000 		.4byte	0x64e
+ 886 0216 24       		.byte	0x24
+ 887 0217 09       		.uleb128 0x9
+ 888 0218 B9000000 		.4byte	.LASF44
+ 889 021c 09       		.byte	0x9
+ 890 021d 3601     		.2byte	0x136
+ 891 021f 84020000 		.4byte	0x284
+ 892 0223 28       		.byte	0x28
+ 893 0224 09       		.uleb128 0x9
+ 894 0225 7C000000 		.4byte	.LASF45
+ 895 0229 09       		.byte	0x9
+ 896 022a 3C01     		.2byte	0x13c
+ 897 022c A8020000 		.4byte	0x2a8
+ 898 0230 2C       		.byte	0x2c
+ 899 0231 09       		.uleb128 0x9
+ 900 0232 00060000 		.4byte	.LASF46
+ 901 0236 09       		.byte	0x9
+ 902 0237 4001     		.2byte	0x140
+ 903 0239 37010000 		.4byte	0x137
+ 904 023d 34       		.byte	0x34
+ 905 023e 09       		.uleb128 0x9
+ 906 023f DE060000 		.4byte	.LASF47
+ 907 0243 09       		.byte	0x9
+ 908 0244 4601     		.2byte	0x146
+ 909 0246 42010000 		.4byte	0x142
+ 910 024a 38       		.byte	0x38
+ 911 024b 09       		.uleb128 0x9
+ 912 024c 17050000 		.4byte	.LASF48
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 17
+
+
+ 913 0250 09       		.byte	0x9
+ 914 0251 4D01     		.2byte	0x14d
+ 915 0253 0D070000 		.4byte	0x70d
+ 916 0257 3C       		.byte	0x3c
+ 917 0258 09       		.uleb128 0x9
+ 918 0259 9A060000 		.4byte	.LASF49
+ 919 025d 09       		.byte	0x9
+ 920 025e 5101     		.2byte	0x151
+ 921 0260 2C010000 		.4byte	0x12c
+ 922 0264 40       		.byte	0x40
+ 923 0265 09       		.uleb128 0x9
+ 924 0266 0F050000 		.4byte	.LASF50
+ 925 026a 09       		.byte	0x9
+ 926 026b 5801     		.2byte	0x158
+ 927 026d 5B030000 		.4byte	0x35b
+ 928 0271 44       		.byte	0x44
+ 929 0272 00       		.byte	0
+ 930 0273 03       		.uleb128 0x3
+ 931 0274 37060000 		.4byte	.LASF51
+ 932 0278 08       		.byte	0x8
+ 933 0279 44       		.byte	0x44
+ 934 027a 7E020000 		.4byte	0x27e
+ 935 027e 0A       		.uleb128 0xa
+ 936 027f 04       		.byte	0x4
+ 937 0280 63010000 		.4byte	0x163
+ 938 0284 03       		.uleb128 0x3
+ 939 0285 AA000000 		.4byte	.LASF52
+ 940 0289 08       		.byte	0x8
+ 941 028a 49       		.byte	0x49
+ 942 028b 8F020000 		.4byte	0x28f
+ 943 028f 06       		.uleb128 0x6
+ 944 0290 31020000 		.4byte	.LASF54
+ 945 0294 04       		.byte	0x4
+ 946 0295 09       		.byte	0x9
+ 947 0296 B0       		.byte	0xb0
+ 948 0297 A8020000 		.4byte	0x2a8
+ 949 029b 07       		.uleb128 0x7
+ 950 029c 6A070000 		.4byte	.LASF32
+ 951 02a0 09       		.byte	0x9
+ 952 02a1 B1       		.byte	0xb1
+ 953 02a2 7E020000 		.4byte	0x27e
+ 954 02a6 00       		.byte	0
+ 955 02a7 00       		.byte	0
+ 956 02a8 03       		.uleb128 0x3
+ 957 02a9 00000000 		.4byte	.LASF55
+ 958 02ad 08       		.byte	0x8
+ 959 02ae 50       		.byte	0x50
+ 960 02af B3020000 		.4byte	0x2b3
+ 961 02b3 06       		.uleb128 0x6
+ 962 02b4 49050000 		.4byte	.LASF56
+ 963 02b8 08       		.byte	0x8
+ 964 02b9 09       		.byte	0x9
+ 965 02ba B7       		.byte	0xb7
+ 966 02bb D8020000 		.4byte	0x2d8
+ 967 02bf 07       		.uleb128 0x7
+ 968 02c0 6A070000 		.4byte	.LASF32
+ 969 02c4 09       		.byte	0x9
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 18
+
+
+ 970 02c5 B8       		.byte	0xb8
+ 971 02c6 7E020000 		.4byte	0x27e
+ 972 02ca 00       		.byte	0
+ 973 02cb 07       		.uleb128 0x7
+ 974 02cc BC070000 		.4byte	.LASF33
+ 975 02d0 09       		.byte	0x9
+ 976 02d1 B9       		.byte	0xb9
+ 977 02d2 7E020000 		.4byte	0x27e
+ 978 02d6 04       		.byte	0x4
+ 979 02d7 00       		.byte	0
+ 980 02d8 03       		.uleb128 0x3
+ 981 02d9 F8070000 		.4byte	.LASF57
+ 982 02dd 08       		.byte	0x8
+ 983 02de 57       		.byte	0x57
+ 984 02df E3020000 		.4byte	0x2e3
+ 985 02e3 0B       		.uleb128 0xb
+ 986 02e4 22010000 		.4byte	.LASF58
+ 987 02e8 1C       		.byte	0x1c
+ 988 02e9 09       		.byte	0x9
+ 989 02ea 9001     		.2byte	0x190
+ 990 02ec 3F030000 		.4byte	0x33f
+ 991 02f0 09       		.uleb128 0x9
+ 992 02f1 64050000 		.4byte	.LASF59
+ 993 02f5 09       		.byte	0x9
+ 994 02f6 9101     		.2byte	0x191
+ 995 02f8 A8020000 		.4byte	0x2a8
+ 996 02fc 00       		.byte	0
+ 997 02fd 09       		.uleb128 0x9
+ 998 02fe 8F010000 		.4byte	.LASF60
+ 999 0302 09       		.byte	0x9
+ 1000 0303 9201     		.2byte	0x192
+ 1001 0305 2C010000 		.4byte	0x12c
+ 1002 0309 08       		.byte	0x8
+ 1003 030a 09       		.uleb128 0x9
+ 1004 030b 27090000 		.4byte	.LASF61
+ 1005 030f 09       		.byte	0x9
+ 1006 0310 9401     		.2byte	0x194
+ 1007 0312 CE040000 		.4byte	0x4ce
+ 1008 0316 0C       		.byte	0xc
+ 1009 0317 09       		.uleb128 0x9
+ 1010 0318 B7040000 		.4byte	.LASF62
+ 1011 031c 09       		.byte	0x9
+ 1012 031d 9701     		.2byte	0x197
+ 1013 031f 7E020000 		.4byte	0x27e
+ 1014 0323 10       		.byte	0x10
+ 1015 0324 09       		.uleb128 0x9
+ 1016 0325 F8050000 		.4byte	.LASF63
+ 1017 0329 09       		.byte	0x9
+ 1018 032a 9801     		.2byte	0x198
+ 1019 032c 7E020000 		.4byte	0x27e
+ 1020 0330 14       		.byte	0x14
+ 1021 0331 09       		.uleb128 0x9
+ 1022 0332 D4060000 		.4byte	.LASF64
+ 1023 0336 09       		.byte	0x9
+ 1024 0337 9B01     		.2byte	0x19b
+ 1025 0339 7E020000 		.4byte	0x27e
+ 1026 033d 18       		.byte	0x18
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 19
+
+
+ 1027 033e 00       		.byte	0
+ 1028 033f 03       		.uleb128 0x3
+ 1029 0340 35010000 		.4byte	.LASF65
+ 1030 0344 08       		.byte	0x8
+ 1031 0345 5C       		.byte	0x5c
+ 1032 0346 4A030000 		.4byte	0x34a
+ 1033 034a 0A       		.uleb128 0xa
+ 1034 034b 04       		.byte	0x4
+ 1035 034c 50030000 		.4byte	0x350
+ 1036 0350 0C       		.uleb128 0xc
+ 1037 0351 5B030000 		.4byte	0x35b
+ 1038 0355 0D       		.uleb128 0xd
+ 1039 0356 5B030000 		.4byte	0x35b
+ 1040 035a 00       		.byte	0
+ 1041 035b 0E       		.uleb128 0xe
+ 1042 035c 04       		.byte	0x4
+ 1043 035d 03       		.uleb128 0x3
+ 1044 035e B8050000 		.4byte	.LASF66
+ 1045 0362 08       		.byte	0x8
+ 1046 0363 61       		.byte	0x61
+ 1047 0364 68030000 		.4byte	0x368
+ 1048 0368 0B       		.uleb128 0xb
+ 1049 0369 C7010000 		.4byte	.LASF67
+ 1050 036d 14       		.byte	0x14
+ 1051 036e 09       		.byte	0x9
+ 1052 036f 6B01     		.2byte	0x16b
+ 1053 0371 B7030000 		.4byte	0x3b7
+ 1054 0375 09       		.uleb128 0x9
+ 1055 0376 AB080000 		.4byte	.LASF68
+ 1056 037a 09       		.byte	0x9
+ 1057 037b 6C01     		.2byte	0x16c
+ 1058 037d 2A070000 		.4byte	0x72a
+ 1059 0381 00       		.byte	0
+ 1060 0382 09       		.uleb128 0x9
+ 1061 0383 68090000 		.4byte	.LASF69
+ 1062 0387 09       		.byte	0x9
+ 1063 0388 6D01     		.2byte	0x16d
+ 1064 038a 2A070000 		.4byte	0x72a
+ 1065 038e 04       		.byte	0x4
+ 1066 038f 09       		.uleb128 0x9
+ 1067 0390 AE040000 		.4byte	.LASF70
+ 1068 0394 09       		.byte	0x9
+ 1069 0395 6E01     		.2byte	0x16e
+ 1070 0397 58010000 		.4byte	0x158
+ 1071 039b 08       		.byte	0x8
+ 1072 039c 09       		.uleb128 0x9
+ 1073 039d 41090000 		.4byte	.LASF71
+ 1074 03a1 09       		.byte	0x9
+ 1075 03a2 6F01     		.2byte	0x16f
+ 1076 03a4 3F030000 		.4byte	0x33f
+ 1077 03a8 0C       		.byte	0xc
+ 1078 03a9 09       		.uleb128 0x9
+ 1079 03aa 9B010000 		.4byte	.LASF72
+ 1080 03ae 09       		.byte	0x9
+ 1081 03af 7101     		.2byte	0x171
+ 1082 03b1 5B030000 		.4byte	0x35b
+ 1083 03b5 10       		.byte	0x10
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 20
+
+
+ 1084 03b6 00       		.byte	0
+ 1085 03b7 03       		.uleb128 0x3
+ 1086 03b8 4B080000 		.4byte	.LASF73
+ 1087 03bc 08       		.byte	0x8
+ 1088 03bd 66       		.byte	0x66
+ 1089 03be C2030000 		.4byte	0x3c2
+ 1090 03c2 0B       		.uleb128 0xb
+ 1091 03c3 78020000 		.4byte	.LASF74
+ 1092 03c7 10       		.byte	0x10
+ 1093 03c8 09       		.byte	0x9
+ 1094 03c9 7B01     		.2byte	0x17b
+ 1095 03cb 04040000 		.4byte	0x404
+ 1096 03cf 09       		.uleb128 0x9
+ 1097 03d0 AB080000 		.4byte	.LASF68
+ 1098 03d4 09       		.byte	0x9
+ 1099 03d5 7C01     		.2byte	0x17c
+ 1100 03d7 2A070000 		.4byte	0x72a
+ 1101 03db 00       		.byte	0
+ 1102 03dc 09       		.uleb128 0x9
+ 1103 03dd 68090000 		.4byte	.LASF69
+ 1104 03e1 09       		.byte	0x9
+ 1105 03e2 7E01     		.2byte	0x17e
+ 1106 03e4 2A070000 		.4byte	0x72a
+ 1107 03e8 04       		.byte	0x4
+ 1108 03e9 09       		.uleb128 0x9
+ 1109 03ea AE040000 		.4byte	.LASF70
+ 1110 03ee 09       		.byte	0x9
+ 1111 03ef 8001     		.2byte	0x180
+ 1112 03f1 58010000 		.4byte	0x158
+ 1113 03f5 08       		.byte	0x8
+ 1114 03f6 09       		.uleb128 0x9
+ 1115 03f7 71000000 		.4byte	.LASF75
+ 1116 03fb 09       		.byte	0x9
+ 1117 03fc 8201     		.2byte	0x182
+ 1118 03fe 25070000 		.4byte	0x725
+ 1119 0402 0C       		.byte	0xc
+ 1120 0403 00       		.byte	0
+ 1121 0404 03       		.uleb128 0x3
+ 1122 0405 30050000 		.4byte	.LASF76
+ 1123 0409 08       		.byte	0x8
+ 1124 040a 6B       		.byte	0x6b
+ 1125 040b 0F040000 		.4byte	0x40f
+ 1126 040f 0B       		.uleb128 0xb
+ 1127 0410 63010000 		.4byte	.LASF77
+ 1128 0414 04       		.byte	0x4
+ 1129 0415 09       		.byte	0x9
+ 1130 0416 A201     		.2byte	0x1a2
+ 1131 0418 2A040000 		.4byte	0x42a
+ 1132 041c 09       		.uleb128 0x9
+ 1133 041d 68080000 		.4byte	.LASF78
+ 1134 0421 09       		.byte	0x9
+ 1135 0422 AA01     		.2byte	0x1aa
+ 1136 0424 30070000 		.4byte	0x730
+ 1137 0428 00       		.byte	0
+ 1138 0429 00       		.byte	0
+ 1139 042a 03       		.uleb128 0x3
+ 1140 042b BD080000 		.4byte	.LASF79
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 21
+
+
+ 1141 042f 08       		.byte	0x8
+ 1142 0430 70       		.byte	0x70
+ 1143 0431 35040000 		.4byte	0x435
+ 1144 0435 0F       		.uleb128 0xf
+ 1145 0436 2F070000 		.4byte	.LASF80
+ 1146 043a 5802     		.2byte	0x258
+ 1147 043c 09       		.byte	0x9
+ 1148 043d C201     		.2byte	0x1c2
+ 1149 043f 91040000 		.4byte	0x491
+ 1150 0443 09       		.uleb128 0x9
+ 1151 0444 88070000 		.4byte	.LASF81
+ 1152 0448 09       		.byte	0x9
+ 1153 0449 C601     		.2byte	0x1c6
+ 1154 044b D8020000 		.4byte	0x2d8
+ 1155 044f 00       		.byte	0
+ 1156 0450 09       		.uleb128 0x9
+ 1157 0451 00010000 		.4byte	.LASF82
+ 1158 0455 09       		.byte	0x9
+ 1159 0456 CA01     		.2byte	0x1ca
+ 1160 0458 B7030000 		.4byte	0x3b7
+ 1161 045c 1C       		.byte	0x1c
+ 1162 045d 08       		.uleb128 0x8
+ 1163 045e 64626700 		.ascii	"dbg\000"
+ 1164 0462 09       		.byte	0x9
+ 1165 0463 CE01     		.2byte	0x1ce
+ 1166 0465 04040000 		.4byte	0x404
+ 1167 0469 2C       		.byte	0x2c
+ 1168 046a 09       		.uleb128 0x9
+ 1169 046b 16060000 		.4byte	.LASF83
+ 1170 046f 09       		.byte	0x9
+ 1171 0470 D201     		.2byte	0x1d2
+ 1172 0472 63010000 		.4byte	0x163
+ 1173 0476 30       		.byte	0x30
+ 1174 0477 08       		.uleb128 0x8
+ 1175 0478 746D00   		.ascii	"tm\000"
+ 1176 047b 09       		.byte	0x9
+ 1177 047c D701     		.2byte	0x1d7
+ 1178 047e 43060000 		.4byte	0x643
+ 1179 0482 78       		.byte	0x78
+ 1180 0483 09       		.uleb128 0x9
+ 1181 0484 07010000 		.4byte	.LASF84
+ 1182 0488 09       		.byte	0x9
+ 1183 0489 E301     		.2byte	0x1e3
+ 1184 048b 35070000 		.4byte	0x735
+ 1185 048f 80       		.byte	0x80
+ 1186 0490 00       		.byte	0
+ 1187 0491 02       		.uleb128 0x2
+ 1188 0492 04       		.byte	0x4
+ 1189 0493 07       		.byte	0x7
+ 1190 0494 C3070000 		.4byte	.LASF85
+ 1191 0498 10       		.uleb128 0x10
+ 1192 0499 F0000000 		.4byte	0xf0
+ 1193 049d A8040000 		.4byte	0x4a8
+ 1194 04a1 11       		.uleb128 0x11
+ 1195 04a2 91040000 		.4byte	0x491
+ 1196 04a6 01       		.byte	0x1
+ 1197 04a7 00       		.byte	0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 22
+
+
+ 1198 04a8 10       		.uleb128 0x10
+ 1199 04a9 F0000000 		.4byte	0xf0
+ 1200 04ad B8040000 		.4byte	0x4b8
+ 1201 04b1 11       		.uleb128 0x11
+ 1202 04b2 91040000 		.4byte	0x491
+ 1203 04b6 03       		.byte	0x3
+ 1204 04b7 00       		.byte	0
+ 1205 04b8 03       		.uleb128 0x3
+ 1206 04b9 39000000 		.4byte	.LASF86
+ 1207 04bd 0A       		.byte	0xa
+ 1208 04be 65       		.byte	0x65
+ 1209 04bf 5B030000 		.4byte	0x35b
+ 1210 04c3 03       		.uleb128 0x3
+ 1211 04c4 2D090000 		.4byte	.LASF87
+ 1212 04c8 0A       		.byte	0xa
+ 1213 04c9 6D       		.byte	0x6d
+ 1214 04ca D5000000 		.4byte	0xd5
+ 1215 04ce 06       		.uleb128 0x6
+ 1216 04cf 9B050000 		.4byte	.LASF88
+ 1217 04d3 04       		.byte	0x4
+ 1218 04d4 0A       		.byte	0xa
+ 1219 04d5 89       		.byte	0x89
+ 1220 04d6 E7040000 		.4byte	0x4e7
+ 1221 04da 12       		.uleb128 0x12
+ 1222 04db 72313300 		.ascii	"r13\000"
+ 1223 04df 0A       		.byte	0xa
+ 1224 04e0 8A       		.byte	0x8a
+ 1225 04e1 28060000 		.4byte	0x628
+ 1226 04e5 00       		.byte	0
+ 1227 04e6 00       		.byte	0
+ 1228 04e7 06       		.uleb128 0x6
+ 1229 04e8 FA060000 		.4byte	.LASF89
+ 1230 04ec 64       		.byte	0x64
+ 1231 04ed 0B       		.byte	0xb
+ 1232 04ee F4       		.byte	0xf4
+ 1233 04ef 28060000 		.4byte	0x628
+ 1234 04f3 12       		.uleb128 0x12
+ 1235 04f4 73313600 		.ascii	"s16\000"
+ 1236 04f8 0B       		.byte	0xb
+ 1237 04f9 F6       		.byte	0xf6
+ 1238 04fa B8040000 		.4byte	0x4b8
+ 1239 04fe 00       		.byte	0
+ 1240 04ff 12       		.uleb128 0x12
+ 1241 0500 73313700 		.ascii	"s17\000"
+ 1242 0504 0B       		.byte	0xb
+ 1243 0505 F7       		.byte	0xf7
+ 1244 0506 B8040000 		.4byte	0x4b8
+ 1245 050a 04       		.byte	0x4
+ 1246 050b 12       		.uleb128 0x12
+ 1247 050c 73313800 		.ascii	"s18\000"
+ 1248 0510 0B       		.byte	0xb
+ 1249 0511 F8       		.byte	0xf8
+ 1250 0512 B8040000 		.4byte	0x4b8
+ 1251 0516 08       		.byte	0x8
+ 1252 0517 12       		.uleb128 0x12
+ 1253 0518 73313900 		.ascii	"s19\000"
+ 1254 051c 0B       		.byte	0xb
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 23
+
+
+ 1255 051d F9       		.byte	0xf9
+ 1256 051e B8040000 		.4byte	0x4b8
+ 1257 0522 0C       		.byte	0xc
+ 1258 0523 12       		.uleb128 0x12
+ 1259 0524 73323000 		.ascii	"s20\000"
+ 1260 0528 0B       		.byte	0xb
+ 1261 0529 FA       		.byte	0xfa
+ 1262 052a B8040000 		.4byte	0x4b8
+ 1263 052e 10       		.byte	0x10
+ 1264 052f 12       		.uleb128 0x12
+ 1265 0530 73323100 		.ascii	"s21\000"
+ 1266 0534 0B       		.byte	0xb
+ 1267 0535 FB       		.byte	0xfb
+ 1268 0536 B8040000 		.4byte	0x4b8
+ 1269 053a 14       		.byte	0x14
+ 1270 053b 12       		.uleb128 0x12
+ 1271 053c 73323200 		.ascii	"s22\000"
+ 1272 0540 0B       		.byte	0xb
+ 1273 0541 FC       		.byte	0xfc
+ 1274 0542 B8040000 		.4byte	0x4b8
+ 1275 0546 18       		.byte	0x18
+ 1276 0547 12       		.uleb128 0x12
+ 1277 0548 73323300 		.ascii	"s23\000"
+ 1278 054c 0B       		.byte	0xb
+ 1279 054d FD       		.byte	0xfd
+ 1280 054e B8040000 		.4byte	0x4b8
+ 1281 0552 1C       		.byte	0x1c
+ 1282 0553 12       		.uleb128 0x12
+ 1283 0554 73323400 		.ascii	"s24\000"
+ 1284 0558 0B       		.byte	0xb
+ 1285 0559 FE       		.byte	0xfe
+ 1286 055a B8040000 		.4byte	0x4b8
+ 1287 055e 20       		.byte	0x20
+ 1288 055f 12       		.uleb128 0x12
+ 1289 0560 73323500 		.ascii	"s25\000"
+ 1290 0564 0B       		.byte	0xb
+ 1291 0565 FF       		.byte	0xff
+ 1292 0566 B8040000 		.4byte	0x4b8
+ 1293 056a 24       		.byte	0x24
+ 1294 056b 08       		.uleb128 0x8
+ 1295 056c 73323600 		.ascii	"s26\000"
+ 1296 0570 0B       		.byte	0xb
+ 1297 0571 0001     		.2byte	0x100
+ 1298 0573 B8040000 		.4byte	0x4b8
+ 1299 0577 28       		.byte	0x28
+ 1300 0578 08       		.uleb128 0x8
+ 1301 0579 73323700 		.ascii	"s27\000"
+ 1302 057d 0B       		.byte	0xb
+ 1303 057e 0101     		.2byte	0x101
+ 1304 0580 B8040000 		.4byte	0x4b8
+ 1305 0584 2C       		.byte	0x2c
+ 1306 0585 08       		.uleb128 0x8
+ 1307 0586 73323800 		.ascii	"s28\000"
+ 1308 058a 0B       		.byte	0xb
+ 1309 058b 0201     		.2byte	0x102
+ 1310 058d B8040000 		.4byte	0x4b8
+ 1311 0591 30       		.byte	0x30
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 24
+
+
+ 1312 0592 08       		.uleb128 0x8
+ 1313 0593 73323900 		.ascii	"s29\000"
+ 1314 0597 0B       		.byte	0xb
+ 1315 0598 0301     		.2byte	0x103
+ 1316 059a B8040000 		.4byte	0x4b8
+ 1317 059e 34       		.byte	0x34
+ 1318 059f 08       		.uleb128 0x8
+ 1319 05a0 73333000 		.ascii	"s30\000"
+ 1320 05a4 0B       		.byte	0xb
+ 1321 05a5 0401     		.2byte	0x104
+ 1322 05a7 B8040000 		.4byte	0x4b8
+ 1323 05ab 38       		.byte	0x38
+ 1324 05ac 08       		.uleb128 0x8
+ 1325 05ad 73333100 		.ascii	"s31\000"
+ 1326 05b1 0B       		.byte	0xb
+ 1327 05b2 0501     		.2byte	0x105
+ 1328 05b4 B8040000 		.4byte	0x4b8
+ 1329 05b8 3C       		.byte	0x3c
+ 1330 05b9 08       		.uleb128 0x8
+ 1331 05ba 723400   		.ascii	"r4\000"
+ 1332 05bd 0B       		.byte	0xb
+ 1333 05be 0701     		.2byte	0x107
+ 1334 05c0 B8040000 		.4byte	0x4b8
+ 1335 05c4 40       		.byte	0x40
+ 1336 05c5 08       		.uleb128 0x8
+ 1337 05c6 723500   		.ascii	"r5\000"
+ 1338 05c9 0B       		.byte	0xb
+ 1339 05ca 0801     		.2byte	0x108
+ 1340 05cc B8040000 		.4byte	0x4b8
+ 1341 05d0 44       		.byte	0x44
+ 1342 05d1 08       		.uleb128 0x8
+ 1343 05d2 723600   		.ascii	"r6\000"
+ 1344 05d5 0B       		.byte	0xb
+ 1345 05d6 0901     		.2byte	0x109
+ 1346 05d8 B8040000 		.4byte	0x4b8
+ 1347 05dc 48       		.byte	0x48
+ 1348 05dd 08       		.uleb128 0x8
+ 1349 05de 723700   		.ascii	"r7\000"
+ 1350 05e1 0B       		.byte	0xb
+ 1351 05e2 0A01     		.2byte	0x10a
+ 1352 05e4 B8040000 		.4byte	0x4b8
+ 1353 05e8 4C       		.byte	0x4c
+ 1354 05e9 08       		.uleb128 0x8
+ 1355 05ea 723800   		.ascii	"r8\000"
+ 1356 05ed 0B       		.byte	0xb
+ 1357 05ee 0B01     		.2byte	0x10b
+ 1358 05f0 B8040000 		.4byte	0x4b8
+ 1359 05f4 50       		.byte	0x50
+ 1360 05f5 08       		.uleb128 0x8
+ 1361 05f6 723900   		.ascii	"r9\000"
+ 1362 05f9 0B       		.byte	0xb
+ 1363 05fa 0C01     		.2byte	0x10c
+ 1364 05fc B8040000 		.4byte	0x4b8
+ 1365 0600 54       		.byte	0x54
+ 1366 0601 08       		.uleb128 0x8
+ 1367 0602 72313000 		.ascii	"r10\000"
+ 1368 0606 0B       		.byte	0xb
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 25
+
+
+ 1369 0607 0D01     		.2byte	0x10d
+ 1370 0609 B8040000 		.4byte	0x4b8
+ 1371 060d 58       		.byte	0x58
+ 1372 060e 08       		.uleb128 0x8
+ 1373 060f 72313100 		.ascii	"r11\000"
+ 1374 0613 0B       		.byte	0xb
+ 1375 0614 0E01     		.2byte	0x10e
+ 1376 0616 B8040000 		.4byte	0x4b8
+ 1377 061a 5C       		.byte	0x5c
+ 1378 061b 08       		.uleb128 0x8
+ 1379 061c 6C7200   		.ascii	"lr\000"
+ 1380 061f 0B       		.byte	0xb
+ 1381 0620 0F01     		.2byte	0x10f
+ 1382 0622 B8040000 		.4byte	0x4b8
+ 1383 0626 60       		.byte	0x60
+ 1384 0627 00       		.byte	0
+ 1385 0628 0A       		.uleb128 0xa
+ 1386 0629 04       		.byte	0x4
+ 1387 062a E7040000 		.4byte	0x4e7
+ 1388 062e 13       		.uleb128 0x13
+ 1389 062f 04       		.byte	0x4
+ 1390 0630 0C       		.byte	0xc
+ 1391 0631 38       		.byte	0x38
+ 1392 0632 43060000 		.4byte	0x643
+ 1393 0636 07       		.uleb128 0x7
+ 1394 0637 BC020000 		.4byte	.LASF90
+ 1395 063b 0C       		.byte	0xc
+ 1396 063c 3C       		.byte	0x3c
+ 1397 063d F5000000 		.4byte	0xf5
+ 1398 0641 00       		.byte	0
+ 1399 0642 00       		.byte	0
+ 1400 0643 03       		.uleb128 0x3
+ 1401 0644 17000000 		.4byte	.LASF91
+ 1402 0648 0C       		.byte	0xc
+ 1403 0649 3D       		.byte	0x3d
+ 1404 064a 2E060000 		.4byte	0x62e
+ 1405 064e 14       		.uleb128 0x14
+ 1406 064f 04       		.byte	0x4
+ 1407 0650 09       		.byte	0x9
+ 1408 0651 FA       		.byte	0xfa
+ 1409 0652 AB060000 		.4byte	0x6ab
+ 1410 0656 15       		.uleb128 0x15
+ 1411 0657 B5020000 		.4byte	.LASF92
+ 1412 065b 09       		.byte	0x9
+ 1413 065c 0101     		.2byte	0x101
+ 1414 065e 37010000 		.4byte	0x137
+ 1415 0662 15       		.uleb128 0x15
+ 1416 0663 70090000 		.4byte	.LASF93
+ 1417 0667 09       		.byte	0x9
+ 1418 0668 0801     		.2byte	0x108
+ 1419 066a 37010000 		.4byte	0x137
+ 1420 066e 15       		.uleb128 0x15
+ 1421 066f EF000000 		.4byte	.LASF94
+ 1422 0673 09       		.byte	0x9
+ 1423 0674 0F01     		.2byte	0x10f
+ 1424 0676 5B030000 		.4byte	0x35b
+ 1425 067a 15       		.uleb128 0x15
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 26
+
+
+ 1426 067b E2080000 		.4byte	.LASF95
+ 1427 067f 09       		.byte	0x9
+ 1428 0680 1601     		.2byte	0x116
+ 1429 0682 AB060000 		.4byte	0x6ab
+ 1430 0686 15       		.uleb128 0x15
+ 1431 0687 0D080000 		.4byte	.LASF96
+ 1432 068b 09       		.byte	0x9
+ 1433 068c 1E01     		.2byte	0x11e
+ 1434 068e D6060000 		.4byte	0x6d6
+ 1435 0692 15       		.uleb128 0x15
+ 1436 0693 10000000 		.4byte	.LASF97
+ 1437 0697 09       		.byte	0x9
+ 1438 0698 2701     		.2byte	0x127
+ 1439 069a 0D070000 		.4byte	0x70d
+ 1440 069e 15       		.uleb128 0x15
+ 1441 069f 16010000 		.4byte	.LASF98
+ 1442 06a3 09       		.byte	0x9
+ 1443 06a4 2F01     		.2byte	0x12f
+ 1444 06a6 42010000 		.4byte	0x142
+ 1445 06aa 00       		.byte	0
+ 1446 06ab 0A       		.uleb128 0xa
+ 1447 06ac 04       		.byte	0x4
+ 1448 06ad 73020000 		.4byte	0x273
+ 1449 06b1 06       		.uleb128 0x6
+ 1450 06b2 B2010000 		.4byte	.LASF99
+ 1451 06b6 0C       		.byte	0xc
+ 1452 06b7 0D       		.byte	0xd
+ 1453 06b8 34       		.byte	0x34
+ 1454 06b9 D6060000 		.4byte	0x6d6
+ 1455 06bd 07       		.uleb128 0x7
+ 1456 06be 69000000 		.4byte	.LASF100
+ 1457 06c2 0D       		.byte	0xd
+ 1458 06c3 35       		.byte	0x35
+ 1459 06c4 A8020000 		.4byte	0x2a8
+ 1460 06c8 00       		.byte	0
+ 1461 06c9 07       		.uleb128 0x7
+ 1462 06ca 5D010000 		.4byte	.LASF101
+ 1463 06ce 0D       		.byte	0xd
+ 1464 06cf 37       		.byte	0x37
+ 1465 06d0 4D010000 		.4byte	0x14d
+ 1466 06d4 08       		.byte	0x8
+ 1467 06d5 00       		.byte	0
+ 1468 06d6 0A       		.uleb128 0xa
+ 1469 06d7 04       		.byte	0x4
+ 1470 06d8 B1060000 		.4byte	0x6b1
+ 1471 06dc 06       		.uleb128 0x6
+ 1472 06dd 5C040000 		.4byte	.LASF102
+ 1473 06e1 10       		.byte	0x10
+ 1474 06e2 0E       		.byte	0xe
+ 1475 06e3 39       		.byte	0x39
+ 1476 06e4 0D070000 		.4byte	0x70d
+ 1477 06e8 07       		.uleb128 0x7
+ 1478 06e9 E9060000 		.4byte	.LASF103
+ 1479 06ed 0E       		.byte	0xe
+ 1480 06ee 3A       		.byte	0x3a
+ 1481 06ef A8020000 		.4byte	0x2a8
+ 1482 06f3 00       		.byte	0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 27
+
+
+ 1483 06f4 07       		.uleb128 0x7
+ 1484 06f5 54040000 		.4byte	.LASF104
+ 1485 06f9 0E       		.byte	0xe
+ 1486 06fa 3C       		.byte	0x3c
+ 1487 06fb 7E020000 		.4byte	0x27e
+ 1488 06ff 08       		.byte	0x8
+ 1489 0700 07       		.uleb128 0x7
+ 1490 0701 E8080000 		.4byte	.LASF105
+ 1491 0705 0E       		.byte	0xe
+ 1492 0706 3E       		.byte	0x3e
+ 1493 0707 50070000 		.4byte	0x750
+ 1494 070b 0C       		.byte	0xc
+ 1495 070c 00       		.byte	0
+ 1496 070d 0A       		.uleb128 0xa
+ 1497 070e 04       		.byte	0x4
+ 1498 070f DC060000 		.4byte	0x6dc
+ 1499 0713 0A       		.uleb128 0xa
+ 1500 0714 04       		.byte	0x4
+ 1501 0715 20070000 		.4byte	0x720
+ 1502 0719 02       		.uleb128 0x2
+ 1503 071a 01       		.byte	0x1
+ 1504 071b 08       		.byte	0x8
+ 1505 071c 34000000 		.4byte	.LASF106
+ 1506 0720 16       		.uleb128 0x16
+ 1507 0721 19070000 		.4byte	0x719
+ 1508 0725 05       		.uleb128 0x5
+ 1509 0726 58010000 		.4byte	0x158
+ 1510 072a 0A       		.uleb128 0xa
+ 1511 072b 04       		.byte	0x4
+ 1512 072c 5D030000 		.4byte	0x35d
+ 1513 0730 05       		.uleb128 0x5
+ 1514 0731 13070000 		.4byte	0x713
+ 1515 0735 10       		.uleb128 0x10
+ 1516 0736 C3040000 		.4byte	0x4c3
+ 1517 073a 45070000 		.4byte	0x745
+ 1518 073e 11       		.uleb128 0x11
+ 1519 073f 91040000 		.4byte	0x491
+ 1520 0743 3A       		.byte	0x3a
+ 1521 0744 00       		.byte	0
+ 1522 0745 03       		.uleb128 0x3
+ 1523 0746 1F080000 		.4byte	.LASF107
+ 1524 074a 0E       		.byte	0xe
+ 1525 074b 34       		.byte	0x34
+ 1526 074c DC060000 		.4byte	0x6dc
+ 1527 0750 0A       		.uleb128 0xa
+ 1528 0751 04       		.byte	0x4
+ 1529 0752 45070000 		.4byte	0x745
+ 1530 0756 02       		.uleb128 0x2
+ 1531 0757 01       		.byte	0x1
+ 1532 0758 02       		.byte	0x2
+ 1533 0759 CF020000 		.4byte	.LASF108
+ 1534 075d 0A       		.uleb128 0xa
+ 1535 075e 04       		.byte	0x4
+ 1536 075f F0000000 		.4byte	0xf0
+ 1537 0763 13       		.uleb128 0x13
+ 1538 0764 04       		.byte	0x4
+ 1539 0765 0F       		.byte	0xf
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 28
+
+
+ 1540 0766 B3       		.byte	0xb3
+ 1541 0767 84070000 		.4byte	0x784
+ 1542 076b 12       		.uleb128 0x12
+ 1543 076c 73657400 		.ascii	"set\000"
+ 1544 0770 0F       		.byte	0xf
+ 1545 0771 B4       		.byte	0xb4
+ 1546 0772 B4000000 		.4byte	0xb4
+ 1547 0776 00       		.byte	0
+ 1548 0777 07       		.uleb128 0x7
+ 1549 0778 7B060000 		.4byte	.LASF109
+ 1550 077c 0F       		.byte	0xf
+ 1551 077d B5       		.byte	0xb5
+ 1552 077e B4000000 		.4byte	0xb4
+ 1553 0782 02       		.byte	0x2
+ 1554 0783 00       		.byte	0
+ 1555 0784 14       		.uleb128 0x14
+ 1556 0785 04       		.byte	0x4
+ 1557 0786 0F       		.byte	0xf
+ 1558 0787 B1       		.byte	0xb1
+ 1559 0788 9F070000 		.4byte	0x79f
+ 1560 078c 17       		.uleb128 0x17
+ 1561 078d 5700     		.ascii	"W\000"
+ 1562 078f 0F       		.byte	0xf
+ 1563 0790 B2       		.byte	0xb2
+ 1564 0791 CA000000 		.4byte	0xca
+ 1565 0795 17       		.uleb128 0x17
+ 1566 0796 4800     		.ascii	"H\000"
+ 1567 0798 0F       		.byte	0xf
+ 1568 0799 B6       		.byte	0xb6
+ 1569 079a 63070000 		.4byte	0x763
+ 1570 079e 00       		.byte	0
+ 1571 079f 13       		.uleb128 0x13
+ 1572 07a0 2C       		.byte	0x2c
+ 1573 07a1 0F       		.byte	0xf
+ 1574 07a2 A9       		.byte	0xa9
+ 1575 07a3 2C080000 		.4byte	0x82c
+ 1576 07a7 07       		.uleb128 0x7
+ 1577 07a8 41020000 		.4byte	.LASF110
+ 1578 07ac 0F       		.byte	0xf
+ 1579 07ad AB       		.byte	0xab
+ 1580 07ae F0000000 		.4byte	0xf0
+ 1581 07b2 00       		.byte	0
+ 1582 07b3 07       		.uleb128 0x7
+ 1583 07b4 55070000 		.4byte	.LASF111
+ 1584 07b8 0F       		.byte	0xf
+ 1585 07b9 AC       		.byte	0xac
+ 1586 07ba F0000000 		.4byte	0xf0
+ 1587 07be 04       		.byte	0x4
+ 1588 07bf 07       		.uleb128 0x7
+ 1589 07c0 98020000 		.4byte	.LASF112
+ 1590 07c4 0F       		.byte	0xf
+ 1591 07c5 AD       		.byte	0xad
+ 1592 07c6 F0000000 		.4byte	0xf0
+ 1593 07ca 08       		.byte	0x8
+ 1594 07cb 07       		.uleb128 0x7
+ 1595 07cc 96040000 		.4byte	.LASF113
+ 1596 07d0 0F       		.byte	0xf
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 29
+
+
+ 1597 07d1 AE       		.byte	0xae
+ 1598 07d2 F0000000 		.4byte	0xf0
+ 1599 07d6 0C       		.byte	0xc
+ 1600 07d7 12       		.uleb128 0x12
+ 1601 07d8 49445200 		.ascii	"IDR\000"
+ 1602 07dc 0F       		.byte	0xf
+ 1603 07dd AF       		.byte	0xaf
+ 1604 07de F0000000 		.4byte	0xf0
+ 1605 07e2 10       		.byte	0x10
+ 1606 07e3 12       		.uleb128 0x12
+ 1607 07e4 4F445200 		.ascii	"ODR\000"
+ 1608 07e8 0F       		.byte	0xf
+ 1609 07e9 B0       		.byte	0xb0
+ 1610 07ea F0000000 		.4byte	0xf0
+ 1611 07ee 14       		.byte	0x14
+ 1612 07ef 07       		.uleb128 0x7
+ 1613 07f0 2F000000 		.4byte	.LASF114
+ 1614 07f4 0F       		.byte	0xf
+ 1615 07f5 B7       		.byte	0xb7
+ 1616 07f6 2C080000 		.4byte	0x82c
+ 1617 07fa 18       		.byte	0x18
+ 1618 07fb 07       		.uleb128 0x7
+ 1619 07fc 79090000 		.4byte	.LASF115
+ 1620 0800 0F       		.byte	0xf
+ 1621 0801 B8       		.byte	0xb8
+ 1622 0802 F0000000 		.4byte	0xf0
+ 1623 0806 1C       		.byte	0x1c
+ 1624 0807 07       		.uleb128 0x7
+ 1625 0808 65020000 		.4byte	.LASF116
+ 1626 080c 0F       		.byte	0xf
+ 1627 080d B9       		.byte	0xb9
+ 1628 080e F0000000 		.4byte	0xf0
+ 1629 0812 20       		.byte	0x20
+ 1630 0813 07       		.uleb128 0x7
+ 1631 0814 53020000 		.4byte	.LASF117
+ 1632 0818 0F       		.byte	0xf
+ 1633 0819 BA       		.byte	0xba
+ 1634 081a F0000000 		.4byte	0xf0
+ 1635 081e 24       		.byte	0x24
+ 1636 081f 12       		.uleb128 0x12
+ 1637 0820 42525200 		.ascii	"BRR\000"
+ 1638 0824 0F       		.byte	0xf
+ 1639 0825 BB       		.byte	0xbb
+ 1640 0826 F0000000 		.4byte	0xf0
+ 1641 082a 28       		.byte	0x28
+ 1642 082b 00       		.byte	0
+ 1643 082c 05       		.uleb128 0x5
+ 1644 082d 84070000 		.4byte	0x784
+ 1645 0831 03       		.uleb128 0x3
+ 1646 0832 58020000 		.4byte	.LASF118
+ 1647 0836 0F       		.byte	0xf
+ 1648 0837 BC       		.byte	0xbc
+ 1649 0838 9F070000 		.4byte	0x79f
+ 1650 083c 18       		.uleb128 0x18
+ 1651 083d A3050000 		.4byte	.LASF119
+ 1652 0841 0F       		.byte	0xf
+ 1653 0842 0E01     		.2byte	0x10e
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 30
+
+
+ 1654 0844 CA000000 		.4byte	0xca
+ 1655 0848 19       		.uleb128 0x19
+ 1656 0849 01       		.byte	0x1
+ 1657 084a 3E000000 		.4byte	0x3e
+ 1658 084e 10       		.byte	0x10
+ 1659 084f 31       		.byte	0x31
+ 1660 0850 73080000 		.4byte	0x873
+ 1661 0854 1A       		.uleb128 0x1a
+ 1662 0855 14080000 		.4byte	.LASF120
+ 1663 0859 00       		.byte	0
+ 1664 085a 1A       		.uleb128 0x1a
+ 1665 085b 3E010000 		.4byte	.LASF121
+ 1666 085f 01       		.byte	0x1
+ 1667 0860 1A       		.uleb128 0x1a
+ 1668 0861 A8070000 		.4byte	.LASF122
+ 1669 0865 02       		.byte	0x2
+ 1670 0866 1A       		.uleb128 0x1a
+ 1671 0867 53000000 		.4byte	.LASF123
+ 1672 086b 03       		.byte	0x3
+ 1673 086c 1A       		.uleb128 0x1a
+ 1674 086d 27080000 		.4byte	.LASF124
+ 1675 0871 04       		.byte	0x4
+ 1676 0872 00       		.byte	0
+ 1677 0873 03       		.uleb128 0x3
+ 1678 0874 8A050000 		.4byte	.LASF125
+ 1679 0878 10       		.byte	0x10
+ 1680 0879 37       		.byte	0x37
+ 1681 087a 48080000 		.4byte	0x848
+ 1682 087e 03       		.uleb128 0x3
+ 1683 087f B3080000 		.4byte	.LASF126
+ 1684 0883 10       		.byte	0x10
+ 1685 0884 3C       		.byte	0x3c
+ 1686 0885 89080000 		.4byte	0x889
+ 1687 0889 0B       		.uleb128 0xb
+ 1688 088a B3080000 		.4byte	.LASF126
+ 1689 088e 18       		.byte	0x18
+ 1690 088f 11       		.byte	0x11
+ 1691 0890 3101     		.2byte	0x131
+ 1692 0892 E5080000 		.4byte	0x8e5
+ 1693 0896 09       		.uleb128 0x9
+ 1694 0897 90080000 		.4byte	.LASF127
+ 1695 089b 11       		.byte	0x11
+ 1696 089c 3501     		.2byte	0x135
+ 1697 089e 73080000 		.4byte	0x873
+ 1698 08a2 00       		.byte	0
+ 1699 08a3 09       		.uleb128 0x9
+ 1700 08a4 81060000 		.4byte	.LASF128
+ 1701 08a8 11       		.byte	0x11
+ 1702 08a9 3901     		.2byte	0x139
+ 1703 08ab ED0A0000 		.4byte	0xaed
+ 1704 08af 04       		.byte	0x4
+ 1705 08b0 09       		.uleb128 0x9
+ 1706 08b1 90040000 		.4byte	.LASF129
+ 1707 08b5 11       		.byte	0x11
+ 1708 08b6 4101     		.2byte	0x141
+ 1709 08b8 CA000000 		.4byte	0xca
+ 1710 08bc 08       		.byte	0x8
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 31
+
+
+ 1711 08bd 08       		.uleb128 0x8
+ 1712 08be 74696D00 		.ascii	"tim\000"
+ 1713 08c2 11       		.byte	0x11
+ 1714 08c3 4501     		.2byte	0x145
+ 1715 08c5 F80A0000 		.4byte	0xaf8
+ 1716 08c9 0C       		.byte	0xc
+ 1717 08ca 09       		.uleb128 0x9
+ 1718 08cb D5020000 		.4byte	.LASF130
+ 1719 08cf 11       		.byte	0x11
+ 1720 08d0 4901     		.2byte	0x149
+ 1721 08d2 5D070000 		.4byte	0x75d
+ 1722 08d6 10       		.byte	0x10
+ 1723 08d7 09       		.uleb128 0x9
+ 1724 08d8 C9080000 		.4byte	.LASF131
+ 1725 08dc 11       		.byte	0x11
+ 1726 08dd 4D01     		.2byte	0x14d
+ 1727 08df 5D070000 		.4byte	0x75d
+ 1728 08e3 14       		.byte	0x14
+ 1729 08e4 00       		.byte	0
+ 1730 08e5 03       		.uleb128 0x3
+ 1731 08e6 EF080000 		.4byte	.LASF132
+ 1732 08ea 10       		.byte	0x10
+ 1733 08eb 43       		.byte	0x43
+ 1734 08ec F0080000 		.4byte	0x8f0
+ 1735 08f0 0A       		.uleb128 0xa
+ 1736 08f1 04       		.byte	0x4
+ 1737 08f2 F6080000 		.4byte	0x8f6
+ 1738 08f6 0C       		.uleb128 0xc
+ 1739 08f7 01090000 		.4byte	0x901
+ 1740 08fb 0D       		.uleb128 0xd
+ 1741 08fc 01090000 		.4byte	0x901
+ 1742 0900 00       		.byte	0
+ 1743 0901 0A       		.uleb128 0xa
+ 1744 0902 04       		.byte	0x4
+ 1745 0903 7E080000 		.4byte	0x87e
+ 1746 0907 1B       		.uleb128 0x1b
+ 1747 0908 60       		.byte	0x60
+ 1748 0909 12       		.byte	0x12
+ 1749 090a 9E01     		.2byte	0x19e
+ 1750 090c 130A0000 		.4byte	0xa13
+ 1751 0910 08       		.uleb128 0x8
+ 1752 0911 43523100 		.ascii	"CR1\000"
+ 1753 0915 12       		.byte	0x12
+ 1754 0916 9F01     		.2byte	0x19f
+ 1755 0918 F0000000 		.4byte	0xf0
+ 1756 091c 00       		.byte	0
+ 1757 091d 08       		.uleb128 0x8
+ 1758 091e 43523200 		.ascii	"CR2\000"
+ 1759 0922 12       		.byte	0x12
+ 1760 0923 A001     		.2byte	0x1a0
+ 1761 0925 F0000000 		.4byte	0xf0
+ 1762 0929 04       		.byte	0x4
+ 1763 092a 09       		.uleb128 0x9
+ 1764 092b 21050000 		.4byte	.LASF133
+ 1765 092f 12       		.byte	0x12
+ 1766 0930 A101     		.2byte	0x1a1
+ 1767 0932 F0000000 		.4byte	0xf0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 32
+
+
+ 1768 0936 08       		.byte	0x8
+ 1769 0937 09       		.uleb128 0x9
+ 1770 0938 81040000 		.4byte	.LASF134
+ 1771 093c 12       		.byte	0x12
+ 1772 093d A201     		.2byte	0x1a2
+ 1773 093f F0000000 		.4byte	0xf0
+ 1774 0943 0C       		.byte	0xc
+ 1775 0944 08       		.uleb128 0x8
+ 1776 0945 535200   		.ascii	"SR\000"
+ 1777 0948 12       		.byte	0x12
+ 1778 0949 A301     		.2byte	0x1a3
+ 1779 094b F0000000 		.4byte	0xf0
+ 1780 094f 10       		.byte	0x10
+ 1781 0950 08       		.uleb128 0x8
+ 1782 0951 45475200 		.ascii	"EGR\000"
+ 1783 0955 12       		.byte	0x12
+ 1784 0956 A401     		.2byte	0x1a4
+ 1785 0958 F0000000 		.4byte	0xf0
+ 1786 095c 14       		.byte	0x14
+ 1787 095d 09       		.uleb128 0x9
+ 1788 095e D8010000 		.4byte	.LASF135
+ 1789 0962 12       		.byte	0x12
+ 1790 0963 A501     		.2byte	0x1a5
+ 1791 0965 F0000000 		.4byte	0xf0
+ 1792 0969 18       		.byte	0x18
+ 1793 096a 09       		.uleb128 0x9
+ 1794 096b DE010000 		.4byte	.LASF136
+ 1795 096f 12       		.byte	0x12
+ 1796 0970 A601     		.2byte	0x1a6
+ 1797 0972 F0000000 		.4byte	0xf0
+ 1798 0976 1C       		.byte	0x1c
+ 1799 0977 09       		.uleb128 0x9
+ 1800 0978 A9040000 		.4byte	.LASF137
+ 1801 097c 12       		.byte	0x12
+ 1802 097d A701     		.2byte	0x1a7
+ 1803 097f F0000000 		.4byte	0xf0
+ 1804 0983 20       		.byte	0x20
+ 1805 0984 08       		.uleb128 0x8
+ 1806 0985 434E5400 		.ascii	"CNT\000"
+ 1807 0989 12       		.byte	0x12
+ 1808 098a A801     		.2byte	0x1a8
+ 1809 098c F0000000 		.4byte	0xf0
+ 1810 0990 24       		.byte	0x24
+ 1811 0991 08       		.uleb128 0x8
+ 1812 0992 50534300 		.ascii	"PSC\000"
+ 1813 0996 12       		.byte	0x12
+ 1814 0997 A901     		.2byte	0x1a9
+ 1815 0999 F0000000 		.4byte	0xf0
+ 1816 099d 28       		.byte	0x28
+ 1817 099e 08       		.uleb128 0x8
+ 1818 099f 41525200 		.ascii	"ARR\000"
+ 1819 09a3 12       		.byte	0x12
+ 1820 09a4 AA01     		.2byte	0x1aa
+ 1821 09a6 F0000000 		.4byte	0xf0
+ 1822 09aa 2C       		.byte	0x2c
+ 1823 09ab 08       		.uleb128 0x8
+ 1824 09ac 52435200 		.ascii	"RCR\000"
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 33
+
+
+ 1825 09b0 12       		.byte	0x12
+ 1826 09b1 AB01     		.2byte	0x1ab
+ 1827 09b3 F0000000 		.4byte	0xf0
+ 1828 09b7 30       		.byte	0x30
+ 1829 09b8 08       		.uleb128 0x8
+ 1830 09b9 43435200 		.ascii	"CCR\000"
+ 1831 09bd 12       		.byte	0x12
+ 1832 09be AC01     		.2byte	0x1ac
+ 1833 09c0 130A0000 		.4byte	0xa13
+ 1834 09c4 34       		.byte	0x34
+ 1835 09c5 09       		.uleb128 0x9
+ 1836 09c6 96010000 		.4byte	.LASF138
+ 1837 09ca 12       		.byte	0x12
+ 1838 09cb AD01     		.2byte	0x1ad
+ 1839 09cd F0000000 		.4byte	0xf0
+ 1840 09d1 44       		.byte	0x44
+ 1841 09d2 08       		.uleb128 0x8
+ 1842 09d3 44435200 		.ascii	"DCR\000"
+ 1843 09d7 12       		.byte	0x12
+ 1844 09d8 AE01     		.2byte	0x1ae
+ 1845 09da F0000000 		.4byte	0xf0
+ 1846 09de 48       		.byte	0x48
+ 1847 09df 09       		.uleb128 0x9
+ 1848 09e0 30010000 		.4byte	.LASF139
+ 1849 09e4 12       		.byte	0x12
+ 1850 09e5 AF01     		.2byte	0x1af
+ 1851 09e7 F0000000 		.4byte	0xf0
+ 1852 09eb 4C       		.byte	0x4c
+ 1853 09ec 08       		.uleb128 0x8
+ 1854 09ed 4F5200   		.ascii	"OR\000"
+ 1855 09f0 12       		.byte	0x12
+ 1856 09f1 B001     		.2byte	0x1b0
+ 1857 09f3 F0000000 		.4byte	0xf0
+ 1858 09f7 50       		.byte	0x50
+ 1859 09f8 09       		.uleb128 0x9
+ 1860 09f9 E4010000 		.4byte	.LASF140
+ 1861 09fd 12       		.byte	0x12
+ 1862 09fe B101     		.2byte	0x1b1
+ 1863 0a00 F0000000 		.4byte	0xf0
+ 1864 0a04 54       		.byte	0x54
+ 1865 0a05 09       		.uleb128 0x9
+ 1866 0a06 76060000 		.4byte	.LASF141
+ 1867 0a0a 12       		.byte	0x12
+ 1868 0a0b B201     		.2byte	0x1b2
+ 1869 0a0d 180A0000 		.4byte	0xa18
+ 1870 0a11 58       		.byte	0x58
+ 1871 0a12 00       		.byte	0
+ 1872 0a13 05       		.uleb128 0x5
+ 1873 0a14 A8040000 		.4byte	0x4a8
+ 1874 0a18 05       		.uleb128 0x5
+ 1875 0a19 98040000 		.4byte	0x498
+ 1876 0a1d 18       		.uleb128 0x18
+ 1877 0a1e C3020000 		.4byte	.LASF142
+ 1878 0a22 12       		.byte	0x12
+ 1879 0a23 B301     		.2byte	0x1b3
+ 1880 0a25 07090000 		.4byte	0x907
+ 1881 0a29 19       		.uleb128 0x19
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 34
+
+
+ 1882 0a2a 01       		.byte	0x1
+ 1883 0a2b 3E000000 		.4byte	0x3e
+ 1884 0a2f 11       		.byte	0x11
+ 1885 0a30 EE       		.byte	0xee
+ 1886 0a31 420A0000 		.4byte	0xa42
+ 1887 0a35 1A       		.uleb128 0x1a
+ 1888 0a36 CF050000 		.4byte	.LASF143
+ 1889 0a3a 00       		.byte	0
+ 1890 0a3b 1A       		.uleb128 0x1a
+ 1891 0a3c 96080000 		.4byte	.LASF144
+ 1892 0a40 01       		.byte	0x1
+ 1893 0a41 00       		.byte	0
+ 1894 0a42 03       		.uleb128 0x3
+ 1895 0a43 8E070000 		.4byte	.LASF145
+ 1896 0a47 11       		.byte	0x11
+ 1897 0a48 F1       		.byte	0xf1
+ 1898 0a49 290A0000 		.4byte	0xa29
+ 1899 0a4d 03       		.uleb128 0x3
+ 1900 0a4e B2070000 		.4byte	.LASF146
+ 1901 0a52 11       		.byte	0x11
+ 1902 0a53 F6       		.byte	0xf6
+ 1903 0a54 CA000000 		.4byte	0xca
+ 1904 0a58 19       		.uleb128 0x19
+ 1905 0a59 01       		.byte	0x1
+ 1906 0a5a 3E000000 		.4byte	0x3e
+ 1907 0a5e 11       		.byte	0x11
+ 1908 0a5f FB       		.byte	0xfb
+ 1909 0a60 710A0000 		.4byte	0xa71
+ 1910 0a64 1A       		.uleb128 0x1a
+ 1911 0a65 13070000 		.4byte	.LASF147
+ 1912 0a69 00       		.byte	0
+ 1913 0a6a 1A       		.uleb128 0x1a
+ 1914 0a6b 21070000 		.4byte	.LASF148
+ 1915 0a6f 01       		.byte	0x1
+ 1916 0a70 00       		.byte	0
+ 1917 0a71 03       		.uleb128 0x3
+ 1918 0a72 21060000 		.4byte	.LASF149
+ 1919 0a76 11       		.byte	0x11
+ 1920 0a77 FE       		.byte	0xfe
+ 1921 0a78 580A0000 		.4byte	0xa58
+ 1922 0a7c 1B       		.uleb128 0x1b
+ 1923 0a7d 1C       		.byte	0x1c
+ 1924 0a7e 11       		.byte	0x11
+ 1925 0a7f 0901     		.2byte	0x109
+ 1926 0a81 E10A0000 		.4byte	0xae1
+ 1927 0a85 09       		.uleb128 0x9
+ 1928 0a86 1D010000 		.4byte	.LASF150
+ 1929 0a8a 11       		.byte	0x11
+ 1930 0a8b 0D01     		.2byte	0x10d
+ 1931 0a8d 420A0000 		.4byte	0xa42
+ 1932 0a91 00       		.byte	0
+ 1933 0a92 09       		.uleb128 0x9
+ 1934 0a93 86080000 		.4byte	.LASF151
+ 1935 0a97 11       		.byte	0x11
+ 1936 0a98 1301     		.2byte	0x113
+ 1937 0a9a 4D0A0000 		.4byte	0xa4d
+ 1938 0a9e 04       		.byte	0x4
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 35
+
+
+ 1939 0a9f 09       		.uleb128 0x9
+ 1940 0aa0 E5050000 		.4byte	.LASF152
+ 1941 0aa4 11       		.byte	0x11
+ 1942 0aa5 1701     		.2byte	0x117
+ 1943 0aa7 E5080000 		.4byte	0x8e5
+ 1944 0aab 08       		.byte	0x8
+ 1945 0aac 09       		.uleb128 0x9
+ 1946 0aad A2010000 		.4byte	.LASF153
+ 1947 0ab1 11       		.byte	0x11
+ 1948 0ab2 1B01     		.2byte	0x11b
+ 1949 0ab4 E5080000 		.4byte	0x8e5
+ 1950 0ab8 0C       		.byte	0xc
+ 1951 0ab9 09       		.uleb128 0x9
+ 1952 0aba 03050000 		.4byte	.LASF154
+ 1953 0abe 11       		.byte	0x11
+ 1954 0abf 1F01     		.2byte	0x11f
+ 1955 0ac1 E5080000 		.4byte	0x8e5
+ 1956 0ac5 10       		.byte	0x10
+ 1957 0ac6 09       		.uleb128 0x9
+ 1958 0ac7 69060000 		.4byte	.LASF155
+ 1959 0acb 11       		.byte	0x11
+ 1960 0acc 2501     		.2byte	0x125
+ 1961 0ace 710A0000 		.4byte	0xa71
+ 1962 0ad2 14       		.byte	0x14
+ 1963 0ad3 09       		.uleb128 0x9
+ 1964 0ad4 71060000 		.4byte	.LASF156
+ 1965 0ad8 11       		.byte	0x11
+ 1966 0ad9 2B01     		.2byte	0x12b
+ 1967 0adb CA000000 		.4byte	0xca
+ 1968 0adf 18       		.byte	0x18
+ 1969 0ae0 00       		.byte	0
+ 1970 0ae1 18       		.uleb128 0x18
+ 1971 0ae2 3F050000 		.4byte	.LASF157
+ 1972 0ae6 11       		.byte	0x11
+ 1973 0ae7 2C01     		.2byte	0x12c
+ 1974 0ae9 7C0A0000 		.4byte	0xa7c
+ 1975 0aed 0A       		.uleb128 0xa
+ 1976 0aee 04       		.byte	0x4
+ 1977 0aef F30A0000 		.4byte	0xaf3
+ 1978 0af3 16       		.uleb128 0x16
+ 1979 0af4 E10A0000 		.4byte	0xae1
+ 1980 0af8 0A       		.uleb128 0xa
+ 1981 0af9 04       		.byte	0x4
+ 1982 0afa 1D0A0000 		.4byte	0xa1d
+ 1983 0afe 1C       		.uleb128 0x1c
+ 1984 0aff 5C070000 		.4byte	.LASF160
+ 1985 0b03 02       		.byte	0x2
+ 1986 0b04 2002     		.2byte	0x220
+ 1987 0b06 03       		.byte	0x3
+ 1988 0b07 180B0000 		.4byte	0xb18
+ 1989 0b0b 1D       		.uleb128 0x1d
+ 1990 0b0c 72020000 		.4byte	.LASF167
+ 1991 0b10 02       		.byte	0x2
+ 1992 0b11 2002     		.2byte	0x220
+ 1993 0b13 CA000000 		.4byte	0xca
+ 1994 0b17 00       		.byte	0
+ 1995 0b18 1E       		.uleb128 0x1e
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 36
+
+
+ 1996 0b19 F6000000 		.4byte	.LASF158
+ 1997 0b1d 0B       		.byte	0xb
+ 1998 0b1e BC01     		.2byte	0x1bc
+ 1999 0b20 03       		.byte	0x3
+ 2000 0b21 1E       		.uleb128 0x1e
+ 2001 0b22 5C090000 		.4byte	.LASF159
+ 2002 0b26 0B       		.byte	0xb
+ 2003 0b27 CA01     		.2byte	0x1ca
+ 2004 0b29 03       		.byte	0x3
+ 2005 0b2a 1C       		.uleb128 0x1c
+ 2006 0b2b 47020000 		.4byte	.LASF161
+ 2007 0b2f 13       		.byte	0x13
+ 2008 0b30 6601     		.2byte	0x166
+ 2009 0b32 03       		.byte	0x3
+ 2010 0b33 450B0000 		.4byte	0xb45
+ 2011 0b37 1F       		.uleb128 0x1f
+ 2012 0b38 38090000 		.4byte	.LASF163
+ 2013 0b3c 550B0000 		.4byte	0xb55
+ 2014 0b40 47020000 		.4byte	.LASF161
+ 2015 0b44 00       		.byte	0
+ 2016 0b45 10       		.uleb128 0x10
+ 2017 0b46 20070000 		.4byte	0x720
+ 2018 0b4a 550B0000 		.4byte	0xb55
+ 2019 0b4e 11       		.uleb128 0x11
+ 2020 0b4f 91040000 		.4byte	0x491
+ 2021 0b53 0B       		.byte	0xb
+ 2022 0b54 00       		.byte	0
+ 2023 0b55 16       		.uleb128 0x16
+ 2024 0b56 450B0000 		.4byte	0xb45
+ 2025 0b5a 20       		.uleb128 0x20
+ 2026 0b5b 49090000 		.4byte	.LASF197
+ 2027 0b5f 03       		.byte	0x3
+ 2028 0b60 E4       		.byte	0xe4
+ 2029 0b61 58010000 		.4byte	0x158
+ 2030 0b65 03       		.byte	0x3
+ 2031 0b66 1E       		.uleb128 0x1e
+ 2032 0b67 86040000 		.4byte	.LASF162
+ 2033 0b6b 13       		.byte	0x13
+ 2034 0b6c 5A01     		.2byte	0x15a
+ 2035 0b6e 03       		.byte	0x3
+ 2036 0b6f 21       		.uleb128 0x21
+ 2037 0b70 6C050000 		.4byte	.LASF165
+ 2038 0b74 03       		.byte	0x3
+ 2039 0b75 F7       		.byte	0xf7
+ 2040 0b76 58010000 		.4byte	0x158
+ 2041 0b7a 03       		.byte	0x3
+ 2042 0b7b 8B0B0000 		.4byte	0xb8b
+ 2043 0b7f 22       		.uleb128 0x22
+ 2044 0b80 0E060000 		.4byte	.LASF164
+ 2045 0b84 03       		.byte	0x3
+ 2046 0b85 F8       		.byte	0xf8
+ 2047 0b86 58010000 		.4byte	0x158
+ 2048 0b8a 00       		.byte	0
+ 2049 0b8b 23       		.uleb128 0x23
+ 2050 0b8c 47010000 		.4byte	.LASF166
+ 2051 0b90 03       		.byte	0x3
+ 2052 0b91 0901     		.2byte	0x109
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 37
+
+
+ 2053 0b93 58010000 		.4byte	0x158
+ 2054 0b97 03       		.byte	0x3
+ 2055 0b98 A90B0000 		.4byte	0xba9
+ 2056 0b9c 1D       		.uleb128 0x1d
+ 2057 0b9d A2070000 		.4byte	.LASF168
+ 2058 0ba1 03       		.byte	0x3
+ 2059 0ba2 0901     		.2byte	0x109
+ 2060 0ba4 58010000 		.4byte	0x158
+ 2061 0ba8 00       		.byte	0
+ 2062 0ba9 24       		.uleb128 0x24
+ 2063 0baa FF030000 		.4byte	.LASF198
+ 2064 0bae 01       		.byte	0x1
+ 2065 0baf 5D       		.byte	0x5d
+ 2066 0bb0 00000000 		.4byte	.LFB257
+ 2067 0bb4 02000000 		.4byte	.LFE257-.LFB257
+ 2068 0bb8 01       		.uleb128 0x1
+ 2069 0bb9 9C       		.byte	0x9c
+ 2070 0bba CC0B0000 		.4byte	0xbcc
+ 2071 0bbe 25       		.uleb128 0x25
+ 2072 0bbf 7C010000 		.4byte	.LASF169
+ 2073 0bc3 01       		.byte	0x1
+ 2074 0bc4 5D       		.byte	0x5d
+ 2075 0bc5 01090000 		.4byte	0x901
+ 2076 0bc9 01       		.uleb128 0x1
+ 2077 0bca 50       		.byte	0x50
+ 2078 0bcb 00       		.byte	0
+ 2079 0bcc 26       		.uleb128 0x26
+ 2080 0bcd 09090000 		.4byte	.LASF199
+ 2081 0bd1 01       		.byte	0x1
+ 2082 0bd2 31       		.byte	0x31
+ 2083 0bd3 00000000 		.4byte	.LFB256
+ 2084 0bd7 38010000 		.4byte	.LFE256-.LFB256
+ 2085 0bdb 01       		.uleb128 0x1
+ 2086 0bdc 9C       		.byte	0x9c
+ 2087 0bdd 180D0000 		.4byte	0xd18
+ 2088 0be1 27       		.uleb128 0x27
+ 2089 0be2 7C010000 		.4byte	.LASF169
+ 2090 0be6 01       		.byte	0x1
+ 2091 0be7 31       		.byte	0x31
+ 2092 0be8 01090000 		.4byte	0x901
+ 2093 0bec 00000000 		.4byte	.LLST0
+ 2094 0bf0 28       		.uleb128 0x28
+ 2095 0bf1 6C656E00 		.ascii	"len\000"
+ 2096 0bf5 01       		.byte	0x1
+ 2097 0bf6 33       		.byte	0x33
+ 2098 0bf7 25000000 		.4byte	0x25
+ 2099 0bfb 21000000 		.4byte	.LLST1
+ 2100 0bff 29       		.uleb128 0x29
+ 2101 0c00 71070000 		.4byte	.LASF170
+ 2102 0c04 01       		.byte	0x1
+ 2103 0c05 34       		.byte	0x34
+ 2104 0c06 180D0000 		.4byte	0xd18
+ 2105 0c0a 41000000 		.4byte	.LLST2
+ 2106 0c0e 2A       		.uleb128 0x2a
+ 2107 0c0f 00000000 		.4byte	.Ldebug_ranges0+0
+ 2108 0c13 640C0000 		.4byte	0xc64
+ 2109 0c17 2B       		.uleb128 0x2b
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 38
+
+
+ 2110 0c18 6300     		.ascii	"c\000"
+ 2111 0c1a 01       		.byte	0x1
+ 2112 0c1b 48       		.byte	0x48
+ 2113 0c1c 25000000 		.4byte	0x25
+ 2114 0c20 02       		.uleb128 0x2
+ 2115 0c21 90       		.byte	0x90
+ 2116 0c22 50       		.uleb128 0x50
+ 2117 0c23 2B       		.uleb128 0x2b
+ 2118 0c24 633100   		.ascii	"c1\000"
+ 2119 0c27 01       		.byte	0x1
+ 2120 0c28 49       		.byte	0x49
+ 2121 0c29 25000000 		.4byte	0x25
+ 2122 0c2d 05       		.uleb128 0x5
+ 2123 0c2e 03       		.byte	0x3
+ 2124 0c2f 00000000 		.4byte	c1.9477
+ 2125 0c33 2B       		.uleb128 0x2b
+ 2126 0c34 633200   		.ascii	"c2\000"
+ 2127 0c37 01       		.byte	0x1
+ 2128 0c38 4A       		.byte	0x4a
+ 2129 0c39 25000000 		.4byte	0x25
+ 2130 0c3d 05       		.uleb128 0x5
+ 2131 0c3e 03       		.byte	0x3
+ 2132 0c3f 00000000 		.4byte	c2.9478
+ 2133 0c43 2B       		.uleb128 0x2b
+ 2134 0c44 6D656400 		.ascii	"med\000"
+ 2135 0c48 01       		.byte	0x1
+ 2136 0c49 4B       		.byte	0x4b
+ 2137 0c4a 25000000 		.4byte	0x25
+ 2138 0c4e 02       		.uleb128 0x2
+ 2139 0c4f 90       		.byte	0x90
+ 2140 0c50 40       		.uleb128 0x40
+ 2141 0c51 2C       		.uleb128 0x2c
+ 2142 0c52 F0000000 		.4byte	.LVL16
+ 2143 0c56 680F0000 		.4byte	0xf68
+ 2144 0c5a 2D       		.uleb128 0x2d
+ 2145 0c5b 02       		.uleb128 0x2
+ 2146 0c5c 90       		.byte	0x90
+ 2147 0c5d 40       		.uleb128 0x40
+ 2148 0c5e 03       		.uleb128 0x3
+ 2149 0c5f F5       		.byte	0xf5
+ 2150 0c60 50       		.uleb128 0x50
+ 2151 0c61 25       		.uleb128 0x25
+ 2152 0c62 00       		.byte	0
+ 2153 0c63 00       		.byte	0
+ 2154 0c64 2E       		.uleb128 0x2e
+ 2155 0c65 6F0B0000 		.4byte	0xb6f
+ 2156 0c69 80000000 		.4byte	.LBB47
+ 2157 0c6d 10000000 		.4byte	.LBE47-.LBB47
+ 2158 0c71 01       		.byte	0x1
+ 2159 0c72 55       		.byte	0x55
+ 2160 0c73 2F       		.uleb128 0x2f
+ 2161 0c74 80000000 		.4byte	.LBB48
+ 2162 0c78 10000000 		.4byte	.LBE48-.LBB48
+ 2163 0c7c 30       		.uleb128 0x30
+ 2164 0c7d 7F0B0000 		.4byte	0xb7f
+ 2165 0c81 31       		.uleb128 0x31
+ 2166 0c82 660B0000 		.4byte	0xb66
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 39
+
+
+ 2167 0c86 80000000 		.4byte	.LBB49
+ 2168 0c8a 06000000 		.4byte	.LBE49-.LBB49
+ 2169 0c8e 03       		.byte	0x3
+ 2170 0c8f FA       		.byte	0xfa
+ 2171 0c90 C00C0000 		.4byte	0xcc0
+ 2172 0c94 32       		.uleb128 0x32
+ 2173 0c95 180B0000 		.4byte	0xb18
+ 2174 0c99 80000000 		.4byte	.LBB50
+ 2175 0c9d 06000000 		.4byte	.LBE50-.LBB50
+ 2176 0ca1 13       		.byte	0x13
+ 2177 0ca2 5C01     		.2byte	0x15c
+ 2178 0ca4 32       		.uleb128 0x32
+ 2179 0ca5 FE0A0000 		.4byte	0xafe
+ 2180 0ca9 80000000 		.4byte	.LBB51
+ 2181 0cad 06000000 		.4byte	.LBE51-.LBB51
+ 2182 0cb1 0B       		.byte	0xb
+ 2183 0cb2 BF01     		.2byte	0x1bf
+ 2184 0cb4 33       		.uleb128 0x33
+ 2185 0cb5 0B0B0000 		.4byte	0xb0b
+ 2186 0cb9 6D000000 		.4byte	.LLST3
+ 2187 0cbd 00       		.byte	0
+ 2188 0cbe 00       		.byte	0
+ 2189 0cbf 00       		.byte	0
+ 2190 0cc0 34       		.uleb128 0x34
+ 2191 0cc1 5A0B0000 		.4byte	0xb5a
+ 2192 0cc5 86000000 		.4byte	.LBB53
+ 2193 0cc9 18000000 		.4byte	.Ldebug_ranges0+0x18
+ 2194 0ccd 03       		.byte	0x3
+ 2195 0cce FB       		.byte	0xfb
+ 2196 0ccf 35       		.uleb128 0x35
+ 2197 0cd0 2A0B0000 		.4byte	0xb2a
+ 2198 0cd4 88000000 		.4byte	.LBB56
+ 2199 0cd8 30000000 		.4byte	.Ldebug_ranges0+0x30
+ 2200 0cdc 03       		.byte	0x3
+ 2201 0cdd FC       		.byte	0xfc
+ 2202 0cde 36       		.uleb128 0x36
+ 2203 0cdf 30000000 		.4byte	.Ldebug_ranges0+0x30
+ 2204 0ce3 30       		.uleb128 0x30
+ 2205 0ce4 370B0000 		.4byte	0xb37
+ 2206 0ce8 37       		.uleb128 0x37
+ 2207 0ce9 210B0000 		.4byte	0xb21
+ 2208 0ced 88000000 		.4byte	.LBB58
+ 2209 0cf1 30000000 		.4byte	.Ldebug_ranges0+0x30
+ 2210 0cf5 13       		.byte	0x13
+ 2211 0cf6 7301     		.2byte	0x173
+ 2212 0cf8 37       		.uleb128 0x37
+ 2213 0cf9 FE0A0000 		.4byte	0xafe
+ 2214 0cfd 88000000 		.4byte	.LBB59
+ 2215 0d01 30000000 		.4byte	.Ldebug_ranges0+0x30
+ 2216 0d05 0B       		.byte	0xb
+ 2217 0d06 CD01     		.2byte	0x1cd
+ 2218 0d08 33       		.uleb128 0x33
+ 2219 0d09 0B0B0000 		.4byte	0xb0b
+ 2220 0d0d 82000000 		.4byte	.LLST4
+ 2221 0d11 00       		.byte	0
+ 2222 0d12 00       		.byte	0
+ 2223 0d13 00       		.byte	0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 40
+
+
+ 2224 0d14 00       		.byte	0
+ 2225 0d15 00       		.byte	0
+ 2226 0d16 00       		.byte	0
+ 2227 0d17 00       		.byte	0
+ 2228 0d18 16       		.uleb128 0x16
+ 2229 0d19 25000000 		.4byte	0x25
+ 2230 0d1d 38       		.uleb128 0x38
+ 2231 0d1e A0020000 		.4byte	.LASF172
+ 2232 0d22 01       		.byte	0x1
+ 2233 0d23 72       		.byte	0x72
+ 2234 0d24 00000000 		.4byte	.LFB258
+ 2235 0d28 50000000 		.4byte	.LFE258-.LFB258
+ 2236 0d2c 01       		.uleb128 0x1
+ 2237 0d2d 9C       		.byte	0x9c
+ 2238 0d2e BE0D0000 		.4byte	0xdbe
+ 2239 0d32 27       		.uleb128 0x27
+ 2240 0d33 C8050000 		.4byte	.LASF171
+ 2241 0d37 01       		.byte	0x1
+ 2242 0d38 72       		.byte	0x72
+ 2243 0d39 BF0D0000 		.4byte	0xdbf
+ 2244 0d3d 96000000 		.4byte	.LLST5
+ 2245 0d41 2A       		.uleb128 0x2a
+ 2246 0d42 48000000 		.4byte	.Ldebug_ranges0+0x48
+ 2247 0d46 580D0000 		.4byte	0xd58
+ 2248 0d4a 28       		.uleb128 0x28
+ 2249 0d4b 6900     		.ascii	"i\000"
+ 2250 0d4d 01       		.byte	0x1
+ 2251 0d4e 78       		.byte	0x78
+ 2252 0d4f 9B000000 		.4byte	0x9b
+ 2253 0d53 C3000000 		.4byte	.LLST6
+ 2254 0d57 00       		.byte	0
+ 2255 0d58 39       		.uleb128 0x39
+ 2256 0d59 0E000000 		.4byte	.LVL19
+ 2257 0d5d 730F0000 		.4byte	0xf73
+ 2258 0d61 750D0000 		.4byte	0xd75
+ 2259 0d65 2D       		.uleb128 0x2d
+ 2260 0d66 01       		.uleb128 0x1
+ 2261 0d67 50       		.byte	0x50
+ 2262 0d68 02       		.uleb128 0x2
+ 2263 0d69 74       		.byte	0x74
+ 2264 0d6a 00       		.sleb128 0
+ 2265 0d6b 2D       		.uleb128 0x2d
+ 2266 0d6c 01       		.uleb128 0x1
+ 2267 0d6d 51       		.byte	0x51
+ 2268 0d6e 05       		.uleb128 0x5
+ 2269 0d6f 03       		.byte	0x3
+ 2270 0d70 00000000 		.4byte	.LANCHOR9
+ 2271 0d74 00       		.byte	0
+ 2272 0d75 39       		.uleb128 0x39
+ 2273 0d76 1A000000 		.4byte	.LVL20
+ 2274 0d7a 7E0F0000 		.4byte	0xf7e
+ 2275 0d7e 990D0000 		.4byte	0xd99
+ 2276 0d82 2D       		.uleb128 0x2d
+ 2277 0d83 01       		.uleb128 0x1
+ 2278 0d84 50       		.byte	0x50
+ 2279 0d85 05       		.uleb128 0x5
+ 2280 0d86 0C       		.byte	0xc
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 41
+
+
+ 2281 0d87 00040240 		.4byte	0x40020400
+ 2282 0d8b 2D       		.uleb128 0x2d
+ 2283 0d8c 01       		.uleb128 0x1
+ 2284 0d8d 51       		.byte	0x51
+ 2285 0d8e 02       		.uleb128 0x2
+ 2286 0d8f 08       		.byte	0x8
+ 2287 0d90 20       		.byte	0x20
+ 2288 0d91 2D       		.uleb128 0x2d
+ 2289 0d92 01       		.uleb128 0x1
+ 2290 0d93 52       		.byte	0x52
+ 2291 0d94 03       		.uleb128 0x3
+ 2292 0d95 0A       		.byte	0xa
+ 2293 0d96 0201     		.2byte	0x102
+ 2294 0d98 00       		.byte	0
+ 2295 0d99 39       		.uleb128 0x39
+ 2296 0d9a 20000000 		.4byte	.LVL21
+ 2297 0d9e 8A0F0000 		.4byte	0xf8a
+ 2298 0da2 AD0D0000 		.4byte	0xdad
+ 2299 0da6 2D       		.uleb128 0x2d
+ 2300 0da7 01       		.uleb128 0x1
+ 2301 0da8 50       		.byte	0x50
+ 2302 0da9 02       		.uleb128 0x2
+ 2303 0daa 74       		.byte	0x74
+ 2304 0dab 00       		.sleb128 0
+ 2305 0dac 00       		.byte	0
+ 2306 0dad 2C       		.uleb128 0x2c
+ 2307 0dae 26000000 		.4byte	.LVL22
+ 2308 0db2 950F0000 		.4byte	0xf95
+ 2309 0db6 2D       		.uleb128 0x2d
+ 2310 0db7 01       		.uleb128 0x1
+ 2311 0db8 50       		.byte	0x50
+ 2312 0db9 02       		.uleb128 0x2
+ 2313 0dba 74       		.byte	0x74
+ 2314 0dbb 00       		.sleb128 0
+ 2315 0dbc 00       		.byte	0
+ 2316 0dbd 00       		.byte	0
+ 2317 0dbe 3A       		.uleb128 0x3a
+ 2318 0dbf 0A       		.uleb128 0xa
+ 2319 0dc0 04       		.byte	0x4
+ 2320 0dc1 BE0D0000 		.4byte	0xdbe
+ 2321 0dc5 38       		.uleb128 0x38
+ 2322 0dc6 D4000000 		.4byte	.LASF173
+ 2323 0dca 01       		.byte	0x1
+ 2324 0dcb 8A       		.byte	0x8a
+ 2325 0dcc 00000000 		.4byte	.LFB259
+ 2326 0dd0 20000000 		.4byte	.LFE259-.LFB259
+ 2327 0dd4 01       		.uleb128 0x1
+ 2328 0dd5 9C       		.byte	0x9c
+ 2329 0dd6 040E0000 		.4byte	0xe04
+ 2330 0dda 25       		.uleb128 0x25
+ 2331 0ddb A2070000 		.4byte	.LASF168
+ 2332 0ddf 01       		.byte	0x1
+ 2333 0de0 8A       		.byte	0x8a
+ 2334 0de1 25000000 		.4byte	0x25
+ 2335 0de5 02       		.uleb128 0x2
+ 2336 0de6 90       		.byte	0x90
+ 2337 0de7 40       		.uleb128 0x40
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 42
+
+
+ 2338 0de8 3B       		.uleb128 0x3b
+ 2339 0de9 656E6400 		.ascii	"end\000"
+ 2340 0ded 01       		.byte	0x1
+ 2341 0dee 8A       		.byte	0x8a
+ 2342 0def 25000000 		.4byte	0x25
+ 2343 0df3 02       		.uleb128 0x2
+ 2344 0df4 90       		.byte	0x90
+ 2345 0df5 41       		.uleb128 0x41
+ 2346 0df6 25       		.uleb128 0x25
+ 2347 0df7 81010000 		.4byte	.LASF174
+ 2348 0dfb 01       		.byte	0x1
+ 2349 0dfc 8A       		.byte	0x8a
+ 2350 0dfd 56070000 		.4byte	0x756
+ 2351 0e01 01       		.uleb128 0x1
+ 2352 0e02 50       		.byte	0x50
+ 2353 0e03 00       		.byte	0
+ 2354 0e04 3C       		.uleb128 0x3c
+ 2355 0e05 CF080000 		.4byte	.LASF176
+ 2356 0e09 01       		.byte	0x1
+ 2357 0e0a 99       		.byte	0x99
+ 2358 0e0b 25000000 		.4byte	0x25
+ 2359 0e0f 00000000 		.4byte	.LFB260
+ 2360 0e13 1C000000 		.4byte	.LFE260-.LFB260
+ 2361 0e17 01       		.uleb128 0x1
+ 2362 0e18 9C       		.byte	0x9c
+ 2363 0e19 2D0E0000 		.4byte	0xe2d
+ 2364 0e1d 27       		.uleb128 0x27
+ 2365 0e1e 49000000 		.4byte	.LASF175
+ 2366 0e22 01       		.byte	0x1
+ 2367 0e23 99       		.byte	0x99
+ 2368 0e24 9B000000 		.4byte	0x9b
+ 2369 0e28 E3000000 		.4byte	.LLST7
+ 2370 0e2c 00       		.byte	0
+ 2371 0e2d 3C       		.uleb128 0x3c
+ 2372 0e2e 01020000 		.4byte	.LASF177
+ 2373 0e32 01       		.byte	0x1
+ 2374 0e33 A8       		.byte	0xa8
+ 2375 0e34 CA000000 		.4byte	0xca
+ 2376 0e38 00000000 		.4byte	.LFB261
+ 2377 0e3c 20000000 		.4byte	.LFE261-.LFB261
+ 2378 0e40 01       		.uleb128 0x1
+ 2379 0e41 9C       		.byte	0x9c
+ 2380 0e42 700E0000 		.4byte	0xe70
+ 2381 0e46 35       		.uleb128 0x35
+ 2382 0e47 8B0B0000 		.4byte	0xb8b
+ 2383 0e4b 02000000 		.4byte	.LBB70
+ 2384 0e4f 60000000 		.4byte	.Ldebug_ranges0+0x60
+ 2385 0e53 01       		.byte	0x1
+ 2386 0e54 A9       		.byte	0xa9
+ 2387 0e55 33       		.uleb128 0x33
+ 2388 0e56 9C0B0000 		.4byte	0xb9c
+ 2389 0e5a 04010000 		.4byte	.LLST8
+ 2390 0e5e 3D       		.uleb128 0x3d
+ 2391 0e5f 5A0B0000 		.4byte	0xb5a
+ 2392 0e63 02000000 		.4byte	.LBB72
+ 2393 0e67 78000000 		.4byte	.Ldebug_ranges0+0x78
+ 2394 0e6b 03       		.byte	0x3
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 43
+
+
+ 2395 0e6c 0B01     		.2byte	0x10b
+ 2396 0e6e 00       		.byte	0
+ 2397 0e6f 00       		.byte	0
+ 2398 0e70 3C       		.uleb128 0x3c
+ 2399 0e71 39070000 		.4byte	.LASF178
+ 2400 0e75 01       		.byte	0x1
+ 2401 0e76 B5       		.byte	0xb5
+ 2402 0e77 25000000 		.4byte	0x25
+ 2403 0e7b 00000000 		.4byte	.LFB262
+ 2404 0e7f 1C000000 		.4byte	.LFE262-.LFB262
+ 2405 0e83 01       		.uleb128 0x1
+ 2406 0e84 9C       		.byte	0x9c
+ 2407 0e85 990E0000 		.4byte	0xe99
+ 2408 0e89 27       		.uleb128 0x27
+ 2409 0e8a 49000000 		.4byte	.LASF175
+ 2410 0e8e 01       		.byte	0x1
+ 2411 0e8f B5       		.byte	0xb5
+ 2412 0e90 9B000000 		.4byte	0x9b
+ 2413 0e94 17010000 		.4byte	.LLST9
+ 2414 0e98 00       		.byte	0
+ 2415 0e99 3E       		.uleb128 0x3e
+ 2416 0e9a 65040000 		.4byte	.LASF179
+ 2417 0e9e 01       		.byte	0x1
+ 2418 0e9f 27       		.byte	0x27
+ 2419 0ea0 25070000 		.4byte	0x725
+ 2420 0ea4 05       		.uleb128 0x5
+ 2421 0ea5 03       		.byte	0x3
+ 2422 0ea6 00000000 		.4byte	last_update_time
+ 2423 0eaa 10       		.uleb128 0x10
+ 2424 0eab BA0E0000 		.4byte	0xeba
+ 2425 0eaf BA0E0000 		.4byte	0xeba
+ 2426 0eb3 11       		.uleb128 0x11
+ 2427 0eb4 91040000 		.4byte	0x491
+ 2428 0eb8 00       		.byte	0
+ 2429 0eb9 00       		.byte	0
+ 2430 0eba 05       		.uleb128 0x5
+ 2431 0ebb 25000000 		.4byte	0x25
+ 2432 0ebf 3E       		.uleb128 0x3e
+ 2433 0ec0 7C080000 		.4byte	.LASF180
+ 2434 0ec4 01       		.byte	0x1
+ 2435 0ec5 28       		.byte	0x28
+ 2436 0ec6 D00E0000 		.4byte	0xed0
+ 2437 0eca 05       		.uleb128 0x5
+ 2438 0ecb 03       		.byte	0x3
+ 2439 0ecc 00000000 		.4byte	servo_pos
+ 2440 0ed0 05       		.uleb128 0x5
+ 2441 0ed1 AA0E0000 		.4byte	0xeaa
+ 2442 0ed5 3E       		.uleb128 0x3e
+ 2443 0ed6 A5060000 		.4byte	.LASF181
+ 2444 0eda 01       		.byte	0x1
+ 2445 0edb 29       		.byte	0x29
+ 2446 0edc BA0E0000 		.4byte	0xeba
+ 2447 0ee0 05       		.uleb128 0x5
+ 2448 0ee1 03       		.byte	0x3
+ 2449 0ee2 00000000 		.4byte	pulse_start
+ 2450 0ee6 3E       		.uleb128 0x3e
+ 2451 0ee7 5A050000 		.4byte	.LASF182
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 44
+
+
+ 2452 0eeb 01       		.byte	0x1
+ 2453 0eec 2A       		.byte	0x2a
+ 2454 0eed BA0E0000 		.4byte	0xeba
+ 2455 0ef1 05       		.uleb128 0x5
+ 2456 0ef2 03       		.byte	0x3
+ 2457 0ef3 00000000 		.4byte	pulse_end
+ 2458 0ef7 3E       		.uleb128 0x3e
+ 2459 0ef8 42040000 		.4byte	.LASF183
+ 2460 0efc 01       		.byte	0x1
+ 2461 0efd 2B       		.byte	0x2b
+ 2462 0efe 080F0000 		.4byte	0xf08
+ 2463 0f02 05       		.uleb128 0x5
+ 2464 0f03 03       		.byte	0x3
+ 2465 0f04 00000000 		.4byte	last_len_received
+ 2466 0f08 05       		.uleb128 0x5
+ 2467 0f09 AA0E0000 		.4byte	0xeaa
+ 2468 0f0d 3E       		.uleb128 0x3e
+ 2469 0f0e 88060000 		.4byte	.LASF184
+ 2470 0f12 01       		.byte	0x1
+ 2471 0f13 2C       		.byte	0x2c
+ 2472 0f14 1E0F0000 		.4byte	0xf1e
+ 2473 0f18 05       		.uleb128 0x5
+ 2474 0f19 03       		.byte	0x3
+ 2475 0f1a 00000000 		.4byte	use_median_filter
+ 2476 0f1e 05       		.uleb128 0x5
+ 2477 0f1f 56070000 		.4byte	0x756
+ 2478 0f23 3E       		.uleb128 0x3e
+ 2479 0f24 7E090000 		.4byte	.LASF185
+ 2480 0f28 01       		.byte	0x1
+ 2481 0f29 2F       		.byte	0x2f
+ 2482 0f2a BF0D0000 		.4byte	0xdbf
+ 2483 0f2e 05       		.uleb128 0x5
+ 2484 0f2f 03       		.byte	0x3
+ 2485 0f30 00000000 		.4byte	done_func
+ 2486 0f34 3E       		.uleb128 0x3e
+ 2487 0f35 CD000000 		.4byte	.LASF186
+ 2488 0f39 01       		.byte	0x1
+ 2489 0f3a 61       		.byte	0x61
+ 2490 0f3b E10A0000 		.4byte	0xae1
+ 2491 0f3f 05       		.uleb128 0x5
+ 2492 0f40 03       		.byte	0x3
+ 2493 0f41 00000000 		.4byte	icucfg
+ 2494 0f45 3F       		.uleb128 0x3f
+ 2495 0f46 06070000 		.4byte	.LASF187
+ 2496 0f4a 14       		.byte	0x14
+ 2497 0f4b A706     		.2byte	0x6a7
+ 2498 0f4d EB000000 		.4byte	0xeb
+ 2499 0f51 40       		.uleb128 0x40
+ 2500 0f52 636800   		.ascii	"ch\000"
+ 2501 0f55 09       		.byte	0x9
+ 2502 0f56 0902     		.2byte	0x209
+ 2503 0f58 2A040000 		.4byte	0x42a
+ 2504 0f5c 3F       		.uleb128 0x3f
+ 2505 0f5d A3040000 		.4byte	.LASF188
+ 2506 0f61 11       		.byte	0x11
+ 2507 0f62 8601     		.2byte	0x186
+ 2508 0f64 7E080000 		.4byte	0x87e
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 45
+
+
+ 2509 0f68 41       		.uleb128 0x41
+ 2510 0f69 D4070000 		.4byte	.LASF189
+ 2511 0f6d D4070000 		.4byte	.LASF189
+ 2512 0f71 15       		.byte	0x15
+ 2513 0f72 29       		.byte	0x29
+ 2514 0f73 41       		.uleb128 0x41
+ 2515 0f74 CB060000 		.4byte	.LASF190
+ 2516 0f78 CB060000 		.4byte	.LASF190
+ 2517 0f7c 10       		.byte	0x10
+ 2518 0f7d DF       		.byte	0xdf
+ 2519 0f7e 42       		.uleb128 0x42
+ 2520 0f7f 94000000 		.4byte	.LASF191
+ 2521 0f83 94000000 		.4byte	.LASF191
+ 2522 0f87 0F       		.byte	0xf
+ 2523 0f88 E001     		.2byte	0x1e0
+ 2524 0f8a 41       		.uleb128 0x41
+ 2525 0f8b B1060000 		.4byte	.LASF192
+ 2526 0f8f B1060000 		.4byte	.LASF192
+ 2527 0f93 10       		.byte	0x10
+ 2528 0f94 E1       		.byte	0xe1
+ 2529 0f95 41       		.uleb128 0x41
+ 2530 0f96 4A060000 		.4byte	.LASF193
+ 2531 0f9a 4A060000 		.4byte	.LASF193
+ 2532 0f9e 10       		.byte	0x10
+ 2533 0f9f E4       		.byte	0xe4
+ 2534 0fa0 00       		.byte	0
+ 2535              		.section	.debug_abbrev,"",%progbits
+ 2536              	.Ldebug_abbrev0:
+ 2537 0000 01       		.uleb128 0x1
+ 2538 0001 11       		.uleb128 0x11
+ 2539 0002 01       		.byte	0x1
+ 2540 0003 25       		.uleb128 0x25
+ 2541 0004 0E       		.uleb128 0xe
+ 2542 0005 13       		.uleb128 0x13
+ 2543 0006 0B       		.uleb128 0xb
+ 2544 0007 03       		.uleb128 0x3
+ 2545 0008 0E       		.uleb128 0xe
+ 2546 0009 1B       		.uleb128 0x1b
+ 2547 000a 0E       		.uleb128 0xe
+ 2548 000b 55       		.uleb128 0x55
+ 2549 000c 17       		.uleb128 0x17
+ 2550 000d 11       		.uleb128 0x11
+ 2551 000e 01       		.uleb128 0x1
+ 2552 000f 10       		.uleb128 0x10
+ 2553 0010 17       		.uleb128 0x17
+ 2554 0011 00       		.byte	0
+ 2555 0012 00       		.byte	0
+ 2556 0013 02       		.uleb128 0x2
+ 2557 0014 24       		.uleb128 0x24
+ 2558 0015 00       		.byte	0
+ 2559 0016 0B       		.uleb128 0xb
+ 2560 0017 0B       		.uleb128 0xb
+ 2561 0018 3E       		.uleb128 0x3e
+ 2562 0019 0B       		.uleb128 0xb
+ 2563 001a 03       		.uleb128 0x3
+ 2564 001b 0E       		.uleb128 0xe
+ 2565 001c 00       		.byte	0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 46
+
+
+ 2566 001d 00       		.byte	0
+ 2567 001e 03       		.uleb128 0x3
+ 2568 001f 16       		.uleb128 0x16
+ 2569 0020 00       		.byte	0
+ 2570 0021 03       		.uleb128 0x3
+ 2571 0022 0E       		.uleb128 0xe
+ 2572 0023 3A       		.uleb128 0x3a
+ 2573 0024 0B       		.uleb128 0xb
+ 2574 0025 3B       		.uleb128 0x3b
+ 2575 0026 0B       		.uleb128 0xb
+ 2576 0027 49       		.uleb128 0x49
+ 2577 0028 13       		.uleb128 0x13
+ 2578 0029 00       		.byte	0
+ 2579 002a 00       		.byte	0
+ 2580 002b 04       		.uleb128 0x4
+ 2581 002c 24       		.uleb128 0x24
+ 2582 002d 00       		.byte	0
+ 2583 002e 0B       		.uleb128 0xb
+ 2584 002f 0B       		.uleb128 0xb
+ 2585 0030 3E       		.uleb128 0x3e
+ 2586 0031 0B       		.uleb128 0xb
+ 2587 0032 03       		.uleb128 0x3
+ 2588 0033 08       		.uleb128 0x8
+ 2589 0034 00       		.byte	0
+ 2590 0035 00       		.byte	0
+ 2591 0036 05       		.uleb128 0x5
+ 2592 0037 35       		.uleb128 0x35
+ 2593 0038 00       		.byte	0
+ 2594 0039 49       		.uleb128 0x49
+ 2595 003a 13       		.uleb128 0x13
+ 2596 003b 00       		.byte	0
+ 2597 003c 00       		.byte	0
+ 2598 003d 06       		.uleb128 0x6
+ 2599 003e 13       		.uleb128 0x13
+ 2600 003f 01       		.byte	0x1
+ 2601 0040 03       		.uleb128 0x3
+ 2602 0041 0E       		.uleb128 0xe
+ 2603 0042 0B       		.uleb128 0xb
+ 2604 0043 0B       		.uleb128 0xb
+ 2605 0044 3A       		.uleb128 0x3a
+ 2606 0045 0B       		.uleb128 0xb
+ 2607 0046 3B       		.uleb128 0x3b
+ 2608 0047 0B       		.uleb128 0xb
+ 2609 0048 01       		.uleb128 0x1
+ 2610 0049 13       		.uleb128 0x13
+ 2611 004a 00       		.byte	0
+ 2612 004b 00       		.byte	0
+ 2613 004c 07       		.uleb128 0x7
+ 2614 004d 0D       		.uleb128 0xd
+ 2615 004e 00       		.byte	0
+ 2616 004f 03       		.uleb128 0x3
+ 2617 0050 0E       		.uleb128 0xe
+ 2618 0051 3A       		.uleb128 0x3a
+ 2619 0052 0B       		.uleb128 0xb
+ 2620 0053 3B       		.uleb128 0x3b
+ 2621 0054 0B       		.uleb128 0xb
+ 2622 0055 49       		.uleb128 0x49
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 47
+
+
+ 2623 0056 13       		.uleb128 0x13
+ 2624 0057 38       		.uleb128 0x38
+ 2625 0058 0B       		.uleb128 0xb
+ 2626 0059 00       		.byte	0
+ 2627 005a 00       		.byte	0
+ 2628 005b 08       		.uleb128 0x8
+ 2629 005c 0D       		.uleb128 0xd
+ 2630 005d 00       		.byte	0
+ 2631 005e 03       		.uleb128 0x3
+ 2632 005f 08       		.uleb128 0x8
+ 2633 0060 3A       		.uleb128 0x3a
+ 2634 0061 0B       		.uleb128 0xb
+ 2635 0062 3B       		.uleb128 0x3b
+ 2636 0063 05       		.uleb128 0x5
+ 2637 0064 49       		.uleb128 0x49
+ 2638 0065 13       		.uleb128 0x13
+ 2639 0066 38       		.uleb128 0x38
+ 2640 0067 0B       		.uleb128 0xb
+ 2641 0068 00       		.byte	0
+ 2642 0069 00       		.byte	0
+ 2643 006a 09       		.uleb128 0x9
+ 2644 006b 0D       		.uleb128 0xd
+ 2645 006c 00       		.byte	0
+ 2646 006d 03       		.uleb128 0x3
+ 2647 006e 0E       		.uleb128 0xe
+ 2648 006f 3A       		.uleb128 0x3a
+ 2649 0070 0B       		.uleb128 0xb
+ 2650 0071 3B       		.uleb128 0x3b
+ 2651 0072 05       		.uleb128 0x5
+ 2652 0073 49       		.uleb128 0x49
+ 2653 0074 13       		.uleb128 0x13
+ 2654 0075 38       		.uleb128 0x38
+ 2655 0076 0B       		.uleb128 0xb
+ 2656 0077 00       		.byte	0
+ 2657 0078 00       		.byte	0
+ 2658 0079 0A       		.uleb128 0xa
+ 2659 007a 0F       		.uleb128 0xf
+ 2660 007b 00       		.byte	0
+ 2661 007c 0B       		.uleb128 0xb
+ 2662 007d 0B       		.uleb128 0xb
+ 2663 007e 49       		.uleb128 0x49
+ 2664 007f 13       		.uleb128 0x13
+ 2665 0080 00       		.byte	0
+ 2666 0081 00       		.byte	0
+ 2667 0082 0B       		.uleb128 0xb
+ 2668 0083 13       		.uleb128 0x13
+ 2669 0084 01       		.byte	0x1
+ 2670 0085 03       		.uleb128 0x3
+ 2671 0086 0E       		.uleb128 0xe
+ 2672 0087 0B       		.uleb128 0xb
+ 2673 0088 0B       		.uleb128 0xb
+ 2674 0089 3A       		.uleb128 0x3a
+ 2675 008a 0B       		.uleb128 0xb
+ 2676 008b 3B       		.uleb128 0x3b
+ 2677 008c 05       		.uleb128 0x5
+ 2678 008d 01       		.uleb128 0x1
+ 2679 008e 13       		.uleb128 0x13
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 48
+
+
+ 2680 008f 00       		.byte	0
+ 2681 0090 00       		.byte	0
+ 2682 0091 0C       		.uleb128 0xc
+ 2683 0092 15       		.uleb128 0x15
+ 2684 0093 01       		.byte	0x1
+ 2685 0094 27       		.uleb128 0x27
+ 2686 0095 19       		.uleb128 0x19
+ 2687 0096 01       		.uleb128 0x1
+ 2688 0097 13       		.uleb128 0x13
+ 2689 0098 00       		.byte	0
+ 2690 0099 00       		.byte	0
+ 2691 009a 0D       		.uleb128 0xd
+ 2692 009b 05       		.uleb128 0x5
+ 2693 009c 00       		.byte	0
+ 2694 009d 49       		.uleb128 0x49
+ 2695 009e 13       		.uleb128 0x13
+ 2696 009f 00       		.byte	0
+ 2697 00a0 00       		.byte	0
+ 2698 00a1 0E       		.uleb128 0xe
+ 2699 00a2 0F       		.uleb128 0xf
+ 2700 00a3 00       		.byte	0
+ 2701 00a4 0B       		.uleb128 0xb
+ 2702 00a5 0B       		.uleb128 0xb
+ 2703 00a6 00       		.byte	0
+ 2704 00a7 00       		.byte	0
+ 2705 00a8 0F       		.uleb128 0xf
+ 2706 00a9 13       		.uleb128 0x13
+ 2707 00aa 01       		.byte	0x1
+ 2708 00ab 03       		.uleb128 0x3
+ 2709 00ac 0E       		.uleb128 0xe
+ 2710 00ad 0B       		.uleb128 0xb
+ 2711 00ae 05       		.uleb128 0x5
+ 2712 00af 3A       		.uleb128 0x3a
+ 2713 00b0 0B       		.uleb128 0xb
+ 2714 00b1 3B       		.uleb128 0x3b
+ 2715 00b2 05       		.uleb128 0x5
+ 2716 00b3 01       		.uleb128 0x1
+ 2717 00b4 13       		.uleb128 0x13
+ 2718 00b5 00       		.byte	0
+ 2719 00b6 00       		.byte	0
+ 2720 00b7 10       		.uleb128 0x10
+ 2721 00b8 01       		.uleb128 0x1
+ 2722 00b9 01       		.byte	0x1
+ 2723 00ba 49       		.uleb128 0x49
+ 2724 00bb 13       		.uleb128 0x13
+ 2725 00bc 01       		.uleb128 0x1
+ 2726 00bd 13       		.uleb128 0x13
+ 2727 00be 00       		.byte	0
+ 2728 00bf 00       		.byte	0
+ 2729 00c0 11       		.uleb128 0x11
+ 2730 00c1 21       		.uleb128 0x21
+ 2731 00c2 00       		.byte	0
+ 2732 00c3 49       		.uleb128 0x49
+ 2733 00c4 13       		.uleb128 0x13
+ 2734 00c5 2F       		.uleb128 0x2f
+ 2735 00c6 0B       		.uleb128 0xb
+ 2736 00c7 00       		.byte	0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 49
+
+
+ 2737 00c8 00       		.byte	0
+ 2738 00c9 12       		.uleb128 0x12
+ 2739 00ca 0D       		.uleb128 0xd
+ 2740 00cb 00       		.byte	0
+ 2741 00cc 03       		.uleb128 0x3
+ 2742 00cd 08       		.uleb128 0x8
+ 2743 00ce 3A       		.uleb128 0x3a
+ 2744 00cf 0B       		.uleb128 0xb
+ 2745 00d0 3B       		.uleb128 0x3b
+ 2746 00d1 0B       		.uleb128 0xb
+ 2747 00d2 49       		.uleb128 0x49
+ 2748 00d3 13       		.uleb128 0x13
+ 2749 00d4 38       		.uleb128 0x38
+ 2750 00d5 0B       		.uleb128 0xb
+ 2751 00d6 00       		.byte	0
+ 2752 00d7 00       		.byte	0
+ 2753 00d8 13       		.uleb128 0x13
+ 2754 00d9 13       		.uleb128 0x13
+ 2755 00da 01       		.byte	0x1
+ 2756 00db 0B       		.uleb128 0xb
+ 2757 00dc 0B       		.uleb128 0xb
+ 2758 00dd 3A       		.uleb128 0x3a
+ 2759 00de 0B       		.uleb128 0xb
+ 2760 00df 3B       		.uleb128 0x3b
+ 2761 00e0 0B       		.uleb128 0xb
+ 2762 00e1 01       		.uleb128 0x1
+ 2763 00e2 13       		.uleb128 0x13
+ 2764 00e3 00       		.byte	0
+ 2765 00e4 00       		.byte	0
+ 2766 00e5 14       		.uleb128 0x14
+ 2767 00e6 17       		.uleb128 0x17
+ 2768 00e7 01       		.byte	0x1
+ 2769 00e8 0B       		.uleb128 0xb
+ 2770 00e9 0B       		.uleb128 0xb
+ 2771 00ea 3A       		.uleb128 0x3a
+ 2772 00eb 0B       		.uleb128 0xb
+ 2773 00ec 3B       		.uleb128 0x3b
+ 2774 00ed 0B       		.uleb128 0xb
+ 2775 00ee 01       		.uleb128 0x1
+ 2776 00ef 13       		.uleb128 0x13
+ 2777 00f0 00       		.byte	0
+ 2778 00f1 00       		.byte	0
+ 2779 00f2 15       		.uleb128 0x15
+ 2780 00f3 0D       		.uleb128 0xd
+ 2781 00f4 00       		.byte	0
+ 2782 00f5 03       		.uleb128 0x3
+ 2783 00f6 0E       		.uleb128 0xe
+ 2784 00f7 3A       		.uleb128 0x3a
+ 2785 00f8 0B       		.uleb128 0xb
+ 2786 00f9 3B       		.uleb128 0x3b
+ 2787 00fa 05       		.uleb128 0x5
+ 2788 00fb 49       		.uleb128 0x49
+ 2789 00fc 13       		.uleb128 0x13
+ 2790 00fd 00       		.byte	0
+ 2791 00fe 00       		.byte	0
+ 2792 00ff 16       		.uleb128 0x16
+ 2793 0100 26       		.uleb128 0x26
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 50
+
+
+ 2794 0101 00       		.byte	0
+ 2795 0102 49       		.uleb128 0x49
+ 2796 0103 13       		.uleb128 0x13
+ 2797 0104 00       		.byte	0
+ 2798 0105 00       		.byte	0
+ 2799 0106 17       		.uleb128 0x17
+ 2800 0107 0D       		.uleb128 0xd
+ 2801 0108 00       		.byte	0
+ 2802 0109 03       		.uleb128 0x3
+ 2803 010a 08       		.uleb128 0x8
+ 2804 010b 3A       		.uleb128 0x3a
+ 2805 010c 0B       		.uleb128 0xb
+ 2806 010d 3B       		.uleb128 0x3b
+ 2807 010e 0B       		.uleb128 0xb
+ 2808 010f 49       		.uleb128 0x49
+ 2809 0110 13       		.uleb128 0x13
+ 2810 0111 00       		.byte	0
+ 2811 0112 00       		.byte	0
+ 2812 0113 18       		.uleb128 0x18
+ 2813 0114 16       		.uleb128 0x16
+ 2814 0115 00       		.byte	0
+ 2815 0116 03       		.uleb128 0x3
+ 2816 0117 0E       		.uleb128 0xe
+ 2817 0118 3A       		.uleb128 0x3a
+ 2818 0119 0B       		.uleb128 0xb
+ 2819 011a 3B       		.uleb128 0x3b
+ 2820 011b 05       		.uleb128 0x5
+ 2821 011c 49       		.uleb128 0x49
+ 2822 011d 13       		.uleb128 0x13
+ 2823 011e 00       		.byte	0
+ 2824 011f 00       		.byte	0
+ 2825 0120 19       		.uleb128 0x19
+ 2826 0121 04       		.uleb128 0x4
+ 2827 0122 01       		.byte	0x1
+ 2828 0123 0B       		.uleb128 0xb
+ 2829 0124 0B       		.uleb128 0xb
+ 2830 0125 49       		.uleb128 0x49
+ 2831 0126 13       		.uleb128 0x13
+ 2832 0127 3A       		.uleb128 0x3a
+ 2833 0128 0B       		.uleb128 0xb
+ 2834 0129 3B       		.uleb128 0x3b
+ 2835 012a 0B       		.uleb128 0xb
+ 2836 012b 01       		.uleb128 0x1
+ 2837 012c 13       		.uleb128 0x13
+ 2838 012d 00       		.byte	0
+ 2839 012e 00       		.byte	0
+ 2840 012f 1A       		.uleb128 0x1a
+ 2841 0130 28       		.uleb128 0x28
+ 2842 0131 00       		.byte	0
+ 2843 0132 03       		.uleb128 0x3
+ 2844 0133 0E       		.uleb128 0xe
+ 2845 0134 1C       		.uleb128 0x1c
+ 2846 0135 0B       		.uleb128 0xb
+ 2847 0136 00       		.byte	0
+ 2848 0137 00       		.byte	0
+ 2849 0138 1B       		.uleb128 0x1b
+ 2850 0139 13       		.uleb128 0x13
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 51
+
+
+ 2851 013a 01       		.byte	0x1
+ 2852 013b 0B       		.uleb128 0xb
+ 2853 013c 0B       		.uleb128 0xb
+ 2854 013d 3A       		.uleb128 0x3a
+ 2855 013e 0B       		.uleb128 0xb
+ 2856 013f 3B       		.uleb128 0x3b
+ 2857 0140 05       		.uleb128 0x5
+ 2858 0141 01       		.uleb128 0x1
+ 2859 0142 13       		.uleb128 0x13
+ 2860 0143 00       		.byte	0
+ 2861 0144 00       		.byte	0
+ 2862 0145 1C       		.uleb128 0x1c
+ 2863 0146 2E       		.uleb128 0x2e
+ 2864 0147 01       		.byte	0x1
+ 2865 0148 03       		.uleb128 0x3
+ 2866 0149 0E       		.uleb128 0xe
+ 2867 014a 3A       		.uleb128 0x3a
+ 2868 014b 0B       		.uleb128 0xb
+ 2869 014c 3B       		.uleb128 0x3b
+ 2870 014d 05       		.uleb128 0x5
+ 2871 014e 27       		.uleb128 0x27
+ 2872 014f 19       		.uleb128 0x19
+ 2873 0150 20       		.uleb128 0x20
+ 2874 0151 0B       		.uleb128 0xb
+ 2875 0152 01       		.uleb128 0x1
+ 2876 0153 13       		.uleb128 0x13
+ 2877 0154 00       		.byte	0
+ 2878 0155 00       		.byte	0
+ 2879 0156 1D       		.uleb128 0x1d
+ 2880 0157 05       		.uleb128 0x5
+ 2881 0158 00       		.byte	0
+ 2882 0159 03       		.uleb128 0x3
+ 2883 015a 0E       		.uleb128 0xe
+ 2884 015b 3A       		.uleb128 0x3a
+ 2885 015c 0B       		.uleb128 0xb
+ 2886 015d 3B       		.uleb128 0x3b
+ 2887 015e 05       		.uleb128 0x5
+ 2888 015f 49       		.uleb128 0x49
+ 2889 0160 13       		.uleb128 0x13
+ 2890 0161 00       		.byte	0
+ 2891 0162 00       		.byte	0
+ 2892 0163 1E       		.uleb128 0x1e
+ 2893 0164 2E       		.uleb128 0x2e
+ 2894 0165 00       		.byte	0
+ 2895 0166 03       		.uleb128 0x3
+ 2896 0167 0E       		.uleb128 0xe
+ 2897 0168 3A       		.uleb128 0x3a
+ 2898 0169 0B       		.uleb128 0xb
+ 2899 016a 3B       		.uleb128 0x3b
+ 2900 016b 05       		.uleb128 0x5
+ 2901 016c 27       		.uleb128 0x27
+ 2902 016d 19       		.uleb128 0x19
+ 2903 016e 20       		.uleb128 0x20
+ 2904 016f 0B       		.uleb128 0xb
+ 2905 0170 00       		.byte	0
+ 2906 0171 00       		.byte	0
+ 2907 0172 1F       		.uleb128 0x1f
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 52
+
+
+ 2908 0173 34       		.uleb128 0x34
+ 2909 0174 00       		.byte	0
+ 2910 0175 03       		.uleb128 0x3
+ 2911 0176 0E       		.uleb128 0xe
+ 2912 0177 49       		.uleb128 0x49
+ 2913 0178 13       		.uleb128 0x13
+ 2914 0179 34       		.uleb128 0x34
+ 2915 017a 19       		.uleb128 0x19
+ 2916 017b 1C       		.uleb128 0x1c
+ 2917 017c 0E       		.uleb128 0xe
+ 2918 017d 00       		.byte	0
+ 2919 017e 00       		.byte	0
+ 2920 017f 20       		.uleb128 0x20
+ 2921 0180 2E       		.uleb128 0x2e
+ 2922 0181 00       		.byte	0
+ 2923 0182 03       		.uleb128 0x3
+ 2924 0183 0E       		.uleb128 0xe
+ 2925 0184 3A       		.uleb128 0x3a
+ 2926 0185 0B       		.uleb128 0xb
+ 2927 0186 3B       		.uleb128 0x3b
+ 2928 0187 0B       		.uleb128 0xb
+ 2929 0188 27       		.uleb128 0x27
+ 2930 0189 19       		.uleb128 0x19
+ 2931 018a 49       		.uleb128 0x49
+ 2932 018b 13       		.uleb128 0x13
+ 2933 018c 20       		.uleb128 0x20
+ 2934 018d 0B       		.uleb128 0xb
+ 2935 018e 00       		.byte	0
+ 2936 018f 00       		.byte	0
+ 2937 0190 21       		.uleb128 0x21
+ 2938 0191 2E       		.uleb128 0x2e
+ 2939 0192 01       		.byte	0x1
+ 2940 0193 03       		.uleb128 0x3
+ 2941 0194 0E       		.uleb128 0xe
+ 2942 0195 3A       		.uleb128 0x3a
+ 2943 0196 0B       		.uleb128 0xb
+ 2944 0197 3B       		.uleb128 0x3b
+ 2945 0198 0B       		.uleb128 0xb
+ 2946 0199 27       		.uleb128 0x27
+ 2947 019a 19       		.uleb128 0x19
+ 2948 019b 49       		.uleb128 0x49
+ 2949 019c 13       		.uleb128 0x13
+ 2950 019d 20       		.uleb128 0x20
+ 2951 019e 0B       		.uleb128 0xb
+ 2952 019f 01       		.uleb128 0x1
+ 2953 01a0 13       		.uleb128 0x13
+ 2954 01a1 00       		.byte	0
+ 2955 01a2 00       		.byte	0
+ 2956 01a3 22       		.uleb128 0x22
+ 2957 01a4 34       		.uleb128 0x34
+ 2958 01a5 00       		.byte	0
+ 2959 01a6 03       		.uleb128 0x3
+ 2960 01a7 0E       		.uleb128 0xe
+ 2961 01a8 3A       		.uleb128 0x3a
+ 2962 01a9 0B       		.uleb128 0xb
+ 2963 01aa 3B       		.uleb128 0x3b
+ 2964 01ab 0B       		.uleb128 0xb
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 53
+
+
+ 2965 01ac 49       		.uleb128 0x49
+ 2966 01ad 13       		.uleb128 0x13
+ 2967 01ae 00       		.byte	0
+ 2968 01af 00       		.byte	0
+ 2969 01b0 23       		.uleb128 0x23
+ 2970 01b1 2E       		.uleb128 0x2e
+ 2971 01b2 01       		.byte	0x1
+ 2972 01b3 03       		.uleb128 0x3
+ 2973 01b4 0E       		.uleb128 0xe
+ 2974 01b5 3A       		.uleb128 0x3a
+ 2975 01b6 0B       		.uleb128 0xb
+ 2976 01b7 3B       		.uleb128 0x3b
+ 2977 01b8 05       		.uleb128 0x5
+ 2978 01b9 27       		.uleb128 0x27
+ 2979 01ba 19       		.uleb128 0x19
+ 2980 01bb 49       		.uleb128 0x49
+ 2981 01bc 13       		.uleb128 0x13
+ 2982 01bd 20       		.uleb128 0x20
+ 2983 01be 0B       		.uleb128 0xb
+ 2984 01bf 01       		.uleb128 0x1
+ 2985 01c0 13       		.uleb128 0x13
+ 2986 01c1 00       		.byte	0
+ 2987 01c2 00       		.byte	0
+ 2988 01c3 24       		.uleb128 0x24
+ 2989 01c4 2E       		.uleb128 0x2e
+ 2990 01c5 01       		.byte	0x1
+ 2991 01c6 03       		.uleb128 0x3
+ 2992 01c7 0E       		.uleb128 0xe
+ 2993 01c8 3A       		.uleb128 0x3a
+ 2994 01c9 0B       		.uleb128 0xb
+ 2995 01ca 3B       		.uleb128 0x3b
+ 2996 01cb 0B       		.uleb128 0xb
+ 2997 01cc 27       		.uleb128 0x27
+ 2998 01cd 19       		.uleb128 0x19
+ 2999 01ce 11       		.uleb128 0x11
+ 3000 01cf 01       		.uleb128 0x1
+ 3001 01d0 12       		.uleb128 0x12
+ 3002 01d1 06       		.uleb128 0x6
+ 3003 01d2 40       		.uleb128 0x40
+ 3004 01d3 18       		.uleb128 0x18
+ 3005 01d4 9742     		.uleb128 0x2117
+ 3006 01d6 19       		.uleb128 0x19
+ 3007 01d7 01       		.uleb128 0x1
+ 3008 01d8 13       		.uleb128 0x13
+ 3009 01d9 00       		.byte	0
+ 3010 01da 00       		.byte	0
+ 3011 01db 25       		.uleb128 0x25
+ 3012 01dc 05       		.uleb128 0x5
+ 3013 01dd 00       		.byte	0
+ 3014 01de 03       		.uleb128 0x3
+ 3015 01df 0E       		.uleb128 0xe
+ 3016 01e0 3A       		.uleb128 0x3a
+ 3017 01e1 0B       		.uleb128 0xb
+ 3018 01e2 3B       		.uleb128 0x3b
+ 3019 01e3 0B       		.uleb128 0xb
+ 3020 01e4 49       		.uleb128 0x49
+ 3021 01e5 13       		.uleb128 0x13
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 54
+
+
+ 3022 01e6 02       		.uleb128 0x2
+ 3023 01e7 18       		.uleb128 0x18
+ 3024 01e8 00       		.byte	0
+ 3025 01e9 00       		.byte	0
+ 3026 01ea 26       		.uleb128 0x26
+ 3027 01eb 2E       		.uleb128 0x2e
+ 3028 01ec 01       		.byte	0x1
+ 3029 01ed 03       		.uleb128 0x3
+ 3030 01ee 0E       		.uleb128 0xe
+ 3031 01ef 3A       		.uleb128 0x3a
+ 3032 01f0 0B       		.uleb128 0xb
+ 3033 01f1 3B       		.uleb128 0x3b
+ 3034 01f2 0B       		.uleb128 0xb
+ 3035 01f3 27       		.uleb128 0x27
+ 3036 01f4 19       		.uleb128 0x19
+ 3037 01f5 11       		.uleb128 0x11
+ 3038 01f6 01       		.uleb128 0x1
+ 3039 01f7 12       		.uleb128 0x12
+ 3040 01f8 06       		.uleb128 0x6
+ 3041 01f9 40       		.uleb128 0x40
+ 3042 01fa 18       		.uleb128 0x18
+ 3043 01fb 01       		.uleb128 0x1
+ 3044 01fc 13       		.uleb128 0x13
+ 3045 01fd 00       		.byte	0
+ 3046 01fe 00       		.byte	0
+ 3047 01ff 27       		.uleb128 0x27
+ 3048 0200 05       		.uleb128 0x5
+ 3049 0201 00       		.byte	0
+ 3050 0202 03       		.uleb128 0x3
+ 3051 0203 0E       		.uleb128 0xe
+ 3052 0204 3A       		.uleb128 0x3a
+ 3053 0205 0B       		.uleb128 0xb
+ 3054 0206 3B       		.uleb128 0x3b
+ 3055 0207 0B       		.uleb128 0xb
+ 3056 0208 49       		.uleb128 0x49
+ 3057 0209 13       		.uleb128 0x13
+ 3058 020a 02       		.uleb128 0x2
+ 3059 020b 17       		.uleb128 0x17
+ 3060 020c 00       		.byte	0
+ 3061 020d 00       		.byte	0
+ 3062 020e 28       		.uleb128 0x28
+ 3063 020f 34       		.uleb128 0x34
+ 3064 0210 00       		.byte	0
+ 3065 0211 03       		.uleb128 0x3
+ 3066 0212 08       		.uleb128 0x8
+ 3067 0213 3A       		.uleb128 0x3a
+ 3068 0214 0B       		.uleb128 0xb
+ 3069 0215 3B       		.uleb128 0x3b
+ 3070 0216 0B       		.uleb128 0xb
+ 3071 0217 49       		.uleb128 0x49
+ 3072 0218 13       		.uleb128 0x13
+ 3073 0219 02       		.uleb128 0x2
+ 3074 021a 17       		.uleb128 0x17
+ 3075 021b 00       		.byte	0
+ 3076 021c 00       		.byte	0
+ 3077 021d 29       		.uleb128 0x29
+ 3078 021e 34       		.uleb128 0x34
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 55
+
+
+ 3079 021f 00       		.byte	0
+ 3080 0220 03       		.uleb128 0x3
+ 3081 0221 0E       		.uleb128 0xe
+ 3082 0222 3A       		.uleb128 0x3a
+ 3083 0223 0B       		.uleb128 0xb
+ 3084 0224 3B       		.uleb128 0x3b
+ 3085 0225 0B       		.uleb128 0xb
+ 3086 0226 49       		.uleb128 0x49
+ 3087 0227 13       		.uleb128 0x13
+ 3088 0228 02       		.uleb128 0x2
+ 3089 0229 17       		.uleb128 0x17
+ 3090 022a 00       		.byte	0
+ 3091 022b 00       		.byte	0
+ 3092 022c 2A       		.uleb128 0x2a
+ 3093 022d 0B       		.uleb128 0xb
+ 3094 022e 01       		.byte	0x1
+ 3095 022f 55       		.uleb128 0x55
+ 3096 0230 17       		.uleb128 0x17
+ 3097 0231 01       		.uleb128 0x1
+ 3098 0232 13       		.uleb128 0x13
+ 3099 0233 00       		.byte	0
+ 3100 0234 00       		.byte	0
+ 3101 0235 2B       		.uleb128 0x2b
+ 3102 0236 34       		.uleb128 0x34
+ 3103 0237 00       		.byte	0
+ 3104 0238 03       		.uleb128 0x3
+ 3105 0239 08       		.uleb128 0x8
+ 3106 023a 3A       		.uleb128 0x3a
+ 3107 023b 0B       		.uleb128 0xb
+ 3108 023c 3B       		.uleb128 0x3b
+ 3109 023d 0B       		.uleb128 0xb
+ 3110 023e 49       		.uleb128 0x49
+ 3111 023f 13       		.uleb128 0x13
+ 3112 0240 02       		.uleb128 0x2
+ 3113 0241 18       		.uleb128 0x18
+ 3114 0242 00       		.byte	0
+ 3115 0243 00       		.byte	0
+ 3116 0244 2C       		.uleb128 0x2c
+ 3117 0245 898201   		.uleb128 0x4109
+ 3118 0248 01       		.byte	0x1
+ 3119 0249 11       		.uleb128 0x11
+ 3120 024a 01       		.uleb128 0x1
+ 3121 024b 31       		.uleb128 0x31
+ 3122 024c 13       		.uleb128 0x13
+ 3123 024d 00       		.byte	0
+ 3124 024e 00       		.byte	0
+ 3125 024f 2D       		.uleb128 0x2d
+ 3126 0250 8A8201   		.uleb128 0x410a
+ 3127 0253 00       		.byte	0
+ 3128 0254 02       		.uleb128 0x2
+ 3129 0255 18       		.uleb128 0x18
+ 3130 0256 9142     		.uleb128 0x2111
+ 3131 0258 18       		.uleb128 0x18
+ 3132 0259 00       		.byte	0
+ 3133 025a 00       		.byte	0
+ 3134 025b 2E       		.uleb128 0x2e
+ 3135 025c 1D       		.uleb128 0x1d
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 56
+
+
+ 3136 025d 01       		.byte	0x1
+ 3137 025e 31       		.uleb128 0x31
+ 3138 025f 13       		.uleb128 0x13
+ 3139 0260 11       		.uleb128 0x11
+ 3140 0261 01       		.uleb128 0x1
+ 3141 0262 12       		.uleb128 0x12
+ 3142 0263 06       		.uleb128 0x6
+ 3143 0264 58       		.uleb128 0x58
+ 3144 0265 0B       		.uleb128 0xb
+ 3145 0266 59       		.uleb128 0x59
+ 3146 0267 0B       		.uleb128 0xb
+ 3147 0268 00       		.byte	0
+ 3148 0269 00       		.byte	0
+ 3149 026a 2F       		.uleb128 0x2f
+ 3150 026b 0B       		.uleb128 0xb
+ 3151 026c 01       		.byte	0x1
+ 3152 026d 11       		.uleb128 0x11
+ 3153 026e 01       		.uleb128 0x1
+ 3154 026f 12       		.uleb128 0x12
+ 3155 0270 06       		.uleb128 0x6
+ 3156 0271 00       		.byte	0
+ 3157 0272 00       		.byte	0
+ 3158 0273 30       		.uleb128 0x30
+ 3159 0274 34       		.uleb128 0x34
+ 3160 0275 00       		.byte	0
+ 3161 0276 31       		.uleb128 0x31
+ 3162 0277 13       		.uleb128 0x13
+ 3163 0278 00       		.byte	0
+ 3164 0279 00       		.byte	0
+ 3165 027a 31       		.uleb128 0x31
+ 3166 027b 1D       		.uleb128 0x1d
+ 3167 027c 01       		.byte	0x1
+ 3168 027d 31       		.uleb128 0x31
+ 3169 027e 13       		.uleb128 0x13
+ 3170 027f 11       		.uleb128 0x11
+ 3171 0280 01       		.uleb128 0x1
+ 3172 0281 12       		.uleb128 0x12
+ 3173 0282 06       		.uleb128 0x6
+ 3174 0283 58       		.uleb128 0x58
+ 3175 0284 0B       		.uleb128 0xb
+ 3176 0285 59       		.uleb128 0x59
+ 3177 0286 0B       		.uleb128 0xb
+ 3178 0287 01       		.uleb128 0x1
+ 3179 0288 13       		.uleb128 0x13
+ 3180 0289 00       		.byte	0
+ 3181 028a 00       		.byte	0
+ 3182 028b 32       		.uleb128 0x32
+ 3183 028c 1D       		.uleb128 0x1d
+ 3184 028d 01       		.byte	0x1
+ 3185 028e 31       		.uleb128 0x31
+ 3186 028f 13       		.uleb128 0x13
+ 3187 0290 11       		.uleb128 0x11
+ 3188 0291 01       		.uleb128 0x1
+ 3189 0292 12       		.uleb128 0x12
+ 3190 0293 06       		.uleb128 0x6
+ 3191 0294 58       		.uleb128 0x58
+ 3192 0295 0B       		.uleb128 0xb
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 57
+
+
+ 3193 0296 59       		.uleb128 0x59
+ 3194 0297 05       		.uleb128 0x5
+ 3195 0298 00       		.byte	0
+ 3196 0299 00       		.byte	0
+ 3197 029a 33       		.uleb128 0x33
+ 3198 029b 05       		.uleb128 0x5
+ 3199 029c 00       		.byte	0
+ 3200 029d 31       		.uleb128 0x31
+ 3201 029e 13       		.uleb128 0x13
+ 3202 029f 02       		.uleb128 0x2
+ 3203 02a0 17       		.uleb128 0x17
+ 3204 02a1 00       		.byte	0
+ 3205 02a2 00       		.byte	0
+ 3206 02a3 34       		.uleb128 0x34
+ 3207 02a4 1D       		.uleb128 0x1d
+ 3208 02a5 00       		.byte	0
+ 3209 02a6 31       		.uleb128 0x31
+ 3210 02a7 13       		.uleb128 0x13
+ 3211 02a8 52       		.uleb128 0x52
+ 3212 02a9 01       		.uleb128 0x1
+ 3213 02aa 55       		.uleb128 0x55
+ 3214 02ab 17       		.uleb128 0x17
+ 3215 02ac 58       		.uleb128 0x58
+ 3216 02ad 0B       		.uleb128 0xb
+ 3217 02ae 59       		.uleb128 0x59
+ 3218 02af 0B       		.uleb128 0xb
+ 3219 02b0 00       		.byte	0
+ 3220 02b1 00       		.byte	0
+ 3221 02b2 35       		.uleb128 0x35
+ 3222 02b3 1D       		.uleb128 0x1d
+ 3223 02b4 01       		.byte	0x1
+ 3224 02b5 31       		.uleb128 0x31
+ 3225 02b6 13       		.uleb128 0x13
+ 3226 02b7 52       		.uleb128 0x52
+ 3227 02b8 01       		.uleb128 0x1
+ 3228 02b9 55       		.uleb128 0x55
+ 3229 02ba 17       		.uleb128 0x17
+ 3230 02bb 58       		.uleb128 0x58
+ 3231 02bc 0B       		.uleb128 0xb
+ 3232 02bd 59       		.uleb128 0x59
+ 3233 02be 0B       		.uleb128 0xb
+ 3234 02bf 00       		.byte	0
+ 3235 02c0 00       		.byte	0
+ 3236 02c1 36       		.uleb128 0x36
+ 3237 02c2 0B       		.uleb128 0xb
+ 3238 02c3 01       		.byte	0x1
+ 3239 02c4 55       		.uleb128 0x55
+ 3240 02c5 17       		.uleb128 0x17
+ 3241 02c6 00       		.byte	0
+ 3242 02c7 00       		.byte	0
+ 3243 02c8 37       		.uleb128 0x37
+ 3244 02c9 1D       		.uleb128 0x1d
+ 3245 02ca 01       		.byte	0x1
+ 3246 02cb 31       		.uleb128 0x31
+ 3247 02cc 13       		.uleb128 0x13
+ 3248 02cd 52       		.uleb128 0x52
+ 3249 02ce 01       		.uleb128 0x1
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 58
+
+
+ 3250 02cf 55       		.uleb128 0x55
+ 3251 02d0 17       		.uleb128 0x17
+ 3252 02d1 58       		.uleb128 0x58
+ 3253 02d2 0B       		.uleb128 0xb
+ 3254 02d3 59       		.uleb128 0x59
+ 3255 02d4 05       		.uleb128 0x5
+ 3256 02d5 00       		.byte	0
+ 3257 02d6 00       		.byte	0
+ 3258 02d7 38       		.uleb128 0x38
+ 3259 02d8 2E       		.uleb128 0x2e
+ 3260 02d9 01       		.byte	0x1
+ 3261 02da 3F       		.uleb128 0x3f
+ 3262 02db 19       		.uleb128 0x19
+ 3263 02dc 03       		.uleb128 0x3
+ 3264 02dd 0E       		.uleb128 0xe
+ 3265 02de 3A       		.uleb128 0x3a
+ 3266 02df 0B       		.uleb128 0xb
+ 3267 02e0 3B       		.uleb128 0x3b
+ 3268 02e1 0B       		.uleb128 0xb
+ 3269 02e2 27       		.uleb128 0x27
+ 3270 02e3 19       		.uleb128 0x19
+ 3271 02e4 11       		.uleb128 0x11
+ 3272 02e5 01       		.uleb128 0x1
+ 3273 02e6 12       		.uleb128 0x12
+ 3274 02e7 06       		.uleb128 0x6
+ 3275 02e8 40       		.uleb128 0x40
+ 3276 02e9 18       		.uleb128 0x18
+ 3277 02ea 9742     		.uleb128 0x2117
+ 3278 02ec 19       		.uleb128 0x19
+ 3279 02ed 01       		.uleb128 0x1
+ 3280 02ee 13       		.uleb128 0x13
+ 3281 02ef 00       		.byte	0
+ 3282 02f0 00       		.byte	0
+ 3283 02f1 39       		.uleb128 0x39
+ 3284 02f2 898201   		.uleb128 0x4109
+ 3285 02f5 01       		.byte	0x1
+ 3286 02f6 11       		.uleb128 0x11
+ 3287 02f7 01       		.uleb128 0x1
+ 3288 02f8 31       		.uleb128 0x31
+ 3289 02f9 13       		.uleb128 0x13
+ 3290 02fa 01       		.uleb128 0x1
+ 3291 02fb 13       		.uleb128 0x13
+ 3292 02fc 00       		.byte	0
+ 3293 02fd 00       		.byte	0
+ 3294 02fe 3A       		.uleb128 0x3a
+ 3295 02ff 15       		.uleb128 0x15
+ 3296 0300 00       		.byte	0
+ 3297 0301 27       		.uleb128 0x27
+ 3298 0302 19       		.uleb128 0x19
+ 3299 0303 00       		.byte	0
+ 3300 0304 00       		.byte	0
+ 3301 0305 3B       		.uleb128 0x3b
+ 3302 0306 05       		.uleb128 0x5
+ 3303 0307 00       		.byte	0
+ 3304 0308 03       		.uleb128 0x3
+ 3305 0309 08       		.uleb128 0x8
+ 3306 030a 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 59
+
+
+ 3307 030b 0B       		.uleb128 0xb
+ 3308 030c 3B       		.uleb128 0x3b
+ 3309 030d 0B       		.uleb128 0xb
+ 3310 030e 49       		.uleb128 0x49
+ 3311 030f 13       		.uleb128 0x13
+ 3312 0310 02       		.uleb128 0x2
+ 3313 0311 18       		.uleb128 0x18
+ 3314 0312 00       		.byte	0
+ 3315 0313 00       		.byte	0
+ 3316 0314 3C       		.uleb128 0x3c
+ 3317 0315 2E       		.uleb128 0x2e
+ 3318 0316 01       		.byte	0x1
+ 3319 0317 3F       		.uleb128 0x3f
+ 3320 0318 19       		.uleb128 0x19
+ 3321 0319 03       		.uleb128 0x3
+ 3322 031a 0E       		.uleb128 0xe
+ 3323 031b 3A       		.uleb128 0x3a
+ 3324 031c 0B       		.uleb128 0xb
+ 3325 031d 3B       		.uleb128 0x3b
+ 3326 031e 0B       		.uleb128 0xb
+ 3327 031f 27       		.uleb128 0x27
+ 3328 0320 19       		.uleb128 0x19
+ 3329 0321 49       		.uleb128 0x49
+ 3330 0322 13       		.uleb128 0x13
+ 3331 0323 11       		.uleb128 0x11
+ 3332 0324 01       		.uleb128 0x1
+ 3333 0325 12       		.uleb128 0x12
+ 3334 0326 06       		.uleb128 0x6
+ 3335 0327 40       		.uleb128 0x40
+ 3336 0328 18       		.uleb128 0x18
+ 3337 0329 9742     		.uleb128 0x2117
+ 3338 032b 19       		.uleb128 0x19
+ 3339 032c 01       		.uleb128 0x1
+ 3340 032d 13       		.uleb128 0x13
+ 3341 032e 00       		.byte	0
+ 3342 032f 00       		.byte	0
+ 3343 0330 3D       		.uleb128 0x3d
+ 3344 0331 1D       		.uleb128 0x1d
+ 3345 0332 00       		.byte	0
+ 3346 0333 31       		.uleb128 0x31
+ 3347 0334 13       		.uleb128 0x13
+ 3348 0335 52       		.uleb128 0x52
+ 3349 0336 01       		.uleb128 0x1
+ 3350 0337 55       		.uleb128 0x55
+ 3351 0338 17       		.uleb128 0x17
+ 3352 0339 58       		.uleb128 0x58
+ 3353 033a 0B       		.uleb128 0xb
+ 3354 033b 59       		.uleb128 0x59
+ 3355 033c 05       		.uleb128 0x5
+ 3356 033d 00       		.byte	0
+ 3357 033e 00       		.byte	0
+ 3358 033f 3E       		.uleb128 0x3e
+ 3359 0340 34       		.uleb128 0x34
+ 3360 0341 00       		.byte	0
+ 3361 0342 03       		.uleb128 0x3
+ 3362 0343 0E       		.uleb128 0xe
+ 3363 0344 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 60
+
+
+ 3364 0345 0B       		.uleb128 0xb
+ 3365 0346 3B       		.uleb128 0x3b
+ 3366 0347 0B       		.uleb128 0xb
+ 3367 0348 49       		.uleb128 0x49
+ 3368 0349 13       		.uleb128 0x13
+ 3369 034a 02       		.uleb128 0x2
+ 3370 034b 18       		.uleb128 0x18
+ 3371 034c 00       		.byte	0
+ 3372 034d 00       		.byte	0
+ 3373 034e 3F       		.uleb128 0x3f
+ 3374 034f 34       		.uleb128 0x34
+ 3375 0350 00       		.byte	0
+ 3376 0351 03       		.uleb128 0x3
+ 3377 0352 0E       		.uleb128 0xe
+ 3378 0353 3A       		.uleb128 0x3a
+ 3379 0354 0B       		.uleb128 0xb
+ 3380 0355 3B       		.uleb128 0x3b
+ 3381 0356 05       		.uleb128 0x5
+ 3382 0357 49       		.uleb128 0x49
+ 3383 0358 13       		.uleb128 0x13
+ 3384 0359 3F       		.uleb128 0x3f
+ 3385 035a 19       		.uleb128 0x19
+ 3386 035b 3C       		.uleb128 0x3c
+ 3387 035c 19       		.uleb128 0x19
+ 3388 035d 00       		.byte	0
+ 3389 035e 00       		.byte	0
+ 3390 035f 40       		.uleb128 0x40
+ 3391 0360 34       		.uleb128 0x34
+ 3392 0361 00       		.byte	0
+ 3393 0362 03       		.uleb128 0x3
+ 3394 0363 08       		.uleb128 0x8
+ 3395 0364 3A       		.uleb128 0x3a
+ 3396 0365 0B       		.uleb128 0xb
+ 3397 0366 3B       		.uleb128 0x3b
+ 3398 0367 05       		.uleb128 0x5
+ 3399 0368 49       		.uleb128 0x49
+ 3400 0369 13       		.uleb128 0x13
+ 3401 036a 3F       		.uleb128 0x3f
+ 3402 036b 19       		.uleb128 0x19
+ 3403 036c 3C       		.uleb128 0x3c
+ 3404 036d 19       		.uleb128 0x19
+ 3405 036e 00       		.byte	0
+ 3406 036f 00       		.byte	0
+ 3407 0370 41       		.uleb128 0x41
+ 3408 0371 2E       		.uleb128 0x2e
+ 3409 0372 00       		.byte	0
+ 3410 0373 3F       		.uleb128 0x3f
+ 3411 0374 19       		.uleb128 0x19
+ 3412 0375 3C       		.uleb128 0x3c
+ 3413 0376 19       		.uleb128 0x19
+ 3414 0377 6E       		.uleb128 0x6e
+ 3415 0378 0E       		.uleb128 0xe
+ 3416 0379 03       		.uleb128 0x3
+ 3417 037a 0E       		.uleb128 0xe
+ 3418 037b 3A       		.uleb128 0x3a
+ 3419 037c 0B       		.uleb128 0xb
+ 3420 037d 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 61
+
+
+ 3421 037e 0B       		.uleb128 0xb
+ 3422 037f 00       		.byte	0
+ 3423 0380 00       		.byte	0
+ 3424 0381 42       		.uleb128 0x42
+ 3425 0382 2E       		.uleb128 0x2e
+ 3426 0383 00       		.byte	0
+ 3427 0384 3F       		.uleb128 0x3f
+ 3428 0385 19       		.uleb128 0x19
+ 3429 0386 3C       		.uleb128 0x3c
+ 3430 0387 19       		.uleb128 0x19
+ 3431 0388 6E       		.uleb128 0x6e
+ 3432 0389 0E       		.uleb128 0xe
+ 3433 038a 03       		.uleb128 0x3
+ 3434 038b 0E       		.uleb128 0xe
+ 3435 038c 3A       		.uleb128 0x3a
+ 3436 038d 0B       		.uleb128 0xb
+ 3437 038e 3B       		.uleb128 0x3b
+ 3438 038f 05       		.uleb128 0x5
+ 3439 0390 00       		.byte	0
+ 3440 0391 00       		.byte	0
+ 3441 0392 00       		.byte	0
+ 3442              		.section	.debug_loc,"",%progbits
+ 3443              	.Ldebug_loc0:
+ 3444              	.LLST0:
+ 3445 0000 00000000 		.4byte	.LVL1
+ 3446 0004 0E000000 		.4byte	.LVL2
+ 3447 0008 0100     		.2byte	0x1
+ 3448 000a 50       		.byte	0x50
+ 3449 000b 0E000000 		.4byte	.LVL2
+ 3450 000f 38010000 		.4byte	.LFE256
+ 3451 0013 0400     		.2byte	0x4
+ 3452 0015 F3       		.byte	0xf3
+ 3453 0016 01       		.uleb128 0x1
+ 3454 0017 50       		.byte	0x50
+ 3455 0018 9F       		.byte	0x9f
+ 3456 0019 00000000 		.4byte	0
+ 3457 001d 00000000 		.4byte	0
+ 3458              	.LLST1:
+ 3459 0021 3A000000 		.4byte	.LVL3
+ 3460 0025 6C000000 		.4byte	.LVL6
+ 3461 0029 0200     		.2byte	0x2
+ 3462 002b 90       		.byte	0x90
+ 3463 002c 4F       		.uleb128 0x4f
+ 3464 002d A4000000 		.4byte	.LVL11
+ 3465 0031 BE000000 		.4byte	.LVL12
+ 3466 0035 0200     		.2byte	0x2
+ 3467 0037 90       		.byte	0x90
+ 3468 0038 4F       		.uleb128 0x4f
+ 3469 0039 00000000 		.4byte	0
+ 3470 003d 00000000 		.4byte	0
+ 3471              	.LLST2:
+ 3472 0041 3E000000 		.4byte	.LVL4
+ 3473 0045 80000000 		.4byte	.LVL7
+ 3474 0049 0200     		.2byte	0x2
+ 3475 004b 90       		.byte	0x90
+ 3476 004c 4E       		.uleb128 0x4e
+ 3477 004d A4000000 		.4byte	.LVL11
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 62
+
+
+ 3478 0051 D2000000 		.4byte	.LVL13
+ 3479 0055 0200     		.2byte	0x2
+ 3480 0057 90       		.byte	0x90
+ 3481 0058 4E       		.uleb128 0x4e
+ 3482 0059 D8000000 		.4byte	.LVL14
+ 3483 005d EF000000 		.4byte	.LVL16-1
+ 3484 0061 0200     		.2byte	0x2
+ 3485 0063 90       		.byte	0x90
+ 3486 0064 4E       		.uleb128 0x4e
+ 3487 0065 00000000 		.4byte	0
+ 3488 0069 00000000 		.4byte	0
+ 3489              	.LLST3:
+ 3490 006d 80000000 		.4byte	.LVL7
+ 3491 0071 86000000 		.4byte	.LVL8
+ 3492 0075 0300     		.2byte	0x3
+ 3493 0077 08       		.byte	0x8
+ 3494 0078 20       		.byte	0x20
+ 3495 0079 9F       		.byte	0x9f
+ 3496 007a 00000000 		.4byte	0
+ 3497 007e 00000000 		.4byte	0
+ 3498              	.LLST4:
+ 3499 0082 8C000000 		.4byte	.LVL9
+ 3500 0086 90000000 		.4byte	.LVL10
+ 3501 008a 0200     		.2byte	0x2
+ 3502 008c 30       		.byte	0x30
+ 3503 008d 9F       		.byte	0x9f
+ 3504 008e 00000000 		.4byte	0
+ 3505 0092 00000000 		.4byte	0
+ 3506              	.LLST5:
+ 3507 0096 00000000 		.4byte	.LVL17
+ 3508 009a 0A000000 		.4byte	.LVL18
+ 3509 009e 0100     		.2byte	0x1
+ 3510 00a0 50       		.byte	0x50
+ 3511 00a1 0A000000 		.4byte	.LVL18
+ 3512 00a5 36000000 		.4byte	.LVL24
+ 3513 00a9 0100     		.2byte	0x1
+ 3514 00ab 55       		.byte	0x55
+ 3515 00ac 36000000 		.4byte	.LVL24
+ 3516 00b0 50000000 		.4byte	.LFE258
+ 3517 00b4 0500     		.2byte	0x5
+ 3518 00b6 03       		.byte	0x3
+ 3519 00b7 00000000 		.4byte	done_func
+ 3520 00bb 00000000 		.4byte	0
+ 3521 00bf 00000000 		.4byte	0
+ 3522              	.LLST6:
+ 3523 00c3 26000000 		.4byte	.LVL22
+ 3524 00c7 34000000 		.4byte	.LVL23
+ 3525 00cb 0200     		.2byte	0x2
+ 3526 00cd 30       		.byte	0x30
+ 3527 00ce 9F       		.byte	0x9f
+ 3528 00cf 34000000 		.4byte	.LVL23
+ 3529 00d3 50000000 		.4byte	.LFE258
+ 3530 00d7 0200     		.2byte	0x2
+ 3531 00d9 31       		.byte	0x31
+ 3532 00da 9F       		.byte	0x9f
+ 3533 00db 00000000 		.4byte	0
+ 3534 00df 00000000 		.4byte	0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 63
+
+
+ 3535              	.LLST7:
+ 3536 00e3 00000000 		.4byte	.LVL26
+ 3537 00e7 0A000000 		.4byte	.LVL27
+ 3538 00eb 0100     		.2byte	0x1
+ 3539 00ed 50       		.byte	0x50
+ 3540 00ee 0A000000 		.4byte	.LVL27
+ 3541 00f2 1C000000 		.4byte	.LFE260
+ 3542 00f6 0400     		.2byte	0x4
+ 3543 00f8 F3       		.byte	0xf3
+ 3544 00f9 01       		.uleb128 0x1
+ 3545 00fa 50       		.byte	0x50
+ 3546 00fb 9F       		.byte	0x9f
+ 3547 00fc 00000000 		.4byte	0
+ 3548 0100 00000000 		.4byte	0
+ 3549              	.LLST8:
+ 3550 0104 06000000 		.4byte	.LVL28
+ 3551 0108 08000000 		.4byte	.LVL29
+ 3552 010c 0100     		.2byte	0x1
+ 3553 010e 50       		.byte	0x50
+ 3554 010f 00000000 		.4byte	0
+ 3555 0113 00000000 		.4byte	0
+ 3556              	.LLST9:
+ 3557 0117 00000000 		.4byte	.LVL30
+ 3558 011b 0A000000 		.4byte	.LVL31
+ 3559 011f 0100     		.2byte	0x1
+ 3560 0121 50       		.byte	0x50
+ 3561 0122 0A000000 		.4byte	.LVL31
+ 3562 0126 1C000000 		.4byte	.LFE262
+ 3563 012a 0400     		.2byte	0x4
+ 3564 012c F3       		.byte	0xf3
+ 3565 012d 01       		.uleb128 0x1
+ 3566 012e 50       		.byte	0x50
+ 3567 012f 9F       		.byte	0x9f
+ 3568 0130 00000000 		.4byte	0
+ 3569 0134 00000000 		.4byte	0
+ 3570              		.section	.debug_aranges,"",%progbits
+ 3571 0000 4C000000 		.4byte	0x4c
+ 3572 0004 0200     		.2byte	0x2
+ 3573 0006 00000000 		.4byte	.Ldebug_info0
+ 3574 000a 04       		.byte	0x4
+ 3575 000b 00       		.byte	0
+ 3576 000c 0000     		.2byte	0
+ 3577 000e 0000     		.2byte	0
+ 3578 0010 00000000 		.4byte	.LFB257
+ 3579 0014 02000000 		.4byte	.LFE257-.LFB257
+ 3580 0018 00000000 		.4byte	.LFB256
+ 3581 001c 38010000 		.4byte	.LFE256-.LFB256
+ 3582 0020 00000000 		.4byte	.LFB258
+ 3583 0024 50000000 		.4byte	.LFE258-.LFB258
+ 3584 0028 00000000 		.4byte	.LFB259
+ 3585 002c 20000000 		.4byte	.LFE259-.LFB259
+ 3586 0030 00000000 		.4byte	.LFB260
+ 3587 0034 1C000000 		.4byte	.LFE260-.LFB260
+ 3588 0038 00000000 		.4byte	.LFB261
+ 3589 003c 20000000 		.4byte	.LFE261-.LFB261
+ 3590 0040 00000000 		.4byte	.LFB262
+ 3591 0044 1C000000 		.4byte	.LFE262-.LFB262
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 64
+
+
+ 3592 0048 00000000 		.4byte	0
+ 3593 004c 00000000 		.4byte	0
+ 3594              		.section	.debug_ranges,"",%progbits
+ 3595              	.Ldebug_ranges0:
+ 3596 0000 70000000 		.4byte	.LBB46
+ 3597 0004 74000000 		.4byte	.LBE46
+ 3598 0008 D8000000 		.4byte	.LBB67
+ 3599 000c FE000000 		.4byte	.LBE67
+ 3600 0010 00000000 		.4byte	0
+ 3601 0014 00000000 		.4byte	0
+ 3602 0018 86000000 		.4byte	.LBB53
+ 3603 001c 88000000 		.4byte	.LBE53
+ 3604 0020 8A000000 		.4byte	.LBB65
+ 3605 0024 8C000000 		.4byte	.LBE65
+ 3606 0028 00000000 		.4byte	0
+ 3607 002c 00000000 		.4byte	0
+ 3608 0030 88000000 		.4byte	.LBB56
+ 3609 0034 8A000000 		.4byte	.LBE56
+ 3610 0038 8C000000 		.4byte	.LBB66
+ 3611 003c 90000000 		.4byte	.LBE66
+ 3612 0040 00000000 		.4byte	0
+ 3613 0044 00000000 		.4byte	0
+ 3614 0048 28000000 		.4byte	.LBB68
+ 3615 004c 2C000000 		.4byte	.LBE68
+ 3616 0050 2E000000 		.4byte	.LBB69
+ 3617 0054 50000000 		.4byte	.LBE69
+ 3618 0058 00000000 		.4byte	0
+ 3619 005c 00000000 		.4byte	0
+ 3620 0060 02000000 		.4byte	.LBB70
+ 3621 0064 04000000 		.4byte	.LBE70
+ 3622 0068 06000000 		.4byte	.LBB77
+ 3623 006c 08000000 		.4byte	.LBE77
+ 3624 0070 00000000 		.4byte	0
+ 3625 0074 00000000 		.4byte	0
+ 3626 0078 02000000 		.4byte	.LBB72
+ 3627 007c 04000000 		.4byte	.LBE72
+ 3628 0080 06000000 		.4byte	.LBB75
+ 3629 0084 08000000 		.4byte	.LBE75
+ 3630 0088 00000000 		.4byte	0
+ 3631 008c 00000000 		.4byte	0
+ 3632 0090 00000000 		.4byte	.LFB257
+ 3633 0094 02000000 		.4byte	.LFE257
+ 3634 0098 00000000 		.4byte	.LFB256
+ 3635 009c 38010000 		.4byte	.LFE256
+ 3636 00a0 00000000 		.4byte	.LFB258
+ 3637 00a4 50000000 		.4byte	.LFE258
+ 3638 00a8 00000000 		.4byte	.LFB259
+ 3639 00ac 20000000 		.4byte	.LFE259
+ 3640 00b0 00000000 		.4byte	.LFB260
+ 3641 00b4 1C000000 		.4byte	.LFE260
+ 3642 00b8 00000000 		.4byte	.LFB261
+ 3643 00bc 20000000 		.4byte	.LFE261
+ 3644 00c0 00000000 		.4byte	.LFB262
+ 3645 00c4 1C000000 		.4byte	.LFE262
+ 3646 00c8 00000000 		.4byte	0
+ 3647 00cc 00000000 		.4byte	0
+ 3648              		.section	.debug_line,"",%progbits
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 65
+
+
+ 3649              	.Ldebug_line0:
+ 3650 0000 4B040000 		.section	.debug_str,"MS",%progbits,1
+ 3650      02005403 
+ 3650      00000201 
+ 3650      FB0E0D00 
+ 3650      01010101 
+ 3651              	.LASF55:
+ 3652 0000 74687265 		.ascii	"threads_queue_t\000"
+ 3652      6164735F 
+ 3652      71756575 
+ 3652      655F7400 
+ 3653              	.LASF97:
+ 3654 0010 77746D74 		.ascii	"wtmtxp\000"
+ 3654      787000
+ 3655              	.LASF91:
+ 3656 0017 746D5F63 		.ascii	"tm_calibration_t\000"
+ 3656      616C6962 
+ 3656      72617469 
+ 3656      6F6E5F74 
+ 3656      00
+ 3657              	.LASF43:
+ 3658 0028 705F7469 		.ascii	"p_time\000"
+ 3658      6D6500
+ 3659              	.LASF114:
+ 3660 002f 42535252 		.ascii	"BSRR\000"
+ 3660      00
+ 3661              	.LASF106:
+ 3662 0034 63686172 		.ascii	"char\000"
+ 3662      00
+ 3663              	.LASF86:
+ 3664 0039 72656761 		.ascii	"regarm_t\000"
+ 3664      726D5F74 
+ 3664      00
+ 3665              	.LASF34:
+ 3666 0042 705F7072 		.ascii	"p_prio\000"
+ 3666      696F00
+ 3667              	.LASF175:
+ 3668 0049 73657276 		.ascii	"servo_num\000"
+ 3668      6F5F6E75 
+ 3668      6D00
+ 3669              	.LASF123:
+ 3670 0053 4943555F 		.ascii	"ICU_WAITING\000"
+ 3670      57414954 
+ 3670      494E4700 
+ 3671              	.LASF30:
+ 3672 005f 73797374 		.ascii	"systime_t\000"
+ 3672      696D655F 
+ 3672      7400
+ 3673              	.LASF100:
+ 3674 0069 735F7175 		.ascii	"s_queue\000"
+ 3674      65756500 
+ 3675              	.LASF75:
+ 3676 0071 76745F73 		.ascii	"vt_systime\000"
+ 3676      79737469 
+ 3676      6D6500
+ 3677              	.LASF45:
+ 3678 007c 705F6D73 		.ascii	"p_msgqueue\000"
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 66
+
+
+ 3678      67717565 
+ 3678      756500
+ 3679              	.LASF14:
+ 3680 0087 756E7369 		.ascii	"unsigned int\000"
+ 3680      676E6564 
+ 3680      20696E74 
+ 3680      00
+ 3681              	.LASF191:
+ 3682 0094 5F70616C 		.ascii	"_pal_lld_setgroupmode\000"
+ 3682      5F6C6C64 
+ 3682      5F736574 
+ 3682      67726F75 
+ 3682      706D6F64 
+ 3683              	.LASF52:
+ 3684 00aa 74687265 		.ascii	"threads_list_t\000"
+ 3684      6164735F 
+ 3684      6C697374 
+ 3684      5F7400
+ 3685              	.LASF44:
+ 3686 00b9 705F7761 		.ascii	"p_waiting\000"
+ 3686      6974696E 
+ 3686      6700
+ 3687              	.LASF7:
+ 3688 00c3 5F5F696E 		.ascii	"__int32_t\000"
+ 3688      7433325F 
+ 3688      7400
+ 3689              	.LASF186:
+ 3690 00cd 69637563 		.ascii	"icucfg\000"
+ 3690      666700
+ 3691              	.LASF173:
+ 3692 00d4 73657276 		.ascii	"servodec_set_pulse_options\000"
+ 3692      6F646563 
+ 3692      5F736574 
+ 3692      5F70756C 
+ 3692      73655F6F 
+ 3693              	.LASF94:
+ 3694 00ef 77746F62 		.ascii	"wtobjp\000"
+ 3694      6A7000
+ 3695              	.LASF158:
+ 3696 00f6 706F7274 		.ascii	"port_lock\000"
+ 3696      5F6C6F63 
+ 3696      6B00
+ 3697              	.LASF82:
+ 3698 0100 76746C69 		.ascii	"vtlist\000"
+ 3698      737400
+ 3699              	.LASF84:
+ 3700 0107 69646C65 		.ascii	"idle_thread_wa\000"
+ 3700      5F746872 
+ 3700      6561645F 
+ 3700      776100
+ 3701              	.LASF98:
+ 3702 0116 65776D61 		.ascii	"ewmask\000"
+ 3702      736B00
+ 3703              	.LASF150:
+ 3704 011d 6D6F6465 		.ascii	"mode\000"
+ 3704      00
+ 3705              	.LASF58:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 67
+
+
+ 3706 0122 63685F72 		.ascii	"ch_ready_list\000"
+ 3706      65616479 
+ 3706      5F6C6973 
+ 3706      7400
+ 3707              	.LASF139:
+ 3708 0130 444D4152 		.ascii	"DMAR\000"
+ 3708      00
+ 3709              	.LASF65:
+ 3710 0135 76746675 		.ascii	"vtfunc_t\000"
+ 3710      6E635F74 
+ 3710      00
+ 3711              	.LASF121:
+ 3712 013e 4943555F 		.ascii	"ICU_STOP\000"
+ 3712      53544F50 
+ 3712      00
+ 3713              	.LASF166:
+ 3714 0147 63685654 		.ascii	"chVTTimeElapsedSinceX\000"
+ 3714      54696D65 
+ 3714      456C6170 
+ 3714      73656453 
+ 3714      696E6365 
+ 3715              	.LASF101:
+ 3716 015d 735F636E 		.ascii	"s_cnt\000"
+ 3716      7400
+ 3717              	.LASF77:
+ 3718 0163 63685F73 		.ascii	"ch_system_debug\000"
+ 3718      79737465 
+ 3718      6D5F6465 
+ 3718      62756700 
+ 3719              	.LASF18:
+ 3720 0173 75696E74 		.ascii	"uint32_t\000"
+ 3720      33325F74 
+ 3720      00
+ 3721              	.LASF169:
+ 3722 017c 69637570 		.ascii	"icup\000"
+ 3722      00
+ 3723              	.LASF174:
+ 3724 0181 6D656469 		.ascii	"median_filter\000"
+ 3724      616E5F66 
+ 3724      696C7465 
+ 3724      7200
+ 3725              	.LASF60:
+ 3726 018f 725F7072 		.ascii	"r_prio\000"
+ 3726      696F00
+ 3727              	.LASF138:
+ 3728 0196 42445452 		.ascii	"BDTR\000"
+ 3728      00
+ 3729              	.LASF72:
+ 3730 019b 76745F70 		.ascii	"vt_par\000"
+ 3730      617200
+ 3731              	.LASF153:
+ 3732 01a2 70657269 		.ascii	"period_cb\000"
+ 3732      6F645F63 
+ 3732      6200
+ 3733              	.LASF0:
+ 3734 01ac 666C6F61 		.ascii	"float\000"
+ 3734      7400
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 68
+
+
+ 3735              	.LASF99:
+ 3736 01b2 63685F73 		.ascii	"ch_semaphore\000"
+ 3736      656D6170 
+ 3736      686F7265 
+ 3736      00
+ 3737              	.LASF26:
+ 3738 01bf 74707269 		.ascii	"tprio_t\000"
+ 3738      6F5F7400 
+ 3739              	.LASF67:
+ 3740 01c7 63685F76 		.ascii	"ch_virtual_timer\000"
+ 3740      69727475 
+ 3740      616C5F74 
+ 3740      696D6572 
+ 3740      00
+ 3741              	.LASF135:
+ 3742 01d8 43434D52 		.ascii	"CCMR1\000"
+ 3742      3100
+ 3743              	.LASF136:
+ 3744 01de 43434D52 		.ascii	"CCMR2\000"
+ 3744      3200
+ 3745              	.LASF140:
+ 3746 01e4 43434D52 		.ascii	"CCMR3\000"
+ 3746      3300
+ 3747              	.LASF13:
+ 3748 01ea 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 3748      206C6F6E 
+ 3748      6720756E 
+ 3748      7369676E 
+ 3748      65642069 
+ 3749              	.LASF177:
+ 3750 0201 73657276 		.ascii	"servodec_get_time_since_update\000"
+ 3750      6F646563 
+ 3750      5F676574 
+ 3750      5F74696D 
+ 3750      655F7369 
+ 3751              	.LASF5:
+ 3752 0220 5F5F7569 		.ascii	"__uint16_t\000"
+ 3752      6E743136 
+ 3752      5F7400
+ 3753              	.LASF29:
+ 3754 022b 636E745F 		.ascii	"cnt_t\000"
+ 3754      7400
+ 3755              	.LASF54:
+ 3756 0231 63685F74 		.ascii	"ch_threads_list\000"
+ 3756      68726561 
+ 3756      64735F6C 
+ 3756      69737400 
+ 3757              	.LASF110:
+ 3758 0241 4D4F4445 		.ascii	"MODER\000"
+ 3758      5200
+ 3759              	.LASF161:
+ 3760 0247 63685379 		.ascii	"chSysUnlock\000"
+ 3760      73556E6C 
+ 3760      6F636B00 
+ 3761              	.LASF117:
+ 3762 0253 41465248 		.ascii	"AFRH\000"
+ 3762      00
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 69
+
+
+ 3763              	.LASF118:
+ 3764 0258 73746D33 		.ascii	"stm32_gpio_t\000"
+ 3764      325F6770 
+ 3764      696F5F74 
+ 3764      00
+ 3765              	.LASF116:
+ 3766 0265 4146524C 		.ascii	"AFRL\000"
+ 3766      00
+ 3767              	.LASF36:
+ 3768 026a 705F6E65 		.ascii	"p_newer\000"
+ 3768      77657200 
+ 3769              	.LASF167:
+ 3770 0272 76616C75 		.ascii	"value\000"
+ 3770      6500
+ 3771              	.LASF74:
+ 3772 0278 63685F76 		.ascii	"ch_virtual_timers_list\000"
+ 3772      69727475 
+ 3772      616C5F74 
+ 3772      696D6572 
+ 3772      735F6C69 
+ 3773              	.LASF31:
+ 3774 028f 74687265 		.ascii	"thread_t\000"
+ 3774      61645F74 
+ 3774      00
+ 3775              	.LASF112:
+ 3776 0298 4F535045 		.ascii	"OSPEEDR\000"
+ 3776      45445200 
+ 3777              	.LASF172:
+ 3778 02a0 73657276 		.ascii	"servodec_init\000"
+ 3778      6F646563 
+ 3778      5F696E69 
+ 3778      7400
+ 3779              	.LASF20:
+ 3780 02ae 73697A65 		.ascii	"size_t\000"
+ 3780      5F7400
+ 3781              	.LASF92:
+ 3782 02b5 7264796D 		.ascii	"rdymsg\000"
+ 3782      736700
+ 3783              	.LASF90:
+ 3784 02bc 6F666673 		.ascii	"offset\000"
+ 3784      657400
+ 3785              	.LASF142:
+ 3786 02c3 73746D33 		.ascii	"stm32_tim_t\000"
+ 3786      325F7469 
+ 3786      6D5F7400 
+ 3787              	.LASF108:
+ 3788 02cf 5F426F6F 		.ascii	"_Bool\000"
+ 3788      6C00
+ 3789              	.LASF130:
+ 3790 02d5 77636372 		.ascii	"wccrp\000"
+ 3790      7000
+ 3791              	.LASF194:
+ 3792 02db 474E5520 		.ascii	"GNU C99 5.4.1 20160919 (release) [ARM/embedded-5-br"
+ 3792      43393920 
+ 3792      352E342E 
+ 3792      31203230 
+ 3792      31363039 
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 70
+
+
+ 3793 030e 616E6368 		.ascii	"anch revision 240496] -mcpu=cortex-m4 -mfloat-abi=h"
+ 3793      20726576 
+ 3793      6973696F 
+ 3793      6E203234 
+ 3793      30343936 
+ 3794 0341 61726420 		.ascii	"ard -mfpu=fpv4-sp-d16 -mno-thumb-interwork -mthumb "
+ 3794      2D6D6670 
+ 3794      753D6670 
+ 3794      76342D73 
+ 3794      702D6431 
+ 3795 0374 2D676764 		.ascii	"-ggdb -O2 -std=gnu99 -fomit-frame-pointer -falign-f"
+ 3795      62202D4F 
+ 3795      32202D73 
+ 3795      74643D67 
+ 3795      6E753939 
+ 3796 03a7 756E6374 		.ascii	"unctions=16 -ffunction-sections -fdata-sections -fn"
+ 3796      696F6E73 
+ 3796      3D313620 
+ 3796      2D666675 
+ 3796      6E637469 
+ 3797 03da 6F2D636F 		.ascii	"o-common -fsingle-precision-constant\000"
+ 3797      6D6D6F6E 
+ 3797      202D6673 
+ 3797      696E676C 
+ 3797      652D7072 
+ 3798              	.LASF198:
+ 3799 03ff 69637570 		.ascii	"icuperiodcb\000"
+ 3799      6572696F 
+ 3799      64636200 
+ 3800              	.LASF196:
+ 3801 040b 443A5C67 		.ascii	"D:\\git\\oroca_bldc_dev\\oroca_bldc_fw\\oroca_bldc_"
+ 3801      69745C6F 
+ 3801      726F6361 
+ 3801      5F626C64 
+ 3801      635F6465 
+ 3802 043a 63686962 		.ascii	"chibios\000"
+ 3802      696F7300 
+ 3803              	.LASF183:
+ 3804 0442 6C617374 		.ascii	"last_len_received\000"
+ 3804      5F6C656E 
+ 3804      5F726563 
+ 3804      65697665 
+ 3804      6400
+ 3805              	.LASF104:
+ 3806 0454 6D5F6F77 		.ascii	"m_owner\000"
+ 3806      6E657200 
+ 3807              	.LASF102:
+ 3808 045c 63685F6D 		.ascii	"ch_mutex\000"
+ 3808      75746578 
+ 3808      00
+ 3809              	.LASF179:
+ 3810 0465 6C617374 		.ascii	"last_update_time\000"
+ 3810      5F757064 
+ 3810      6174655F 
+ 3810      74696D65 
+ 3810      00
+ 3811              	.LASF12:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 71
+
+
+ 3812 0476 5F5F7569 		.ascii	"__uint64_t\000"
+ 3812      6E743634 
+ 3812      5F7400
+ 3813              	.LASF134:
+ 3814 0481 44494552 		.ascii	"DIER\000"
+ 3814      00
+ 3815              	.LASF162:
+ 3816 0486 63685379 		.ascii	"chSysLock\000"
+ 3816      734C6F63 
+ 3816      6B00
+ 3817              	.LASF129:
+ 3818 0490 636C6F63 		.ascii	"clock\000"
+ 3818      6B00
+ 3819              	.LASF113:
+ 3820 0496 50555044 		.ascii	"PUPDR\000"
+ 3820      5200
+ 3821              	.LASF38:
+ 3822 049c 705F6E61 		.ascii	"p_name\000"
+ 3822      6D6500
+ 3823              	.LASF188:
+ 3824 04a3 49435544 		.ascii	"ICUD3\000"
+ 3824      3300
+ 3825              	.LASF137:
+ 3826 04a9 43434552 		.ascii	"CCER\000"
+ 3826      00
+ 3827              	.LASF70:
+ 3828 04ae 76745F64 		.ascii	"vt_delta\000"
+ 3828      656C7461 
+ 3828      00
+ 3829              	.LASF62:
+ 3830 04b7 725F6E65 		.ascii	"r_newer\000"
+ 3830      77657200 
+ 3831              	.LASF195:
+ 3832 04bf 7372632F 		.ascii	"src/core/servo_dec.c\000"
+ 3832      636F7265 
+ 3832      2F736572 
+ 3832      766F5F64 
+ 3832      65632E63 
+ 3833              	.LASF23:
+ 3834 04d4 74737461 		.ascii	"tstate_t\000"
+ 3834      74655F74 
+ 3834      00
+ 3835              	.LASF11:
+ 3836 04dd 6C6F6E67 		.ascii	"long long int\000"
+ 3836      206C6F6E 
+ 3836      6720696E 
+ 3836      7400
+ 3837              	.LASF37:
+ 3838 04eb 705F6F6C 		.ascii	"p_older\000"
+ 3838      64657200 
+ 3839              	.LASF39:
+ 3840 04f3 705F7374 		.ascii	"p_state\000"
+ 3840      61746500 
+ 3841              	.LASF15:
+ 3842 04fb 75696E74 		.ascii	"uint8_t\000"
+ 3842      385F7400 
+ 3843              	.LASF154:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 72
+
+
+ 3844 0503 6F766572 		.ascii	"overflow_cb\000"
+ 3844      666C6F77 
+ 3844      5F636200 
+ 3845              	.LASF50:
+ 3846 050f 705F6D70 		.ascii	"p_mpool\000"
+ 3846      6F6F6C00 
+ 3847              	.LASF48:
+ 3848 0517 705F6D74 		.ascii	"p_mtxlist\000"
+ 3848      786C6973 
+ 3848      7400
+ 3849              	.LASF133:
+ 3850 0521 534D4352 		.ascii	"SMCR\000"
+ 3850      00
+ 3851              	.LASF53:
+ 3852 0526 63685F74 		.ascii	"ch_thread\000"
+ 3852      68726561 
+ 3852      6400
+ 3853              	.LASF76:
+ 3854 0530 73797374 		.ascii	"system_debug_t\000"
+ 3854      656D5F64 
+ 3854      65627567 
+ 3854      5F7400
+ 3855              	.LASF157:
+ 3856 053f 49435543 		.ascii	"ICUConfig\000"
+ 3856      6F6E6669 
+ 3856      6700
+ 3857              	.LASF56:
+ 3858 0549 63685F74 		.ascii	"ch_threads_queue\000"
+ 3858      68726561 
+ 3858      64735F71 
+ 3858      75657565 
+ 3858      00
+ 3859              	.LASF182:
+ 3860 055a 70756C73 		.ascii	"pulse_end\000"
+ 3860      655F656E 
+ 3860      6400
+ 3861              	.LASF59:
+ 3862 0564 725F7175 		.ascii	"r_queue\000"
+ 3862      65756500 
+ 3863              	.LASF165:
+ 3864 056c 63685654 		.ascii	"chVTGetSystemTime\000"
+ 3864      47657453 
+ 3864      79737465 
+ 3864      6D54696D 
+ 3864      6500
+ 3865              	.LASF28:
+ 3866 057e 6576656E 		.ascii	"eventmask_t\000"
+ 3866      746D6173 
+ 3866      6B5F7400 
+ 3867              	.LASF125:
+ 3868 058a 69637573 		.ascii	"icustate_t\000"
+ 3868      74617465 
+ 3868      5F7400
+ 3869              	.LASF27:
+ 3870 0595 6D73675F 		.ascii	"msg_t\000"
+ 3870      7400
+ 3871              	.LASF88:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 73
+
+
+ 3872 059b 636F6E74 		.ascii	"context\000"
+ 3872      65787400 
+ 3873              	.LASF119:
+ 3874 05a3 696F706F 		.ascii	"ioportmask_t\000"
+ 3874      72746D61 
+ 3874      736B5F74 
+ 3874      00
+ 3875              	.LASF40:
+ 3876 05b0 705F666C 		.ascii	"p_flags\000"
+ 3876      61677300 
+ 3877              	.LASF66:
+ 3878 05b8 76697274 		.ascii	"virtual_timer_t\000"
+ 3878      75616C5F 
+ 3878      74696D65 
+ 3878      725F7400 
+ 3879              	.LASF171:
+ 3880 05c8 645F6675 		.ascii	"d_func\000"
+ 3880      6E6300
+ 3881              	.LASF143:
+ 3882 05cf 4943555F 		.ascii	"ICU_INPUT_ACTIVE_HIGH\000"
+ 3882      494E5055 
+ 3882      545F4143 
+ 3882      54495645 
+ 3882      5F484947 
+ 3883              	.LASF152:
+ 3884 05e5 77696474 		.ascii	"width_cb\000"
+ 3884      685F6362 
+ 3884      00
+ 3885              	.LASF25:
+ 3886 05ee 74736C69 		.ascii	"tslices_t\000"
+ 3886      6365735F 
+ 3886      7400
+ 3887              	.LASF63:
+ 3888 05f8 725F6F6C 		.ascii	"r_older\000"
+ 3888      64657200 
+ 3889              	.LASF46:
+ 3890 0600 705F6D73 		.ascii	"p_msg\000"
+ 3890      6700
+ 3891              	.LASF22:
+ 3892 0606 746D6F64 		.ascii	"tmode_t\000"
+ 3892      655F7400 
+ 3893              	.LASF164:
+ 3894 060e 73797374 		.ascii	"systime\000"
+ 3894      696D6500 
+ 3895              	.LASF83:
+ 3896 0616 6D61696E 		.ascii	"mainthread\000"
+ 3896      74687265 
+ 3896      616400
+ 3897              	.LASF149:
+ 3898 0621 69637563 		.ascii	"icuchannel_t\000"
+ 3898      68616E6E 
+ 3898      656C5F74 
+ 3898      00
+ 3899              	.LASF16:
+ 3900 062e 75696E74 		.ascii	"uint16_t\000"
+ 3900      31365F74 
+ 3900      00
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 74
+
+
+ 3901              	.LASF51:
+ 3902 0637 74687265 		.ascii	"thread_reference_t\000"
+ 3902      61645F72 
+ 3902      65666572 
+ 3902      656E6365 
+ 3902      5F7400
+ 3903              	.LASF193:
+ 3904 064a 69637545 		.ascii	"icuEnableNotifications\000"
+ 3904      6E61626C 
+ 3904      654E6F74 
+ 3904      69666963 
+ 3904      6174696F 
+ 3905              	.LASF21:
+ 3906 0661 7274636E 		.ascii	"rtcnt_t\000"
+ 3906      745F7400 
+ 3907              	.LASF155:
+ 3908 0669 6368616E 		.ascii	"channel\000"
+ 3908      6E656C00 
+ 3909              	.LASF156:
+ 3910 0671 64696572 		.ascii	"dier\000"
+ 3910      00
+ 3911              	.LASF141:
+ 3912 0676 43435852 		.ascii	"CCXR\000"
+ 3912      00
+ 3913              	.LASF109:
+ 3914 067b 636C6561 		.ascii	"clear\000"
+ 3914      7200
+ 3915              	.LASF128:
+ 3916 0681 636F6E66 		.ascii	"config\000"
+ 3916      696700
+ 3917              	.LASF184:
+ 3918 0688 7573655F 		.ascii	"use_median_filter\000"
+ 3918      6D656469 
+ 3918      616E5F66 
+ 3918      696C7465 
+ 3918      7200
+ 3919              	.LASF49:
+ 3920 069a 705F7265 		.ascii	"p_realprio\000"
+ 3920      616C7072 
+ 3920      696F00
+ 3921              	.LASF181:
+ 3922 06a5 70756C73 		.ascii	"pulse_start\000"
+ 3922      655F7374 
+ 3922      61727400 
+ 3923              	.LASF192:
+ 3924 06b1 69637553 		.ascii	"icuStartCapture\000"
+ 3924      74617274 
+ 3924      43617074 
+ 3924      75726500 
+ 3925              	.LASF3:
+ 3926 06c1 73686F72 		.ascii	"short int\000"
+ 3926      7420696E 
+ 3926      7400
+ 3927              	.LASF190:
+ 3928 06cb 69637553 		.ascii	"icuStart\000"
+ 3928      74617274 
+ 3928      00
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 75
+
+
+ 3929              	.LASF64:
+ 3930 06d4 725F6375 		.ascii	"r_current\000"
+ 3930      7272656E 
+ 3930      7400
+ 3931              	.LASF47:
+ 3932 06de 705F6570 		.ascii	"p_epending\000"
+ 3932      656E6469 
+ 3932      6E6700
+ 3933              	.LASF103:
+ 3934 06e9 6D5F7175 		.ascii	"m_queue\000"
+ 3934      65756500 
+ 3935              	.LASF8:
+ 3936 06f1 6C6F6E67 		.ascii	"long int\000"
+ 3936      20696E74 
+ 3936      00
+ 3937              	.LASF89:
+ 3938 06fa 706F7274 		.ascii	"port_intctx\000"
+ 3938      5F696E74 
+ 3938      63747800 
+ 3939              	.LASF187:
+ 3940 0706 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 3940      52784275 
+ 3940      66666572 
+ 3940      00
+ 3941              	.LASF147:
+ 3942 0713 4943555F 		.ascii	"ICU_CHANNEL_1\000"
+ 3942      4348414E 
+ 3942      4E454C5F 
+ 3942      3100
+ 3943              	.LASF148:
+ 3944 0721 4943555F 		.ascii	"ICU_CHANNEL_2\000"
+ 3944      4348414E 
+ 3944      4E454C5F 
+ 3944      3200
+ 3945              	.LASF80:
+ 3946 072f 63685F73 		.ascii	"ch_system\000"
+ 3946      79737465 
+ 3946      6D00
+ 3947              	.LASF178:
+ 3948 0739 73657276 		.ascii	"servodec_get_last_pulse_len\000"
+ 3948      6F646563 
+ 3948      5F676574 
+ 3948      5F6C6173 
+ 3948      745F7075 
+ 3949              	.LASF111:
+ 3950 0755 4F545950 		.ascii	"OTYPER\000"
+ 3950      455200
+ 3951              	.LASF160:
+ 3952 075c 5F5F7365 		.ascii	"__set_BASEPRI\000"
+ 3952      745F4241 
+ 3952      53455052 
+ 3952      4900
+ 3953              	.LASF32:
+ 3954 076a 705F6E65 		.ascii	"p_next\000"
+ 3954      787400
+ 3955              	.LASF170:
+ 3956 0771 6C656E5F 		.ascii	"len_set\000"
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 76
+
+
+ 3956      73657400 
+ 3957              	.LASF19:
+ 3958 0779 75696E74 		.ascii	"uint64_t\000"
+ 3958      36345F74 
+ 3958      00
+ 3959              	.LASF35:
+ 3960 0782 705F6374 		.ascii	"p_ctx\000"
+ 3960      7800
+ 3961              	.LASF81:
+ 3962 0788 726C6973 		.ascii	"rlist\000"
+ 3962      7400
+ 3963              	.LASF145:
+ 3964 078e 6963756D 		.ascii	"icumode_t\000"
+ 3964      6F64655F 
+ 3964      7400
+ 3965              	.LASF4:
+ 3966 0798 5F5F7569 		.ascii	"__uint8_t\000"
+ 3966      6E74385F 
+ 3966      7400
+ 3967              	.LASF168:
+ 3968 07a2 73746172 		.ascii	"start\000"
+ 3968      7400
+ 3969              	.LASF122:
+ 3970 07a8 4943555F 		.ascii	"ICU_READY\000"
+ 3970      52454144 
+ 3970      5900
+ 3971              	.LASF146:
+ 3972 07b2 69637566 		.ascii	"icufreq_t\000"
+ 3972      7265715F 
+ 3972      7400
+ 3973              	.LASF33:
+ 3974 07bc 705F7072 		.ascii	"p_prev\000"
+ 3974      657600
+ 3975              	.LASF85:
+ 3976 07c3 73697A65 		.ascii	"sizetype\000"
+ 3976      74797065 
+ 3976      00
+ 3977              	.LASF24:
+ 3978 07cc 74726566 		.ascii	"trefs_t\000"
+ 3978      735F7400 
+ 3979              	.LASF189:
+ 3980 07d4 7574696C 		.ascii	"utils_middle_of_3\000"
+ 3980      735F6D69 
+ 3980      64646C65 
+ 3980      5F6F665F 
+ 3980      3300
+ 3981              	.LASF10:
+ 3982 07e6 6C6F6E67 		.ascii	"long unsigned int\000"
+ 3982      20756E73 
+ 3982      69676E65 
+ 3982      6420696E 
+ 3982      7400
+ 3983              	.LASF57:
+ 3984 07f8 72656164 		.ascii	"ready_list_t\000"
+ 3984      795F6C69 
+ 3984      73745F74 
+ 3984      00
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 77
+
+
+ 3985              	.LASF17:
+ 3986 0805 696E7433 		.ascii	"int32_t\000"
+ 3986      325F7400 
+ 3987              	.LASF96:
+ 3988 080d 77747365 		.ascii	"wtsemp\000"
+ 3988      6D7000
+ 3989              	.LASF120:
+ 3990 0814 4943555F 		.ascii	"ICU_UNINIT\000"
+ 3990      554E494E 
+ 3990      495400
+ 3991              	.LASF107:
+ 3992 081f 6D757465 		.ascii	"mutex_t\000"
+ 3992      785F7400 
+ 3993              	.LASF124:
+ 3994 0827 4943555F 		.ascii	"ICU_ACTIVE\000"
+ 3994      41435449 
+ 3994      564500
+ 3995              	.LASF2:
+ 3996 0832 756E7369 		.ascii	"unsigned char\000"
+ 3996      676E6564 
+ 3996      20636861 
+ 3996      7200
+ 3997              	.LASF9:
+ 3998 0840 5F5F7569 		.ascii	"__uint32_t\000"
+ 3998      6E743332 
+ 3998      5F7400
+ 3999              	.LASF73:
+ 4000 084b 76697274 		.ascii	"virtual_timers_list_t\000"
+ 4000      75616C5F 
+ 4000      74696D65 
+ 4000      72735F6C 
+ 4000      6973745F 
+ 4001              	.LASF41:
+ 4002 0861 705F7265 		.ascii	"p_refs\000"
+ 4002      667300
+ 4003              	.LASF78:
+ 4004 0868 70616E69 		.ascii	"panic_msg\000"
+ 4004      635F6D73 
+ 4004      6700
+ 4005              	.LASF42:
+ 4006 0872 705F7072 		.ascii	"p_preempt\000"
+ 4006      65656D70 
+ 4006      7400
+ 4007              	.LASF180:
+ 4008 087c 73657276 		.ascii	"servo_pos\000"
+ 4008      6F5F706F 
+ 4008      7300
+ 4009              	.LASF151:
+ 4010 0886 66726571 		.ascii	"frequency\000"
+ 4010      75656E63 
+ 4010      7900
+ 4011              	.LASF127:
+ 4012 0890 73746174 		.ascii	"state\000"
+ 4012      6500
+ 4013              	.LASF144:
+ 4014 0896 4943555F 		.ascii	"ICU_INPUT_ACTIVE_LOW\000"
+ 4014      494E5055 
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 78
+
+
+ 4014      545F4143 
+ 4014      54495645 
+ 4014      5F4C4F57 
+ 4015              	.LASF68:
+ 4016 08ab 76745F6E 		.ascii	"vt_next\000"
+ 4016      65787400 
+ 4017              	.LASF126:
+ 4018 08b3 49435544 		.ascii	"ICUDriver\000"
+ 4018      72697665 
+ 4018      7200
+ 4019              	.LASF79:
+ 4020 08bd 63685F73 		.ascii	"ch_system_t\000"
+ 4020      79737465 
+ 4020      6D5F7400 
+ 4021              	.LASF131:
+ 4022 08c9 70636372 		.ascii	"pccrp\000"
+ 4022      7000
+ 4023              	.LASF176:
+ 4024 08cf 73657276 		.ascii	"servodec_get_servo\000"
+ 4024      6F646563 
+ 4024      5F676574 
+ 4024      5F736572 
+ 4024      766F00
+ 4025              	.LASF95:
+ 4026 08e2 77747472 		.ascii	"wttrp\000"
+ 4026      7000
+ 4027              	.LASF105:
+ 4028 08e8 6D5F6E65 		.ascii	"m_next\000"
+ 4028      787400
+ 4029              	.LASF132:
+ 4030 08ef 69637563 		.ascii	"icucallback_t\000"
+ 4030      616C6C62 
+ 4030      61636B5F 
+ 4030      7400
+ 4031              	.LASF1:
+ 4032 08fd 7369676E 		.ascii	"signed char\000"
+ 4032      65642063 
+ 4032      68617200 
+ 4033              	.LASF199:
+ 4034 0909 69637577 		.ascii	"icuwidthcb\000"
+ 4034      69647468 
+ 4034      636200
+ 4035              	.LASF6:
+ 4036 0914 73686F72 		.ascii	"short unsigned int\000"
+ 4036      7420756E 
+ 4036      7369676E 
+ 4036      65642069 
+ 4036      6E7400
+ 4037              	.LASF61:
+ 4038 0927 725F6374 		.ascii	"r_ctx\000"
+ 4038      7800
+ 4039              	.LASF87:
+ 4040 092d 73746B61 		.ascii	"stkalign_t\000"
+ 4040      6C69676E 
+ 4040      5F7400
+ 4041              	.LASF163:
+ 4042 0938 5F5F6675 		.ascii	"__func__\000"
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 79
+
+
+ 4042      6E635F5F 
+ 4042      00
+ 4043              	.LASF71:
+ 4044 0941 76745F66 		.ascii	"vt_func\000"
+ 4044      756E6300 
+ 4045              	.LASF197:
+ 4046 0949 63685654 		.ascii	"chVTGetSystemTimeX\000"
+ 4046      47657453 
+ 4046      79737465 
+ 4046      6D54696D 
+ 4046      655800
+ 4047              	.LASF159:
+ 4048 095c 706F7274 		.ascii	"port_unlock\000"
+ 4048      5F756E6C 
+ 4048      6F636B00 
+ 4049              	.LASF69:
+ 4050 0968 76745F70 		.ascii	"vt_prev\000"
+ 4050      72657600 
+ 4051              	.LASF93:
+ 4052 0970 65786974 		.ascii	"exitcode\000"
+ 4052      636F6465 
+ 4052      00
+ 4053              	.LASF115:
+ 4054 0979 4C434B52 		.ascii	"LCKR\000"
+ 4054      00
+ 4055              	.LASF185:
+ 4056 097e 646F6E65 		.ascii	"done_func\000"
+ 4056      5F66756E 
+ 4056      6300
+ 4057              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160919 (release) [ARM/embedded-5-bran
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s 			page 80
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 servo_dec.c
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:22     .text.icuperiodcb:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:27     .text.icuperiodcb:00000000 icuperiodcb
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:41     .text.icuwidthcb:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:46     .text.icuwidthcb:00000000 icuwidthcb
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:278    .text.icuwidthcb:00000100 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:296    .text.servodec_init:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:302    .text.servodec_init:00000000 servodec_init
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:361    .text.servodec_init:00000038 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:372    .text.servodec_set_pulse_options:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:378    .text.servodec_set_pulse_options:00000000 servodec_set_pulse_options
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:402    .text.servodec_set_pulse_options:00000014 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:409    .text.servodec_get_servo:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:415    .text.servodec_get_servo:00000000 servodec_get_servo
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:438    .text.servodec_get_servo:00000014 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:444    .text.servodec_get_time_since_update:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:450    .text.servodec_get_time_since_update:00000000 servodec_get_time_since_update
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:493    .text.servodec_get_time_since_update:00000014 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:500    .text.servodec_get_last_pulse_len:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:506    .text.servodec_get_last_pulse_len:00000000 servodec_get_last_pulse_len
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:529    .text.servodec_get_last_pulse_len:00000014 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:535    .bss.servo_pos:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:539    .bss.servo_pos:00000000 servo_pos
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:542    .data.c1.9477:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:546    .data.c1.9477:00000000 c1.9477
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:549    .data.pulse_end:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:553    .data.pulse_end:00000000 pulse_end
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:556    .bss.last_update_time:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:560    .bss.last_update_time:00000000 last_update_time
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:563    .data.c2.9478:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:567    .data.c2.9478:00000000 c2.9478
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:570    .bss.last_len_received:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:574    .bss.last_len_received:00000000 last_len_received
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:580    .bss.use_median_filter:00000000 use_median_filter
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:581    .bss.use_median_filter:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:583    .data.pulse_start:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:587    .data.pulse_start:00000000 pulse_start
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:590    .bss.done_func:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:594    .bss.done_func:00000000 done_func
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:597    .data.icucfg:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccpBoa4l.s:601    .data.icucfg:00000000 icucfg
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+utils_middle_of_3
+ch
+icuStart
+_pal_lld_setgroupmode
+icuStartCapture
+icuEnableNotifications
+ICUD3

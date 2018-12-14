@@ -1,0 +1,819 @@
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 1
+   4              		.eabi_attribute 28, 1
+   5              		.fpu fpv4-sp-d16
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 2
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.thumb
+  16              		.syntax unified
+  17              		.file	"crc.c"
+  18              		.text
+  19              	.Ltext0:
+  20              		.cfi_sections	.debug_frame
+  21              		.section	.text.crc16,"ax",%progbits
+  22              		.align	2
+  23              		.p2align 4,,15
+  24              		.global	crc16
+  25              		.thumb
+  26              		.thumb_func
+  27              		.type	crc16, %function
+  28              	crc16:
+  29              	.LFB0:
+  30              		.file 1 "src/core/crc.c"
+  31              		.loc 1 57 0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 0
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35              		@ link register save eliminated.
+  36              	.LVL0:
+  37              		.loc 1 60 0
+  38 0000 91B1     		cbz	r1, .L4
+  39              		.loc 1 57 0
+  40 0002 70B4     		push	{r4, r5, r6}
+  41              		.cfi_def_cfa_offset 12
+  42              		.cfi_offset 4, -12
+  43              		.cfi_offset 5, -8
+  44              		.cfi_offset 6, -4
+  45 0004 094E     		ldr	r6, .L10
+  46 0006 4518     		adds	r5, r0, r1
+  47              		.loc 1 60 0
+  48 0008 0023     		movs	r3, #0
+  49              	.LVL1:
+  50              	.L3:
+  51              		.loc 1 61 0 discriminator 3
+  52 000a 10F8012B 		ldrb	r2, [r0], #1	@ zero_extendqisi2
+  53              	.LVL2:
+  54 000e C3F30F24 		ubfx	r4, r3, #8, #16
+  55 0012 6240     		eors	r2, r2, r4
+  56              		.loc 1 60 0 discriminator 3
+  57 0014 A842     		cmp	r0, r5
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 2
+
+
+  58              		.loc 1 61 0 discriminator 3
+  59 0016 36F81210 		ldrh	r1, [r6, r2, lsl #1]
+  60 001a 81EA0323 		eor	r3, r1, r3, lsl #8
+  61              	.LVL3:
+  62 001e 9BB2     		uxth	r3, r3
+  63              	.LVL4:
+  64              		.loc 1 60 0 discriminator 3
+  65 0020 F3D1     		bne	.L3
+  66              		.loc 1 64 0
+  67 0022 1846     		mov	r0, r3
+  68              	.LVL5:
+  69 0024 70BC     		pop	{r4, r5, r6}
+  70              		.cfi_restore 6
+  71              		.cfi_restore 5
+  72              		.cfi_restore 4
+  73              		.cfi_def_cfa_offset 0
+  74 0026 7047     		bx	lr
+  75              	.LVL6:
+  76              	.L4:
+  77 0028 0846     		mov	r0, r1
+  78              	.LVL7:
+  79 002a 7047     		bx	lr
+  80              	.L11:
+  81              		.align	2
+  82              	.L10:
+  83 002c 00000000 		.word	.LANCHOR0
+  84              		.cfi_endproc
+  85              	.LFE0:
+  86              		.size	crc16, .-crc16
+  87              		.global	crc16_tab
+  88              		.section	.rodata.crc16_tab,"a",%progbits
+  89              		.align	2
+  90              		.set	.LANCHOR0,. + 0
+  91              		.type	crc16_tab, %object
+  92              		.size	crc16_tab, 512
+  93              	crc16_tab:
+  94 0000 0000     		.short	0
+  95 0002 2110     		.short	4129
+  96 0004 4220     		.short	8258
+  97 0006 6330     		.short	12387
+  98 0008 8440     		.short	16516
+  99 000a A550     		.short	20645
+ 100 000c C660     		.short	24774
+ 101 000e E770     		.short	28903
+ 102 0010 0881     		.short	-32504
+ 103 0012 2991     		.short	-28375
+ 104 0014 4AA1     		.short	-24246
+ 105 0016 6BB1     		.short	-20117
+ 106 0018 8CC1     		.short	-15988
+ 107 001a ADD1     		.short	-11859
+ 108 001c CEE1     		.short	-7730
+ 109 001e EFF1     		.short	-3601
+ 110 0020 3112     		.short	4657
+ 111 0022 1002     		.short	528
+ 112 0024 7332     		.short	12915
+ 113 0026 5222     		.short	8786
+ 114 0028 B552     		.short	21173
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 3
+
+
+ 115 002a 9442     		.short	17044
+ 116 002c F772     		.short	29431
+ 117 002e D662     		.short	25302
+ 118 0030 3993     		.short	-27847
+ 119 0032 1883     		.short	-31976
+ 120 0034 7BB3     		.short	-19589
+ 121 0036 5AA3     		.short	-23718
+ 122 0038 BDD3     		.short	-11331
+ 123 003a 9CC3     		.short	-15460
+ 124 003c FFF3     		.short	-3073
+ 125 003e DEE3     		.short	-7202
+ 126 0040 6224     		.short	9314
+ 127 0042 4334     		.short	13379
+ 128 0044 2004     		.short	1056
+ 129 0046 0114     		.short	5121
+ 130 0048 E664     		.short	25830
+ 131 004a C774     		.short	29895
+ 132 004c A444     		.short	17572
+ 133 004e 8554     		.short	21637
+ 134 0050 6AA5     		.short	-23190
+ 135 0052 4BB5     		.short	-19125
+ 136 0054 2885     		.short	-31448
+ 137 0056 0995     		.short	-27383
+ 138 0058 EEE5     		.short	-6674
+ 139 005a CFF5     		.short	-2609
+ 140 005c ACC5     		.short	-14932
+ 141 005e 8DD5     		.short	-10867
+ 142 0060 5336     		.short	13907
+ 143 0062 7226     		.short	9842
+ 144 0064 1116     		.short	5649
+ 145 0066 3006     		.short	1584
+ 146 0068 D776     		.short	30423
+ 147 006a F666     		.short	26358
+ 148 006c 9556     		.short	22165
+ 149 006e B446     		.short	18100
+ 150 0070 5BB7     		.short	-18597
+ 151 0072 7AA7     		.short	-22662
+ 152 0074 1997     		.short	-26855
+ 153 0076 3887     		.short	-30920
+ 154 0078 DFF7     		.short	-2081
+ 155 007a FEE7     		.short	-6146
+ 156 007c 9DD7     		.short	-10339
+ 157 007e BCC7     		.short	-14404
+ 158 0080 C448     		.short	18628
+ 159 0082 E558     		.short	22757
+ 160 0084 8668     		.short	26758
+ 161 0086 A778     		.short	30887
+ 162 0088 4008     		.short	2112
+ 163 008a 6118     		.short	6241
+ 164 008c 0228     		.short	10242
+ 165 008e 2338     		.short	14371
+ 166 0090 CCC9     		.short	-13876
+ 167 0092 EDD9     		.short	-9747
+ 168 0094 8EE9     		.short	-5746
+ 169 0096 AFF9     		.short	-1617
+ 170 0098 4889     		.short	-30392
+ 171 009a 6999     		.short	-26263
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 4
+
+
+ 172 009c 0AA9     		.short	-22262
+ 173 009e 2BB9     		.short	-18133
+ 174 00a0 F55A     		.short	23285
+ 175 00a2 D44A     		.short	19156
+ 176 00a4 B77A     		.short	31415
+ 177 00a6 966A     		.short	27286
+ 178 00a8 711A     		.short	6769
+ 179 00aa 500A     		.short	2640
+ 180 00ac 333A     		.short	14899
+ 181 00ae 122A     		.short	10770
+ 182 00b0 FDDB     		.short	-9219
+ 183 00b2 DCCB     		.short	-13348
+ 184 00b4 BFFB     		.short	-1089
+ 185 00b6 9EEB     		.short	-5218
+ 186 00b8 799B     		.short	-25735
+ 187 00ba 588B     		.short	-29864
+ 188 00bc 3BBB     		.short	-17605
+ 189 00be 1AAB     		.short	-21734
+ 190 00c0 A66C     		.short	27814
+ 191 00c2 877C     		.short	31879
+ 192 00c4 E44C     		.short	19684
+ 193 00c6 C55C     		.short	23749
+ 194 00c8 222C     		.short	11298
+ 195 00ca 033C     		.short	15363
+ 196 00cc 600C     		.short	3168
+ 197 00ce 411C     		.short	7233
+ 198 00d0 AEED     		.short	-4690
+ 199 00d2 8FFD     		.short	-625
+ 200 00d4 ECCD     		.short	-12820
+ 201 00d6 CDDD     		.short	-8755
+ 202 00d8 2AAD     		.short	-21206
+ 203 00da 0BBD     		.short	-17141
+ 204 00dc 688D     		.short	-29336
+ 205 00de 499D     		.short	-25271
+ 206 00e0 977E     		.short	32407
+ 207 00e2 B66E     		.short	28342
+ 208 00e4 D55E     		.short	24277
+ 209 00e6 F44E     		.short	20212
+ 210 00e8 133E     		.short	15891
+ 211 00ea 322E     		.short	11826
+ 212 00ec 511E     		.short	7761
+ 213 00ee 700E     		.short	3696
+ 214 00f0 9FFF     		.short	-97
+ 215 00f2 BEEF     		.short	-4162
+ 216 00f4 DDDF     		.short	-8227
+ 217 00f6 FCCF     		.short	-12292
+ 218 00f8 1BBF     		.short	-16613
+ 219 00fa 3AAF     		.short	-20678
+ 220 00fc 599F     		.short	-24743
+ 221 00fe 788F     		.short	-28808
+ 222 0100 8891     		.short	-28280
+ 223 0102 A981     		.short	-32343
+ 224 0104 CAB1     		.short	-20022
+ 225 0106 EBA1     		.short	-24085
+ 226 0108 0CD1     		.short	-12020
+ 227 010a 2DC1     		.short	-16083
+ 228 010c 4EF1     		.short	-3762
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 5
+
+
+ 229 010e 6FE1     		.short	-7825
+ 230 0110 8010     		.short	4224
+ 231 0112 A100     		.short	161
+ 232 0114 C230     		.short	12482
+ 233 0116 E320     		.short	8419
+ 234 0118 0450     		.short	20484
+ 235 011a 2540     		.short	16421
+ 236 011c 4670     		.short	28742
+ 237 011e 6760     		.short	24679
+ 238 0120 B983     		.short	-31815
+ 239 0122 9893     		.short	-27752
+ 240 0124 FBA3     		.short	-23557
+ 241 0126 DAB3     		.short	-19494
+ 242 0128 3DC3     		.short	-15555
+ 243 012a 1CD3     		.short	-11492
+ 244 012c 7FE3     		.short	-7297
+ 245 012e 5EF3     		.short	-3234
+ 246 0130 B102     		.short	689
+ 247 0132 9012     		.short	4752
+ 248 0134 F322     		.short	8947
+ 249 0136 D232     		.short	13010
+ 250 0138 3542     		.short	16949
+ 251 013a 1452     		.short	21012
+ 252 013c 7762     		.short	25207
+ 253 013e 5672     		.short	29270
+ 254 0140 EAB5     		.short	-18966
+ 255 0142 CBA5     		.short	-23093
+ 256 0144 A895     		.short	-27224
+ 257 0146 8985     		.short	-31351
+ 258 0148 6EF5     		.short	-2706
+ 259 014a 4FE5     		.short	-6833
+ 260 014c 2CD5     		.short	-10964
+ 261 014e 0DC5     		.short	-15091
+ 262 0150 E234     		.short	13538
+ 263 0152 C324     		.short	9411
+ 264 0154 A014     		.short	5280
+ 265 0156 8104     		.short	1153
+ 266 0158 6674     		.short	29798
+ 267 015a 4764     		.short	25671
+ 268 015c 2454     		.short	21540
+ 269 015e 0544     		.short	17413
+ 270 0160 DBA7     		.short	-22565
+ 271 0162 FAB7     		.short	-18438
+ 272 0164 9987     		.short	-30823
+ 273 0166 B897     		.short	-26696
+ 274 0168 5FE7     		.short	-6305
+ 275 016a 7EF7     		.short	-2178
+ 276 016c 1DC7     		.short	-14563
+ 277 016e 3CD7     		.short	-10436
+ 278 0170 D326     		.short	9939
+ 279 0172 F236     		.short	14066
+ 280 0174 9106     		.short	1681
+ 281 0176 B016     		.short	5808
+ 282 0178 5766     		.short	26199
+ 283 017a 7676     		.short	30326
+ 284 017c 1546     		.short	17941
+ 285 017e 3456     		.short	22068
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 6
+
+
+ 286 0180 4CD9     		.short	-9908
+ 287 0182 6DC9     		.short	-13971
+ 288 0184 0EF9     		.short	-1778
+ 289 0186 2FE9     		.short	-5841
+ 290 0188 C899     		.short	-26168
+ 291 018a E989     		.short	-30231
+ 292 018c 8AB9     		.short	-18038
+ 293 018e ABA9     		.short	-22101
+ 294 0190 4458     		.short	22596
+ 295 0192 6548     		.short	18533
+ 296 0194 0678     		.short	30726
+ 297 0196 2768     		.short	26663
+ 298 0198 C018     		.short	6336
+ 299 019a E108     		.short	2273
+ 300 019c 8238     		.short	14466
+ 301 019e A328     		.short	10403
+ 302 01a0 7DCB     		.short	-13443
+ 303 01a2 5CDB     		.short	-9380
+ 304 01a4 3FEB     		.short	-5313
+ 305 01a6 1EFB     		.short	-1250
+ 306 01a8 F98B     		.short	-29703
+ 307 01aa D89B     		.short	-25640
+ 308 01ac BBAB     		.short	-21573
+ 309 01ae 9ABB     		.short	-17510
+ 310 01b0 754A     		.short	19061
+ 311 01b2 545A     		.short	23124
+ 312 01b4 376A     		.short	27191
+ 313 01b6 167A     		.short	31254
+ 314 01b8 F10A     		.short	2801
+ 315 01ba D01A     		.short	6864
+ 316 01bc B32A     		.short	10931
+ 317 01be 923A     		.short	14994
+ 318 01c0 2EFD     		.short	-722
+ 319 01c2 0FED     		.short	-4849
+ 320 01c4 6CDD     		.short	-8852
+ 321 01c6 4DCD     		.short	-12979
+ 322 01c8 AABD     		.short	-16982
+ 323 01ca 8BAD     		.short	-21109
+ 324 01cc E89D     		.short	-25112
+ 325 01ce C98D     		.short	-29239
+ 326 01d0 267C     		.short	31782
+ 327 01d2 076C     		.short	27655
+ 328 01d4 645C     		.short	23652
+ 329 01d6 454C     		.short	19525
+ 330 01d8 A23C     		.short	15522
+ 331 01da 832C     		.short	11395
+ 332 01dc E01C     		.short	7392
+ 333 01de C10C     		.short	3265
+ 334 01e0 1FEF     		.short	-4321
+ 335 01e2 3EFF     		.short	-194
+ 336 01e4 5DCF     		.short	-12451
+ 337 01e6 7CDF     		.short	-8324
+ 338 01e8 9BAF     		.short	-20581
+ 339 01ea BABF     		.short	-16454
+ 340 01ec D98F     		.short	-28711
+ 341 01ee F89F     		.short	-24584
+ 342 01f0 176E     		.short	28183
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 7
+
+
+ 343 01f2 367E     		.short	32310
+ 344 01f4 554E     		.short	20053
+ 345 01f6 745E     		.short	24180
+ 346 01f8 932E     		.short	11923
+ 347 01fa B23E     		.short	16050
+ 348 01fc D10E     		.short	3793
+ 349 01fe F01E     		.short	7920
+ 350              		.text
+ 351              	.Letext0:
+ 352              		.section	.debug_info,"",%progbits
+ 353              	.Ldebug_info0:
+ 354 0000 C0000000 		.4byte	0xc0
+ 355 0004 0400     		.2byte	0x4
+ 356 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 357 000a 04       		.byte	0x4
+ 358 000b 01       		.uleb128 0x1
+ 359 000c 6C000000 		.4byte	.LASF5
+ 360 0010 0C       		.byte	0xc
+ 361 0011 0D000000 		.4byte	.LASF6
+ 362 0015 35000000 		.4byte	.LASF7
+ 363 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 364 001d 00000000 		.4byte	0
+ 365 0021 00000000 		.4byte	.Ldebug_line0
+ 366 0025 02       		.uleb128 0x2
+ 367 0026 2F000000 		.4byte	.LASF8
+ 368 002a 01       		.byte	0x1
+ 369 002b 39       		.byte	0x39
+ 370 002c 76000000 		.4byte	0x76
+ 371 0030 00000000 		.4byte	.LFB0
+ 372 0034 30000000 		.4byte	.LFE0-.LFB0
+ 373 0038 01       		.uleb128 0x1
+ 374 0039 9C       		.byte	0x9c
+ 375 003a 76000000 		.4byte	0x76
+ 376 003e 03       		.uleb128 0x3
+ 377 003f 62756600 		.ascii	"buf\000"
+ 378 0043 01       		.byte	0x1
+ 379 0044 39       		.byte	0x39
+ 380 0045 7D000000 		.4byte	0x7d
+ 381 0049 00000000 		.4byte	.LLST0
+ 382 004d 03       		.uleb128 0x3
+ 383 004e 6C656E00 		.ascii	"len\000"
+ 384 0052 01       		.byte	0x1
+ 385 0053 39       		.byte	0x39
+ 386 0054 8A000000 		.4byte	0x8a
+ 387 0058 44000000 		.4byte	.LLST1
+ 388 005c 04       		.uleb128 0x4
+ 389 005d 6900     		.ascii	"i\000"
+ 390 005f 01       		.byte	0x1
+ 391 0060 3A       		.byte	0x3a
+ 392 0061 8A000000 		.4byte	0x8a
+ 393 0065 00       		.byte	0
+ 394 0066 05       		.uleb128 0x5
+ 395 0067 B1010000 		.4byte	.LASF0
+ 396 006b 01       		.byte	0x1
+ 397 006c 3B       		.byte	0x3b
+ 398 006d 76000000 		.4byte	0x76
+ 399 0071 70000000 		.4byte	.LLST2
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 8
+
+
+ 400 0075 00       		.byte	0
+ 401 0076 06       		.uleb128 0x6
+ 402 0077 02       		.byte	0x2
+ 403 0078 07       		.byte	0x7
+ 404 0079 1C000000 		.4byte	.LASF1
+ 405 007d 07       		.uleb128 0x7
+ 406 007e 04       		.byte	0x4
+ 407 007f 83000000 		.4byte	0x83
+ 408 0083 06       		.uleb128 0x6
+ 409 0084 01       		.byte	0x1
+ 410 0085 08       		.byte	0x8
+ 411 0086 99010000 		.4byte	.LASF2
+ 412 008a 06       		.uleb128 0x6
+ 413 008b 04       		.byte	0x4
+ 414 008c 07       		.byte	0x7
+ 415 008d 00000000 		.4byte	.LASF3
+ 416 0091 08       		.uleb128 0x8
+ 417 0092 A8000000 		.4byte	0xa8
+ 418 0096 A1000000 		.4byte	0xa1
+ 419 009a 09       		.uleb128 0x9
+ 420 009b A1000000 		.4byte	0xa1
+ 421 009f FF       		.byte	0xff
+ 422 00a0 00       		.byte	0
+ 423 00a1 06       		.uleb128 0x6
+ 424 00a2 04       		.byte	0x4
+ 425 00a3 07       		.byte	0x7
+ 426 00a4 90010000 		.4byte	.LASF4
+ 427 00a8 0A       		.uleb128 0xa
+ 428 00a9 76000000 		.4byte	0x76
+ 429 00ad 0B       		.uleb128 0xb
+ 430 00ae A7010000 		.4byte	.LASF9
+ 431 00b2 01       		.byte	0x1
+ 432 00b3 1B       		.byte	0x1b
+ 433 00b4 BE000000 		.4byte	0xbe
+ 434 00b8 05       		.uleb128 0x5
+ 435 00b9 03       		.byte	0x3
+ 436 00ba 00000000 		.4byte	crc16_tab
+ 437 00be 0A       		.uleb128 0xa
+ 438 00bf 91000000 		.4byte	0x91
+ 439 00c3 00       		.byte	0
+ 440              		.section	.debug_abbrev,"",%progbits
+ 441              	.Ldebug_abbrev0:
+ 442 0000 01       		.uleb128 0x1
+ 443 0001 11       		.uleb128 0x11
+ 444 0002 01       		.byte	0x1
+ 445 0003 25       		.uleb128 0x25
+ 446 0004 0E       		.uleb128 0xe
+ 447 0005 13       		.uleb128 0x13
+ 448 0006 0B       		.uleb128 0xb
+ 449 0007 03       		.uleb128 0x3
+ 450 0008 0E       		.uleb128 0xe
+ 451 0009 1B       		.uleb128 0x1b
+ 452 000a 0E       		.uleb128 0xe
+ 453 000b 55       		.uleb128 0x55
+ 454 000c 17       		.uleb128 0x17
+ 455 000d 11       		.uleb128 0x11
+ 456 000e 01       		.uleb128 0x1
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 9
+
+
+ 457 000f 10       		.uleb128 0x10
+ 458 0010 17       		.uleb128 0x17
+ 459 0011 00       		.byte	0
+ 460 0012 00       		.byte	0
+ 461 0013 02       		.uleb128 0x2
+ 462 0014 2E       		.uleb128 0x2e
+ 463 0015 01       		.byte	0x1
+ 464 0016 3F       		.uleb128 0x3f
+ 465 0017 19       		.uleb128 0x19
+ 466 0018 03       		.uleb128 0x3
+ 467 0019 0E       		.uleb128 0xe
+ 468 001a 3A       		.uleb128 0x3a
+ 469 001b 0B       		.uleb128 0xb
+ 470 001c 3B       		.uleb128 0x3b
+ 471 001d 0B       		.uleb128 0xb
+ 472 001e 27       		.uleb128 0x27
+ 473 001f 19       		.uleb128 0x19
+ 474 0020 49       		.uleb128 0x49
+ 475 0021 13       		.uleb128 0x13
+ 476 0022 11       		.uleb128 0x11
+ 477 0023 01       		.uleb128 0x1
+ 478 0024 12       		.uleb128 0x12
+ 479 0025 06       		.uleb128 0x6
+ 480 0026 40       		.uleb128 0x40
+ 481 0027 18       		.uleb128 0x18
+ 482 0028 9742     		.uleb128 0x2117
+ 483 002a 19       		.uleb128 0x19
+ 484 002b 01       		.uleb128 0x1
+ 485 002c 13       		.uleb128 0x13
+ 486 002d 00       		.byte	0
+ 487 002e 00       		.byte	0
+ 488 002f 03       		.uleb128 0x3
+ 489 0030 05       		.uleb128 0x5
+ 490 0031 00       		.byte	0
+ 491 0032 03       		.uleb128 0x3
+ 492 0033 08       		.uleb128 0x8
+ 493 0034 3A       		.uleb128 0x3a
+ 494 0035 0B       		.uleb128 0xb
+ 495 0036 3B       		.uleb128 0x3b
+ 496 0037 0B       		.uleb128 0xb
+ 497 0038 49       		.uleb128 0x49
+ 498 0039 13       		.uleb128 0x13
+ 499 003a 02       		.uleb128 0x2
+ 500 003b 17       		.uleb128 0x17
+ 501 003c 00       		.byte	0
+ 502 003d 00       		.byte	0
+ 503 003e 04       		.uleb128 0x4
+ 504 003f 34       		.uleb128 0x34
+ 505 0040 00       		.byte	0
+ 506 0041 03       		.uleb128 0x3
+ 507 0042 08       		.uleb128 0x8
+ 508 0043 3A       		.uleb128 0x3a
+ 509 0044 0B       		.uleb128 0xb
+ 510 0045 3B       		.uleb128 0x3b
+ 511 0046 0B       		.uleb128 0xb
+ 512 0047 49       		.uleb128 0x49
+ 513 0048 13       		.uleb128 0x13
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 10
+
+
+ 514 0049 1C       		.uleb128 0x1c
+ 515 004a 0B       		.uleb128 0xb
+ 516 004b 00       		.byte	0
+ 517 004c 00       		.byte	0
+ 518 004d 05       		.uleb128 0x5
+ 519 004e 34       		.uleb128 0x34
+ 520 004f 00       		.byte	0
+ 521 0050 03       		.uleb128 0x3
+ 522 0051 0E       		.uleb128 0xe
+ 523 0052 3A       		.uleb128 0x3a
+ 524 0053 0B       		.uleb128 0xb
+ 525 0054 3B       		.uleb128 0x3b
+ 526 0055 0B       		.uleb128 0xb
+ 527 0056 49       		.uleb128 0x49
+ 528 0057 13       		.uleb128 0x13
+ 529 0058 02       		.uleb128 0x2
+ 530 0059 17       		.uleb128 0x17
+ 531 005a 00       		.byte	0
+ 532 005b 00       		.byte	0
+ 533 005c 06       		.uleb128 0x6
+ 534 005d 24       		.uleb128 0x24
+ 535 005e 00       		.byte	0
+ 536 005f 0B       		.uleb128 0xb
+ 537 0060 0B       		.uleb128 0xb
+ 538 0061 3E       		.uleb128 0x3e
+ 539 0062 0B       		.uleb128 0xb
+ 540 0063 03       		.uleb128 0x3
+ 541 0064 0E       		.uleb128 0xe
+ 542 0065 00       		.byte	0
+ 543 0066 00       		.byte	0
+ 544 0067 07       		.uleb128 0x7
+ 545 0068 0F       		.uleb128 0xf
+ 546 0069 00       		.byte	0
+ 547 006a 0B       		.uleb128 0xb
+ 548 006b 0B       		.uleb128 0xb
+ 549 006c 49       		.uleb128 0x49
+ 550 006d 13       		.uleb128 0x13
+ 551 006e 00       		.byte	0
+ 552 006f 00       		.byte	0
+ 553 0070 08       		.uleb128 0x8
+ 554 0071 01       		.uleb128 0x1
+ 555 0072 01       		.byte	0x1
+ 556 0073 49       		.uleb128 0x49
+ 557 0074 13       		.uleb128 0x13
+ 558 0075 01       		.uleb128 0x1
+ 559 0076 13       		.uleb128 0x13
+ 560 0077 00       		.byte	0
+ 561 0078 00       		.byte	0
+ 562 0079 09       		.uleb128 0x9
+ 563 007a 21       		.uleb128 0x21
+ 564 007b 00       		.byte	0
+ 565 007c 49       		.uleb128 0x49
+ 566 007d 13       		.uleb128 0x13
+ 567 007e 2F       		.uleb128 0x2f
+ 568 007f 0B       		.uleb128 0xb
+ 569 0080 00       		.byte	0
+ 570 0081 00       		.byte	0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 11
+
+
+ 571 0082 0A       		.uleb128 0xa
+ 572 0083 26       		.uleb128 0x26
+ 573 0084 00       		.byte	0
+ 574 0085 49       		.uleb128 0x49
+ 575 0086 13       		.uleb128 0x13
+ 576 0087 00       		.byte	0
+ 577 0088 00       		.byte	0
+ 578 0089 0B       		.uleb128 0xb
+ 579 008a 34       		.uleb128 0x34
+ 580 008b 00       		.byte	0
+ 581 008c 03       		.uleb128 0x3
+ 582 008d 0E       		.uleb128 0xe
+ 583 008e 3A       		.uleb128 0x3a
+ 584 008f 0B       		.uleb128 0xb
+ 585 0090 3B       		.uleb128 0x3b
+ 586 0091 0B       		.uleb128 0xb
+ 587 0092 49       		.uleb128 0x49
+ 588 0093 13       		.uleb128 0x13
+ 589 0094 3F       		.uleb128 0x3f
+ 590 0095 19       		.uleb128 0x19
+ 591 0096 02       		.uleb128 0x2
+ 592 0097 18       		.uleb128 0x18
+ 593 0098 00       		.byte	0
+ 594 0099 00       		.byte	0
+ 595 009a 00       		.byte	0
+ 596              		.section	.debug_loc,"",%progbits
+ 597              	.Ldebug_loc0:
+ 598              	.LLST0:
+ 599 0000 00000000 		.4byte	.LVL0
+ 600 0004 0E000000 		.4byte	.LVL2
+ 601 0008 0100     		.2byte	0x1
+ 602 000a 50       		.byte	0x50
+ 603 000b 0E000000 		.4byte	.LVL2
+ 604 000f 20000000 		.4byte	.LVL4
+ 605 0013 0300     		.2byte	0x3
+ 606 0015 70       		.byte	0x70
+ 607 0016 7F       		.sleb128 -1
+ 608 0017 9F       		.byte	0x9f
+ 609 0018 20000000 		.4byte	.LVL4
+ 610 001c 24000000 		.4byte	.LVL5
+ 611 0020 0100     		.2byte	0x1
+ 612 0022 50       		.byte	0x50
+ 613 0023 28000000 		.4byte	.LVL6
+ 614 0027 2A000000 		.4byte	.LVL7
+ 615 002b 0100     		.2byte	0x1
+ 616 002d 50       		.byte	0x50
+ 617 002e 2A000000 		.4byte	.LVL7
+ 618 0032 30000000 		.4byte	.LFE0
+ 619 0036 0400     		.2byte	0x4
+ 620 0038 F3       		.byte	0xf3
+ 621 0039 01       		.uleb128 0x1
+ 622 003a 50       		.byte	0x50
+ 623 003b 9F       		.byte	0x9f
+ 624 003c 00000000 		.4byte	0
+ 625 0040 00000000 		.4byte	0
+ 626              	.LLST1:
+ 627 0044 00000000 		.4byte	.LVL0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 12
+
+
+ 628 0048 0A000000 		.4byte	.LVL1
+ 629 004c 0100     		.2byte	0x1
+ 630 004e 51       		.byte	0x51
+ 631 004f 0A000000 		.4byte	.LVL1
+ 632 0053 28000000 		.4byte	.LVL6
+ 633 0057 0400     		.2byte	0x4
+ 634 0059 F3       		.byte	0xf3
+ 635 005a 01       		.uleb128 0x1
+ 636 005b 51       		.byte	0x51
+ 637 005c 9F       		.byte	0x9f
+ 638 005d 28000000 		.4byte	.LVL6
+ 639 0061 30000000 		.4byte	.LFE0
+ 640 0065 0100     		.2byte	0x1
+ 641 0067 51       		.byte	0x51
+ 642 0068 00000000 		.4byte	0
+ 643 006c 00000000 		.4byte	0
+ 644              	.LLST2:
+ 645 0070 00000000 		.4byte	.LVL0
+ 646 0074 0A000000 		.4byte	.LVL1
+ 647 0078 0200     		.2byte	0x2
+ 648 007a 30       		.byte	0x30
+ 649 007b 9F       		.byte	0x9f
+ 650 007c 0A000000 		.4byte	.LVL1
+ 651 0080 1E000000 		.4byte	.LVL3
+ 652 0084 0100     		.2byte	0x1
+ 653 0086 53       		.byte	0x53
+ 654 0087 20000000 		.4byte	.LVL4
+ 655 008b 28000000 		.4byte	.LVL6
+ 656 008f 0100     		.2byte	0x1
+ 657 0091 53       		.byte	0x53
+ 658 0092 28000000 		.4byte	.LVL6
+ 659 0096 30000000 		.4byte	.LFE0
+ 660 009a 0200     		.2byte	0x2
+ 661 009c 30       		.byte	0x30
+ 662 009d 9F       		.byte	0x9f
+ 663 009e 00000000 		.4byte	0
+ 664 00a2 00000000 		.4byte	0
+ 665              		.section	.debug_aranges,"",%progbits
+ 666 0000 1C000000 		.4byte	0x1c
+ 667 0004 0200     		.2byte	0x2
+ 668 0006 00000000 		.4byte	.Ldebug_info0
+ 669 000a 04       		.byte	0x4
+ 670 000b 00       		.byte	0
+ 671 000c 0000     		.2byte	0
+ 672 000e 0000     		.2byte	0
+ 673 0010 00000000 		.4byte	.LFB0
+ 674 0014 30000000 		.4byte	.LFE0-.LFB0
+ 675 0018 00000000 		.4byte	0
+ 676 001c 00000000 		.4byte	0
+ 677              		.section	.debug_ranges,"",%progbits
+ 678              	.Ldebug_ranges0:
+ 679 0000 00000000 		.4byte	.LFB0
+ 680 0004 30000000 		.4byte	.LFE0
+ 681 0008 00000000 		.4byte	0
+ 682 000c 00000000 		.4byte	0
+ 683              		.section	.debug_line,"",%progbits
+ 684              	.Ldebug_line0:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 13
+
+
+ 685 0000 52000000 		.section	.debug_str,"MS",%progbits,1
+ 685      02002500 
+ 685      00000201 
+ 685      FB0E0D00 
+ 685      01010101 
+ 686              	.LASF3:
+ 687 0000 756E7369 		.ascii	"unsigned int\000"
+ 687      676E6564 
+ 687      20696E74 
+ 687      00
+ 688              	.LASF6:
+ 689 000d 7372632F 		.ascii	"src/core/crc.c\000"
+ 689      636F7265 
+ 689      2F637263 
+ 689      2E6300
+ 690              	.LASF1:
+ 691 001c 73686F72 		.ascii	"short unsigned int\000"
+ 691      7420756E 
+ 691      7369676E 
+ 691      65642069 
+ 691      6E7400
+ 692              	.LASF8:
+ 693 002f 63726331 		.ascii	"crc16\000"
+ 693      3600
+ 694              	.LASF7:
+ 695 0035 443A5C67 		.ascii	"D:\\git\\oroca_bldc_dev\\oroca_bldc_fw\\oroca_bldc_"
+ 695      69745C6F 
+ 695      726F6361 
+ 695      5F626C64 
+ 695      635F6465 
+ 696 0064 63686962 		.ascii	"chibios\000"
+ 696      696F7300 
+ 697              	.LASF5:
+ 698 006c 474E5520 		.ascii	"GNU C99 5.4.1 20160919 (release) [ARM/embedded-5-br"
+ 698      43393920 
+ 698      352E342E 
+ 698      31203230 
+ 698      31363039 
+ 699 009f 616E6368 		.ascii	"anch revision 240496] -mcpu=cortex-m4 -mfloat-abi=h"
+ 699      20726576 
+ 699      6973696F 
+ 699      6E203234 
+ 699      30343936 
+ 700 00d2 61726420 		.ascii	"ard -mfpu=fpv4-sp-d16 -mno-thumb-interwork -mthumb "
+ 700      2D6D6670 
+ 700      753D6670 
+ 700      76342D73 
+ 700      702D6431 
+ 701 0105 2D676764 		.ascii	"-ggdb -O2 -std=gnu99 -fomit-frame-pointer -falign-f"
+ 701      62202D4F 
+ 701      32202D73 
+ 701      74643D67 
+ 701      6E753939 
+ 702 0138 756E6374 		.ascii	"unctions=16 -ffunction-sections -fdata-sections -fn"
+ 702      696F6E73 
+ 702      3D313620 
+ 702      2D666675 
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 14
+
+
+ 702      6E637469 
+ 703 016b 6F2D636F 		.ascii	"o-common -fsingle-precision-constant\000"
+ 703      6D6D6F6E 
+ 703      202D6673 
+ 703      696E676C 
+ 703      652D7072 
+ 704              	.LASF4:
+ 705 0190 73697A65 		.ascii	"sizetype\000"
+ 705      74797065 
+ 705      00
+ 706              	.LASF2:
+ 707 0199 756E7369 		.ascii	"unsigned char\000"
+ 707      676E6564 
+ 707      20636861 
+ 707      7200
+ 708              	.LASF9:
+ 709 01a7 63726331 		.ascii	"crc16_tab\000"
+ 709      365F7461 
+ 709      6200
+ 710              	.LASF0:
+ 711 01b1 636B7375 		.ascii	"cksum\000"
+ 711      6D00
+ 712              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160919 (release) [ARM/embedded-5-bran
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 crc.c
+C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s:22     .text.crc16:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s:28     .text.crc16:00000000 crc16
+C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s:83     .text.crc16:0000002c $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s:93     .rodata.crc16_tab:00000000 crc16_tab
+C:\Users\IDONNO~1\AppData\Local\Temp\ccnDxrYd.s:89     .rodata.crc16_tab:00000000 $d
+                     .debug_frame:00000010 $d
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,2815 @@
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 1
+   4              		.eabi_attribute 28, 1
+   5              		.fpu fpv4-sp-d16
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 2
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.thumb
+  16              		.syntax unified
+  17              		.file	"ledpwm.c"
+  18              		.text
+  19              	.Ltext0:
+  20              		.cfi_sections	.debug_frame
+  21              		.section	.text.ledpwm_init,"ax",%progbits
+  22              		.align	2
+  23              		.p2align 4,,15
+  24              		.global	ledpwm_init
+  25              		.thumb
+  26              		.thumb_func
+  27              		.type	ledpwm_init, %function
+  28              	ledpwm_init:
+  29              	.LFB256:
+  30              		.file 1 "src/core/ledpwm.c"
+  31              		.loc 1 36 0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 0
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35 0000 38B5     		push	{r3, r4, r5, lr}
+  36              		.cfi_def_cfa_offset 16
+  37              		.cfi_offset 3, -16
+  38              		.cfi_offset 4, -12
+  39              		.cfi_offset 5, -8
+  40              		.cfi_offset 14, -4
+  41              		.loc 1 37 0
+  42 0002 124A     		ldr	r2, .L6
+  43 0004 124D     		ldr	r5, .L6+4
+  44              		.loc 1 36 0
+  45 0006 2DED028B 		vpush.64	{d8}
+  46              		.cfi_def_cfa_offset 24
+  47              		.cfi_offset 80, -24
+  48              		.cfi_offset 81, -20
+  49              		.loc 1 37 0
+  50 000a 0023     		movs	r3, #0
+  51              	.LBB2:
+  52              		.loc 1 41 0
+  53 000c 9FED118A 		vldr.32	s16, .L6+8
+  54              	.LBE2:
+  55              		.loc 1 37 0
+  56 0010 1360     		str	r3, [r2]
+  57              	.LBB3:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 2
+
+
+  58              		.loc 1 40 0
+  59 0012 1C46     		mov	r4, r3
+  60              	.LBE3:
+  61              		.loc 1 37 0
+  62 0014 5360     		str	r3, [r2, #4]
+  63              	.LVL0:
+  64              	.L2:
+  65              	.LBB4:
+  66              		.loc 1 41 0 discriminator 3
+  67 0016 07EE904A 		vmov	s15, r4	@ int
+  68 001a B8EEE70A 		vcvt.f32.s32	s0, s15
+  69 001e DFED0E0A 		vldr.32	s1, .L6+12
+  70 0022 80EE080A 		vdiv.f32	s0, s0, s16
+  71 0026 FFF7FEFF 		bl	powf
+  72              	.LVL1:
+  73              		.loc 1 40 0 discriminator 3
+  74 002a 0134     		adds	r4, r4, #1
+  75              	.LVL2:
+  76              		.loc 1 41 0 discriminator 3
+  77 002c 20EE080A 		vmul.f32	s0, s0, s16
+  78 0030 FFF7FEFF 		bl	roundf
+  79              	.LVL3:
+  80 0034 FDEEC07A 		vcvt.s32.f32	s15, s0
+  81              		.loc 1 40 0 discriminator 3
+  82 0038 C92C     		cmp	r4, #201
+  83              		.loc 1 41 0 discriminator 3
+  84 003a 17EE903A 		vmov	r3, s15	@ int
+  85 003e 05F8013F 		strb	r3, [r5, #1]!
+  86              		.loc 1 40 0 discriminator 3
+  87 0042 E8D1     		bne	.L2
+  88              	.LBE4:
+  89              		.loc 1 43 0
+  90 0044 BDEC028B 		vldm	sp!, {d8}
+  91              		.cfi_restore 80
+  92              		.cfi_restore 81
+  93              		.cfi_def_cfa_offset 16
+  94 0048 38BD     		pop	{r3, r4, r5, pc}
+  95              	.LVL4:
+  96              	.L7:
+  97 004a 00BF     		.align	2
+  98              	.L6:
+  99 004c 00000000 		.word	.LANCHOR0
+ 100 0050 FFFFFFFF 		.word	.LANCHOR1-1
+ 101 0054 00004843 		.word	1128792064
+ 102 0058 E4380E40 		.word	1074673892
+ 103              		.cfi_endproc
+ 104              	.LFE256:
+ 105              		.size	ledpwm_init, .-ledpwm_init
+ 106              		.section	.text.ledpwm_set_intensity,"ax",%progbits
+ 107              		.align	2
+ 108              		.p2align 4,,15
+ 109              		.global	ledpwm_set_intensity
+ 110              		.thumb
+ 111              		.thumb_func
+ 112              		.type	ledpwm_set_intensity, %function
+ 113              	ledpwm_set_intensity:
+ 114              	.LFB257:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 3
+
+
+ 115              		.loc 1 51 0
+ 116              		.cfi_startproc
+ 117              		@ args = 0, pretend = 0, frame = 0
+ 118              		@ frame_needed = 0, uses_anonymous_args = 0
+ 119              		@ link register save eliminated.
+ 120              	.LVL5:
+ 121              		.loc 1 52 0
+ 122 0000 0128     		cmp	r0, #1
+ 123 0002 00D9     		bls	.L13
+ 124 0004 7047     		bx	lr
+ 125              	.L13:
+ 126              		.loc 1 56 0
+ 127 0006 B5EEC00A 		vcmpe.f32	s0, #0
+ 128 000a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 129 000e 0ED4     		bmi	.L11
+ 130              		.loc 1 60 0
+ 131 0010 F7EE007A 		vmov.f32	s15, #1.0e+0
+ 132 0014 B4EEE70A 		vcmpe.f32	s0, s15
+ 133 0018 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 134 001c C8BF     		it	gt
+ 135 001e C823     		movgt	r3, #200
+ 136 0020 07DD     		ble	.L14
+ 137              	.LVL6:
+ 138              	.L10:
+ 139              		.loc 1 64 0
+ 140 0022 0849     		ldr	r1, .L15
+ 141 0024 084A     		ldr	r2, .L15+4
+ 142 0026 CB5C     		ldrb	r3, [r1, r3]	@ zero_extendqisi2
+ 143 0028 42F82030 		str	r3, [r2, r0, lsl #2]
+ 144 002c 7047     		bx	lr
+ 145              	.LVL7:
+ 146              	.L11:
+ 147 002e 0023     		movs	r3, #0
+ 148 0030 F7E7     		b	.L10
+ 149              	.L14:
+ 150 0032 DFED067A 		vldr.32	s15, .L15+8
+ 151 0036 20EE270A 		vmul.f32	s0, s0, s15
+ 152              	.LVL8:
+ 153 003a FDEEC07A 		vcvt.s32.f32	s15, s0
+ 154 003e 17EE903A 		vmov	r3, s15	@ int
+ 155 0042 EEE7     		b	.L10
+ 156              	.L16:
+ 157              		.align	2
+ 158              	.L15:
+ 159 0044 00000000 		.word	.LANCHOR1
+ 160 0048 00000000 		.word	.LANCHOR0
+ 161 004c 00004843 		.word	1128792064
+ 162              		.cfi_endproc
+ 163              	.LFE257:
+ 164              		.size	ledpwm_set_intensity, .-ledpwm_set_intensity
+ 165              		.section	.text.ledpwm_led_on,"ax",%progbits
+ 166              		.align	2
+ 167              		.p2align 4,,15
+ 168              		.global	ledpwm_led_on
+ 169              		.thumb
+ 170              		.thumb_func
+ 171              		.type	ledpwm_led_on, %function
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 4
+
+
+ 172              	ledpwm_led_on:
+ 173              	.LFB258:
+ 174              		.loc 1 67 0
+ 175              		.cfi_startproc
+ 176              		@ args = 0, pretend = 0, frame = 0
+ 177              		@ frame_needed = 0, uses_anonymous_args = 0
+ 178              		@ link register save eliminated.
+ 179              	.LVL9:
+ 180              		.loc 1 68 0
+ 181 0000 0128     		cmp	r0, #1
+ 182 0002 03DC     		bgt	.L17
+ 183              		.loc 1 72 0
+ 184 0004 024B     		ldr	r3, .L19
+ 185 0006 C822     		movs	r2, #200
+ 186 0008 43F82020 		str	r2, [r3, r0, lsl #2]
+ 187              	.L17:
+ 188 000c 7047     		bx	lr
+ 189              	.L20:
+ 190 000e 00BF     		.align	2
+ 191              	.L19:
+ 192 0010 00000000 		.word	.LANCHOR0
+ 193              		.cfi_endproc
+ 194              	.LFE258:
+ 195              		.size	ledpwm_led_on, .-ledpwm_led_on
+ 196              		.section	.text.ledpwm_led_off,"ax",%progbits
+ 197              		.align	2
+ 198              		.p2align 4,,15
+ 199              		.global	ledpwm_led_off
+ 200              		.thumb
+ 201              		.thumb_func
+ 202              		.type	ledpwm_led_off, %function
+ 203              	ledpwm_led_off:
+ 204              	.LFB259:
+ 205              		.loc 1 75 0
+ 206              		.cfi_startproc
+ 207              		@ args = 0, pretend = 0, frame = 0
+ 208              		@ frame_needed = 0, uses_anonymous_args = 0
+ 209              		@ link register save eliminated.
+ 210              	.LVL10:
+ 211              		.loc 1 76 0
+ 212 0000 0128     		cmp	r0, #1
+ 213 0002 03DC     		bgt	.L21
+ 214              		.loc 1 80 0
+ 215 0004 024B     		ldr	r3, .L23
+ 216 0006 0022     		movs	r2, #0
+ 217 0008 43F82020 		str	r2, [r3, r0, lsl #2]
+ 218              	.L21:
+ 219 000c 7047     		bx	lr
+ 220              	.L24:
+ 221 000e 00BF     		.align	2
+ 222              	.L23:
+ 223 0010 00000000 		.word	.LANCHOR0
+ 224              		.cfi_endproc
+ 225              	.LFE259:
+ 226              		.size	ledpwm_led_off, .-ledpwm_led_off
+ 227              		.section	.text.ledpwm_update_pwm,"ax",%progbits
+ 228              		.align	2
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 5
+
+
+ 229              		.p2align 4,,15
+ 230              		.global	ledpwm_update_pwm
+ 231              		.thumb
+ 232              		.thumb_func
+ 233              		.type	ledpwm_update_pwm, %function
+ 234              	ledpwm_update_pwm:
+ 235              	.LFB260:
+ 236              		.loc 1 86 0
+ 237              		.cfi_startproc
+ 238              		@ args = 0, pretend = 0, frame = 0
+ 239              		@ frame_needed = 0, uses_anonymous_args = 0
+ 240              		@ link register save eliminated.
+ 241              		.loc 1 88 0
+ 242 0000 0C4A     		ldr	r2, .L33
+ 243 0002 1368     		ldr	r3, [r2]
+ 244 0004 0133     		adds	r3, r3, #1
+ 245              		.loc 1 89 0
+ 246 0006 C82B     		cmp	r3, #200
+ 247              		.loc 1 90 0
+ 248 0008 08BF     		it	eq
+ 249 000a 0023     		moveq	r3, #0
+ 250 000c 1360     		str	r3, [r2]
+ 251              		.loc 1 93 0
+ 252 000e 0A4A     		ldr	r2, .L33+4
+ 253 0010 1168     		ldr	r1, [r2]
+ 254 0012 9942     		cmp	r1, r3
+ 255              		.loc 1 94 0
+ 256 0014 0949     		ldr	r1, .L33+8
+ 257 0016 4FF01000 		mov	r0, #16
+ 258 001a D4BF     		ite	le
+ 259 001c 4883     		strhle	r0, [r1, #26]	@ movhi
+ 260              		.loc 1 96 0
+ 261 001e 0883     		strhgt	r0, [r1, #24]	@ movhi
+ 262              		.loc 1 99 0
+ 263 0020 5268     		ldr	r2, [r2, #4]
+ 264 0022 9A42     		cmp	r2, r3
+ 265              		.loc 1 100 0
+ 266 0024 054B     		ldr	r3, .L33+8
+ 267 0026 4FF02002 		mov	r2, #32
+ 268 002a D4BF     		ite	le
+ 269 002c 5A83     		strhle	r2, [r3, #26]	@ movhi
+ 270              		.loc 1 102 0
+ 271 002e 1A83     		strhgt	r2, [r3, #24]	@ movhi
+ 272 0030 7047     		bx	lr
+ 273              	.L34:
+ 274 0032 00BF     		.align	2
+ 275              	.L33:
+ 276 0034 00000000 		.word	.LANCHOR2
+ 277 0038 00000000 		.word	.LANCHOR0
+ 278 003c 00080240 		.word	1073874944
+ 279              		.cfi_endproc
+ 280              	.LFE260:
+ 281              		.size	ledpwm_update_pwm, .-ledpwm_update_pwm
+ 282              		.section	.bss.led_values,"aw",%nobits
+ 283              		.align	2
+ 284              		.set	.LANCHOR0,. + 0
+ 285              		.type	led_values, %object
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 6
+
+
+ 286              		.size	led_values, 8
+ 287              	led_values:
+ 288 0000 00000000 		.space	8
+ 288      00000000 
+ 289              		.section	.bss.cnt.10303,"aw",%nobits
+ 290              		.align	2
+ 291              		.set	.LANCHOR2,. + 0
+ 292              		.type	cnt.10303, %object
+ 293              		.size	cnt.10303, 4
+ 294              	cnt.10303:
+ 295 0000 00000000 		.space	4
+ 296              		.section	.bss.gamma_table,"aw",%nobits
+ 297              		.align	2
+ 298              		.set	.LANCHOR1,. + 0
+ 299              		.type	gamma_table, %object
+ 300              		.size	gamma_table, 201
+ 301              	gamma_table:
+ 302 0000 00000000 		.space	201
+ 302      00000000 
+ 302      00000000 
+ 302      00000000 
+ 302      00000000 
+ 303              		.text
+ 304              	.Letext0:
+ 305              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\5.4 2016q3\\lib\\gcc\\arm-none-eabi\\5.4
+ 306              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\5.4 2016q3\\arm-none-eabi\\include\\mach
+ 307              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\5.4 2016q3\\arm-none-eabi\\include\\sys\
+ 308              		.file 5 "src/ChibiOS_3.0.2/os/rt/ports/ARMCMx/compilers/GCC/chtypes.h"
+ 309              		.file 6 "src/ChibiOS_3.0.2/os/rt/include/chsystypes.h"
+ 310              		.file 7 "src/ChibiOS_3.0.2/os/rt/include/chschd.h"
+ 311              		.file 8 "src/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore.h"
+ 312              		.file 9 "src/ChibiOS_3.0.2/os/rt/ports/ARMCMx/chcore_v7m.h"
+ 313              		.file 10 "src/ChibiOS_3.0.2/os/rt/include/chtm.h"
+ 314              		.file 11 "src/ChibiOS_3.0.2/os/rt/include/chsem.h"
+ 315              		.file 12 "src/ChibiOS_3.0.2/os/rt/include/chmtx.h"
+ 316              		.file 13 "src/ChibiOS_3.0.2/os/hal/ports/STM32/LLD/GPIOv2/pal_lld.h"
+ 317              		.file 14 "c:\\program files (x86)\\gnu tools arm embedded\\5.4 2016q3\\arm-none-eabi\\include\\mat
+ 318              		.file 15 "src/ChibiOS_3.0.2/os/ext/CMSIS/include/core_cm4.h"
+ 319              		.section	.debug_info,"",%progbits
+ 320              	.Ldebug_info0:
+ 321 0000 A2090000 		.4byte	0x9a2
+ 322 0004 0400     		.2byte	0x4
+ 323 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 324 000a 04       		.byte	0x4
+ 325 000b 01       		.uleb128 0x1
+ 326 000c 21050000 		.4byte	.LASF133
+ 327 0010 0C       		.byte	0xc
+ 328 0011 CB030000 		.4byte	.LASF134
+ 329 0015 36020000 		.4byte	.LASF135
+ 330 0019 20000000 		.4byte	.Ldebug_ranges0+0x20
+ 331 001d 00000000 		.4byte	0
+ 332 0021 00000000 		.4byte	.Ldebug_line0
+ 333 0025 02       		.uleb128 0x2
+ 334 0026 04       		.byte	0x4
+ 335 0027 04       		.byte	0x4
+ 336 0028 4C030000 		.4byte	.LASF0
+ 337 002c 03       		.uleb128 0x3
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 7
+
+
+ 338 002d 04       		.byte	0x4
+ 339 002e 05       		.byte	0x5
+ 340 002f 696E7400 		.ascii	"int\000"
+ 341 0033 04       		.uleb128 0x4
+ 342 0034 0D000000 		.4byte	.LASF3
+ 343 0038 02       		.byte	0x2
+ 344 0039 D8       		.byte	0xd8
+ 345 003a 3E000000 		.4byte	0x3e
+ 346 003e 02       		.uleb128 0x2
+ 347 003f 04       		.byte	0x4
+ 348 0040 07       		.byte	0x7
+ 349 0041 B7010000 		.4byte	.LASF1
+ 350 0045 02       		.uleb128 0x2
+ 351 0046 01       		.byte	0x1
+ 352 0047 06       		.byte	0x6
+ 353 0048 DE000000 		.4byte	.LASF2
+ 354 004c 04       		.uleb128 0x4
+ 355 004d 2B000000 		.4byte	.LASF4
+ 356 0051 03       		.byte	0x3
+ 357 0052 1D       		.byte	0x1d
+ 358 0053 57000000 		.4byte	0x57
+ 359 0057 02       		.uleb128 0x2
+ 360 0058 01       		.byte	0x1
+ 361 0059 08       		.byte	0x8
+ 362 005a BD030000 		.4byte	.LASF5
+ 363 005e 02       		.uleb128 0x2
+ 364 005f 02       		.byte	0x2
+ 365 0060 05       		.byte	0x5
+ 366 0061 E7030000 		.4byte	.LASF6
+ 367 0065 04       		.uleb128 0x4
+ 368 0066 8B040000 		.4byte	.LASF7
+ 369 006a 03       		.byte	0x3
+ 370 006b 2B       		.byte	0x2b
+ 371 006c 70000000 		.4byte	0x70
+ 372 0070 02       		.uleb128 0x2
+ 373 0071 02       		.byte	0x2
+ 374 0072 07       		.byte	0x7
+ 375 0073 13020000 		.4byte	.LASF8
+ 376 0077 04       		.uleb128 0x4
+ 377 0078 A2020000 		.4byte	.LASF9
+ 378 007c 03       		.byte	0x3
+ 379 007d 3F       		.byte	0x3f
+ 380 007e 82000000 		.4byte	0x82
+ 381 0082 02       		.uleb128 0x2
+ 382 0083 04       		.byte	0x4
+ 383 0084 05       		.byte	0x5
+ 384 0085 38010000 		.4byte	.LASF10
+ 385 0089 04       		.uleb128 0x4
+ 386 008a C4040000 		.4byte	.LASF11
+ 387 008e 03       		.byte	0x3
+ 388 008f 41       		.byte	0x41
+ 389 0090 94000000 		.4byte	0x94
+ 390 0094 02       		.uleb128 0x2
+ 391 0095 04       		.byte	0x4
+ 392 0096 07       		.byte	0x7
+ 393 0097 EF000000 		.4byte	.LASF12
+ 394 009b 02       		.uleb128 0x2
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 8
+
+
+ 395 009c 08       		.byte	0x8
+ 396 009d 05       		.byte	0x5
+ 397 009e D0000000 		.4byte	.LASF13
+ 398 00a2 04       		.uleb128 0x4
+ 399 00a3 3C030000 		.4byte	.LASF14
+ 400 00a7 03       		.byte	0x3
+ 401 00a8 5B       		.byte	0x5b
+ 402 00a9 AD000000 		.4byte	0xad
+ 403 00ad 02       		.uleb128 0x2
+ 404 00ae 08       		.byte	0x8
+ 405 00af 07       		.byte	0x7
+ 406 00b0 67000000 		.4byte	.LASF15
+ 407 00b4 04       		.uleb128 0x4
+ 408 00b5 4B060000 		.4byte	.LASF16
+ 409 00b9 04       		.byte	0x4
+ 410 00ba 18       		.byte	0x18
+ 411 00bb 4C000000 		.4byte	0x4c
+ 412 00bf 04       		.uleb128 0x4
+ 413 00c0 4A010000 		.4byte	.LASF17
+ 414 00c4 04       		.byte	0x4
+ 415 00c5 24       		.byte	0x24
+ 416 00c6 65000000 		.4byte	0x65
+ 417 00ca 04       		.uleb128 0x4
+ 418 00cb B5030000 		.4byte	.LASF18
+ 419 00cf 04       		.byte	0x4
+ 420 00d0 2C       		.byte	0x2c
+ 421 00d1 77000000 		.4byte	0x77
+ 422 00d5 04       		.uleb128 0x4
+ 423 00d6 47040000 		.4byte	.LASF19
+ 424 00da 04       		.byte	0x4
+ 425 00db 30       		.byte	0x30
+ 426 00dc 89000000 		.4byte	0x89
+ 427 00e0 04       		.uleb128 0x4
+ 428 00e1 1B000000 		.4byte	.LASF20
+ 429 00e5 04       		.byte	0x4
+ 430 00e6 3C       		.byte	0x3c
+ 431 00e7 A2000000 		.4byte	0xa2
+ 432 00eb 05       		.uleb128 0x5
+ 433 00ec CA000000 		.4byte	0xca
+ 434 00f0 05       		.uleb128 0x5
+ 435 00f1 D5000000 		.4byte	0xd5
+ 436 00f5 04       		.uleb128 0x4
+ 437 00f6 B7020000 		.4byte	.LASF21
+ 438 00fa 05       		.byte	0x5
+ 439 00fb 45       		.byte	0x45
+ 440 00fc D5000000 		.4byte	0xd5
+ 441 0100 04       		.uleb128 0x4
+ 442 0101 79020000 		.4byte	.LASF22
+ 443 0105 05       		.byte	0x5
+ 444 0106 48       		.byte	0x48
+ 445 0107 B4000000 		.4byte	0xb4
+ 446 010b 04       		.uleb128 0x4
+ 447 010c 41010000 		.4byte	.LASF23
+ 448 0110 05       		.byte	0x5
+ 449 0111 49       		.byte	0x49
+ 450 0112 B4000000 		.4byte	0xb4
+ 451 0116 04       		.uleb128 0x4
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 9
+
+
+ 452 0117 63030000 		.4byte	.LASF24
+ 453 011b 05       		.byte	0x5
+ 454 011c 4A       		.byte	0x4a
+ 455 011d B4000000 		.4byte	0xb4
+ 456 0121 04       		.uleb128 0x4
+ 457 0122 18010000 		.4byte	.LASF25
+ 458 0126 05       		.byte	0x5
+ 459 0127 4B       		.byte	0x4b
+ 460 0128 B4000000 		.4byte	0xb4
+ 461 012c 04       		.uleb128 0x4
+ 462 012d 82030000 		.4byte	.LASF26
+ 463 0131 05       		.byte	0x5
+ 464 0132 4C       		.byte	0x4c
+ 465 0133 D5000000 		.4byte	0xd5
+ 466 0137 04       		.uleb128 0x4
+ 467 0138 30020000 		.4byte	.LASF27
+ 468 013c 05       		.byte	0x5
+ 469 013d 4D       		.byte	0x4d
+ 470 013e CA000000 		.4byte	0xca
+ 471 0142 04       		.uleb128 0x4
+ 472 0143 96020000 		.4byte	.LASF28
+ 473 0147 05       		.byte	0x5
+ 474 0148 4F       		.byte	0x4f
+ 475 0149 D5000000 		.4byte	0xd5
+ 476 014d 04       		.uleb128 0x4
+ 477 014e B1010000 		.4byte	.LASF29
+ 478 0152 05       		.byte	0x5
+ 479 0153 51       		.byte	0x51
+ 480 0154 CA000000 		.4byte	0xca
+ 481 0158 04       		.uleb128 0x4
+ 482 0159 A6040000 		.4byte	.LASF30
+ 483 015d 06       		.byte	0x6
+ 484 015e 33       		.byte	0x33
+ 485 015f D5000000 		.4byte	0xd5
+ 486 0163 04       		.uleb128 0x4
+ 487 0164 96040000 		.4byte	.LASF31
+ 488 0168 06       		.byte	0x6
+ 489 0169 3F       		.byte	0x3f
+ 490 016a 6E010000 		.4byte	0x16e
+ 491 016e 06       		.uleb128 0x6
+ 492 016f 26020000 		.4byte	.LASF53
+ 493 0173 48       		.byte	0x48
+ 494 0174 07       		.byte	0x7
+ 495 0175 C2       		.byte	0xc2
+ 496 0176 73020000 		.4byte	0x273
+ 497 017a 07       		.uleb128 0x7
+ 498 017b 11040000 		.4byte	.LASF32
+ 499 017f 07       		.byte	0x7
+ 500 0180 C3       		.byte	0xc3
+ 501 0181 7E020000 		.4byte	0x27e
+ 502 0185 00       		.byte	0
+ 503 0186 07       		.uleb128 0x7
+ 504 0187 7B030000 		.4byte	.LASF33
+ 505 018b 07       		.byte	0x7
+ 506 018c C5       		.byte	0xc5
+ 507 018d 7E020000 		.4byte	0x27e
+ 508 0191 04       		.byte	0x4
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 10
+
+
+ 509 0192 07       		.uleb128 0x7
+ 510 0193 C9000000 		.4byte	.LASF34
+ 511 0197 07       		.byte	0x7
+ 512 0198 C7       		.byte	0xc7
+ 513 0199 2C010000 		.4byte	0x12c
+ 514 019d 08       		.byte	0x8
+ 515 019e 07       		.uleb128 0x7
+ 516 019f 95060000 		.4byte	.LASF35
+ 517 01a3 07       		.byte	0x7
+ 518 01a4 C8       		.byte	0xc8
+ 519 01a5 AE040000 		.4byte	0x4ae
+ 520 01a9 0C       		.byte	0xc
+ 521 01aa 07       		.uleb128 0x7
+ 522 01ab 53010000 		.4byte	.LASF36
+ 523 01af 07       		.byte	0x7
+ 524 01b0 CA       		.byte	0xca
+ 525 01b1 7E020000 		.4byte	0x27e
+ 526 01b5 10       		.byte	0x10
+ 527 01b6 07       		.uleb128 0x7
+ 528 01b7 05030000 		.4byte	.LASF37
+ 529 01bb 07       		.byte	0x7
+ 530 01bc CB       		.byte	0xcb
+ 531 01bd 7E020000 		.4byte	0x27e
+ 532 01c1 14       		.byte	0x14
+ 533 01c2 07       		.uleb128 0x7
+ 534 01c3 65060000 		.4byte	.LASF38
+ 535 01c7 07       		.byte	0x7
+ 536 01c8 D2       		.byte	0xd2
+ 537 01c9 F3060000 		.4byte	0x6f3
+ 538 01cd 18       		.byte	0x18
+ 539 01ce 07       		.uleb128 0x7
+ 540 01cf F1030000 		.4byte	.LASF39
+ 541 01d3 07       		.byte	0x7
+ 542 01d4 DD       		.byte	0xdd
+ 543 01d5 0B010000 		.4byte	0x10b
+ 544 01d9 1C       		.byte	0x1c
+ 545 01da 07       		.uleb128 0x7
+ 546 01db 18040000 		.4byte	.LASF40
+ 547 01df 07       		.byte	0x7
+ 548 01e0 E1       		.byte	0xe1
+ 549 01e1 00010000 		.4byte	0x100
+ 550 01e5 1D       		.byte	0x1d
+ 551 01e6 07       		.uleb128 0x7
+ 552 01e7 1A050000 		.4byte	.LASF41
+ 553 01eb 07       		.byte	0x7
+ 554 01ec E6       		.byte	0xe6
+ 555 01ed 16010000 		.4byte	0x116
+ 556 01f1 1E       		.byte	0x1e
+ 557 01f2 07       		.uleb128 0x7
+ 558 01f3 F9030000 		.4byte	.LASF42
+ 559 01f7 07       		.byte	0x7
+ 560 01f8 EC       		.byte	0xec
+ 561 01f9 21010000 		.4byte	0x121
+ 562 01fd 1F       		.byte	0x1f
+ 563 01fe 07       		.uleb128 0x7
+ 564 01ff 81020000 		.4byte	.LASF43
+ 565 0203 07       		.byte	0x7
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 11
+
+
+ 566 0204 F3       		.byte	0xf3
+ 567 0205 05070000 		.4byte	0x705
+ 568 0209 20       		.byte	0x20
+ 569 020a 08       		.uleb128 0x8
+ 570 020b 705F7500 		.ascii	"p_u\000"
+ 571 020f 07       		.byte	0x7
+ 572 0210 3101     		.2byte	0x131
+ 573 0212 2E060000 		.4byte	0x62e
+ 574 0216 24       		.byte	0x24
+ 575 0217 09       		.uleb128 0x9
+ 576 0218 9B060000 		.4byte	.LASF44
+ 577 021c 07       		.byte	0x7
+ 578 021d 3601     		.2byte	0x136
+ 579 021f 84020000 		.4byte	0x284
+ 580 0223 28       		.byte	0x28
+ 581 0224 09       		.uleb128 0x9
+ 582 0225 F1040000 		.4byte	.LASF45
+ 583 0229 07       		.byte	0x7
+ 584 022a 3C01     		.2byte	0x13c
+ 585 022c A8020000 		.4byte	0x2a8
+ 586 0230 2C       		.byte	0x2c
+ 587 0231 09       		.uleb128 0x9
+ 588 0232 80060000 		.4byte	.LASF46
+ 589 0236 07       		.byte	0x7
+ 590 0237 4001     		.2byte	0x140
+ 591 0239 37010000 		.4byte	0x137
+ 592 023d 34       		.byte	0x34
+ 593 023e 09       		.uleb128 0x9
+ 594 023f 3C040000 		.4byte	.LASF47
+ 595 0243 07       		.byte	0x7
+ 596 0244 4601     		.2byte	0x146
+ 597 0246 42010000 		.4byte	0x142
+ 598 024a 38       		.byte	0x38
+ 599 024b 09       		.uleb128 0x9
+ 600 024c DD030000 		.4byte	.LASF48
+ 601 0250 07       		.byte	0x7
+ 602 0251 4D01     		.2byte	0x14d
+ 603 0253 ED060000 		.4byte	0x6ed
+ 604 0257 3C       		.byte	0x3c
+ 605 0258 09       		.uleb128 0x9
+ 606 0259 B0040000 		.4byte	.LASF49
+ 607 025d 07       		.byte	0x7
+ 608 025e 5101     		.2byte	0x151
+ 609 0260 2C010000 		.4byte	0x12c
+ 610 0264 40       		.byte	0x40
+ 611 0265 09       		.uleb128 0x9
+ 612 0266 01010000 		.4byte	.LASF50
+ 613 026a 07       		.byte	0x7
+ 614 026b 5801     		.2byte	0x158
+ 615 026d 5B030000 		.4byte	0x35b
+ 616 0271 44       		.byte	0x44
+ 617 0272 00       		.byte	0
+ 618 0273 04       		.uleb128 0x4
+ 619 0274 BF020000 		.4byte	.LASF51
+ 620 0278 06       		.byte	0x6
+ 621 0279 44       		.byte	0x44
+ 622 027a 7E020000 		.4byte	0x27e
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 12
+
+
+ 623 027e 0A       		.uleb128 0xa
+ 624 027f 04       		.byte	0x4
+ 625 0280 63010000 		.4byte	0x163
+ 626 0284 04       		.uleb128 0x4
+ 627 0285 71060000 		.4byte	.LASF52
+ 628 0289 06       		.byte	0x6
+ 629 028a 49       		.byte	0x49
+ 630 028b 8F020000 		.4byte	0x28f
+ 631 028f 06       		.uleb128 0x6
+ 632 0290 6A040000 		.4byte	.LASF54
+ 633 0294 04       		.byte	0x4
+ 634 0295 07       		.byte	0x7
+ 635 0296 B0       		.byte	0xb0
+ 636 0297 A8020000 		.4byte	0x2a8
+ 637 029b 07       		.uleb128 0x7
+ 638 029c 11040000 		.4byte	.LASF32
+ 639 02a0 07       		.byte	0x7
+ 640 02a1 B1       		.byte	0xb1
+ 641 02a2 7E020000 		.4byte	0x27e
+ 642 02a6 00       		.byte	0
+ 643 02a7 00       		.byte	0
+ 644 02a8 04       		.uleb128 0x4
+ 645 02a9 0A050000 		.4byte	.LASF55
+ 646 02ad 06       		.byte	0x6
+ 647 02ae 50       		.byte	0x50
+ 648 02af B3020000 		.4byte	0x2b3
+ 649 02b3 06       		.uleb128 0x6
+ 650 02b4 AC000000 		.4byte	.LASF56
+ 651 02b8 08       		.byte	0x8
+ 652 02b9 07       		.byte	0x7
+ 653 02ba B7       		.byte	0xb7
+ 654 02bb D8020000 		.4byte	0x2d8
+ 655 02bf 07       		.uleb128 0x7
+ 656 02c0 11040000 		.4byte	.LASF32
+ 657 02c4 07       		.byte	0x7
+ 658 02c5 B8       		.byte	0xb8
+ 659 02c6 7E020000 		.4byte	0x27e
+ 660 02ca 00       		.byte	0
+ 661 02cb 07       		.uleb128 0x7
+ 662 02cc 7B030000 		.4byte	.LASF33
+ 663 02d0 07       		.byte	0x7
+ 664 02d1 B9       		.byte	0xb9
+ 665 02d2 7E020000 		.4byte	0x27e
+ 666 02d6 04       		.byte	0x4
+ 667 02d7 00       		.byte	0
+ 668 02d8 04       		.uleb128 0x4
+ 669 02d9 00000000 		.4byte	.LASF57
+ 670 02dd 06       		.byte	0x6
+ 671 02de 57       		.byte	0x57
+ 672 02df E3020000 		.4byte	0x2e3
+ 673 02e3 0B       		.uleb128 0xb
+ 674 02e4 88020000 		.4byte	.LASF58
+ 675 02e8 1C       		.byte	0x1c
+ 676 02e9 07       		.byte	0x7
+ 677 02ea 9001     		.2byte	0x190
+ 678 02ec 3F030000 		.4byte	0x33f
+ 679 02f0 09       		.uleb128 0x9
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 13
+
+
+ 680 02f1 57040000 		.4byte	.LASF59
+ 681 02f5 07       		.byte	0x7
+ 682 02f6 9101     		.2byte	0x191
+ 683 02f8 A8020000 		.4byte	0x2a8
+ 684 02fc 00       		.byte	0
+ 685 02fd 09       		.uleb128 0x9
+ 686 02fe 03040000 		.4byte	.LASF60
+ 687 0302 07       		.byte	0x7
+ 688 0303 9201     		.2byte	0x192
+ 689 0305 2C010000 		.4byte	0x12c
+ 690 0309 08       		.byte	0x8
+ 691 030a 09       		.uleb128 0x9
+ 692 030b 0D030000 		.4byte	.LASF61
+ 693 030f 07       		.byte	0x7
+ 694 0310 9401     		.2byte	0x194
+ 695 0312 AE040000 		.4byte	0x4ae
+ 696 0316 0C       		.byte	0xc
+ 697 0317 09       		.uleb128 0x9
+ 698 0318 74010000 		.4byte	.LASF62
+ 699 031c 07       		.byte	0x7
+ 700 031d 9701     		.2byte	0x197
+ 701 031f 7E020000 		.4byte	0x27e
+ 702 0323 10       		.byte	0x10
+ 703 0324 09       		.uleb128 0x9
+ 704 0325 2E030000 		.4byte	.LASF63
+ 705 0329 07       		.byte	0x7
+ 706 032a 9801     		.2byte	0x198
+ 707 032c 7E020000 		.4byte	0x27e
+ 708 0330 14       		.byte	0x14
+ 709 0331 09       		.uleb128 0x9
+ 710 0332 24030000 		.4byte	.LASF64
+ 711 0336 07       		.byte	0x7
+ 712 0337 9B01     		.2byte	0x19b
+ 713 0339 7E020000 		.4byte	0x27e
+ 714 033d 18       		.byte	0x18
+ 715 033e 00       		.byte	0
+ 716 033f 04       		.uleb128 0x4
+ 717 0340 BB040000 		.4byte	.LASF65
+ 718 0344 06       		.byte	0x6
+ 719 0345 5C       		.byte	0x5c
+ 720 0346 4A030000 		.4byte	0x34a
+ 721 034a 0A       		.uleb128 0xa
+ 722 034b 04       		.byte	0x4
+ 723 034c 50030000 		.4byte	0x350
+ 724 0350 0C       		.uleb128 0xc
+ 725 0351 5B030000 		.4byte	0x35b
+ 726 0355 0D       		.uleb128 0xd
+ 727 0356 5B030000 		.4byte	0x35b
+ 728 035a 00       		.byte	0
+ 729 035b 0E       		.uleb128 0xe
+ 730 035c 04       		.byte	0x4
+ 731 035d 04       		.uleb128 0x4
+ 732 035e 6B030000 		.4byte	.LASF66
+ 733 0362 06       		.byte	0x6
+ 734 0363 61       		.byte	0x61
+ 735 0364 68030000 		.4byte	0x368
+ 736 0368 0B       		.uleb128 0xb
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 14
+
+
+ 737 0369 E0040000 		.4byte	.LASF67
+ 738 036d 14       		.byte	0x14
+ 739 036e 07       		.byte	0x7
+ 740 036f 6B01     		.2byte	0x16b
+ 741 0371 B7030000 		.4byte	0x3b7
+ 742 0375 09       		.uleb128 0x9
+ 743 0376 C4010000 		.4byte	.LASF68
+ 744 037a 07       		.byte	0x7
+ 745 037b 6C01     		.2byte	0x16c
+ 746 037d 0A070000 		.4byte	0x70a
+ 747 0381 00       		.byte	0
+ 748 0382 09       		.uleb128 0x9
+ 749 0383 85010000 		.4byte	.LASF69
+ 750 0387 07       		.byte	0x7
+ 751 0388 6D01     		.2byte	0x16d
+ 752 038a 0A070000 		.4byte	0x70a
+ 753 038e 04       		.byte	0x4
+ 754 038f 09       		.uleb128 0x9
+ 755 0390 DD010000 		.4byte	.LASF70
+ 756 0394 07       		.byte	0x7
+ 757 0395 6E01     		.2byte	0x16e
+ 758 0397 58010000 		.4byte	0x158
+ 759 039b 08       		.byte	0x8
+ 760 039c 09       		.uleb128 0x9
+ 761 039d EF020000 		.4byte	.LASF71
+ 762 03a1 07       		.byte	0x7
+ 763 03a2 6F01     		.2byte	0x16f
+ 764 03a4 3F030000 		.4byte	0x33f
+ 765 03a8 0C       		.byte	0xc
+ 766 03a9 09       		.uleb128 0x9
+ 767 03aa FC040000 		.4byte	.LASF72
+ 768 03ae 07       		.byte	0x7
+ 769 03af 7101     		.2byte	0x171
+ 770 03b1 5B030000 		.4byte	0x35b
+ 771 03b5 10       		.byte	0x10
+ 772 03b6 00       		.byte	0
+ 773 03b7 04       		.uleb128 0x4
+ 774 03b8 89000000 		.4byte	.LASF73
+ 775 03bc 06       		.byte	0x6
+ 776 03bd 66       		.byte	0x66
+ 777 03be C2030000 		.4byte	0x3c2
+ 778 03c2 0B       		.uleb128 0xb
+ 779 03c3 D2020000 		.4byte	.LASF74
+ 780 03c7 10       		.byte	0x10
+ 781 03c8 07       		.byte	0x7
+ 782 03c9 7B01     		.2byte	0x17b
+ 783 03cb 04040000 		.4byte	0x404
+ 784 03cf 09       		.uleb128 0x9
+ 785 03d0 C4010000 		.4byte	.LASF68
+ 786 03d4 07       		.byte	0x7
+ 787 03d5 7C01     		.2byte	0x17c
+ 788 03d7 0A070000 		.4byte	0x70a
+ 789 03db 00       		.byte	0
+ 790 03dc 09       		.uleb128 0x9
+ 791 03dd 85010000 		.4byte	.LASF69
+ 792 03e1 07       		.byte	0x7
+ 793 03e2 7E01     		.2byte	0x17e
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 15
+
+
+ 794 03e4 0A070000 		.4byte	0x70a
+ 795 03e8 04       		.byte	0x4
+ 796 03e9 09       		.uleb128 0x9
+ 797 03ea DD010000 		.4byte	.LASF70
+ 798 03ee 07       		.byte	0x7
+ 799 03ef 8001     		.2byte	0x180
+ 800 03f1 58010000 		.4byte	0x158
+ 801 03f5 08       		.byte	0x8
+ 802 03f6 09       		.uleb128 0x9
+ 803 03f7 5F040000 		.4byte	.LASF75
+ 804 03fb 07       		.byte	0x7
+ 805 03fc 8201     		.2byte	0x182
+ 806 03fe 05070000 		.4byte	0x705
+ 807 0402 0C       		.byte	0xc
+ 808 0403 00       		.byte	0
+ 809 0404 04       		.uleb128 0x4
+ 810 0405 E6010000 		.4byte	.LASF76
+ 811 0409 06       		.byte	0x6
+ 812 040a 6B       		.byte	0x6b
+ 813 040b 0F040000 		.4byte	0x40f
+ 814 040f 0B       		.uleb128 0xb
+ 815 0410 9F030000 		.4byte	.LASF77
+ 816 0414 04       		.byte	0x4
+ 817 0415 07       		.byte	0x7
+ 818 0416 A201     		.2byte	0x1a2
+ 819 0418 2A040000 		.4byte	0x42a
+ 820 041c 09       		.uleb128 0x9
+ 821 041d CF040000 		.4byte	.LASF78
+ 822 0421 07       		.byte	0x7
+ 823 0422 AA01     		.2byte	0x1aa
+ 824 0424 10070000 		.4byte	0x710
+ 825 0428 00       		.byte	0
+ 826 0429 00       		.byte	0
+ 827 042a 04       		.uleb128 0x4
+ 828 042b 6D020000 		.4byte	.LASF79
+ 829 042f 06       		.byte	0x6
+ 830 0430 70       		.byte	0x70
+ 831 0431 35040000 		.4byte	0x435
+ 832 0435 0F       		.uleb128 0xf
+ 833 0436 2E010000 		.4byte	.LASF80
+ 834 043a 5802     		.2byte	0x258
+ 835 043c 07       		.byte	0x7
+ 836 043d C201     		.2byte	0x1c2
+ 837 043f 91040000 		.4byte	0x491
+ 838 0443 09       		.uleb128 0x9
+ 839 0444 45060000 		.4byte	.LASF81
+ 840 0448 07       		.byte	0x7
+ 841 0449 C601     		.2byte	0x1c6
+ 842 044b D8020000 		.4byte	0x2d8
+ 843 044f 00       		.byte	0
+ 844 0450 09       		.uleb128 0x9
+ 845 0451 41000000 		.4byte	.LASF82
+ 846 0455 07       		.byte	0x7
+ 847 0456 CA01     		.2byte	0x1ca
+ 848 0458 B7030000 		.4byte	0x3b7
+ 849 045c 1C       		.byte	0x1c
+ 850 045d 08       		.uleb128 0x8
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 16
+
+
+ 851 045e 64626700 		.ascii	"dbg\000"
+ 852 0462 07       		.byte	0x7
+ 853 0463 CE01     		.2byte	0x1ce
+ 854 0465 04040000 		.4byte	0x404
+ 855 0469 2C       		.byte	0x2c
+ 856 046a 09       		.uleb128 0x9
+ 857 046b 7E000000 		.4byte	.LASF83
+ 858 046f 07       		.byte	0x7
+ 859 0470 D201     		.2byte	0x1d2
+ 860 0472 63010000 		.4byte	0x163
+ 861 0476 30       		.byte	0x30
+ 862 0477 08       		.uleb128 0x8
+ 863 0478 746D00   		.ascii	"tm\000"
+ 864 047b 07       		.byte	0x7
+ 865 047c D701     		.2byte	0x1d7
+ 866 047e 23060000 		.4byte	0x623
+ 867 0482 78       		.byte	0x78
+ 868 0483 09       		.uleb128 0x9
+ 869 0484 A2010000 		.4byte	.LASF84
+ 870 0488 07       		.byte	0x7
+ 871 0489 E301     		.2byte	0x1e3
+ 872 048b 15070000 		.4byte	0x715
+ 873 048f 80       		.byte	0x80
+ 874 0490 00       		.byte	0
+ 875 0491 02       		.uleb128 0x2
+ 876 0492 04       		.byte	0x4
+ 877 0493 07       		.byte	0x7
+ 878 0494 53060000 		.4byte	.LASF85
+ 879 0498 04       		.uleb128 0x4
+ 880 0499 7C010000 		.4byte	.LASF86
+ 881 049d 08       		.byte	0x8
+ 882 049e 65       		.byte	0x65
+ 883 049f 5B030000 		.4byte	0x35b
+ 884 04a3 04       		.uleb128 0x4
+ 885 04a4 AC020000 		.4byte	.LASF87
+ 886 04a8 08       		.byte	0x8
+ 887 04a9 6D       		.byte	0x6d
+ 888 04aa E0000000 		.4byte	0xe0
+ 889 04ae 06       		.uleb128 0x6
+ 890 04af 0B020000 		.4byte	.LASF88
+ 891 04b3 04       		.byte	0x4
+ 892 04b4 08       		.byte	0x8
+ 893 04b5 89       		.byte	0x89
+ 894 04b6 C7040000 		.4byte	0x4c7
+ 895 04ba 10       		.uleb128 0x10
+ 896 04bb 72313300 		.ascii	"r13\000"
+ 897 04bf 08       		.byte	0x8
+ 898 04c0 8A       		.byte	0x8a
+ 899 04c1 08060000 		.4byte	0x608
+ 900 04c5 00       		.byte	0
+ 901 04c6 00       		.byte	0
+ 902 04c7 06       		.uleb128 0x6
+ 903 04c8 35000000 		.4byte	.LASF89
+ 904 04cc 64       		.byte	0x64
+ 905 04cd 09       		.byte	0x9
+ 906 04ce F4       		.byte	0xf4
+ 907 04cf 08060000 		.4byte	0x608
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 17
+
+
+ 908 04d3 10       		.uleb128 0x10
+ 909 04d4 73313600 		.ascii	"s16\000"
+ 910 04d8 09       		.byte	0x9
+ 911 04d9 F6       		.byte	0xf6
+ 912 04da 98040000 		.4byte	0x498
+ 913 04de 00       		.byte	0
+ 914 04df 10       		.uleb128 0x10
+ 915 04e0 73313700 		.ascii	"s17\000"
+ 916 04e4 09       		.byte	0x9
+ 917 04e5 F7       		.byte	0xf7
+ 918 04e6 98040000 		.4byte	0x498
+ 919 04ea 04       		.byte	0x4
+ 920 04eb 10       		.uleb128 0x10
+ 921 04ec 73313800 		.ascii	"s18\000"
+ 922 04f0 09       		.byte	0x9
+ 923 04f1 F8       		.byte	0xf8
+ 924 04f2 98040000 		.4byte	0x498
+ 925 04f6 08       		.byte	0x8
+ 926 04f7 10       		.uleb128 0x10
+ 927 04f8 73313900 		.ascii	"s19\000"
+ 928 04fc 09       		.byte	0x9
+ 929 04fd F9       		.byte	0xf9
+ 930 04fe 98040000 		.4byte	0x498
+ 931 0502 0C       		.byte	0xc
+ 932 0503 10       		.uleb128 0x10
+ 933 0504 73323000 		.ascii	"s20\000"
+ 934 0508 09       		.byte	0x9
+ 935 0509 FA       		.byte	0xfa
+ 936 050a 98040000 		.4byte	0x498
+ 937 050e 10       		.byte	0x10
+ 938 050f 10       		.uleb128 0x10
+ 939 0510 73323100 		.ascii	"s21\000"
+ 940 0514 09       		.byte	0x9
+ 941 0515 FB       		.byte	0xfb
+ 942 0516 98040000 		.4byte	0x498
+ 943 051a 14       		.byte	0x14
+ 944 051b 10       		.uleb128 0x10
+ 945 051c 73323200 		.ascii	"s22\000"
+ 946 0520 09       		.byte	0x9
+ 947 0521 FC       		.byte	0xfc
+ 948 0522 98040000 		.4byte	0x498
+ 949 0526 18       		.byte	0x18
+ 950 0527 10       		.uleb128 0x10
+ 951 0528 73323300 		.ascii	"s23\000"
+ 952 052c 09       		.byte	0x9
+ 953 052d FD       		.byte	0xfd
+ 954 052e 98040000 		.4byte	0x498
+ 955 0532 1C       		.byte	0x1c
+ 956 0533 10       		.uleb128 0x10
+ 957 0534 73323400 		.ascii	"s24\000"
+ 958 0538 09       		.byte	0x9
+ 959 0539 FE       		.byte	0xfe
+ 960 053a 98040000 		.4byte	0x498
+ 961 053e 20       		.byte	0x20
+ 962 053f 10       		.uleb128 0x10
+ 963 0540 73323500 		.ascii	"s25\000"
+ 964 0544 09       		.byte	0x9
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 18
+
+
+ 965 0545 FF       		.byte	0xff
+ 966 0546 98040000 		.4byte	0x498
+ 967 054a 24       		.byte	0x24
+ 968 054b 08       		.uleb128 0x8
+ 969 054c 73323600 		.ascii	"s26\000"
+ 970 0550 09       		.byte	0x9
+ 971 0551 0001     		.2byte	0x100
+ 972 0553 98040000 		.4byte	0x498
+ 973 0557 28       		.byte	0x28
+ 974 0558 08       		.uleb128 0x8
+ 975 0559 73323700 		.ascii	"s27\000"
+ 976 055d 09       		.byte	0x9
+ 977 055e 0101     		.2byte	0x101
+ 978 0560 98040000 		.4byte	0x498
+ 979 0564 2C       		.byte	0x2c
+ 980 0565 08       		.uleb128 0x8
+ 981 0566 73323800 		.ascii	"s28\000"
+ 982 056a 09       		.byte	0x9
+ 983 056b 0201     		.2byte	0x102
+ 984 056d 98040000 		.4byte	0x498
+ 985 0571 30       		.byte	0x30
+ 986 0572 08       		.uleb128 0x8
+ 987 0573 73323900 		.ascii	"s29\000"
+ 988 0577 09       		.byte	0x9
+ 989 0578 0301     		.2byte	0x103
+ 990 057a 98040000 		.4byte	0x498
+ 991 057e 34       		.byte	0x34
+ 992 057f 08       		.uleb128 0x8
+ 993 0580 73333000 		.ascii	"s30\000"
+ 994 0584 09       		.byte	0x9
+ 995 0585 0401     		.2byte	0x104
+ 996 0587 98040000 		.4byte	0x498
+ 997 058b 38       		.byte	0x38
+ 998 058c 08       		.uleb128 0x8
+ 999 058d 73333100 		.ascii	"s31\000"
+ 1000 0591 09       		.byte	0x9
+ 1001 0592 0501     		.2byte	0x105
+ 1002 0594 98040000 		.4byte	0x498
+ 1003 0598 3C       		.byte	0x3c
+ 1004 0599 08       		.uleb128 0x8
+ 1005 059a 723400   		.ascii	"r4\000"
+ 1006 059d 09       		.byte	0x9
+ 1007 059e 0701     		.2byte	0x107
+ 1008 05a0 98040000 		.4byte	0x498
+ 1009 05a4 40       		.byte	0x40
+ 1010 05a5 08       		.uleb128 0x8
+ 1011 05a6 723500   		.ascii	"r5\000"
+ 1012 05a9 09       		.byte	0x9
+ 1013 05aa 0801     		.2byte	0x108
+ 1014 05ac 98040000 		.4byte	0x498
+ 1015 05b0 44       		.byte	0x44
+ 1016 05b1 08       		.uleb128 0x8
+ 1017 05b2 723600   		.ascii	"r6\000"
+ 1018 05b5 09       		.byte	0x9
+ 1019 05b6 0901     		.2byte	0x109
+ 1020 05b8 98040000 		.4byte	0x498
+ 1021 05bc 48       		.byte	0x48
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 19
+
+
+ 1022 05bd 08       		.uleb128 0x8
+ 1023 05be 723700   		.ascii	"r7\000"
+ 1024 05c1 09       		.byte	0x9
+ 1025 05c2 0A01     		.2byte	0x10a
+ 1026 05c4 98040000 		.4byte	0x498
+ 1027 05c8 4C       		.byte	0x4c
+ 1028 05c9 08       		.uleb128 0x8
+ 1029 05ca 723800   		.ascii	"r8\000"
+ 1030 05cd 09       		.byte	0x9
+ 1031 05ce 0B01     		.2byte	0x10b
+ 1032 05d0 98040000 		.4byte	0x498
+ 1033 05d4 50       		.byte	0x50
+ 1034 05d5 08       		.uleb128 0x8
+ 1035 05d6 723900   		.ascii	"r9\000"
+ 1036 05d9 09       		.byte	0x9
+ 1037 05da 0C01     		.2byte	0x10c
+ 1038 05dc 98040000 		.4byte	0x498
+ 1039 05e0 54       		.byte	0x54
+ 1040 05e1 08       		.uleb128 0x8
+ 1041 05e2 72313000 		.ascii	"r10\000"
+ 1042 05e6 09       		.byte	0x9
+ 1043 05e7 0D01     		.2byte	0x10d
+ 1044 05e9 98040000 		.4byte	0x498
+ 1045 05ed 58       		.byte	0x58
+ 1046 05ee 08       		.uleb128 0x8
+ 1047 05ef 72313100 		.ascii	"r11\000"
+ 1048 05f3 09       		.byte	0x9
+ 1049 05f4 0E01     		.2byte	0x10e
+ 1050 05f6 98040000 		.4byte	0x498
+ 1051 05fa 5C       		.byte	0x5c
+ 1052 05fb 08       		.uleb128 0x8
+ 1053 05fc 6C7200   		.ascii	"lr\000"
+ 1054 05ff 09       		.byte	0x9
+ 1055 0600 0F01     		.2byte	0x10f
+ 1056 0602 98040000 		.4byte	0x498
+ 1057 0606 60       		.byte	0x60
+ 1058 0607 00       		.byte	0
+ 1059 0608 0A       		.uleb128 0xa
+ 1060 0609 04       		.byte	0x4
+ 1061 060a C7040000 		.4byte	0x4c7
+ 1062 060e 11       		.uleb128 0x11
+ 1063 060f 04       		.byte	0x4
+ 1064 0610 0A       		.byte	0xa
+ 1065 0611 38       		.byte	0x38
+ 1066 0612 23060000 		.4byte	0x623
+ 1067 0616 07       		.uleb128 0x7
+ 1068 0617 D9040000 		.4byte	.LASF90
+ 1069 061b 0A       		.byte	0xa
+ 1070 061c 3C       		.byte	0x3c
+ 1071 061d F5000000 		.4byte	0xf5
+ 1072 0621 00       		.byte	0
+ 1073 0622 00       		.byte	0
+ 1074 0623 04       		.uleb128 0x4
+ 1075 0624 13030000 		.4byte	.LASF91
+ 1076 0628 0A       		.byte	0xa
+ 1077 0629 3D       		.byte	0x3d
+ 1078 062a 0E060000 		.4byte	0x60e
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 20
+
+
+ 1079 062e 12       		.uleb128 0x12
+ 1080 062f 04       		.byte	0x4
+ 1081 0630 07       		.byte	0x7
+ 1082 0631 FA       		.byte	0xfa
+ 1083 0632 8B060000 		.4byte	0x68b
+ 1084 0636 13       		.uleb128 0x13
+ 1085 0637 14000000 		.4byte	.LASF92
+ 1086 063b 07       		.byte	0x7
+ 1087 063c 0101     		.2byte	0x101
+ 1088 063e 37010000 		.4byte	0x137
+ 1089 0642 13       		.uleb128 0x13
+ 1090 0643 63010000 		.4byte	.LASF93
+ 1091 0647 07       		.byte	0x7
+ 1092 0648 0801     		.2byte	0x108
+ 1093 064a 37010000 		.4byte	0x137
+ 1094 064e 13       		.uleb128 0x13
+ 1095 064f 11010000 		.4byte	.LASF94
+ 1096 0653 07       		.byte	0x7
+ 1097 0654 0F01     		.2byte	0x10f
+ 1098 0656 5B030000 		.4byte	0x35b
+ 1099 065a 13       		.uleb128 0x13
+ 1100 065b 28010000 		.4byte	.LASF95
+ 1101 065f 07       		.byte	0x7
+ 1102 0660 1601     		.2byte	0x116
+ 1103 0662 8B060000 		.4byte	0x68b
+ 1104 0666 13       		.uleb128 0x13
+ 1105 0667 D6010000 		.4byte	.LASF96
+ 1106 066b 07       		.byte	0x7
+ 1107 066c 1E01     		.2byte	0x11e
+ 1108 066e B6060000 		.4byte	0x6b6
+ 1109 0672 13       		.uleb128 0x13
+ 1110 0673 50040000 		.4byte	.LASF97
+ 1111 0677 07       		.byte	0x7
+ 1112 0678 2701     		.2byte	0x127
+ 1113 067a ED060000 		.4byte	0x6ed
+ 1114 067e 13       		.uleb128 0x13
+ 1115 067f 0A040000 		.4byte	.LASF98
+ 1116 0683 07       		.byte	0x7
+ 1117 0684 2F01     		.2byte	0x12f
+ 1118 0686 42010000 		.4byte	0x142
+ 1119 068a 00       		.byte	0
+ 1120 068b 0A       		.uleb128 0xa
+ 1121 068c 04       		.byte	0x4
+ 1122 068d 73020000 		.4byte	0x273
+ 1123 0691 06       		.uleb128 0x6
+ 1124 0692 2F040000 		.4byte	.LASF99
+ 1125 0696 0C       		.byte	0xc
+ 1126 0697 0B       		.byte	0xb
+ 1127 0698 34       		.byte	0x34
+ 1128 0699 B6060000 		.4byte	0x6b6
+ 1129 069d 07       		.uleb128 0x7
+ 1130 069e 5B010000 		.4byte	.LASF100
+ 1131 06a2 0B       		.byte	0xb
+ 1132 06a3 35       		.byte	0x35
+ 1133 06a4 A8020000 		.4byte	0x2a8
+ 1134 06a8 00       		.byte	0
+ 1135 06a9 07       		.uleb128 0x7
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 21
+
+
+ 1136 06aa 05020000 		.4byte	.LASF101
+ 1137 06ae 0B       		.byte	0xb
+ 1138 06af 37       		.byte	0x37
+ 1139 06b0 4D010000 		.4byte	0x14d
+ 1140 06b4 08       		.byte	0x8
+ 1141 06b5 00       		.byte	0
+ 1142 06b6 0A       		.uleb128 0xa
+ 1143 06b7 04       		.byte	0x4
+ 1144 06b8 91060000 		.4byte	0x691
+ 1145 06bc 06       		.uleb128 0x6
+ 1146 06bd 5C060000 		.4byte	.LASF102
+ 1147 06c1 10       		.byte	0x10
+ 1148 06c2 0C       		.byte	0xc
+ 1149 06c3 39       		.byte	0x39
+ 1150 06c4 ED060000 		.4byte	0x6ed
+ 1151 06c8 07       		.uleb128 0x7
+ 1152 06c9 09010000 		.4byte	.LASF103
+ 1153 06cd 0C       		.byte	0xc
+ 1154 06ce 3A       		.byte	0x3a
+ 1155 06cf A8020000 		.4byte	0x2a8
+ 1156 06d3 00       		.byte	0
+ 1157 06d4 07       		.uleb128 0x7
+ 1158 06d5 86060000 		.4byte	.LASF104
+ 1159 06d9 0C       		.byte	0xc
+ 1160 06da 3C       		.byte	0x3c
+ 1161 06db 7E020000 		.4byte	0x27e
+ 1162 06df 08       		.byte	0x8
+ 1163 06e0 07       		.uleb128 0x7
+ 1164 06e1 9F040000 		.4byte	.LASF105
+ 1165 06e5 0C       		.byte	0xc
+ 1166 06e6 3E       		.byte	0x3e
+ 1167 06e7 30070000 		.4byte	0x730
+ 1168 06eb 0C       		.byte	0xc
+ 1169 06ec 00       		.byte	0
+ 1170 06ed 0A       		.uleb128 0xa
+ 1171 06ee 04       		.byte	0x4
+ 1172 06ef BC060000 		.4byte	0x6bc
+ 1173 06f3 0A       		.uleb128 0xa
+ 1174 06f4 04       		.byte	0x4
+ 1175 06f5 00070000 		.4byte	0x700
+ 1176 06f9 02       		.uleb128 0x2
+ 1177 06fa 01       		.byte	0x1
+ 1178 06fb 08       		.byte	0x8
+ 1179 06fc 86040000 		.4byte	.LASF106
+ 1180 0700 14       		.uleb128 0x14
+ 1181 0701 F9060000 		.4byte	0x6f9
+ 1182 0705 05       		.uleb128 0x5
+ 1183 0706 58010000 		.4byte	0x158
+ 1184 070a 0A       		.uleb128 0xa
+ 1185 070b 04       		.byte	0x4
+ 1186 070c 5D030000 		.4byte	0x35d
+ 1187 0710 05       		.uleb128 0x5
+ 1188 0711 F3060000 		.4byte	0x6f3
+ 1189 0715 15       		.uleb128 0x15
+ 1190 0716 A3040000 		.4byte	0x4a3
+ 1191 071a 25070000 		.4byte	0x725
+ 1192 071e 16       		.uleb128 0x16
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 22
+
+
+ 1193 071f 91040000 		.4byte	0x491
+ 1194 0723 3A       		.byte	0x3a
+ 1195 0724 00       		.byte	0
+ 1196 0725 04       		.uleb128 0x4
+ 1197 0726 9A010000 		.4byte	.LASF107
+ 1198 072a 0C       		.byte	0xc
+ 1199 072b 34       		.byte	0x34
+ 1200 072c BC060000 		.4byte	0x6bc
+ 1201 0730 0A       		.uleb128 0xa
+ 1202 0731 04       		.byte	0x4
+ 1203 0732 25070000 		.4byte	0x725
+ 1204 0736 02       		.uleb128 0x2
+ 1205 0737 01       		.byte	0x1
+ 1206 0738 02       		.byte	0x2
+ 1207 0739 AF030000 		.4byte	.LASF108
+ 1208 073d 11       		.uleb128 0x11
+ 1209 073e 04       		.byte	0x4
+ 1210 073f 0D       		.byte	0xd
+ 1211 0740 B3       		.byte	0xb3
+ 1212 0741 5E070000 		.4byte	0x75e
+ 1213 0745 10       		.uleb128 0x10
+ 1214 0746 73657400 		.ascii	"set\000"
+ 1215 074a 0D       		.byte	0xd
+ 1216 074b B4       		.byte	0xb4
+ 1217 074c BF000000 		.4byte	0xbf
+ 1218 0750 00       		.byte	0
+ 1219 0751 07       		.uleb128 0x7
+ 1220 0752 E9020000 		.4byte	.LASF109
+ 1221 0756 0D       		.byte	0xd
+ 1222 0757 B5       		.byte	0xb5
+ 1223 0758 BF000000 		.4byte	0xbf
+ 1224 075c 02       		.byte	0x2
+ 1225 075d 00       		.byte	0
+ 1226 075e 12       		.uleb128 0x12
+ 1227 075f 04       		.byte	0x4
+ 1228 0760 0D       		.byte	0xd
+ 1229 0761 B1       		.byte	0xb1
+ 1230 0762 79070000 		.4byte	0x779
+ 1231 0766 17       		.uleb128 0x17
+ 1232 0767 5700     		.ascii	"W\000"
+ 1233 0769 0D       		.byte	0xd
+ 1234 076a B2       		.byte	0xb2
+ 1235 076b D5000000 		.4byte	0xd5
+ 1236 076f 17       		.uleb128 0x17
+ 1237 0770 4800     		.ascii	"H\000"
+ 1238 0772 0D       		.byte	0xd
+ 1239 0773 B6       		.byte	0xb6
+ 1240 0774 3D070000 		.4byte	0x73d
+ 1241 0778 00       		.byte	0
+ 1242 0779 11       		.uleb128 0x11
+ 1243 077a 2C       		.byte	0x2c
+ 1244 077b 0D       		.byte	0xd
+ 1245 077c A9       		.byte	0xa9
+ 1246 077d 06080000 		.4byte	0x806
+ 1247 0781 07       		.uleb128 0x7
+ 1248 0782 36030000 		.4byte	.LASF110
+ 1249 0786 0D       		.byte	0xd
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 23
+
+
+ 1250 0787 AB       		.byte	0xab
+ 1251 0788 F0000000 		.4byte	0xf0
+ 1252 078c 00       		.byte	0
+ 1253 078d 07       		.uleb128 0x7
+ 1254 078e 24000000 		.4byte	.LASF111
+ 1255 0792 0D       		.byte	0xd
+ 1256 0793 AC       		.byte	0xac
+ 1257 0794 F0000000 		.4byte	0xf0
+ 1258 0798 04       		.byte	0x4
+ 1259 0799 07       		.uleb128 0x7
+ 1260 079a 6C010000 		.4byte	.LASF112
+ 1261 079e 0D       		.byte	0xd
+ 1262 079f AD       		.byte	0xad
+ 1263 07a0 F0000000 		.4byte	0xf0
+ 1264 07a4 08       		.byte	0x8
+ 1265 07a5 07       		.uleb128 0x7
+ 1266 07a6 22010000 		.4byte	.LASF113
+ 1267 07aa 0D       		.byte	0xd
+ 1268 07ab AE       		.byte	0xae
+ 1269 07ac F0000000 		.4byte	0xf0
+ 1270 07b0 0C       		.byte	0xc
+ 1271 07b1 10       		.uleb128 0x10
+ 1272 07b2 49445200 		.ascii	"IDR\000"
+ 1273 07b6 0D       		.byte	0xd
+ 1274 07b7 AF       		.byte	0xaf
+ 1275 07b8 F0000000 		.4byte	0xf0
+ 1276 07bc 10       		.byte	0x10
+ 1277 07bd 10       		.uleb128 0x10
+ 1278 07be 4F445200 		.ascii	"ODR\000"
+ 1279 07c2 0D       		.byte	0xd
+ 1280 07c3 B0       		.byte	0xb0
+ 1281 07c4 F0000000 		.4byte	0xf0
+ 1282 07c8 14       		.byte	0x14
+ 1283 07c9 07       		.uleb128 0x7
+ 1284 07ca EA000000 		.4byte	.LASF114
+ 1285 07ce 0D       		.byte	0xd
+ 1286 07cf B7       		.byte	0xb7
+ 1287 07d0 06080000 		.4byte	0x806
+ 1288 07d4 18       		.byte	0x18
+ 1289 07d5 07       		.uleb128 0x7
+ 1290 07d6 00020000 		.4byte	.LASF115
+ 1291 07da 0D       		.byte	0xd
+ 1292 07db B8       		.byte	0xb8
+ 1293 07dc F0000000 		.4byte	0xf0
+ 1294 07e0 1C       		.byte	0x1c
+ 1295 07e1 07       		.uleb128 0x7
+ 1296 07e2 5E030000 		.4byte	.LASF116
+ 1297 07e6 0D       		.byte	0xd
+ 1298 07e7 B9       		.byte	0xb9
+ 1299 07e8 F0000000 		.4byte	0xf0
+ 1300 07ec 20       		.byte	0x20
+ 1301 07ed 07       		.uleb128 0x7
+ 1302 07ee 47030000 		.4byte	.LASF117
+ 1303 07f2 0D       		.byte	0xd
+ 1304 07f3 BA       		.byte	0xba
+ 1305 07f4 F0000000 		.4byte	0xf0
+ 1306 07f8 24       		.byte	0x24
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 24
+
+
+ 1307 07f9 10       		.uleb128 0x10
+ 1308 07fa 42525200 		.ascii	"BRR\000"
+ 1309 07fe 0D       		.byte	0xd
+ 1310 07ff BB       		.byte	0xbb
+ 1311 0800 F0000000 		.4byte	0xf0
+ 1312 0804 28       		.byte	0x28
+ 1313 0805 00       		.byte	0
+ 1314 0806 05       		.uleb128 0x5
+ 1315 0807 5E070000 		.4byte	0x75e
+ 1316 080b 04       		.uleb128 0x4
+ 1317 080c 8D010000 		.4byte	.LASF118
+ 1318 0810 0D       		.byte	0xd
+ 1319 0811 BC       		.byte	0xbc
+ 1320 0812 79070000 		.4byte	0x779
+ 1321 0816 18       		.uleb128 0x18
+ 1322 0817 5A000000 		.4byte	.LASF119
+ 1323 081b 0D       		.byte	0xd
+ 1324 081c 0E01     		.2byte	0x10e
+ 1325 081e D5000000 		.4byte	0xd5
+ 1326 0822 02       		.uleb128 0x2
+ 1327 0823 08       		.byte	0x8
+ 1328 0824 04       		.byte	0x4
+ 1329 0825 8E060000 		.4byte	.LASF120
+ 1330 0829 02       		.uleb128 0x2
+ 1331 082a 08       		.byte	0x8
+ 1332 082b 04       		.byte	0x4
+ 1333 082c 7A040000 		.4byte	.LASF121
+ 1334 0830 19       		.uleb128 0x19
+ 1335 0831 BD000000 		.4byte	.LASF122
+ 1336 0835 01       		.byte	0x1
+ 1337 0836 24       		.byte	0x24
+ 1338 0837 00000000 		.4byte	.LFB256
+ 1339 083b 5C000000 		.4byte	.LFE256-.LFB256
+ 1340 083f 01       		.uleb128 0x1
+ 1341 0840 9C       		.byte	0x9c
+ 1342 0841 8B080000 		.4byte	0x88b
+ 1343 0845 1A       		.uleb128 0x1a
+ 1344 0846 00000000 		.4byte	.Ldebug_ranges0+0
+ 1345 084a 1B       		.uleb128 0x1b
+ 1346 084b 6900     		.ascii	"i\000"
+ 1347 084d 01       		.byte	0x1
+ 1348 084e 28       		.byte	0x28
+ 1349 084f 2C000000 		.4byte	0x2c
+ 1350 0853 00000000 		.4byte	.LLST0
+ 1351 0857 1C       		.uleb128 0x1c
+ 1352 0858 2A000000 		.4byte	.LVL1
+ 1353 085c 8D090000 		.4byte	0x98d
+ 1354 0860 80080000 		.4byte	0x880
+ 1355 0864 1D       		.uleb128 0x1d
+ 1356 0865 02       		.uleb128 0x2
+ 1357 0866 90       		.byte	0x90
+ 1358 0867 40       		.uleb128 0x40
+ 1359 0868 0A       		.uleb128 0xa
+ 1360 0869 74       		.byte	0x74
+ 1361 086a 00       		.sleb128 0
+ 1362 086b F7       		.byte	0xf7
+ 1363 086c 2C       		.uleb128 0x2c
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 25
+
+
+ 1364 086d F7       		.byte	0xf7
+ 1365 086e 25       		.uleb128 0x25
+ 1366 086f F5       		.byte	0xf5
+ 1367 0870 50       		.uleb128 0x50
+ 1368 0871 25       		.uleb128 0x25
+ 1369 0872 1B       		.byte	0x1b
+ 1370 0873 1D       		.uleb128 0x1d
+ 1371 0874 02       		.uleb128 0x2
+ 1372 0875 90       		.byte	0x90
+ 1373 0876 41       		.uleb128 0x41
+ 1374 0877 07       		.uleb128 0x7
+ 1375 0878 F4       		.byte	0xf4
+ 1376 0879 25       		.uleb128 0x25
+ 1377 087a 04       		.byte	0x4
+ 1378 087b E4380E40 		.4byte	0x400e38e4
+ 1379 087f 00       		.byte	0
+ 1380 0880 1E       		.uleb128 0x1e
+ 1381 0881 34000000 		.4byte	.LVL3
+ 1382 0885 99090000 		.4byte	0x999
+ 1383 0889 00       		.byte	0
+ 1384 088a 00       		.byte	0
+ 1385 088b 19       		.uleb128 0x19
+ 1386 088c 8A030000 		.4byte	.LASF123
+ 1387 0890 01       		.byte	0x1
+ 1388 0891 33       		.byte	0x33
+ 1389 0892 00000000 		.4byte	.LFB257
+ 1390 0896 50000000 		.4byte	.LFE257-.LFB257
+ 1391 089a 01       		.uleb128 0x1
+ 1392 089b 9C       		.byte	0x9c
+ 1393 089c BD080000 		.4byte	0x8bd
+ 1394 08a0 1F       		.uleb128 0x1f
+ 1395 08a1 6C656400 		.ascii	"led\000"
+ 1396 08a5 01       		.byte	0x1
+ 1397 08a6 33       		.byte	0x33
+ 1398 08a7 3E000000 		.4byte	0x3e
+ 1399 08ab 01       		.uleb128 0x1
+ 1400 08ac 50       		.byte	0x50
+ 1401 08ad 20       		.uleb128 0x20
+ 1402 08ae CC010000 		.4byte	.LASF124
+ 1403 08b2 01       		.byte	0x1
+ 1404 08b3 33       		.byte	0x33
+ 1405 08b4 25000000 		.4byte	0x25
+ 1406 08b8 2B000000 		.4byte	.LLST1
+ 1407 08bc 00       		.byte	0
+ 1408 08bd 19       		.uleb128 0x19
+ 1409 08be F7020000 		.4byte	.LASF125
+ 1410 08c2 01       		.byte	0x1
+ 1411 08c3 43       		.byte	0x43
+ 1412 08c4 00000000 		.4byte	.LFB258
+ 1413 08c8 14000000 		.4byte	.LFE258-.LFB258
+ 1414 08cc 01       		.uleb128 0x1
+ 1415 08cd 9C       		.byte	0x9c
+ 1416 08ce E0080000 		.4byte	0x8e0
+ 1417 08d2 1F       		.uleb128 0x1f
+ 1418 08d3 6C656400 		.ascii	"led\000"
+ 1419 08d7 01       		.byte	0x1
+ 1420 08d8 43       		.byte	0x43
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 26
+
+
+ 1421 08d9 2C000000 		.4byte	0x2c
+ 1422 08dd 01       		.uleb128 0x1
+ 1423 08de 50       		.byte	0x50
+ 1424 08df 00       		.byte	0
+ 1425 08e0 19       		.uleb128 0x19
+ 1426 08e1 20040000 		.4byte	.LASF126
+ 1427 08e5 01       		.byte	0x1
+ 1428 08e6 4B       		.byte	0x4b
+ 1429 08e7 00000000 		.4byte	.LFB259
+ 1430 08eb 14000000 		.4byte	.LFE259-.LFB259
+ 1431 08ef 01       		.uleb128 0x1
+ 1432 08f0 9C       		.byte	0x9c
+ 1433 08f1 03090000 		.4byte	0x903
+ 1434 08f5 1F       		.uleb128 0x1f
+ 1435 08f6 6C656400 		.ascii	"led\000"
+ 1436 08fa 01       		.byte	0x1
+ 1437 08fb 4B       		.byte	0x4b
+ 1438 08fc 2C000000 		.4byte	0x2c
+ 1439 0900 01       		.uleb128 0x1
+ 1440 0901 50       		.byte	0x50
+ 1441 0902 00       		.byte	0
+ 1442 0903 19       		.uleb128 0x19
+ 1443 0904 48000000 		.4byte	.LASF127
+ 1444 0908 01       		.byte	0x1
+ 1445 0909 56       		.byte	0x56
+ 1446 090a 00000000 		.4byte	.LFB260
+ 1447 090e 40000000 		.4byte	.LFE260-.LFB260
+ 1448 0912 01       		.uleb128 0x1
+ 1449 0913 9C       		.byte	0x9c
+ 1450 0914 2A090000 		.4byte	0x92a
+ 1451 0918 21       		.uleb128 0x21
+ 1452 0919 636E7400 		.ascii	"cnt\000"
+ 1453 091d 01       		.byte	0x1
+ 1454 091e 57       		.byte	0x57
+ 1455 091f 2C000000 		.4byte	0x2c
+ 1456 0923 05       		.uleb128 0x5
+ 1457 0924 03       		.byte	0x3
+ 1458 0925 00000000 		.4byte	cnt.10303
+ 1459 0929 00       		.byte	0
+ 1460 092a 15       		.uleb128 0x15
+ 1461 092b 3A090000 		.4byte	0x93a
+ 1462 092f 3A090000 		.4byte	0x93a
+ 1463 0933 16       		.uleb128 0x16
+ 1464 0934 91040000 		.4byte	0x491
+ 1465 0938 01       		.byte	0x1
+ 1466 0939 00       		.byte	0
+ 1467 093a 05       		.uleb128 0x5
+ 1468 093b 2C000000 		.4byte	0x2c
+ 1469 093f 22       		.uleb128 0x22
+ 1470 0940 F5010000 		.4byte	.LASF128
+ 1471 0944 01       		.byte	0x1
+ 1472 0945 21       		.byte	0x21
+ 1473 0946 50090000 		.4byte	0x950
+ 1474 094a 05       		.uleb128 0x5
+ 1475 094b 03       		.byte	0x3
+ 1476 094c 00000000 		.4byte	led_values
+ 1477 0950 05       		.uleb128 0x5
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 27
+
+
+ 1478 0951 2A090000 		.4byte	0x92a
+ 1479 0955 15       		.uleb128 0x15
+ 1480 0956 B4000000 		.4byte	0xb4
+ 1481 095a 65090000 		.4byte	0x965
+ 1482 095e 16       		.uleb128 0x16
+ 1483 095f 91040000 		.4byte	0x491
+ 1484 0963 C8       		.byte	0xc8
+ 1485 0964 00       		.byte	0
+ 1486 0965 22       		.uleb128 0x22
+ 1487 0966 52030000 		.4byte	.LASF129
+ 1488 096a 01       		.byte	0x1
+ 1489 096b 22       		.byte	0x22
+ 1490 096c 55090000 		.4byte	0x955
+ 1491 0970 05       		.uleb128 0x5
+ 1492 0971 03       		.byte	0x3
+ 1493 0972 00000000 		.4byte	gamma_table
+ 1494 0976 23       		.uleb128 0x23
+ 1495 0977 9F000000 		.4byte	.LASF130
+ 1496 097b 0F       		.byte	0xf
+ 1497 097c A706     		.2byte	0x6a7
+ 1498 097e EB000000 		.4byte	0xeb
+ 1499 0982 24       		.uleb128 0x24
+ 1500 0983 636800   		.ascii	"ch\000"
+ 1501 0986 07       		.byte	0x7
+ 1502 0987 0902     		.2byte	0x209
+ 1503 0989 2A040000 		.4byte	0x42a
+ 1504 098d 25       		.uleb128 0x25
+ 1505 098e 6C060000 		.4byte	.LASF131
+ 1506 0992 6C060000 		.4byte	.LASF131
+ 1507 0996 0E       		.byte	0xe
+ 1508 0997 8401     		.2byte	0x184
+ 1509 0999 25       		.uleb128 0x25
+ 1510 099a 03050000 		.4byte	.LASF132
+ 1511 099e 03050000 		.4byte	.LASF132
+ 1512 09a2 0E       		.byte	0xe
+ 1513 09a3 9101     		.2byte	0x191
+ 1514 09a5 00       		.byte	0
+ 1515              		.section	.debug_abbrev,"",%progbits
+ 1516              	.Ldebug_abbrev0:
+ 1517 0000 01       		.uleb128 0x1
+ 1518 0001 11       		.uleb128 0x11
+ 1519 0002 01       		.byte	0x1
+ 1520 0003 25       		.uleb128 0x25
+ 1521 0004 0E       		.uleb128 0xe
+ 1522 0005 13       		.uleb128 0x13
+ 1523 0006 0B       		.uleb128 0xb
+ 1524 0007 03       		.uleb128 0x3
+ 1525 0008 0E       		.uleb128 0xe
+ 1526 0009 1B       		.uleb128 0x1b
+ 1527 000a 0E       		.uleb128 0xe
+ 1528 000b 55       		.uleb128 0x55
+ 1529 000c 17       		.uleb128 0x17
+ 1530 000d 11       		.uleb128 0x11
+ 1531 000e 01       		.uleb128 0x1
+ 1532 000f 10       		.uleb128 0x10
+ 1533 0010 17       		.uleb128 0x17
+ 1534 0011 00       		.byte	0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 28
+
+
+ 1535 0012 00       		.byte	0
+ 1536 0013 02       		.uleb128 0x2
+ 1537 0014 24       		.uleb128 0x24
+ 1538 0015 00       		.byte	0
+ 1539 0016 0B       		.uleb128 0xb
+ 1540 0017 0B       		.uleb128 0xb
+ 1541 0018 3E       		.uleb128 0x3e
+ 1542 0019 0B       		.uleb128 0xb
+ 1543 001a 03       		.uleb128 0x3
+ 1544 001b 0E       		.uleb128 0xe
+ 1545 001c 00       		.byte	0
+ 1546 001d 00       		.byte	0
+ 1547 001e 03       		.uleb128 0x3
+ 1548 001f 24       		.uleb128 0x24
+ 1549 0020 00       		.byte	0
+ 1550 0021 0B       		.uleb128 0xb
+ 1551 0022 0B       		.uleb128 0xb
+ 1552 0023 3E       		.uleb128 0x3e
+ 1553 0024 0B       		.uleb128 0xb
+ 1554 0025 03       		.uleb128 0x3
+ 1555 0026 08       		.uleb128 0x8
+ 1556 0027 00       		.byte	0
+ 1557 0028 00       		.byte	0
+ 1558 0029 04       		.uleb128 0x4
+ 1559 002a 16       		.uleb128 0x16
+ 1560 002b 00       		.byte	0
+ 1561 002c 03       		.uleb128 0x3
+ 1562 002d 0E       		.uleb128 0xe
+ 1563 002e 3A       		.uleb128 0x3a
+ 1564 002f 0B       		.uleb128 0xb
+ 1565 0030 3B       		.uleb128 0x3b
+ 1566 0031 0B       		.uleb128 0xb
+ 1567 0032 49       		.uleb128 0x49
+ 1568 0033 13       		.uleb128 0x13
+ 1569 0034 00       		.byte	0
+ 1570 0035 00       		.byte	0
+ 1571 0036 05       		.uleb128 0x5
+ 1572 0037 35       		.uleb128 0x35
+ 1573 0038 00       		.byte	0
+ 1574 0039 49       		.uleb128 0x49
+ 1575 003a 13       		.uleb128 0x13
+ 1576 003b 00       		.byte	0
+ 1577 003c 00       		.byte	0
+ 1578 003d 06       		.uleb128 0x6
+ 1579 003e 13       		.uleb128 0x13
+ 1580 003f 01       		.byte	0x1
+ 1581 0040 03       		.uleb128 0x3
+ 1582 0041 0E       		.uleb128 0xe
+ 1583 0042 0B       		.uleb128 0xb
+ 1584 0043 0B       		.uleb128 0xb
+ 1585 0044 3A       		.uleb128 0x3a
+ 1586 0045 0B       		.uleb128 0xb
+ 1587 0046 3B       		.uleb128 0x3b
+ 1588 0047 0B       		.uleb128 0xb
+ 1589 0048 01       		.uleb128 0x1
+ 1590 0049 13       		.uleb128 0x13
+ 1591 004a 00       		.byte	0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 29
+
+
+ 1592 004b 00       		.byte	0
+ 1593 004c 07       		.uleb128 0x7
+ 1594 004d 0D       		.uleb128 0xd
+ 1595 004e 00       		.byte	0
+ 1596 004f 03       		.uleb128 0x3
+ 1597 0050 0E       		.uleb128 0xe
+ 1598 0051 3A       		.uleb128 0x3a
+ 1599 0052 0B       		.uleb128 0xb
+ 1600 0053 3B       		.uleb128 0x3b
+ 1601 0054 0B       		.uleb128 0xb
+ 1602 0055 49       		.uleb128 0x49
+ 1603 0056 13       		.uleb128 0x13
+ 1604 0057 38       		.uleb128 0x38
+ 1605 0058 0B       		.uleb128 0xb
+ 1606 0059 00       		.byte	0
+ 1607 005a 00       		.byte	0
+ 1608 005b 08       		.uleb128 0x8
+ 1609 005c 0D       		.uleb128 0xd
+ 1610 005d 00       		.byte	0
+ 1611 005e 03       		.uleb128 0x3
+ 1612 005f 08       		.uleb128 0x8
+ 1613 0060 3A       		.uleb128 0x3a
+ 1614 0061 0B       		.uleb128 0xb
+ 1615 0062 3B       		.uleb128 0x3b
+ 1616 0063 05       		.uleb128 0x5
+ 1617 0064 49       		.uleb128 0x49
+ 1618 0065 13       		.uleb128 0x13
+ 1619 0066 38       		.uleb128 0x38
+ 1620 0067 0B       		.uleb128 0xb
+ 1621 0068 00       		.byte	0
+ 1622 0069 00       		.byte	0
+ 1623 006a 09       		.uleb128 0x9
+ 1624 006b 0D       		.uleb128 0xd
+ 1625 006c 00       		.byte	0
+ 1626 006d 03       		.uleb128 0x3
+ 1627 006e 0E       		.uleb128 0xe
+ 1628 006f 3A       		.uleb128 0x3a
+ 1629 0070 0B       		.uleb128 0xb
+ 1630 0071 3B       		.uleb128 0x3b
+ 1631 0072 05       		.uleb128 0x5
+ 1632 0073 49       		.uleb128 0x49
+ 1633 0074 13       		.uleb128 0x13
+ 1634 0075 38       		.uleb128 0x38
+ 1635 0076 0B       		.uleb128 0xb
+ 1636 0077 00       		.byte	0
+ 1637 0078 00       		.byte	0
+ 1638 0079 0A       		.uleb128 0xa
+ 1639 007a 0F       		.uleb128 0xf
+ 1640 007b 00       		.byte	0
+ 1641 007c 0B       		.uleb128 0xb
+ 1642 007d 0B       		.uleb128 0xb
+ 1643 007e 49       		.uleb128 0x49
+ 1644 007f 13       		.uleb128 0x13
+ 1645 0080 00       		.byte	0
+ 1646 0081 00       		.byte	0
+ 1647 0082 0B       		.uleb128 0xb
+ 1648 0083 13       		.uleb128 0x13
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 30
+
+
+ 1649 0084 01       		.byte	0x1
+ 1650 0085 03       		.uleb128 0x3
+ 1651 0086 0E       		.uleb128 0xe
+ 1652 0087 0B       		.uleb128 0xb
+ 1653 0088 0B       		.uleb128 0xb
+ 1654 0089 3A       		.uleb128 0x3a
+ 1655 008a 0B       		.uleb128 0xb
+ 1656 008b 3B       		.uleb128 0x3b
+ 1657 008c 05       		.uleb128 0x5
+ 1658 008d 01       		.uleb128 0x1
+ 1659 008e 13       		.uleb128 0x13
+ 1660 008f 00       		.byte	0
+ 1661 0090 00       		.byte	0
+ 1662 0091 0C       		.uleb128 0xc
+ 1663 0092 15       		.uleb128 0x15
+ 1664 0093 01       		.byte	0x1
+ 1665 0094 27       		.uleb128 0x27
+ 1666 0095 19       		.uleb128 0x19
+ 1667 0096 01       		.uleb128 0x1
+ 1668 0097 13       		.uleb128 0x13
+ 1669 0098 00       		.byte	0
+ 1670 0099 00       		.byte	0
+ 1671 009a 0D       		.uleb128 0xd
+ 1672 009b 05       		.uleb128 0x5
+ 1673 009c 00       		.byte	0
+ 1674 009d 49       		.uleb128 0x49
+ 1675 009e 13       		.uleb128 0x13
+ 1676 009f 00       		.byte	0
+ 1677 00a0 00       		.byte	0
+ 1678 00a1 0E       		.uleb128 0xe
+ 1679 00a2 0F       		.uleb128 0xf
+ 1680 00a3 00       		.byte	0
+ 1681 00a4 0B       		.uleb128 0xb
+ 1682 00a5 0B       		.uleb128 0xb
+ 1683 00a6 00       		.byte	0
+ 1684 00a7 00       		.byte	0
+ 1685 00a8 0F       		.uleb128 0xf
+ 1686 00a9 13       		.uleb128 0x13
+ 1687 00aa 01       		.byte	0x1
+ 1688 00ab 03       		.uleb128 0x3
+ 1689 00ac 0E       		.uleb128 0xe
+ 1690 00ad 0B       		.uleb128 0xb
+ 1691 00ae 05       		.uleb128 0x5
+ 1692 00af 3A       		.uleb128 0x3a
+ 1693 00b0 0B       		.uleb128 0xb
+ 1694 00b1 3B       		.uleb128 0x3b
+ 1695 00b2 05       		.uleb128 0x5
+ 1696 00b3 01       		.uleb128 0x1
+ 1697 00b4 13       		.uleb128 0x13
+ 1698 00b5 00       		.byte	0
+ 1699 00b6 00       		.byte	0
+ 1700 00b7 10       		.uleb128 0x10
+ 1701 00b8 0D       		.uleb128 0xd
+ 1702 00b9 00       		.byte	0
+ 1703 00ba 03       		.uleb128 0x3
+ 1704 00bb 08       		.uleb128 0x8
+ 1705 00bc 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 31
+
+
+ 1706 00bd 0B       		.uleb128 0xb
+ 1707 00be 3B       		.uleb128 0x3b
+ 1708 00bf 0B       		.uleb128 0xb
+ 1709 00c0 49       		.uleb128 0x49
+ 1710 00c1 13       		.uleb128 0x13
+ 1711 00c2 38       		.uleb128 0x38
+ 1712 00c3 0B       		.uleb128 0xb
+ 1713 00c4 00       		.byte	0
+ 1714 00c5 00       		.byte	0
+ 1715 00c6 11       		.uleb128 0x11
+ 1716 00c7 13       		.uleb128 0x13
+ 1717 00c8 01       		.byte	0x1
+ 1718 00c9 0B       		.uleb128 0xb
+ 1719 00ca 0B       		.uleb128 0xb
+ 1720 00cb 3A       		.uleb128 0x3a
+ 1721 00cc 0B       		.uleb128 0xb
+ 1722 00cd 3B       		.uleb128 0x3b
+ 1723 00ce 0B       		.uleb128 0xb
+ 1724 00cf 01       		.uleb128 0x1
+ 1725 00d0 13       		.uleb128 0x13
+ 1726 00d1 00       		.byte	0
+ 1727 00d2 00       		.byte	0
+ 1728 00d3 12       		.uleb128 0x12
+ 1729 00d4 17       		.uleb128 0x17
+ 1730 00d5 01       		.byte	0x1
+ 1731 00d6 0B       		.uleb128 0xb
+ 1732 00d7 0B       		.uleb128 0xb
+ 1733 00d8 3A       		.uleb128 0x3a
+ 1734 00d9 0B       		.uleb128 0xb
+ 1735 00da 3B       		.uleb128 0x3b
+ 1736 00db 0B       		.uleb128 0xb
+ 1737 00dc 01       		.uleb128 0x1
+ 1738 00dd 13       		.uleb128 0x13
+ 1739 00de 00       		.byte	0
+ 1740 00df 00       		.byte	0
+ 1741 00e0 13       		.uleb128 0x13
+ 1742 00e1 0D       		.uleb128 0xd
+ 1743 00e2 00       		.byte	0
+ 1744 00e3 03       		.uleb128 0x3
+ 1745 00e4 0E       		.uleb128 0xe
+ 1746 00e5 3A       		.uleb128 0x3a
+ 1747 00e6 0B       		.uleb128 0xb
+ 1748 00e7 3B       		.uleb128 0x3b
+ 1749 00e8 05       		.uleb128 0x5
+ 1750 00e9 49       		.uleb128 0x49
+ 1751 00ea 13       		.uleb128 0x13
+ 1752 00eb 00       		.byte	0
+ 1753 00ec 00       		.byte	0
+ 1754 00ed 14       		.uleb128 0x14
+ 1755 00ee 26       		.uleb128 0x26
+ 1756 00ef 00       		.byte	0
+ 1757 00f0 49       		.uleb128 0x49
+ 1758 00f1 13       		.uleb128 0x13
+ 1759 00f2 00       		.byte	0
+ 1760 00f3 00       		.byte	0
+ 1761 00f4 15       		.uleb128 0x15
+ 1762 00f5 01       		.uleb128 0x1
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 32
+
+
+ 1763 00f6 01       		.byte	0x1
+ 1764 00f7 49       		.uleb128 0x49
+ 1765 00f8 13       		.uleb128 0x13
+ 1766 00f9 01       		.uleb128 0x1
+ 1767 00fa 13       		.uleb128 0x13
+ 1768 00fb 00       		.byte	0
+ 1769 00fc 00       		.byte	0
+ 1770 00fd 16       		.uleb128 0x16
+ 1771 00fe 21       		.uleb128 0x21
+ 1772 00ff 00       		.byte	0
+ 1773 0100 49       		.uleb128 0x49
+ 1774 0101 13       		.uleb128 0x13
+ 1775 0102 2F       		.uleb128 0x2f
+ 1776 0103 0B       		.uleb128 0xb
+ 1777 0104 00       		.byte	0
+ 1778 0105 00       		.byte	0
+ 1779 0106 17       		.uleb128 0x17
+ 1780 0107 0D       		.uleb128 0xd
+ 1781 0108 00       		.byte	0
+ 1782 0109 03       		.uleb128 0x3
+ 1783 010a 08       		.uleb128 0x8
+ 1784 010b 3A       		.uleb128 0x3a
+ 1785 010c 0B       		.uleb128 0xb
+ 1786 010d 3B       		.uleb128 0x3b
+ 1787 010e 0B       		.uleb128 0xb
+ 1788 010f 49       		.uleb128 0x49
+ 1789 0110 13       		.uleb128 0x13
+ 1790 0111 00       		.byte	0
+ 1791 0112 00       		.byte	0
+ 1792 0113 18       		.uleb128 0x18
+ 1793 0114 16       		.uleb128 0x16
+ 1794 0115 00       		.byte	0
+ 1795 0116 03       		.uleb128 0x3
+ 1796 0117 0E       		.uleb128 0xe
+ 1797 0118 3A       		.uleb128 0x3a
+ 1798 0119 0B       		.uleb128 0xb
+ 1799 011a 3B       		.uleb128 0x3b
+ 1800 011b 05       		.uleb128 0x5
+ 1801 011c 49       		.uleb128 0x49
+ 1802 011d 13       		.uleb128 0x13
+ 1803 011e 00       		.byte	0
+ 1804 011f 00       		.byte	0
+ 1805 0120 19       		.uleb128 0x19
+ 1806 0121 2E       		.uleb128 0x2e
+ 1807 0122 01       		.byte	0x1
+ 1808 0123 3F       		.uleb128 0x3f
+ 1809 0124 19       		.uleb128 0x19
+ 1810 0125 03       		.uleb128 0x3
+ 1811 0126 0E       		.uleb128 0xe
+ 1812 0127 3A       		.uleb128 0x3a
+ 1813 0128 0B       		.uleb128 0xb
+ 1814 0129 3B       		.uleb128 0x3b
+ 1815 012a 0B       		.uleb128 0xb
+ 1816 012b 27       		.uleb128 0x27
+ 1817 012c 19       		.uleb128 0x19
+ 1818 012d 11       		.uleb128 0x11
+ 1819 012e 01       		.uleb128 0x1
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 33
+
+
+ 1820 012f 12       		.uleb128 0x12
+ 1821 0130 06       		.uleb128 0x6
+ 1822 0131 40       		.uleb128 0x40
+ 1823 0132 18       		.uleb128 0x18
+ 1824 0133 9742     		.uleb128 0x2117
+ 1825 0135 19       		.uleb128 0x19
+ 1826 0136 01       		.uleb128 0x1
+ 1827 0137 13       		.uleb128 0x13
+ 1828 0138 00       		.byte	0
+ 1829 0139 00       		.byte	0
+ 1830 013a 1A       		.uleb128 0x1a
+ 1831 013b 0B       		.uleb128 0xb
+ 1832 013c 01       		.byte	0x1
+ 1833 013d 55       		.uleb128 0x55
+ 1834 013e 17       		.uleb128 0x17
+ 1835 013f 00       		.byte	0
+ 1836 0140 00       		.byte	0
+ 1837 0141 1B       		.uleb128 0x1b
+ 1838 0142 34       		.uleb128 0x34
+ 1839 0143 00       		.byte	0
+ 1840 0144 03       		.uleb128 0x3
+ 1841 0145 08       		.uleb128 0x8
+ 1842 0146 3A       		.uleb128 0x3a
+ 1843 0147 0B       		.uleb128 0xb
+ 1844 0148 3B       		.uleb128 0x3b
+ 1845 0149 0B       		.uleb128 0xb
+ 1846 014a 49       		.uleb128 0x49
+ 1847 014b 13       		.uleb128 0x13
+ 1848 014c 02       		.uleb128 0x2
+ 1849 014d 17       		.uleb128 0x17
+ 1850 014e 00       		.byte	0
+ 1851 014f 00       		.byte	0
+ 1852 0150 1C       		.uleb128 0x1c
+ 1853 0151 898201   		.uleb128 0x4109
+ 1854 0154 01       		.byte	0x1
+ 1855 0155 11       		.uleb128 0x11
+ 1856 0156 01       		.uleb128 0x1
+ 1857 0157 31       		.uleb128 0x31
+ 1858 0158 13       		.uleb128 0x13
+ 1859 0159 01       		.uleb128 0x1
+ 1860 015a 13       		.uleb128 0x13
+ 1861 015b 00       		.byte	0
+ 1862 015c 00       		.byte	0
+ 1863 015d 1D       		.uleb128 0x1d
+ 1864 015e 8A8201   		.uleb128 0x410a
+ 1865 0161 00       		.byte	0
+ 1866 0162 02       		.uleb128 0x2
+ 1867 0163 18       		.uleb128 0x18
+ 1868 0164 9142     		.uleb128 0x2111
+ 1869 0166 18       		.uleb128 0x18
+ 1870 0167 00       		.byte	0
+ 1871 0168 00       		.byte	0
+ 1872 0169 1E       		.uleb128 0x1e
+ 1873 016a 898201   		.uleb128 0x4109
+ 1874 016d 00       		.byte	0
+ 1875 016e 11       		.uleb128 0x11
+ 1876 016f 01       		.uleb128 0x1
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 34
+
+
+ 1877 0170 31       		.uleb128 0x31
+ 1878 0171 13       		.uleb128 0x13
+ 1879 0172 00       		.byte	0
+ 1880 0173 00       		.byte	0
+ 1881 0174 1F       		.uleb128 0x1f
+ 1882 0175 05       		.uleb128 0x5
+ 1883 0176 00       		.byte	0
+ 1884 0177 03       		.uleb128 0x3
+ 1885 0178 08       		.uleb128 0x8
+ 1886 0179 3A       		.uleb128 0x3a
+ 1887 017a 0B       		.uleb128 0xb
+ 1888 017b 3B       		.uleb128 0x3b
+ 1889 017c 0B       		.uleb128 0xb
+ 1890 017d 49       		.uleb128 0x49
+ 1891 017e 13       		.uleb128 0x13
+ 1892 017f 02       		.uleb128 0x2
+ 1893 0180 18       		.uleb128 0x18
+ 1894 0181 00       		.byte	0
+ 1895 0182 00       		.byte	0
+ 1896 0183 20       		.uleb128 0x20
+ 1897 0184 05       		.uleb128 0x5
+ 1898 0185 00       		.byte	0
+ 1899 0186 03       		.uleb128 0x3
+ 1900 0187 0E       		.uleb128 0xe
+ 1901 0188 3A       		.uleb128 0x3a
+ 1902 0189 0B       		.uleb128 0xb
+ 1903 018a 3B       		.uleb128 0x3b
+ 1904 018b 0B       		.uleb128 0xb
+ 1905 018c 49       		.uleb128 0x49
+ 1906 018d 13       		.uleb128 0x13
+ 1907 018e 02       		.uleb128 0x2
+ 1908 018f 17       		.uleb128 0x17
+ 1909 0190 00       		.byte	0
+ 1910 0191 00       		.byte	0
+ 1911 0192 21       		.uleb128 0x21
+ 1912 0193 34       		.uleb128 0x34
+ 1913 0194 00       		.byte	0
+ 1914 0195 03       		.uleb128 0x3
+ 1915 0196 08       		.uleb128 0x8
+ 1916 0197 3A       		.uleb128 0x3a
+ 1917 0198 0B       		.uleb128 0xb
+ 1918 0199 3B       		.uleb128 0x3b
+ 1919 019a 0B       		.uleb128 0xb
+ 1920 019b 49       		.uleb128 0x49
+ 1921 019c 13       		.uleb128 0x13
+ 1922 019d 02       		.uleb128 0x2
+ 1923 019e 18       		.uleb128 0x18
+ 1924 019f 00       		.byte	0
+ 1925 01a0 00       		.byte	0
+ 1926 01a1 22       		.uleb128 0x22
+ 1927 01a2 34       		.uleb128 0x34
+ 1928 01a3 00       		.byte	0
+ 1929 01a4 03       		.uleb128 0x3
+ 1930 01a5 0E       		.uleb128 0xe
+ 1931 01a6 3A       		.uleb128 0x3a
+ 1932 01a7 0B       		.uleb128 0xb
+ 1933 01a8 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 35
+
+
+ 1934 01a9 0B       		.uleb128 0xb
+ 1935 01aa 49       		.uleb128 0x49
+ 1936 01ab 13       		.uleb128 0x13
+ 1937 01ac 02       		.uleb128 0x2
+ 1938 01ad 18       		.uleb128 0x18
+ 1939 01ae 00       		.byte	0
+ 1940 01af 00       		.byte	0
+ 1941 01b0 23       		.uleb128 0x23
+ 1942 01b1 34       		.uleb128 0x34
+ 1943 01b2 00       		.byte	0
+ 1944 01b3 03       		.uleb128 0x3
+ 1945 01b4 0E       		.uleb128 0xe
+ 1946 01b5 3A       		.uleb128 0x3a
+ 1947 01b6 0B       		.uleb128 0xb
+ 1948 01b7 3B       		.uleb128 0x3b
+ 1949 01b8 05       		.uleb128 0x5
+ 1950 01b9 49       		.uleb128 0x49
+ 1951 01ba 13       		.uleb128 0x13
+ 1952 01bb 3F       		.uleb128 0x3f
+ 1953 01bc 19       		.uleb128 0x19
+ 1954 01bd 3C       		.uleb128 0x3c
+ 1955 01be 19       		.uleb128 0x19
+ 1956 01bf 00       		.byte	0
+ 1957 01c0 00       		.byte	0
+ 1958 01c1 24       		.uleb128 0x24
+ 1959 01c2 34       		.uleb128 0x34
+ 1960 01c3 00       		.byte	0
+ 1961 01c4 03       		.uleb128 0x3
+ 1962 01c5 08       		.uleb128 0x8
+ 1963 01c6 3A       		.uleb128 0x3a
+ 1964 01c7 0B       		.uleb128 0xb
+ 1965 01c8 3B       		.uleb128 0x3b
+ 1966 01c9 05       		.uleb128 0x5
+ 1967 01ca 49       		.uleb128 0x49
+ 1968 01cb 13       		.uleb128 0x13
+ 1969 01cc 3F       		.uleb128 0x3f
+ 1970 01cd 19       		.uleb128 0x19
+ 1971 01ce 3C       		.uleb128 0x3c
+ 1972 01cf 19       		.uleb128 0x19
+ 1973 01d0 00       		.byte	0
+ 1974 01d1 00       		.byte	0
+ 1975 01d2 25       		.uleb128 0x25
+ 1976 01d3 2E       		.uleb128 0x2e
+ 1977 01d4 00       		.byte	0
+ 1978 01d5 3F       		.uleb128 0x3f
+ 1979 01d6 19       		.uleb128 0x19
+ 1980 01d7 3C       		.uleb128 0x3c
+ 1981 01d8 19       		.uleb128 0x19
+ 1982 01d9 6E       		.uleb128 0x6e
+ 1983 01da 0E       		.uleb128 0xe
+ 1984 01db 03       		.uleb128 0x3
+ 1985 01dc 0E       		.uleb128 0xe
+ 1986 01dd 3A       		.uleb128 0x3a
+ 1987 01de 0B       		.uleb128 0xb
+ 1988 01df 3B       		.uleb128 0x3b
+ 1989 01e0 05       		.uleb128 0x5
+ 1990 01e1 00       		.byte	0
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 36
+
+
+ 1991 01e2 00       		.byte	0
+ 1992 01e3 00       		.byte	0
+ 1993              		.section	.debug_loc,"",%progbits
+ 1994              	.Ldebug_loc0:
+ 1995              	.LLST0:
+ 1996 0000 16000000 		.4byte	.LVL0
+ 1997 0004 2C000000 		.4byte	.LVL2
+ 1998 0008 0100     		.2byte	0x1
+ 1999 000a 54       		.byte	0x54
+ 2000 000b 2C000000 		.4byte	.LVL2
+ 2001 000f 34000000 		.4byte	.LVL3
+ 2002 0013 0300     		.2byte	0x3
+ 2003 0015 74       		.byte	0x74
+ 2004 0016 7F       		.sleb128 -1
+ 2005 0017 9F       		.byte	0x9f
+ 2006 0018 34000000 		.4byte	.LVL3
+ 2007 001c 4A000000 		.4byte	.LVL4
+ 2008 0020 0100     		.2byte	0x1
+ 2009 0022 54       		.byte	0x54
+ 2010 0023 00000000 		.4byte	0
+ 2011 0027 00000000 		.4byte	0
+ 2012              	.LLST1:
+ 2013 002b 00000000 		.4byte	.LVL5
+ 2014 002f 22000000 		.4byte	.LVL6
+ 2015 0033 0200     		.2byte	0x2
+ 2016 0035 90       		.byte	0x90
+ 2017 0036 40       		.uleb128 0x40
+ 2018 0037 2E000000 		.4byte	.LVL7
+ 2019 003b 3A000000 		.4byte	.LVL8
+ 2020 003f 0200     		.2byte	0x2
+ 2021 0041 90       		.byte	0x90
+ 2022 0042 40       		.uleb128 0x40
+ 2023 0043 3A000000 		.4byte	.LVL8
+ 2024 0047 50000000 		.4byte	.LFE257
+ 2025 004b 0600     		.2byte	0x6
+ 2026 004d F3       		.byte	0xf3
+ 2027 004e 03       		.uleb128 0x3
+ 2028 004f F5       		.byte	0xf5
+ 2029 0050 40       		.uleb128 0x40
+ 2030 0051 25       		.uleb128 0x25
+ 2031 0052 9F       		.byte	0x9f
+ 2032 0053 00000000 		.4byte	0
+ 2033 0057 00000000 		.4byte	0
+ 2034              		.section	.debug_aranges,"",%progbits
+ 2035 0000 3C000000 		.4byte	0x3c
+ 2036 0004 0200     		.2byte	0x2
+ 2037 0006 00000000 		.4byte	.Ldebug_info0
+ 2038 000a 04       		.byte	0x4
+ 2039 000b 00       		.byte	0
+ 2040 000c 0000     		.2byte	0
+ 2041 000e 0000     		.2byte	0
+ 2042 0010 00000000 		.4byte	.LFB256
+ 2043 0014 5C000000 		.4byte	.LFE256-.LFB256
+ 2044 0018 00000000 		.4byte	.LFB257
+ 2045 001c 50000000 		.4byte	.LFE257-.LFB257
+ 2046 0020 00000000 		.4byte	.LFB258
+ 2047 0024 14000000 		.4byte	.LFE258-.LFB258
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 37
+
+
+ 2048 0028 00000000 		.4byte	.LFB259
+ 2049 002c 14000000 		.4byte	.LFE259-.LFB259
+ 2050 0030 00000000 		.4byte	.LFB260
+ 2051 0034 40000000 		.4byte	.LFE260-.LFB260
+ 2052 0038 00000000 		.4byte	0
+ 2053 003c 00000000 		.4byte	0
+ 2054              		.section	.debug_ranges,"",%progbits
+ 2055              	.Ldebug_ranges0:
+ 2056 0000 0C000000 		.4byte	.LBB2
+ 2057 0004 10000000 		.4byte	.LBE2
+ 2058 0008 12000000 		.4byte	.LBB3
+ 2059 000c 14000000 		.4byte	.LBE3
+ 2060 0010 16000000 		.4byte	.LBB4
+ 2061 0014 44000000 		.4byte	.LBE4
+ 2062 0018 00000000 		.4byte	0
+ 2063 001c 00000000 		.4byte	0
+ 2064 0020 00000000 		.4byte	.LFB256
+ 2065 0024 5C000000 		.4byte	.LFE256
+ 2066 0028 00000000 		.4byte	.LFB257
+ 2067 002c 50000000 		.4byte	.LFE257
+ 2068 0030 00000000 		.4byte	.LFB258
+ 2069 0034 14000000 		.4byte	.LFE258
+ 2070 0038 00000000 		.4byte	.LFB259
+ 2071 003c 14000000 		.4byte	.LFE259
+ 2072 0040 00000000 		.4byte	.LFB260
+ 2073 0044 40000000 		.4byte	.LFE260
+ 2074 0048 00000000 		.4byte	0
+ 2075 004c 00000000 		.4byte	0
+ 2076              		.section	.debug_line,"",%progbits
+ 2077              	.Ldebug_line0:
+ 2078 0000 8F030000 		.section	.debug_str,"MS",%progbits,1
+ 2078      02000403 
+ 2078      00000201 
+ 2078      FB0E0D00 
+ 2078      01010101 
+ 2079              	.LASF57:
+ 2080 0000 72656164 		.ascii	"ready_list_t\000"
+ 2080      795F6C69 
+ 2080      73745F74 
+ 2080      00
+ 2081              	.LASF3:
+ 2082 000d 73697A65 		.ascii	"size_t\000"
+ 2082      5F7400
+ 2083              	.LASF92:
+ 2084 0014 7264796D 		.ascii	"rdymsg\000"
+ 2084      736700
+ 2085              	.LASF20:
+ 2086 001b 75696E74 		.ascii	"uint64_t\000"
+ 2086      36345F74 
+ 2086      00
+ 2087              	.LASF111:
+ 2088 0024 4F545950 		.ascii	"OTYPER\000"
+ 2088      455200
+ 2089              	.LASF4:
+ 2090 002b 5F5F7569 		.ascii	"__uint8_t\000"
+ 2090      6E74385F 
+ 2090      7400
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 38
+
+
+ 2091              	.LASF89:
+ 2092 0035 706F7274 		.ascii	"port_intctx\000"
+ 2092      5F696E74 
+ 2092      63747800 
+ 2093              	.LASF82:
+ 2094 0041 76746C69 		.ascii	"vtlist\000"
+ 2094      737400
+ 2095              	.LASF127:
+ 2096 0048 6C656470 		.ascii	"ledpwm_update_pwm\000"
+ 2096      776D5F75 
+ 2096      70646174 
+ 2096      655F7077 
+ 2096      6D00
+ 2097              	.LASF119:
+ 2098 005a 696F706F 		.ascii	"ioportmask_t\000"
+ 2098      72746D61 
+ 2098      736B5F74 
+ 2098      00
+ 2099              	.LASF15:
+ 2100 0067 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2100      206C6F6E 
+ 2100      6720756E 
+ 2100      7369676E 
+ 2100      65642069 
+ 2101              	.LASF83:
+ 2102 007e 6D61696E 		.ascii	"mainthread\000"
+ 2102      74687265 
+ 2102      616400
+ 2103              	.LASF73:
+ 2104 0089 76697274 		.ascii	"virtual_timers_list_t\000"
+ 2104      75616C5F 
+ 2104      74696D65 
+ 2104      72735F6C 
+ 2104      6973745F 
+ 2105              	.LASF130:
+ 2106 009f 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 2106      52784275 
+ 2106      66666572 
+ 2106      00
+ 2107              	.LASF56:
+ 2108 00ac 63685F74 		.ascii	"ch_threads_queue\000"
+ 2108      68726561 
+ 2108      64735F71 
+ 2108      75657565 
+ 2108      00
+ 2109              	.LASF122:
+ 2110 00bd 6C656470 		.ascii	"ledpwm_init\000"
+ 2110      776D5F69 
+ 2110      6E697400 
+ 2111              	.LASF34:
+ 2112 00c9 705F7072 		.ascii	"p_prio\000"
+ 2112      696F00
+ 2113              	.LASF13:
+ 2114 00d0 6C6F6E67 		.ascii	"long long int\000"
+ 2114      206C6F6E 
+ 2114      6720696E 
+ 2114      7400
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 39
+
+
+ 2115              	.LASF2:
+ 2116 00de 7369676E 		.ascii	"signed char\000"
+ 2116      65642063 
+ 2116      68617200 
+ 2117              	.LASF114:
+ 2118 00ea 42535252 		.ascii	"BSRR\000"
+ 2118      00
+ 2119              	.LASF12:
+ 2120 00ef 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2120      20756E73 
+ 2120      69676E65 
+ 2120      6420696E 
+ 2120      7400
+ 2121              	.LASF50:
+ 2122 0101 705F6D70 		.ascii	"p_mpool\000"
+ 2122      6F6F6C00 
+ 2123              	.LASF103:
+ 2124 0109 6D5F7175 		.ascii	"m_queue\000"
+ 2124      65756500 
+ 2125              	.LASF94:
+ 2126 0111 77746F62 		.ascii	"wtobjp\000"
+ 2126      6A7000
+ 2127              	.LASF25:
+ 2128 0118 74736C69 		.ascii	"tslices_t\000"
+ 2128      6365735F 
+ 2128      7400
+ 2129              	.LASF113:
+ 2130 0122 50555044 		.ascii	"PUPDR\000"
+ 2130      5200
+ 2131              	.LASF95:
+ 2132 0128 77747472 		.ascii	"wttrp\000"
+ 2132      7000
+ 2133              	.LASF80:
+ 2134 012e 63685F73 		.ascii	"ch_system\000"
+ 2134      79737465 
+ 2134      6D00
+ 2135              	.LASF10:
+ 2136 0138 6C6F6E67 		.ascii	"long int\000"
+ 2136      20696E74 
+ 2136      00
+ 2137              	.LASF23:
+ 2138 0141 74737461 		.ascii	"tstate_t\000"
+ 2138      74655F74 
+ 2138      00
+ 2139              	.LASF17:
+ 2140 014a 75696E74 		.ascii	"uint16_t\000"
+ 2140      31365F74 
+ 2140      00
+ 2141              	.LASF36:
+ 2142 0153 705F6E65 		.ascii	"p_newer\000"
+ 2142      77657200 
+ 2143              	.LASF100:
+ 2144 015b 735F7175 		.ascii	"s_queue\000"
+ 2144      65756500 
+ 2145              	.LASF93:
+ 2146 0163 65786974 		.ascii	"exitcode\000"
+ 2146      636F6465 
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 40
+
+
+ 2146      00
+ 2147              	.LASF112:
+ 2148 016c 4F535045 		.ascii	"OSPEEDR\000"
+ 2148      45445200 
+ 2149              	.LASF62:
+ 2150 0174 725F6E65 		.ascii	"r_newer\000"
+ 2150      77657200 
+ 2151              	.LASF86:
+ 2152 017c 72656761 		.ascii	"regarm_t\000"
+ 2152      726D5F74 
+ 2152      00
+ 2153              	.LASF69:
+ 2154 0185 76745F70 		.ascii	"vt_prev\000"
+ 2154      72657600 
+ 2155              	.LASF118:
+ 2156 018d 73746D33 		.ascii	"stm32_gpio_t\000"
+ 2156      325F6770 
+ 2156      696F5F74 
+ 2156      00
+ 2157              	.LASF107:
+ 2158 019a 6D757465 		.ascii	"mutex_t\000"
+ 2158      785F7400 
+ 2159              	.LASF84:
+ 2160 01a2 69646C65 		.ascii	"idle_thread_wa\000"
+ 2160      5F746872 
+ 2160      6561645F 
+ 2160      776100
+ 2161              	.LASF29:
+ 2162 01b1 636E745F 		.ascii	"cnt_t\000"
+ 2162      7400
+ 2163              	.LASF1:
+ 2164 01b7 756E7369 		.ascii	"unsigned int\000"
+ 2164      676E6564 
+ 2164      20696E74 
+ 2164      00
+ 2165              	.LASF68:
+ 2166 01c4 76745F6E 		.ascii	"vt_next\000"
+ 2166      65787400 
+ 2167              	.LASF124:
+ 2168 01cc 696E7465 		.ascii	"intensity\000"
+ 2168      6E736974 
+ 2168      7900
+ 2169              	.LASF96:
+ 2170 01d6 77747365 		.ascii	"wtsemp\000"
+ 2170      6D7000
+ 2171              	.LASF70:
+ 2172 01dd 76745F64 		.ascii	"vt_delta\000"
+ 2172      656C7461 
+ 2172      00
+ 2173              	.LASF76:
+ 2174 01e6 73797374 		.ascii	"system_debug_t\000"
+ 2174      656D5F64 
+ 2174      65627567 
+ 2174      5F7400
+ 2175              	.LASF128:
+ 2176 01f5 6C65645F 		.ascii	"led_values\000"
+ 2176      76616C75 
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 41
+
+
+ 2176      657300
+ 2177              	.LASF115:
+ 2178 0200 4C434B52 		.ascii	"LCKR\000"
+ 2178      00
+ 2179              	.LASF101:
+ 2180 0205 735F636E 		.ascii	"s_cnt\000"
+ 2180      7400
+ 2181              	.LASF88:
+ 2182 020b 636F6E74 		.ascii	"context\000"
+ 2182      65787400 
+ 2183              	.LASF8:
+ 2184 0213 73686F72 		.ascii	"short unsigned int\000"
+ 2184      7420756E 
+ 2184      7369676E 
+ 2184      65642069 
+ 2184      6E7400
+ 2185              	.LASF53:
+ 2186 0226 63685F74 		.ascii	"ch_thread\000"
+ 2186      68726561 
+ 2186      6400
+ 2187              	.LASF27:
+ 2188 0230 6D73675F 		.ascii	"msg_t\000"
+ 2188      7400
+ 2189              	.LASF135:
+ 2190 0236 443A5C67 		.ascii	"D:\\git\\oroca_bldc_dev\\oroca_bldc_fw\\oroca_bldc_"
+ 2190      69745C6F 
+ 2190      726F6361 
+ 2190      5F626C64 
+ 2190      635F6465 
+ 2191 0265 63686962 		.ascii	"chibios\000"
+ 2191      696F7300 
+ 2192              	.LASF79:
+ 2193 026d 63685F73 		.ascii	"ch_system_t\000"
+ 2193      79737465 
+ 2193      6D5F7400 
+ 2194              	.LASF22:
+ 2195 0279 746D6F64 		.ascii	"tmode_t\000"
+ 2195      655F7400 
+ 2196              	.LASF43:
+ 2197 0281 705F7469 		.ascii	"p_time\000"
+ 2197      6D6500
+ 2198              	.LASF58:
+ 2199 0288 63685F72 		.ascii	"ch_ready_list\000"
+ 2199      65616479 
+ 2199      5F6C6973 
+ 2199      7400
+ 2200              	.LASF28:
+ 2201 0296 6576656E 		.ascii	"eventmask_t\000"
+ 2201      746D6173 
+ 2201      6B5F7400 
+ 2202              	.LASF9:
+ 2203 02a2 5F5F696E 		.ascii	"__int32_t\000"
+ 2203      7433325F 
+ 2203      7400
+ 2204              	.LASF87:
+ 2205 02ac 73746B61 		.ascii	"stkalign_t\000"
+ 2205      6C69676E 
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 42
+
+
+ 2205      5F7400
+ 2206              	.LASF21:
+ 2207 02b7 7274636E 		.ascii	"rtcnt_t\000"
+ 2207      745F7400 
+ 2208              	.LASF51:
+ 2209 02bf 74687265 		.ascii	"thread_reference_t\000"
+ 2209      61645F72 
+ 2209      65666572 
+ 2209      656E6365 
+ 2209      5F7400
+ 2210              	.LASF74:
+ 2211 02d2 63685F76 		.ascii	"ch_virtual_timers_list\000"
+ 2211      69727475 
+ 2211      616C5F74 
+ 2211      696D6572 
+ 2211      735F6C69 
+ 2212              	.LASF109:
+ 2213 02e9 636C6561 		.ascii	"clear\000"
+ 2213      7200
+ 2214              	.LASF71:
+ 2215 02ef 76745F66 		.ascii	"vt_func\000"
+ 2215      756E6300 
+ 2216              	.LASF125:
+ 2217 02f7 6C656470 		.ascii	"ledpwm_led_on\000"
+ 2217      776D5F6C 
+ 2217      65645F6F 
+ 2217      6E00
+ 2218              	.LASF37:
+ 2219 0305 705F6F6C 		.ascii	"p_older\000"
+ 2219      64657200 
+ 2220              	.LASF61:
+ 2221 030d 725F6374 		.ascii	"r_ctx\000"
+ 2221      7800
+ 2222              	.LASF91:
+ 2223 0313 746D5F63 		.ascii	"tm_calibration_t\000"
+ 2223      616C6962 
+ 2223      72617469 
+ 2223      6F6E5F74 
+ 2223      00
+ 2224              	.LASF64:
+ 2225 0324 725F6375 		.ascii	"r_current\000"
+ 2225      7272656E 
+ 2225      7400
+ 2226              	.LASF63:
+ 2227 032e 725F6F6C 		.ascii	"r_older\000"
+ 2227      64657200 
+ 2228              	.LASF110:
+ 2229 0336 4D4F4445 		.ascii	"MODER\000"
+ 2229      5200
+ 2230              	.LASF14:
+ 2231 033c 5F5F7569 		.ascii	"__uint64_t\000"
+ 2231      6E743634 
+ 2231      5F7400
+ 2232              	.LASF117:
+ 2233 0347 41465248 		.ascii	"AFRH\000"
+ 2233      00
+ 2234              	.LASF0:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 43
+
+
+ 2235 034c 666C6F61 		.ascii	"float\000"
+ 2235      7400
+ 2236              	.LASF129:
+ 2237 0352 67616D6D 		.ascii	"gamma_table\000"
+ 2237      615F7461 
+ 2237      626C6500 
+ 2238              	.LASF116:
+ 2239 035e 4146524C 		.ascii	"AFRL\000"
+ 2239      00
+ 2240              	.LASF24:
+ 2241 0363 74726566 		.ascii	"trefs_t\000"
+ 2241      735F7400 
+ 2242              	.LASF66:
+ 2243 036b 76697274 		.ascii	"virtual_timer_t\000"
+ 2243      75616C5F 
+ 2243      74696D65 
+ 2243      725F7400 
+ 2244              	.LASF33:
+ 2245 037b 705F7072 		.ascii	"p_prev\000"
+ 2245      657600
+ 2246              	.LASF26:
+ 2247 0382 74707269 		.ascii	"tprio_t\000"
+ 2247      6F5F7400 
+ 2248              	.LASF123:
+ 2249 038a 6C656470 		.ascii	"ledpwm_set_intensity\000"
+ 2249      776D5F73 
+ 2249      65745F69 
+ 2249      6E74656E 
+ 2249      73697479 
+ 2250              	.LASF77:
+ 2251 039f 63685F73 		.ascii	"ch_system_debug\000"
+ 2251      79737465 
+ 2251      6D5F6465 
+ 2251      62756700 
+ 2252              	.LASF108:
+ 2253 03af 5F426F6F 		.ascii	"_Bool\000"
+ 2253      6C00
+ 2254              	.LASF18:
+ 2255 03b5 696E7433 		.ascii	"int32_t\000"
+ 2255      325F7400 
+ 2256              	.LASF5:
+ 2257 03bd 756E7369 		.ascii	"unsigned char\000"
+ 2257      676E6564 
+ 2257      20636861 
+ 2257      7200
+ 2258              	.LASF134:
+ 2259 03cb 7372632F 		.ascii	"src/core/ledpwm.c\000"
+ 2259      636F7265 
+ 2259      2F6C6564 
+ 2259      70776D2E 
+ 2259      6300
+ 2260              	.LASF48:
+ 2261 03dd 705F6D74 		.ascii	"p_mtxlist\000"
+ 2261      786C6973 
+ 2261      7400
+ 2262              	.LASF6:
+ 2263 03e7 73686F72 		.ascii	"short int\000"
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 44
+
+
+ 2263      7420696E 
+ 2263      7400
+ 2264              	.LASF39:
+ 2265 03f1 705F7374 		.ascii	"p_state\000"
+ 2265      61746500 
+ 2266              	.LASF42:
+ 2267 03f9 705F7072 		.ascii	"p_preempt\000"
+ 2267      65656D70 
+ 2267      7400
+ 2268              	.LASF60:
+ 2269 0403 725F7072 		.ascii	"r_prio\000"
+ 2269      696F00
+ 2270              	.LASF98:
+ 2271 040a 65776D61 		.ascii	"ewmask\000"
+ 2271      736B00
+ 2272              	.LASF32:
+ 2273 0411 705F6E65 		.ascii	"p_next\000"
+ 2273      787400
+ 2274              	.LASF40:
+ 2275 0418 705F666C 		.ascii	"p_flags\000"
+ 2275      61677300 
+ 2276              	.LASF126:
+ 2277 0420 6C656470 		.ascii	"ledpwm_led_off\000"
+ 2277      776D5F6C 
+ 2277      65645F6F 
+ 2277      666600
+ 2278              	.LASF99:
+ 2279 042f 63685F73 		.ascii	"ch_semaphore\000"
+ 2279      656D6170 
+ 2279      686F7265 
+ 2279      00
+ 2280              	.LASF47:
+ 2281 043c 705F6570 		.ascii	"p_epending\000"
+ 2281      656E6469 
+ 2281      6E6700
+ 2282              	.LASF19:
+ 2283 0447 75696E74 		.ascii	"uint32_t\000"
+ 2283      33325F74 
+ 2283      00
+ 2284              	.LASF97:
+ 2285 0450 77746D74 		.ascii	"wtmtxp\000"
+ 2285      787000
+ 2286              	.LASF59:
+ 2287 0457 725F7175 		.ascii	"r_queue\000"
+ 2287      65756500 
+ 2288              	.LASF75:
+ 2289 045f 76745F73 		.ascii	"vt_systime\000"
+ 2289      79737469 
+ 2289      6D6500
+ 2290              	.LASF54:
+ 2291 046a 63685F74 		.ascii	"ch_threads_list\000"
+ 2291      68726561 
+ 2291      64735F6C 
+ 2291      69737400 
+ 2292              	.LASF121:
+ 2293 047a 6C6F6E67 		.ascii	"long double\000"
+ 2293      20646F75 
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 45
+
+
+ 2293      626C6500 
+ 2294              	.LASF106:
+ 2295 0486 63686172 		.ascii	"char\000"
+ 2295      00
+ 2296              	.LASF7:
+ 2297 048b 5F5F7569 		.ascii	"__uint16_t\000"
+ 2297      6E743136 
+ 2297      5F7400
+ 2298              	.LASF31:
+ 2299 0496 74687265 		.ascii	"thread_t\000"
+ 2299      61645F74 
+ 2299      00
+ 2300              	.LASF105:
+ 2301 049f 6D5F6E65 		.ascii	"m_next\000"
+ 2301      787400
+ 2302              	.LASF30:
+ 2303 04a6 73797374 		.ascii	"systime_t\000"
+ 2303      696D655F 
+ 2303      7400
+ 2304              	.LASF49:
+ 2305 04b0 705F7265 		.ascii	"p_realprio\000"
+ 2305      616C7072 
+ 2305      696F00
+ 2306              	.LASF65:
+ 2307 04bb 76746675 		.ascii	"vtfunc_t\000"
+ 2307      6E635F74 
+ 2307      00
+ 2308              	.LASF11:
+ 2309 04c4 5F5F7569 		.ascii	"__uint32_t\000"
+ 2309      6E743332 
+ 2309      5F7400
+ 2310              	.LASF78:
+ 2311 04cf 70616E69 		.ascii	"panic_msg\000"
+ 2311      635F6D73 
+ 2311      6700
+ 2312              	.LASF90:
+ 2313 04d9 6F666673 		.ascii	"offset\000"
+ 2313      657400
+ 2314              	.LASF67:
+ 2315 04e0 63685F76 		.ascii	"ch_virtual_timer\000"
+ 2315      69727475 
+ 2315      616C5F74 
+ 2315      696D6572 
+ 2315      00
+ 2316              	.LASF45:
+ 2317 04f1 705F6D73 		.ascii	"p_msgqueue\000"
+ 2317      67717565 
+ 2317      756500
+ 2318              	.LASF72:
+ 2319 04fc 76745F70 		.ascii	"vt_par\000"
+ 2319      617200
+ 2320              	.LASF132:
+ 2321 0503 726F756E 		.ascii	"roundf\000"
+ 2321      646600
+ 2322              	.LASF55:
+ 2323 050a 74687265 		.ascii	"threads_queue_t\000"
+ 2323      6164735F 
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 46
+
+
+ 2323      71756575 
+ 2323      655F7400 
+ 2324              	.LASF41:
+ 2325 051a 705F7265 		.ascii	"p_refs\000"
+ 2325      667300
+ 2326              	.LASF133:
+ 2327 0521 474E5520 		.ascii	"GNU C99 5.4.1 20160919 (release) [ARM/embedded-5-br"
+ 2327      43393920 
+ 2327      352E342E 
+ 2327      31203230 
+ 2327      31363039 
+ 2328 0554 616E6368 		.ascii	"anch revision 240496] -mcpu=cortex-m4 -mfloat-abi=h"
+ 2328      20726576 
+ 2328      6973696F 
+ 2328      6E203234 
+ 2328      30343936 
+ 2329 0587 61726420 		.ascii	"ard -mfpu=fpv4-sp-d16 -mno-thumb-interwork -mthumb "
+ 2329      2D6D6670 
+ 2329      753D6670 
+ 2329      76342D73 
+ 2329      702D6431 
+ 2330 05ba 2D676764 		.ascii	"-ggdb -O2 -std=gnu99 -fomit-frame-pointer -falign-f"
+ 2330      62202D4F 
+ 2330      32202D73 
+ 2330      74643D67 
+ 2330      6E753939 
+ 2331 05ed 756E6374 		.ascii	"unctions=16 -ffunction-sections -fdata-sections -fn"
+ 2331      696F6E73 
+ 2331      3D313620 
+ 2331      2D666675 
+ 2331      6E637469 
+ 2332 0620 6F2D636F 		.ascii	"o-common -fsingle-precision-constant\000"
+ 2332      6D6D6F6E 
+ 2332      202D6673 
+ 2332      696E676C 
+ 2332      652D7072 
+ 2333              	.LASF81:
+ 2334 0645 726C6973 		.ascii	"rlist\000"
+ 2334      7400
+ 2335              	.LASF16:
+ 2336 064b 75696E74 		.ascii	"uint8_t\000"
+ 2336      385F7400 
+ 2337              	.LASF85:
+ 2338 0653 73697A65 		.ascii	"sizetype\000"
+ 2338      74797065 
+ 2338      00
+ 2339              	.LASF102:
+ 2340 065c 63685F6D 		.ascii	"ch_mutex\000"
+ 2340      75746578 
+ 2340      00
+ 2341              	.LASF38:
+ 2342 0665 705F6E61 		.ascii	"p_name\000"
+ 2342      6D6500
+ 2343              	.LASF131:
+ 2344 066c 706F7766 		.ascii	"powf\000"
+ 2344      00
+ 2345              	.LASF52:
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 47
+
+
+ 2346 0671 74687265 		.ascii	"threads_list_t\000"
+ 2346      6164735F 
+ 2346      6C697374 
+ 2346      5F7400
+ 2347              	.LASF46:
+ 2348 0680 705F6D73 		.ascii	"p_msg\000"
+ 2348      6700
+ 2349              	.LASF104:
+ 2350 0686 6D5F6F77 		.ascii	"m_owner\000"
+ 2350      6E657200 
+ 2351              	.LASF120:
+ 2352 068e 646F7562 		.ascii	"double\000"
+ 2352      6C6500
+ 2353              	.LASF35:
+ 2354 0695 705F6374 		.ascii	"p_ctx\000"
+ 2354      7800
+ 2355              	.LASF44:
+ 2356 069b 705F7761 		.ascii	"p_waiting\000"
+ 2356      6974696E 
+ 2356      6700
+ 2357              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160919 (release) [ARM/embedded-5-bran
+ARM GAS  C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s 			page 48
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ledpwm.c
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:22     .text.ledpwm_init:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:28     .text.ledpwm_init:00000000 ledpwm_init
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:99     .text.ledpwm_init:0000004c $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:107    .text.ledpwm_set_intensity:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:113    .text.ledpwm_set_intensity:00000000 ledpwm_set_intensity
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:159    .text.ledpwm_set_intensity:00000044 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:166    .text.ledpwm_led_on:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:172    .text.ledpwm_led_on:00000000 ledpwm_led_on
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:192    .text.ledpwm_led_on:00000010 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:197    .text.ledpwm_led_off:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:203    .text.ledpwm_led_off:00000000 ledpwm_led_off
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:223    .text.ledpwm_led_off:00000010 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:228    .text.ledpwm_update_pwm:00000000 $t
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:234    .text.ledpwm_update_pwm:00000000 ledpwm_update_pwm
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:276    .text.ledpwm_update_pwm:00000034 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:283    .bss.led_values:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:287    .bss.led_values:00000000 led_values
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:290    .bss.cnt.10303:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:294    .bss.cnt.10303:00000000 cnt.10303
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:297    .bss.gamma_table:00000000 $d
+C:\Users\IDONNO~1\AppData\Local\Temp\ccORSB8M.s:301    .bss.gamma_table:00000000 gamma_table
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+powf
+roundf
