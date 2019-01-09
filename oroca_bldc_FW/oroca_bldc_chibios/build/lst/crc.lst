@@ -1,0 +1,868 @@
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 2
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"crc.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.crc16,"ax",%progbits
+  18              		.align	1
+  19              		.p2align 4,,15
+  20              		.global	crc16
+  21              		.arch armv7e-m
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  25              		.fpu fpv4-sp-d16
+  26              		.type	crc16, %function
+  27              	crc16:
+  28              	.LVL0:
+  29              	.LFB0:
+  30              		.file 1 "src/core/crc.c"
+  31              		.loc 1 57 60 view -0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 0
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35              		@ link register save eliminated.
+  36              		.loc 1 58 2 view .LVU1
+  37              		.loc 1 59 2 view .LVU2
+  38              		.loc 1 60 2 view .LVU3
+  39              		.loc 1 60 2 is_stmt 0 view .LVU4
+  40 0000 91B1     		cbz	r1, .L7
+  41              		.loc 1 57 60 view .LVU5
+  42 0002 10B4     		push	{r4}
+  43              		.cfi_def_cfa_offset 4
+  44              		.cfi_offset 4, -4
+  45 0004 094C     		ldr	r4, .L11
+  46 0006 4218     		adds	r2, r0, r1
+  47              		.loc 1 59 17 view .LVU6
+  48 0008 0021     		movs	r1, #0
+  49              	.LVL1:
+  50              	.L3:
+  51              		.loc 1 61 3 is_stmt 1 discriminator 3 view .LVU7
+  52              		.loc 1 61 38 is_stmt 0 discriminator 3 view .LVU8
+  53 000a 10F8013B 		ldrb	r3, [r0], #1	@ zero_extendqisi2
+  54              	.LVL2:
+  55              		.loc 1 61 36 discriminator 3 view .LVU9
+  56 000e 83EA1123 		eor	r3, r3, r1, lsr #8
+  57              		.loc 1 60 2 discriminator 3 view .LVU10
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 2
+
+
+  58 0012 9042     		cmp	r0, r2
+  59              		.loc 1 61 55 discriminator 3 view .LVU11
+  60 0014 34F81330 		ldrh	r3, [r4, r3, lsl #1]
+  61 0018 83EA0121 		eor	r1, r3, r1, lsl #8
+  62              	.LVL3:
+  63              		.loc 1 61 9 discriminator 3 view .LVU12
+  64 001c 89B2     		uxth	r1, r1
+  65              	.LVL4:
+  66              		.loc 1 60 2 discriminator 3 view .LVU13
+  67 001e F4D1     		bne	.L3
+  68              		.loc 1 63 2 is_stmt 1 view .LVU14
+  69              		.loc 1 64 1 is_stmt 0 view .LVU15
+  70 0020 0846     		mov	r0, r1
+  71              	.LVL5:
+  72              		.loc 1 64 1 view .LVU16
+  73 0022 5DF8044B 		ldr	r4, [sp], #4
+  74              		.cfi_restore 4
+  75              		.cfi_def_cfa_offset 0
+  76 0026 7047     		bx	lr
+  77              	.LVL6:
+  78              	.L7:
+  79              		.loc 1 63 2 is_stmt 1 view .LVU17
+  80              		.loc 1 64 1 is_stmt 0 view .LVU18
+  81 0028 0846     		mov	r0, r1
+  82              	.LVL7:
+  83              		.loc 1 64 1 view .LVU19
+  84 002a 7047     		bx	lr
+  85              	.L12:
+  86              		.align	2
+  87              	.L11:
+  88 002c 00000000 		.word	.LANCHOR0
+  89              		.cfi_endproc
+  90              	.LFE0:
+  91              		.size	crc16, .-crc16
+  92              		.global	crc16_tab
+  93              		.section	.rodata.crc16_tab,"a"
+  94              		.align	2
+  95              		.set	.LANCHOR0,. + 0
+  96              		.type	crc16_tab, %object
+  97              		.size	crc16_tab, 512
+  98              	crc16_tab:
+  99 0000 0000     		.short	0
+ 100 0002 2110     		.short	4129
+ 101 0004 4220     		.short	8258
+ 102 0006 6330     		.short	12387
+ 103 0008 8440     		.short	16516
+ 104 000a A550     		.short	20645
+ 105 000c C660     		.short	24774
+ 106 000e E770     		.short	28903
+ 107 0010 0881     		.short	-32504
+ 108 0012 2991     		.short	-28375
+ 109 0014 4AA1     		.short	-24246
+ 110 0016 6BB1     		.short	-20117
+ 111 0018 8CC1     		.short	-15988
+ 112 001a ADD1     		.short	-11859
+ 113 001c CEE1     		.short	-7730
+ 114 001e EFF1     		.short	-3601
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 3
+
+
+ 115 0020 3112     		.short	4657
+ 116 0022 1002     		.short	528
+ 117 0024 7332     		.short	12915
+ 118 0026 5222     		.short	8786
+ 119 0028 B552     		.short	21173
+ 120 002a 9442     		.short	17044
+ 121 002c F772     		.short	29431
+ 122 002e D662     		.short	25302
+ 123 0030 3993     		.short	-27847
+ 124 0032 1883     		.short	-31976
+ 125 0034 7BB3     		.short	-19589
+ 126 0036 5AA3     		.short	-23718
+ 127 0038 BDD3     		.short	-11331
+ 128 003a 9CC3     		.short	-15460
+ 129 003c FFF3     		.short	-3073
+ 130 003e DEE3     		.short	-7202
+ 131 0040 6224     		.short	9314
+ 132 0042 4334     		.short	13379
+ 133 0044 2004     		.short	1056
+ 134 0046 0114     		.short	5121
+ 135 0048 E664     		.short	25830
+ 136 004a C774     		.short	29895
+ 137 004c A444     		.short	17572
+ 138 004e 8554     		.short	21637
+ 139 0050 6AA5     		.short	-23190
+ 140 0052 4BB5     		.short	-19125
+ 141 0054 2885     		.short	-31448
+ 142 0056 0995     		.short	-27383
+ 143 0058 EEE5     		.short	-6674
+ 144 005a CFF5     		.short	-2609
+ 145 005c ACC5     		.short	-14932
+ 146 005e 8DD5     		.short	-10867
+ 147 0060 5336     		.short	13907
+ 148 0062 7226     		.short	9842
+ 149 0064 1116     		.short	5649
+ 150 0066 3006     		.short	1584
+ 151 0068 D776     		.short	30423
+ 152 006a F666     		.short	26358
+ 153 006c 9556     		.short	22165
+ 154 006e B446     		.short	18100
+ 155 0070 5BB7     		.short	-18597
+ 156 0072 7AA7     		.short	-22662
+ 157 0074 1997     		.short	-26855
+ 158 0076 3887     		.short	-30920
+ 159 0078 DFF7     		.short	-2081
+ 160 007a FEE7     		.short	-6146
+ 161 007c 9DD7     		.short	-10339
+ 162 007e BCC7     		.short	-14404
+ 163 0080 C448     		.short	18628
+ 164 0082 E558     		.short	22757
+ 165 0084 8668     		.short	26758
+ 166 0086 A778     		.short	30887
+ 167 0088 4008     		.short	2112
+ 168 008a 6118     		.short	6241
+ 169 008c 0228     		.short	10242
+ 170 008e 2338     		.short	14371
+ 171 0090 CCC9     		.short	-13876
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 4
+
+
+ 172 0092 EDD9     		.short	-9747
+ 173 0094 8EE9     		.short	-5746
+ 174 0096 AFF9     		.short	-1617
+ 175 0098 4889     		.short	-30392
+ 176 009a 6999     		.short	-26263
+ 177 009c 0AA9     		.short	-22262
+ 178 009e 2BB9     		.short	-18133
+ 179 00a0 F55A     		.short	23285
+ 180 00a2 D44A     		.short	19156
+ 181 00a4 B77A     		.short	31415
+ 182 00a6 966A     		.short	27286
+ 183 00a8 711A     		.short	6769
+ 184 00aa 500A     		.short	2640
+ 185 00ac 333A     		.short	14899
+ 186 00ae 122A     		.short	10770
+ 187 00b0 FDDB     		.short	-9219
+ 188 00b2 DCCB     		.short	-13348
+ 189 00b4 BFFB     		.short	-1089
+ 190 00b6 9EEB     		.short	-5218
+ 191 00b8 799B     		.short	-25735
+ 192 00ba 588B     		.short	-29864
+ 193 00bc 3BBB     		.short	-17605
+ 194 00be 1AAB     		.short	-21734
+ 195 00c0 A66C     		.short	27814
+ 196 00c2 877C     		.short	31879
+ 197 00c4 E44C     		.short	19684
+ 198 00c6 C55C     		.short	23749
+ 199 00c8 222C     		.short	11298
+ 200 00ca 033C     		.short	15363
+ 201 00cc 600C     		.short	3168
+ 202 00ce 411C     		.short	7233
+ 203 00d0 AEED     		.short	-4690
+ 204 00d2 8FFD     		.short	-625
+ 205 00d4 ECCD     		.short	-12820
+ 206 00d6 CDDD     		.short	-8755
+ 207 00d8 2AAD     		.short	-21206
+ 208 00da 0BBD     		.short	-17141
+ 209 00dc 688D     		.short	-29336
+ 210 00de 499D     		.short	-25271
+ 211 00e0 977E     		.short	32407
+ 212 00e2 B66E     		.short	28342
+ 213 00e4 D55E     		.short	24277
+ 214 00e6 F44E     		.short	20212
+ 215 00e8 133E     		.short	15891
+ 216 00ea 322E     		.short	11826
+ 217 00ec 511E     		.short	7761
+ 218 00ee 700E     		.short	3696
+ 219 00f0 9FFF     		.short	-97
+ 220 00f2 BEEF     		.short	-4162
+ 221 00f4 DDDF     		.short	-8227
+ 222 00f6 FCCF     		.short	-12292
+ 223 00f8 1BBF     		.short	-16613
+ 224 00fa 3AAF     		.short	-20678
+ 225 00fc 599F     		.short	-24743
+ 226 00fe 788F     		.short	-28808
+ 227 0100 8891     		.short	-28280
+ 228 0102 A981     		.short	-32343
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 5
+
+
+ 229 0104 CAB1     		.short	-20022
+ 230 0106 EBA1     		.short	-24085
+ 231 0108 0CD1     		.short	-12020
+ 232 010a 2DC1     		.short	-16083
+ 233 010c 4EF1     		.short	-3762
+ 234 010e 6FE1     		.short	-7825
+ 235 0110 8010     		.short	4224
+ 236 0112 A100     		.short	161
+ 237 0114 C230     		.short	12482
+ 238 0116 E320     		.short	8419
+ 239 0118 0450     		.short	20484
+ 240 011a 2540     		.short	16421
+ 241 011c 4670     		.short	28742
+ 242 011e 6760     		.short	24679
+ 243 0120 B983     		.short	-31815
+ 244 0122 9893     		.short	-27752
+ 245 0124 FBA3     		.short	-23557
+ 246 0126 DAB3     		.short	-19494
+ 247 0128 3DC3     		.short	-15555
+ 248 012a 1CD3     		.short	-11492
+ 249 012c 7FE3     		.short	-7297
+ 250 012e 5EF3     		.short	-3234
+ 251 0130 B102     		.short	689
+ 252 0132 9012     		.short	4752
+ 253 0134 F322     		.short	8947
+ 254 0136 D232     		.short	13010
+ 255 0138 3542     		.short	16949
+ 256 013a 1452     		.short	21012
+ 257 013c 7762     		.short	25207
+ 258 013e 5672     		.short	29270
+ 259 0140 EAB5     		.short	-18966
+ 260 0142 CBA5     		.short	-23093
+ 261 0144 A895     		.short	-27224
+ 262 0146 8985     		.short	-31351
+ 263 0148 6EF5     		.short	-2706
+ 264 014a 4FE5     		.short	-6833
+ 265 014c 2CD5     		.short	-10964
+ 266 014e 0DC5     		.short	-15091
+ 267 0150 E234     		.short	13538
+ 268 0152 C324     		.short	9411
+ 269 0154 A014     		.short	5280
+ 270 0156 8104     		.short	1153
+ 271 0158 6674     		.short	29798
+ 272 015a 4764     		.short	25671
+ 273 015c 2454     		.short	21540
+ 274 015e 0544     		.short	17413
+ 275 0160 DBA7     		.short	-22565
+ 276 0162 FAB7     		.short	-18438
+ 277 0164 9987     		.short	-30823
+ 278 0166 B897     		.short	-26696
+ 279 0168 5FE7     		.short	-6305
+ 280 016a 7EF7     		.short	-2178
+ 281 016c 1DC7     		.short	-14563
+ 282 016e 3CD7     		.short	-10436
+ 283 0170 D326     		.short	9939
+ 284 0172 F236     		.short	14066
+ 285 0174 9106     		.short	1681
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 6
+
+
+ 286 0176 B016     		.short	5808
+ 287 0178 5766     		.short	26199
+ 288 017a 7676     		.short	30326
+ 289 017c 1546     		.short	17941
+ 290 017e 3456     		.short	22068
+ 291 0180 4CD9     		.short	-9908
+ 292 0182 6DC9     		.short	-13971
+ 293 0184 0EF9     		.short	-1778
+ 294 0186 2FE9     		.short	-5841
+ 295 0188 C899     		.short	-26168
+ 296 018a E989     		.short	-30231
+ 297 018c 8AB9     		.short	-18038
+ 298 018e ABA9     		.short	-22101
+ 299 0190 4458     		.short	22596
+ 300 0192 6548     		.short	18533
+ 301 0194 0678     		.short	30726
+ 302 0196 2768     		.short	26663
+ 303 0198 C018     		.short	6336
+ 304 019a E108     		.short	2273
+ 305 019c 8238     		.short	14466
+ 306 019e A328     		.short	10403
+ 307 01a0 7DCB     		.short	-13443
+ 308 01a2 5CDB     		.short	-9380
+ 309 01a4 3FEB     		.short	-5313
+ 310 01a6 1EFB     		.short	-1250
+ 311 01a8 F98B     		.short	-29703
+ 312 01aa D89B     		.short	-25640
+ 313 01ac BBAB     		.short	-21573
+ 314 01ae 9ABB     		.short	-17510
+ 315 01b0 754A     		.short	19061
+ 316 01b2 545A     		.short	23124
+ 317 01b4 376A     		.short	27191
+ 318 01b6 167A     		.short	31254
+ 319 01b8 F10A     		.short	2801
+ 320 01ba D01A     		.short	6864
+ 321 01bc B32A     		.short	10931
+ 322 01be 923A     		.short	14994
+ 323 01c0 2EFD     		.short	-722
+ 324 01c2 0FED     		.short	-4849
+ 325 01c4 6CDD     		.short	-8852
+ 326 01c6 4DCD     		.short	-12979
+ 327 01c8 AABD     		.short	-16982
+ 328 01ca 8BAD     		.short	-21109
+ 329 01cc E89D     		.short	-25112
+ 330 01ce C98D     		.short	-29239
+ 331 01d0 267C     		.short	31782
+ 332 01d2 076C     		.short	27655
+ 333 01d4 645C     		.short	23652
+ 334 01d6 454C     		.short	19525
+ 335 01d8 A23C     		.short	15522
+ 336 01da 832C     		.short	11395
+ 337 01dc E01C     		.short	7392
+ 338 01de C10C     		.short	3265
+ 339 01e0 1FEF     		.short	-4321
+ 340 01e2 3EFF     		.short	-194
+ 341 01e4 5DCF     		.short	-12451
+ 342 01e6 7CDF     		.short	-8324
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 7
+
+
+ 343 01e8 9BAF     		.short	-20581
+ 344 01ea BABF     		.short	-16454
+ 345 01ec D98F     		.short	-28711
+ 346 01ee F89F     		.short	-24584
+ 347 01f0 176E     		.short	28183
+ 348 01f2 367E     		.short	32310
+ 349 01f4 554E     		.short	20053
+ 350 01f6 745E     		.short	24180
+ 351 01f8 932E     		.short	11923
+ 352 01fa B23E     		.short	16050
+ 353 01fc D10E     		.short	3793
+ 354 01fe F01E     		.short	7920
+ 355              		.text
+ 356              	.Letext0:
+ 357              		.section	.debug_info,"",%progbits
+ 358              	.Ldebug_info0:
+ 359 0000 CB000000 		.4byte	0xcb
+ 360 0004 0400     		.2byte	0x4
+ 361 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 362 000a 04       		.byte	0x4
+ 363 000b 01       		.uleb128 0x1
+ 364 000c 00000000 		.4byte	.LASF5
+ 365 0010 0C       		.byte	0xc
+ 366 0011 3B010000 		.4byte	.LASF6
+ 367 0015 7B010000 		.4byte	.LASF7
+ 368 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 369 001d 00000000 		.4byte	0
+ 370 0021 00000000 		.4byte	.Ldebug_line0
+ 371 0025 02       		.uleb128 0x2
+ 372 0026 48000000 		.4byte	0x48
+ 373 002a 35000000 		.4byte	0x35
+ 374 002e 03       		.uleb128 0x3
+ 375 002f 3A000000 		.4byte	0x3a
+ 376 0033 FF       		.byte	0xff
+ 377 0034 00       		.byte	0
+ 378 0035 04       		.uleb128 0x4
+ 379 0036 25000000 		.4byte	0x25
+ 380 003a 05       		.uleb128 0x5
+ 381 003b 04       		.byte	0x4
+ 382 003c 07       		.byte	0x7
+ 383 003d 2E010000 		.4byte	.LASF0
+ 384 0041 05       		.uleb128 0x5
+ 385 0042 02       		.byte	0x2
+ 386 0043 07       		.byte	0x7
+ 387 0044 4A010000 		.4byte	.LASF1
+ 388 0048 04       		.uleb128 0x4
+ 389 0049 41000000 		.4byte	0x41
+ 390 004d 06       		.uleb128 0x6
+ 391 004e 71010000 		.4byte	.LASF2
+ 392 0052 01       		.byte	0x1
+ 393 0053 1B       		.byte	0x1b
+ 394 0054 16       		.byte	0x16
+ 395 0055 35000000 		.4byte	0x35
+ 396 0059 05       		.uleb128 0x5
+ 397 005a 03       		.byte	0x3
+ 398 005b 00000000 		.4byte	crc16_tab
+ 399 005f 07       		.uleb128 0x7
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 8
+
+
+ 400 0060 5D010000 		.4byte	.LASF8
+ 401 0064 01       		.byte	0x1
+ 402 0065 39       		.byte	0x39
+ 403 0066 10       		.byte	0x10
+ 404 0067 41000000 		.4byte	0x41
+ 405 006b 00000000 		.4byte	.LFB0
+ 406 006f 30000000 		.4byte	.LFE0-.LFB0
+ 407 0073 01       		.uleb128 0x1
+ 408 0074 9C       		.byte	0x9c
+ 409 0075 C1000000 		.4byte	0xc1
+ 410 0079 08       		.uleb128 0x8
+ 411 007a 62756600 		.ascii	"buf\000"
+ 412 007e 01       		.byte	0x1
+ 413 007f 39       		.byte	0x39
+ 414 0080 25       		.byte	0x25
+ 415 0081 C1000000 		.4byte	0xc1
+ 416 0085 0A000000 		.4byte	.LLST0
+ 417 0089 00000000 		.4byte	.LVUS0
+ 418 008d 08       		.uleb128 0x8
+ 419 008e 6C656E00 		.ascii	"len\000"
+ 420 0092 01       		.byte	0x1
+ 421 0093 39       		.byte	0x39
+ 422 0094 37       		.byte	0x37
+ 423 0095 3A000000 		.4byte	0x3a
+ 424 0099 54000000 		.4byte	.LLST1
+ 425 009d 4E000000 		.4byte	.LVUS1
+ 426 00a1 09       		.uleb128 0x9
+ 427 00a2 6900     		.ascii	"i\000"
+ 428 00a4 01       		.byte	0x1
+ 429 00a5 3A       		.byte	0x3a
+ 430 00a6 0F       		.byte	0xf
+ 431 00a7 3A000000 		.4byte	0x3a
+ 432 00ab 00       		.byte	0
+ 433 00ac 0A       		.uleb128 0xa
+ 434 00ad B2010000 		.4byte	.LASF3
+ 435 00b1 01       		.byte	0x1
+ 436 00b2 3B       		.byte	0x3b
+ 437 00b3 11       		.byte	0x11
+ 438 00b4 41000000 		.4byte	0x41
+ 439 00b8 88000000 		.4byte	.LLST2
+ 440 00bc 80000000 		.4byte	.LVUS2
+ 441 00c0 00       		.byte	0
+ 442 00c1 0B       		.uleb128 0xb
+ 443 00c2 04       		.byte	0x4
+ 444 00c3 C7000000 		.4byte	0xc7
+ 445 00c7 05       		.uleb128 0x5
+ 446 00c8 01       		.byte	0x1
+ 447 00c9 08       		.byte	0x8
+ 448 00ca 63010000 		.4byte	.LASF4
+ 449 00ce 00       		.byte	0
+ 450              		.section	.debug_abbrev,"",%progbits
+ 451              	.Ldebug_abbrev0:
+ 452 0000 01       		.uleb128 0x1
+ 453 0001 11       		.uleb128 0x11
+ 454 0002 01       		.byte	0x1
+ 455 0003 25       		.uleb128 0x25
+ 456 0004 0E       		.uleb128 0xe
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 9
+
+
+ 457 0005 13       		.uleb128 0x13
+ 458 0006 0B       		.uleb128 0xb
+ 459 0007 03       		.uleb128 0x3
+ 460 0008 0E       		.uleb128 0xe
+ 461 0009 1B       		.uleb128 0x1b
+ 462 000a 0E       		.uleb128 0xe
+ 463 000b 55       		.uleb128 0x55
+ 464 000c 17       		.uleb128 0x17
+ 465 000d 11       		.uleb128 0x11
+ 466 000e 01       		.uleb128 0x1
+ 467 000f 10       		.uleb128 0x10
+ 468 0010 17       		.uleb128 0x17
+ 469 0011 00       		.byte	0
+ 470 0012 00       		.byte	0
+ 471 0013 02       		.uleb128 0x2
+ 472 0014 01       		.uleb128 0x1
+ 473 0015 01       		.byte	0x1
+ 474 0016 49       		.uleb128 0x49
+ 475 0017 13       		.uleb128 0x13
+ 476 0018 01       		.uleb128 0x1
+ 477 0019 13       		.uleb128 0x13
+ 478 001a 00       		.byte	0
+ 479 001b 00       		.byte	0
+ 480 001c 03       		.uleb128 0x3
+ 481 001d 21       		.uleb128 0x21
+ 482 001e 00       		.byte	0
+ 483 001f 49       		.uleb128 0x49
+ 484 0020 13       		.uleb128 0x13
+ 485 0021 2F       		.uleb128 0x2f
+ 486 0022 0B       		.uleb128 0xb
+ 487 0023 00       		.byte	0
+ 488 0024 00       		.byte	0
+ 489 0025 04       		.uleb128 0x4
+ 490 0026 26       		.uleb128 0x26
+ 491 0027 00       		.byte	0
+ 492 0028 49       		.uleb128 0x49
+ 493 0029 13       		.uleb128 0x13
+ 494 002a 00       		.byte	0
+ 495 002b 00       		.byte	0
+ 496 002c 05       		.uleb128 0x5
+ 497 002d 24       		.uleb128 0x24
+ 498 002e 00       		.byte	0
+ 499 002f 0B       		.uleb128 0xb
+ 500 0030 0B       		.uleb128 0xb
+ 501 0031 3E       		.uleb128 0x3e
+ 502 0032 0B       		.uleb128 0xb
+ 503 0033 03       		.uleb128 0x3
+ 504 0034 0E       		.uleb128 0xe
+ 505 0035 00       		.byte	0
+ 506 0036 00       		.byte	0
+ 507 0037 06       		.uleb128 0x6
+ 508 0038 34       		.uleb128 0x34
+ 509 0039 00       		.byte	0
+ 510 003a 03       		.uleb128 0x3
+ 511 003b 0E       		.uleb128 0xe
+ 512 003c 3A       		.uleb128 0x3a
+ 513 003d 0B       		.uleb128 0xb
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 10
+
+
+ 514 003e 3B       		.uleb128 0x3b
+ 515 003f 0B       		.uleb128 0xb
+ 516 0040 39       		.uleb128 0x39
+ 517 0041 0B       		.uleb128 0xb
+ 518 0042 49       		.uleb128 0x49
+ 519 0043 13       		.uleb128 0x13
+ 520 0044 3F       		.uleb128 0x3f
+ 521 0045 19       		.uleb128 0x19
+ 522 0046 02       		.uleb128 0x2
+ 523 0047 18       		.uleb128 0x18
+ 524 0048 00       		.byte	0
+ 525 0049 00       		.byte	0
+ 526 004a 07       		.uleb128 0x7
+ 527 004b 2E       		.uleb128 0x2e
+ 528 004c 01       		.byte	0x1
+ 529 004d 3F       		.uleb128 0x3f
+ 530 004e 19       		.uleb128 0x19
+ 531 004f 03       		.uleb128 0x3
+ 532 0050 0E       		.uleb128 0xe
+ 533 0051 3A       		.uleb128 0x3a
+ 534 0052 0B       		.uleb128 0xb
+ 535 0053 3B       		.uleb128 0x3b
+ 536 0054 0B       		.uleb128 0xb
+ 537 0055 39       		.uleb128 0x39
+ 538 0056 0B       		.uleb128 0xb
+ 539 0057 27       		.uleb128 0x27
+ 540 0058 19       		.uleb128 0x19
+ 541 0059 49       		.uleb128 0x49
+ 542 005a 13       		.uleb128 0x13
+ 543 005b 11       		.uleb128 0x11
+ 544 005c 01       		.uleb128 0x1
+ 545 005d 12       		.uleb128 0x12
+ 546 005e 06       		.uleb128 0x6
+ 547 005f 40       		.uleb128 0x40
+ 548 0060 18       		.uleb128 0x18
+ 549 0061 9742     		.uleb128 0x2117
+ 550 0063 19       		.uleb128 0x19
+ 551 0064 01       		.uleb128 0x1
+ 552 0065 13       		.uleb128 0x13
+ 553 0066 00       		.byte	0
+ 554 0067 00       		.byte	0
+ 555 0068 08       		.uleb128 0x8
+ 556 0069 05       		.uleb128 0x5
+ 557 006a 00       		.byte	0
+ 558 006b 03       		.uleb128 0x3
+ 559 006c 08       		.uleb128 0x8
+ 560 006d 3A       		.uleb128 0x3a
+ 561 006e 0B       		.uleb128 0xb
+ 562 006f 3B       		.uleb128 0x3b
+ 563 0070 0B       		.uleb128 0xb
+ 564 0071 39       		.uleb128 0x39
+ 565 0072 0B       		.uleb128 0xb
+ 566 0073 49       		.uleb128 0x49
+ 567 0074 13       		.uleb128 0x13
+ 568 0075 02       		.uleb128 0x2
+ 569 0076 17       		.uleb128 0x17
+ 570 0077 B742     		.uleb128 0x2137
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 11
+
+
+ 571 0079 17       		.uleb128 0x17
+ 572 007a 00       		.byte	0
+ 573 007b 00       		.byte	0
+ 574 007c 09       		.uleb128 0x9
+ 575 007d 34       		.uleb128 0x34
+ 576 007e 00       		.byte	0
+ 577 007f 03       		.uleb128 0x3
+ 578 0080 08       		.uleb128 0x8
+ 579 0081 3A       		.uleb128 0x3a
+ 580 0082 0B       		.uleb128 0xb
+ 581 0083 3B       		.uleb128 0x3b
+ 582 0084 0B       		.uleb128 0xb
+ 583 0085 39       		.uleb128 0x39
+ 584 0086 0B       		.uleb128 0xb
+ 585 0087 49       		.uleb128 0x49
+ 586 0088 13       		.uleb128 0x13
+ 587 0089 1C       		.uleb128 0x1c
+ 588 008a 0B       		.uleb128 0xb
+ 589 008b 00       		.byte	0
+ 590 008c 00       		.byte	0
+ 591 008d 0A       		.uleb128 0xa
+ 592 008e 34       		.uleb128 0x34
+ 593 008f 00       		.byte	0
+ 594 0090 03       		.uleb128 0x3
+ 595 0091 0E       		.uleb128 0xe
+ 596 0092 3A       		.uleb128 0x3a
+ 597 0093 0B       		.uleb128 0xb
+ 598 0094 3B       		.uleb128 0x3b
+ 599 0095 0B       		.uleb128 0xb
+ 600 0096 39       		.uleb128 0x39
+ 601 0097 0B       		.uleb128 0xb
+ 602 0098 49       		.uleb128 0x49
+ 603 0099 13       		.uleb128 0x13
+ 604 009a 02       		.uleb128 0x2
+ 605 009b 17       		.uleb128 0x17
+ 606 009c B742     		.uleb128 0x2137
+ 607 009e 17       		.uleb128 0x17
+ 608 009f 00       		.byte	0
+ 609 00a0 00       		.byte	0
+ 610 00a1 0B       		.uleb128 0xb
+ 611 00a2 0F       		.uleb128 0xf
+ 612 00a3 00       		.byte	0
+ 613 00a4 0B       		.uleb128 0xb
+ 614 00a5 0B       		.uleb128 0xb
+ 615 00a6 49       		.uleb128 0x49
+ 616 00a7 13       		.uleb128 0x13
+ 617 00a8 00       		.byte	0
+ 618 00a9 00       		.byte	0
+ 619 00aa 00       		.byte	0
+ 620              		.section	.debug_loc,"",%progbits
+ 621              	.Ldebug_loc0:
+ 622              	.LVUS0:
+ 623 0000 00       		.uleb128 0
+ 624 0001 00       		.uleb128 .LVU9
+ 625 0002 00       		.uleb128 .LVU9
+ 626 0003 00       		.uleb128 .LVU13
+ 627 0004 00       		.uleb128 .LVU13
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 12
+
+
+ 628 0005 00       		.uleb128 .LVU16
+ 629 0006 00       		.uleb128 .LVU17
+ 630 0007 00       		.uleb128 .LVU19
+ 631 0008 00       		.uleb128 .LVU19
+ 632 0009 00       		.uleb128 0
+ 633              	.LLST0:
+ 634 000a 00000000 		.4byte	.LVL0
+ 635 000e 0E000000 		.4byte	.LVL2
+ 636 0012 0100     		.2byte	0x1
+ 637 0014 50       		.byte	0x50
+ 638 0015 0E000000 		.4byte	.LVL2
+ 639 0019 1E000000 		.4byte	.LVL4
+ 640 001d 0300     		.2byte	0x3
+ 641 001f 70       		.byte	0x70
+ 642 0020 7F       		.sleb128 -1
+ 643 0021 9F       		.byte	0x9f
+ 644 0022 1E000000 		.4byte	.LVL4
+ 645 0026 22000000 		.4byte	.LVL5
+ 646 002a 0100     		.2byte	0x1
+ 647 002c 50       		.byte	0x50
+ 648 002d 28000000 		.4byte	.LVL6
+ 649 0031 2A000000 		.4byte	.LVL7
+ 650 0035 0100     		.2byte	0x1
+ 651 0037 50       		.byte	0x50
+ 652 0038 2A000000 		.4byte	.LVL7
+ 653 003c 30000000 		.4byte	.LFE0
+ 654 0040 0400     		.2byte	0x4
+ 655 0042 F3       		.byte	0xf3
+ 656 0043 01       		.uleb128 0x1
+ 657 0044 50       		.byte	0x50
+ 658 0045 9F       		.byte	0x9f
+ 659 0046 00000000 		.4byte	0
+ 660 004a 00000000 		.4byte	0
+ 661              	.LVUS1:
+ 662 004e 00       		.uleb128 0
+ 663 004f 00       		.uleb128 .LVU7
+ 664 0050 00       		.uleb128 .LVU7
+ 665 0051 00       		.uleb128 .LVU17
+ 666 0052 00       		.uleb128 .LVU17
+ 667 0053 00       		.uleb128 0
+ 668              	.LLST1:
+ 669 0054 00000000 		.4byte	.LVL0
+ 670 0058 0A000000 		.4byte	.LVL1
+ 671 005c 0100     		.2byte	0x1
+ 672 005e 51       		.byte	0x51
+ 673 005f 0A000000 		.4byte	.LVL1
+ 674 0063 28000000 		.4byte	.LVL6
+ 675 0067 0400     		.2byte	0x4
+ 676 0069 F3       		.byte	0xf3
+ 677 006a 01       		.uleb128 0x1
+ 678 006b 51       		.byte	0x51
+ 679 006c 9F       		.byte	0x9f
+ 680 006d 28000000 		.4byte	.LVL6
+ 681 0071 30000000 		.4byte	.LFE0
+ 682 0075 0100     		.2byte	0x1
+ 683 0077 51       		.byte	0x51
+ 684 0078 00000000 		.4byte	0
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 13
+
+
+ 685 007c 00000000 		.4byte	0
+ 686              	.LVUS2:
+ 687 0080 03       		.uleb128 .LVU3
+ 688 0081 00       		.uleb128 .LVU7
+ 689 0082 00       		.uleb128 .LVU7
+ 690 0083 00       		.uleb128 .LVU12
+ 691 0084 00       		.uleb128 .LVU13
+ 692 0085 00       		.uleb128 .LVU17
+ 693 0086 00       		.uleb128 .LVU17
+ 694 0087 00       		.uleb128 0
+ 695              	.LLST2:
+ 696 0088 00000000 		.4byte	.LVL0
+ 697 008c 0A000000 		.4byte	.LVL1
+ 698 0090 0200     		.2byte	0x2
+ 699 0092 30       		.byte	0x30
+ 700 0093 9F       		.byte	0x9f
+ 701 0094 0A000000 		.4byte	.LVL1
+ 702 0098 1C000000 		.4byte	.LVL3
+ 703 009c 0100     		.2byte	0x1
+ 704 009e 51       		.byte	0x51
+ 705 009f 1E000000 		.4byte	.LVL4
+ 706 00a3 28000000 		.4byte	.LVL6
+ 707 00a7 0100     		.2byte	0x1
+ 708 00a9 51       		.byte	0x51
+ 709 00aa 28000000 		.4byte	.LVL6
+ 710 00ae 30000000 		.4byte	.LFE0
+ 711 00b2 0200     		.2byte	0x2
+ 712 00b4 30       		.byte	0x30
+ 713 00b5 9F       		.byte	0x9f
+ 714 00b6 00000000 		.4byte	0
+ 715 00ba 00000000 		.4byte	0
+ 716              		.section	.debug_aranges,"",%progbits
+ 717 0000 1C000000 		.4byte	0x1c
+ 718 0004 0200     		.2byte	0x2
+ 719 0006 00000000 		.4byte	.Ldebug_info0
+ 720 000a 04       		.byte	0x4
+ 721 000b 00       		.byte	0
+ 722 000c 0000     		.2byte	0
+ 723 000e 0000     		.2byte	0
+ 724 0010 00000000 		.4byte	.LFB0
+ 725 0014 30000000 		.4byte	.LFE0-.LFB0
+ 726 0018 00000000 		.4byte	0
+ 727 001c 00000000 		.4byte	0
+ 728              		.section	.debug_ranges,"",%progbits
+ 729              	.Ldebug_ranges0:
+ 730 0000 00000000 		.4byte	.LFB0
+ 731 0004 30000000 		.4byte	.LFE0
+ 732 0008 00000000 		.4byte	0
+ 733 000c 00000000 		.4byte	0
+ 734              		.section	.debug_line,"",%progbits
+ 735              	.Ldebug_line0:
+ 736 0000 8C000000 		.section	.debug_str,"MS",%progbits,1
+ 736      03002500 
+ 736      00000201 
+ 736      FB0E0D00 
+ 736      01010101 
+ 737              	.LASF5:
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 14
+
+
+ 738 0000 474E5520 		.ascii	"GNU C99 8.2.1 20181213 (release) [gcc-8-branch revi"
+ 738      43393920 
+ 738      382E322E 
+ 738      31203230 
+ 738      31383132 
+ 739 0033 73696F6E 		.ascii	"sion 267074] -mcpu=cortex-m4 -mfloat-abi=hard -mfpu"
+ 739      20323637 
+ 739      3037345D 
+ 739      202D6D63 
+ 739      70753D63 
+ 740 0066 3D667076 		.ascii	"=fpv4-sp-d16 -mno-thumb-interwork -mthumb -march=ar"
+ 740      342D7370 
+ 740      2D643136 
+ 740      202D6D6E 
+ 740      6F2D7468 
+ 741 0099 6D763765 		.ascii	"mv7e-m+fp -ggdb -O2 -std=gnu99 -fomit-frame-pointer"
+ 741      2D6D2B66 
+ 741      70202D67 
+ 741      67646220 
+ 741      2D4F3220 
+ 742 00cc 202D6661 		.ascii	" -falign-functions=16 -ffunction-sections -fdata-se"
+ 742      6C69676E 
+ 742      2D66756E 
+ 742      6374696F 
+ 742      6E733D31 
+ 743 00ff 6374696F 		.ascii	"ctions -fno-common -fsingle-precision-constant\000"
+ 743      6E73202D 
+ 743      666E6F2D 
+ 743      636F6D6D 
+ 743      6F6E202D 
+ 744              	.LASF0:
+ 745 012e 756E7369 		.ascii	"unsigned int\000"
+ 745      676E6564 
+ 745      20696E74 
+ 745      00
+ 746              	.LASF6:
+ 747 013b 7372632F 		.ascii	"src/core/crc.c\000"
+ 747      636F7265 
+ 747      2F637263 
+ 747      2E6300
+ 748              	.LASF1:
+ 749 014a 73686F72 		.ascii	"short unsigned int\000"
+ 749      7420756E 
+ 749      7369676E 
+ 749      65642069 
+ 749      6E7400
+ 750              	.LASF8:
+ 751 015d 63726331 		.ascii	"crc16\000"
+ 751      3600
+ 752              	.LASF4:
+ 753 0163 756E7369 		.ascii	"unsigned char\000"
+ 753      676E6564 
+ 753      20636861 
+ 753      7200
+ 754              	.LASF2:
+ 755 0171 63726331 		.ascii	"crc16_tab\000"
+ 755      365F7461 
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 15
+
+
+ 755      6200
+ 756              	.LASF7:
+ 757 017b 443A5C67 		.ascii	"D:\\git\\oroca_bldc_dev\\oroca_bldc_FW\\oroca_bldc_"
+ 757      69745C6F 
+ 757      726F6361 
+ 757      5F626C64 
+ 757      635F6465 
+ 758 01aa 63686962 		.ascii	"chibios\000"
+ 758      696F7300 
+ 759              	.LASF3:
+ 760 01b2 636B7375 		.ascii	"cksum\000"
+ 760      6D00
+ 761              		.ident	"GCC: (GNU Tools for Arm Embedded Processors 8-2018-q4-major) 8.2.1 20181213 (release) [gcc
+ARM GAS  C:\Users\USER\AppData\Local\Temp\ccwlo44O.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 crc.c
+C:\Users\USER\AppData\Local\Temp\ccwlo44O.s:18     .text.crc16:00000000 $t
+C:\Users\USER\AppData\Local\Temp\ccwlo44O.s:27     .text.crc16:00000000 crc16
+C:\Users\USER\AppData\Local\Temp\ccwlo44O.s:88     .text.crc16:0000002c $d
+C:\Users\USER\AppData\Local\Temp\ccwlo44O.s:98     .rodata.crc16_tab:00000000 crc16_tab
+C:\Users\USER\AppData\Local\Temp\ccwlo44O.s:94     .rodata.crc16_tab:00000000 $d
+
+NO UNDEFINED SYMBOLS
