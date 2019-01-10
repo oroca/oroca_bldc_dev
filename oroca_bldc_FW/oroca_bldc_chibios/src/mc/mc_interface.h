@@ -31,14 +31,8 @@
 #ifndef MCCONF_DEFAULT_MOTOR_TYPE
 #define MCCONF_DEFAULT_MOTOR_TYPE		MOTOR_TYPE_BLDC
 #endif
-#ifndef MCCONF_PWM_MODE
-#define MCCONF_PWM_MODE					PWM_MODE_SYNCHRONOUS // Default PWM mode
-#endif
 #ifndef MCCONF_SENSOR_MODE
 #define MCCONF_SENSOR_MODE				SENSOR_MODE_SENSORLESS // Sensor mode
-#endif
-#ifndef MCCONF_COMM_MODE
-#define MCCONF_COMM_MODE				COMM_MODE_INTEGRATE	// The commutation mode to use
 #endif
 #ifndef MCCONF_M_SENSOR_PORT_MODE
 #define MCCONF_M_SENSOR_PORT_MODE		SENSOR_PORT_MODE_HALL // The mode of the hall_encoder port

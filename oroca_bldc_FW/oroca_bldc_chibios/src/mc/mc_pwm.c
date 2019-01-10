@@ -575,7 +575,6 @@ static THD_FUNCTION(timer_thread, arg) {
 			//print_m = sinf(smc1.ThetaCal)*100;
 			//print_m = print_l - print_k ;
 
-			Usart1_printf(&SD1, (uint8_t *)"TEST->");
 			Usart1_printf(&SD1, (uint8_t *)"%d	%d	",print_a,print_b);
 			Usart1_printf(&SD1, (uint8_t *)"%d	%d	",print_c,print_d);
 			Usart1_printf(&SD1, (uint8_t *)"%d	%d	",print_e,print_f);

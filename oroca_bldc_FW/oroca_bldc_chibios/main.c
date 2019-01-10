@@ -68,25 +68,6 @@ static THD_FUNCTION(periodic_thread, arg)
 	chRegSetThreadName("BLDC periodic");
 
 
-/*
-if(mcconf.m_sensor_port_mode ==  SENSOR_PORT_MODE_ABI)
-{
-	mavlink_dbgString( 0, "SENSOR_PORT_MODE_ABI" );
-
-}
-else if(mcconf.m_sensor_port_mode ==  SENSOR_PORT_MODE_HALL)
-{
-	mavlink_dbgString( 0, "SENSOR_PORT_MODE_HALL" );
-
-}
-else if(mcconf.m_sensor_port_mode ==  SENSOR_PORT_MODE_AS5047_SPI)
-{
-	mavlink_dbgString( 0, "SENSOR_PORT_MODE_AS5047_SPI" );
-
-}
-*/
-	
-
 	for(;;)
 	{
 		LED_GREEN_ON();		chThdSleepMilliseconds(50);
@@ -94,7 +75,6 @@ else if(mcconf.m_sensor_port_mode ==  SENSOR_PORT_MODE_AS5047_SPI)
 		LED_GREEN_ON();		chThdSleepMilliseconds(50);
 		LED_GREEN_OFF();		chThdSleepMilliseconds(850);
 
-		//mavlink_dbgString( 0, "test" );
 		//chvprintf(&SD1, (uint8_t *)"\x1b[2J\x1b[0;0H");
 		//chvprintf(&SD1, (uint8_t *)"%f/r/n",mc_interface_get_angle());
 

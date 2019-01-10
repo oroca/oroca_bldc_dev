@@ -30,7 +30,6 @@
 #include "hw.h"
 #include "mc_define.h"
 #include "mc_typedef.h"
-
 #include "mc_control.h"
 #include "mc_sensor.h"
 #include "mc_pwm.h"
@@ -42,7 +41,7 @@
 
 #include "comm_usb_serial.h"
 
-#include "conf_general.h"
+//#include "conf_general.h"
 #include "mc_interface.h"
 
 #include "mavlink_proc.h"
@@ -56,9 +55,7 @@
 // Private variables
 static volatile mcConfiguration_t m_conf;
 static mc_fault_code m_fault_now;
-static int m_ignore_iterations;
 static volatile bool m_lock_enabled;
-
 
 // Private functions
 static void update_override_limits(volatile mcConfiguration_t *conf);
@@ -77,10 +74,6 @@ static thread_t *sample_send_tp;
 #include MCCONF_DEFAULT_USER
 #endif
 
-// Default configuration parameters that can be overridden
-//#include "mcconf_default.h"
-//#include "appconf_default.h"
-
 // EEPROM settings
 #define EEPROM_BASE_MCCONF		1000
 
@@ -88,16 +81,17 @@ static thread_t *sample_send_tp;
 extern uint16_t VirtAddVarTab[NB_OF_VAR];
 
 // Private variables
-mcConfiguration_t mcconf, mcconf_old;
+//mcConfiguration_t mcconf, mcconf_old;
 
 
 
-void mcconf_general_init(void) {
+void mcconf_general_init(void) 
+{
 	// First, make sure that all relevant virtual addresses are assigned for page swapping.
 	memset(VirtAddVarTab, 0, sizeof(VirtAddVarTab));
 
 	int ind = 0;
-	for (unsigned int i = 0;i < (sizeof(app_configuration) / 2);i++)
+	for (unsigned int i = 0;i < (sizeof(mcConfiguration_t) / 2);i++)
 	{
 		VirtAddVarTab[ind++] = EEPROM_BASE_MCCONF + i;
 	}
@@ -114,10 +108,9 @@ void mcconf_general_init(void) {
  * @param conf
  * A pointer to store the default configuration to.
  */
-void mcconf_general_get_default_mc_configuration(mcConfiguration_t *conf) {
+void mcconf_general_get_default_mc_configuration(mcConfiguration_t *conf) 
+{
 	memset(conf, 0, sizeof(mcConfiguration_t));
-	conf->pwm_mode = MCCONF_PWM_MODE;
-	conf->comm_mode = MCCONF_COMM_MODE;
 	conf->motor_type = MCCONF_DEFAULT_MOTOR_TYPE;
 	conf->sensor_mode = MCCONF_SENSOR_MODE;
 
@@ -248,10 +241,7 @@ void mcconf_general_read_mc_configuration(mcConfiguration_t *conf)
 		}
 	}
 
-	//chvprintf(&SDU1, (uint8_t *)"to conf_general.c : conf_general_read_mc_configuration\r\n");
-
-	//mavlink_dbgString(0,(uint8_t *)"to conf_general.c : conf_general_read_mc_configuration\r\n");
-
+	//chvprintf(&SD1, (uint8_t *)"to conf_general.c : conf_general_read_mc_configuration\r\n");
 
 
 	if (!is_ok) 
@@ -272,11 +262,7 @@ void mcconf_general_read_mc_configuration(mcConfiguration_t *conf)
 bool mcconf_general_store_mc_configuration(mcConfiguration_t *conf) 
 {
 
-	mavlink_dbgString(0,"conf_general_store_mc_configuration");
-
-
 	mc_interface_unlock();
-	//mc_interface_release_motor();
 
 	utils_sys_lock_cnt();
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, DISABLE);
@@ -319,7 +305,6 @@ void mc_interface_init(mcConfiguration_t *configuration)
 
 	m_conf.m_sensor_port_mode = SENSOR_PORT_MODE_AS5047_SPI;
 
-
 	// Start threads
 	chThdCreateStatic(sample_send_thread_wa, sizeof(sample_send_thread_wa), NORMALPRIO - 1, sample_send_thread, NULL);
 	
@@ -327,37 +312,19 @@ void mc_interface_init(mcConfiguration_t *configuration)
 	// Initialize encoder
 #if !WS2811_ENABLE
 	switch (m_conf.m_sensor_port_mode) {
-		case SENSOR_PORT_MODE_ABI:
-			encoder_init_abi(m_conf.m_encoder_counts);
-			break;
-
-		case SENSOR_PORT_MODE_AS5047_SPI:
-			encoder_init_as5047p_spi();
-			break;
-
-		default:
-			break;
+		case SENSOR_PORT_MODE_ABI:			encoder_init_abi(m_conf.m_encoder_counts);		break;
+		case SENSOR_PORT_MODE_AS5047_SPI:	encoder_init_as5047p_spi();						break;
+		default:			break;
 	}
 #endif
 
-//	m_conf.motor_type = MOTOR_TYPE_BLDC;
-	mcpwm_init(&m_conf);
-
 	// Initialize selected implementation
-/*	switch (m_conf.motor_type) {
-		case MOTOR_TYPE_BLDC:
-		case MOTOR_TYPE_DC:
-			mcpwm_init(&m_conf);
-			break;
-
-		case MOTOR_TYPE_FOC:
-			//mcpwm_foc_init(&m_conf);
-			break;
-
-		default:
-			break;
+	switch (m_conf.motor_type) {
+		case MOTOR_TYPE_BLDC:	mcpwm_init(&m_conf);			break;
+		case MOTOR_TYPE_DC:			break;
+		default:			break;
 	}
-*/
+
 
 }
 
@@ -388,33 +355,13 @@ void mc_interface_set_configuration(mcConfiguration_t *configuration) {
 	}
 #endif
 
-	if (m_conf.motor_type == MOTOR_TYPE_FOC	&& configuration->motor_type != MOTOR_TYPE_FOC)
-	{
-		//mcpwm_foc_deinit();
-		m_conf = *configuration;
-		mcpwm_init(&m_conf);
-	}
-	else if (m_conf.motor_type != MOTOR_TYPE_FOC && configuration->motor_type == MOTOR_TYPE_FOC)
-	{
-		mcpwm_deinit();
-		m_conf = *configuration;
-		//mcpwm_foc_init(&m_conf);
-	}
-	else
-	{
-		m_conf = *configuration;
-	}
 
 	update_override_limits(&m_conf);
 
 	switch (m_conf.motor_type) {
 	case MOTOR_TYPE_BLDC:
 	case MOTOR_TYPE_DC:
-//		mcpwm_set_configuration(&m_conf);
-		break;
-
-	case MOTOR_TYPE_FOC:
-		//mcpwm_foc_set_configuration(&m_conf);
+		mc_setConfiguration(&m_conf);
 		break;
 
 	default:
@@ -429,11 +376,6 @@ bool mc_interface_dccal_done(void) {
 	case MOTOR_TYPE_DC:
 		//ret = mcpwm_is_dccal_done();
 		break;
-
-	case MOTOR_TYPE_FOC:
-		//ret = mcpwm_foc_is_dccal_done();
-		break;
-
 	default:
 		break;
 	}

@@ -33,32 +33,14 @@ typedef enum {
 } mc_state;
 
 typedef enum {
-	PWM_MODE_NONSYNCHRONOUS_HISW = 0, // This mode is not recommended
-	PWM_MODE_SYNCHRONOUS, // The recommended and most tested mode
-	PWM_MODE_BIPOLAR // Some glitches occasionally, can kill MOSFETs
-} mc_pwm_mode;
-
-typedef enum {
-	COMM_MODE_INTEGRATE = 0,
-	COMM_MODE_DELAY
-} mc_comm_mode;
-
-typedef enum {
 	SENSOR_MODE_SENSORLESS = 0,
 	SENSOR_MODE_SENSORED,
 	SENSOR_MODE_HYBRID
 } mc_sensor_mode;
 
 typedef enum {
-	FOC_SENSOR_MODE_SENSORLESS = 0,
-	FOC_SENSOR_MODE_ENCODER,
-	FOC_SENSOR_MODE_HALL
-} mc_foc_sensor_mode;
-
-typedef enum {
 	MOTOR_TYPE_BLDC = 0,
-	MOTOR_TYPE_DC,
-	MOTOR_TYPE_FOC
+	MOTOR_TYPE_DC
 } mc_motor_type;
 
 typedef enum {
@@ -79,15 +61,6 @@ typedef enum {
 	CONTROL_MODE_NONE
 } mc_control_mode;
 
-typedef enum {
-	DISP_POS_MODE_NONE = 0,
-	DISP_POS_MODE_INDUCTANCE,
-	DISP_POS_MODE_OBSERVER,
-	DISP_POS_MODE_ENCODER,
-	DISP_POS_MODE_PID_POS,
-	DISP_POS_MODE_PID_POS_ERROR,
-	DISP_POS_MODE_ENCODER_OBSERVER_ERROR
-} disp_pos_mode;
 
 typedef enum {
 	SENSOR_PORT_MODE_HALL = 0,
@@ -119,8 +92,6 @@ typedef struct {
 	float rshunt;
 	uint16_t pwmFreq;
 	
-	mc_pwm_mode pwm_mode;
-	mc_comm_mode comm_mode;
 	mc_motor_type motor_type;
 	mc_sensor_mode sensor_mode;
 
