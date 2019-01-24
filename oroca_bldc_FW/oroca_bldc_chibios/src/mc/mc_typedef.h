@@ -352,7 +352,7 @@ typedef struct
     uint16_t OpenLoop:1;
     uint16_t RunMotor:1;
     uint16_t DcCalDone:1;
-}tMcCtrlBits __attribute__((packed));
+} __attribute__((packed)) tMcCtrlBits ;
 
 
 
