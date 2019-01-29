@@ -25,6 +25,12 @@
 #ifndef _MC_CONTROL_H_
 #define _MC_CONTROL_H_
 
+//public function Declaration
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 //======================================================================================
 //macro
 #define Digital_PI_controller(out, ref, in, err0, limit, kp, ki, tsample)   \
@@ -71,10 +77,6 @@ extern tParkParm ParkParm;
 extern tSVGenParm SVGenParm;
 extern tFdWeakParm FdWeakParm;
 
-//public function Declaration
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 	void SpeedControl( void );
 	void CurrentControl( void );

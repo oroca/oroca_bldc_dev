@@ -36,6 +36,7 @@ extern "C" {
 void mcpwm_init(volatile mcConfiguration_t *configuration);
 void mcpwm_deinit(void);
 
+void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty_C);
 
 #ifdef __cplusplus
 }

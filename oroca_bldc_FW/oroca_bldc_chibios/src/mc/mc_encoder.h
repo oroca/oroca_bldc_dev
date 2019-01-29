@@ -20,11 +20,18 @@
 #ifndef _MC_ENCODER_H_
 #define _MC_ENCODER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 //#include "conf_general.h"
 #include <stdint.h>
 #include <stdbool.h>
 
 extern tSMC smc1;
+extern uint32_t enc_counts;
+
 //extern float last_enc_angle;
 
 typedef enum {
@@ -32,6 +39,7 @@ typedef enum {
 	ENCODER_MODE_ABI,
 	ENCODER_MODE_AS5047P_SPI,
 	ENCODER_MODE_AHALL,
+	ENCODER_MODE_DHALL,
 	ENCODER_MODE_PWM
 } encoder_mode;
 
@@ -52,6 +60,13 @@ bool encoder_index_found(void);
 void encoder_3HarmonicFilter(tSMC *s);
 void encoder_PLLThetaEstimation(tSMC *s);
 void encoder_tSMCInit(tSMC *s);
+
+int read_hall(void) ;
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif /* ENCODER_H_ */

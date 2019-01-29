@@ -22,6 +22,8 @@
 #include "hal.h"
 #include "stm32f4xx_conf.h"
 
+#include <math.h>
+
 #include "hw.h"
 #include "mc_define.h"
 #include "mc_typedef.h"
@@ -30,9 +32,7 @@
 #include "mc_encoder.h"
 
 #include "usart1_print.h"
-
-#include <math.h>
-
+#include "utils.h"
 
 // Defines
 #define AS5047_USE_HW_SPI_PINS		1
@@ -77,7 +77,7 @@
 
 // Private variables
 static bool index_found = false;
-static uint32_t enc_counts = 10000;
+uint32_t enc_counts = 10000;
 encoder_mode EncMode = ENCODER_MODE_NONE;
 //float last_enc_angle = 0.0;
 
@@ -280,21 +280,22 @@ void encoder_tim_isr(void) {
 		smc1.AlphaMeas = sinf(smc1.ThetaMeas);
 		smc1.BetaMeas = cosf(smc1.ThetaMeas);
 
+/*
 		encoder_PLLThetaEstimation(&smc1);
 
 		smc1.Theta  = smc1.ThetaEst - PI - (0.017453293f * 25.0f);
-
+*/
 	}
 	else if (EncMode == ENCODER_MODE_AHALL)
 	{
 		smc1.AlphaMeas = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
 		smc1.BetaMeas = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
-	
-		encoder_PLLThetaEstimation(&smc1);
+
+	/*	encoder_PLLThetaEstimation(&smc1);
 
 		smc1.Theta = smc1.ThetaEst + 0.3f;
 		smc1.Futi  = smc1.pll_PIout / TWOPI * HALL_SENSOR_FREQ;
-		smc1.rpm 	= 120.0f * smc1.Futi / 7.0f;
+		smc1.rpm 	= 120.0f * smc1.Futi / 7.0f;*/
 	}
 	else if(EncMode == ENCODER_MODE_PWM)
 	{
@@ -403,7 +404,7 @@ static void spi_delay(void) {
 
 
 void encoder_init_pwm(void) {
-	NVIC_InitTypeDef NVIC_InitStructure;
+	//NVIC_InitTypeDef NVIC_InitStructure;
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 	TIM_ICInitTypeDef TIM_ICInitStructure;
 
@@ -668,4 +669,8 @@ void encoder_tSMCInit(tSMC *s)
 	s->H21= 0.0f;s->H22= 1.0f;s->H23= 0.0f;
 }
 
+int read_hall(void) 
+{
+	return READ_HALL1() | (READ_HALL2() << 1) | (READ_HALL3() << 2);
+}
 

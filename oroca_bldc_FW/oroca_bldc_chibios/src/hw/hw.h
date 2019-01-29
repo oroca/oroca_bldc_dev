@@ -16,29 +16,38 @@
     */
 
 /*
- * mc_sensor.h
+ * hw.h
  *
- *  Created on: 13 okt 2012
+ *  Created on: 12 apr 2014
  *      Author: bakchajang
  */
 
-#ifndef _MC_SENSOR_H_
-#define _MC_SENSOR_H_
+#ifndef HW_H_
+#define HW_H_
 
-#ifdef __cplusplus
-extern "C" {
+#include "stm32f4xx_conf.h"
+//#include "conf_general.h"
+
+/*
+ * Select only one hardware version
+ */
+//#if !defined(HW_VERSION_OROCA)
+#define HW_VERSION_OROCA
+//#endif
+
+
+#ifdef HW_VERSION_OROCA
+#include "hw_oroca.h"
+#else
+#error "No hardware version defined"
 #endif
 
-extern tMeasCurrParm MeasCurrParm;
-extern tMeasSensorValue MeasSensorValue;
+// Functions
+void hw_init_gpio(void);
+void hw_setup_adc_channels(void);
+void hw_setup_servo_outputs(void);
+void hw_start_i2c(void);
+void hw_stop_i2c(void);
+void hw_try_restore_i2c(void);
 
-
-bool do_dc_cal(void);
-
-
-#ifdef __cplusplus
-}
-#endif
-
-
-#endif
+#endif /* HW_H_ */

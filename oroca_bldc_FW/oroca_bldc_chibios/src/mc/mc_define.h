@@ -25,6 +25,11 @@
 #ifndef _MC_DEFINE_H_
 #define _MC_DEFINE_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #define MCPWM_DEAD_TIME_CYCLES			80		// Dead time
 #define MCPWM_RPM_TIMER_FREQ			1000000.0	// Frequency of the RPM measurement timer
 #define MCPWM_MIN_DUTY_CYCLE			0.005	// Minimum duty cycle
@@ -93,5 +98,9 @@
 #define WMd 2.0f * PI * 180.0f
 #define AMd (WMd-(2./PWMPEROID))/(WMd+(2./PWMPEROID))
 #define BMd WMd/(WMd+(2./PWMPEROID))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MC_PWM_H_ */

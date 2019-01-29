@@ -26,7 +26,7 @@
 #include "hal.h"
 #include "stm32f4xx_conf.h"
 
-#include "utils.h"
+#include <math.h>
 
 #include "hw.h"
 #include "mc_define.h"
@@ -38,9 +38,8 @@
 #include "mc_pwm.h"
 #include "mc_encoder.h"
 
-
-static volatile mc_control_mode control_mode;
-
+#include "usart1_print.h"
+#include "utils.h"
 
 //======================================================================================
 //internal function Declaration
@@ -58,8 +57,7 @@ static THD_FUNCTION(timer_thread, arg);
 void mcpwm_init(volatile mcConfiguration_t *configuration)
 {
 
-	chvprintf(&SD1, (uint8_t *)"to mc_interface -> mcpwm_init\r\n");
-
+	//chvprintf(&SD1, (uint8_t *)"to mc_interface -> mcpwm_init\r\n");
 
 	utils_sys_lock_cnt();
 
@@ -290,7 +288,6 @@ void mcpwm_init(volatile mcConfiguration_t *configuration)
 
 	McCtrlBits.DcCalDone = do_dc_cal();
 	
-
 	chThdCreateStatic(timer_thread_wa, sizeof(timer_thread_wa), NORMALPRIO, timer_thread, NULL);
 
 }
@@ -363,22 +360,45 @@ void update_timer_Duty(unsigned int duty_A,unsigned int duty_B,unsigned int duty
 /*
  * New ADC samples ready. Do commutation!
  */
-uint32_t MCCtrlCnt = 0;	
+static uint32_t MCCtrlCnt = 0;	
 void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 {
 	(void)p;
 	(void)flags;
 
-	//LED_RED_ON();
+	LED_RED_ON();
 
 	MCCtrlCnt++;
 
-	if (EncMode == ENCODER_MODE_AHALL)
+	if(MCCtrlCnt % CURR_CTRL_DIV == 0)//current ctrl
 	{
-		smc1.AlphaMeas = ((float)ADC_Value[ADC_IND_SENS1] - 1241.0f)/ 4095.0f;
-		smc1.BetaMeas = ((float)ADC_Value[ADC_IND_SENS2] - 1241.0f)/ 4095.0f;
-		
+		if(EncMode == ENCODER_MODE_ABI)
+		{
+			smc1.ThetaMeas = ((float)HW_ENC_TIM->CNT * TWOPI) / (float)enc_counts;
+
+			smc1.AlphaMeas = sinf(smc1.ThetaMeas);
+			smc1.BetaMeas = cosf(smc1.ThetaMeas);
+		}
+		else if(EncMode == ENCODER_MODE_DHALL)
+		{
+			switch(read_hall()){
+			case 0:  smc1.Theta = 0.0f; break;
+			case 1:  smc1.Theta = 60.0f; break;
+			case 2:  smc1.Theta = 120.0f; break;
+			case 3:  smc1.Theta = 180.0f; break;
+			case 4:  smc1.Theta = 240.0f; break;
+			case 5:  smc1.Theta = 270.0f; break;
+				default:   smc1.Theta = 0.0;break;}
+		}
+
+		if(EncMode != ENCODER_MODE_DHALL)
+		{
+
+			encoder_PLLThetaEstimation(&smc1);
+			smc1.Theta	= smc1.ThetaEst - PI - (0.017453293f * 25.0f);
+		}
 	}
+
 	
 	if(MCCtrlCnt % SPD_CTRL_DIV == 0) //speed ctrl
 	{
@@ -405,10 +425,10 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 		//control
 		else 
 		{
-			control_mode = CONTROL_MODE_SETUP;
+			m_conf.control_mode = CONTROL_MODE_SETUP;
 
 			// Calculate control values
-			if(control_mode == CONTROL_MODE_SETUP)
+			if(m_conf.control_mode == CONTROL_MODE_SETUP)
 			{
 				//ParkParm.qAngle -= 0.001f;
 				//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
@@ -422,7 +442,7 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 				ParkParm.qVq = 0.0f;
 
 			}
-			else if(control_mode == CONTROL_MODE_CURRENT)
+			else if(m_conf.control_mode == CONTROL_MODE_CURRENT)
 			{
 				//ParkParm.qAngle -= 0.01f;
 				//if(  ParkParm.qAngle < 0)ParkParm.qAngle=2*PI;
@@ -434,7 +454,7 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 				CtrlParm.qVqRef = 0.0f; //from gui
 				
 			}
-			else if(control_mode == CONTROL_MODE_SPEED)//operate speed controller
+			else if(m_conf.control_mode == CONTROL_MODE_SPEED)//operate speed controller
 			{
 
 				CtrlParm.qVelRef = 0.001f;
@@ -445,7 +465,7 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 				ParkParm.qAngle = smc1.Theta;
 			
 			}
-			else if(control_mode == CONTROL_MODE_POSITION)//operate positon controller
+			else if(m_conf.control_mode == CONTROL_MODE_POSITION)//operate positon controller
 			{
 
 			
@@ -472,7 +492,7 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 			ParkParm.qId = ParkParm.qIalpha*cosf(ParkParm.qAngle) + ParkParm.qIbeta*sinf(ParkParm.qAngle);
 			ParkParm.qIq = -ParkParm.qIalpha*sinf(ParkParm.qAngle) + ParkParm.qIbeta*cosf(ParkParm.qAngle);
 
-			if(control_mode != CONTROL_MODE_SETUP && control_mode != CONTROL_MODE_NONE)
+			if(m_conf.control_mode != CONTROL_MODE_SETUP && m_conf.control_mode != CONTROL_MODE_NONE)
 			{
 				CurrentControl();
 			}
@@ -492,7 +512,7 @@ void mcpwm_adc_dma_int_handler(void *p, uint32_t flags)
 
 		}
 	}
-	//LED_RED_OFF();
+	LED_RED_OFF();
 
 	WWDG_SetCounter(100);
 

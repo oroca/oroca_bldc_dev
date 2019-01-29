@@ -25,6 +25,11 @@
 #ifndef _MCPWM_TYPEDEF_H_
 #define _MCPWM_TYPEDEF_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 typedef enum {
    MC_STATE_OFF = 0,
    MC_STATE_DETECTING,
@@ -94,6 +99,7 @@ typedef struct {
 	
 	mc_motor_type motor_type;
 	mc_sensor_mode sensor_mode;
+	mc_control_mode control_mode;
 
 	// Limits
 	float l_current_max;
@@ -352,10 +358,11 @@ typedef struct
     uint16_t OpenLoop:1;
     uint16_t RunMotor:1;
     uint16_t DcCalDone:1;
-} __attribute__((packed)) tMcCtrlBits ;
+} __attribute__((packed)) tMcCtrlBits;
 
 
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MC_PWM_H_ */

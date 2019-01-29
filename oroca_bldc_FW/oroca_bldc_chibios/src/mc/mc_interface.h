@@ -25,6 +25,11 @@
 #ifndef _MC_INTERFACE_H_
 #define _MC_INTERFACE_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include "mc_typedef.h"
 
 // Default settings
@@ -110,7 +115,9 @@
 #endif
 
 
-// Functions
+// extern
+extern volatile mcConfiguration_t m_conf;
+
 // Functions
 void mcconf_general_init(void);
 void mcconf_general_get_default_mc_configuration(mcConfiguration_t *conf);
@@ -123,10 +130,14 @@ void mc_interface_set_configuration(mcConfiguration_t *configuration);
 void mc_interface_set_pwm_callback(void (*p_func)(void));
 void mc_interface_lock(void);
 void mc_interface_unlock(void);
-//void mc_interface_fault_stop(mc_fault_code fault);
+void mc_interface_fault_stop(mc_fault_code fault);
 
 void mc_setVelocity(uint16_t vel);
 float mc_interface_get_angle(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif /* MC_INTERFACE_H_ */

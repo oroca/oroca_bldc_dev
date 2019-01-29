@@ -26,6 +26,8 @@
 #include "hal.h"
 #include "stm32f4xx_conf.h"
 
+#include <math.h>
+
 #include "hw.h"
 #include "mc_define.h"
 #include "mc_typedef.h"
@@ -39,7 +41,7 @@
 
 //#include "utils.h"
 
-#include <math.h>
+
 
 
 //======================================================================================

@@ -26,6 +26,8 @@
 #include "hal.h"
 #include "stm32f4xx_conf.h"
 
+#include <math.h>
+
 #include "hw.h"
 #include "mc_define.h"
 #include "mc_typedef.h"
@@ -35,9 +37,8 @@
 #include "mc_sensor.h"
 #include "mc_pwm.h"
 
-//#include "utils.h"
+#include "utils.h"
 
-#include <math.h>
 
 //======================================================================================
 //private variable Declaration

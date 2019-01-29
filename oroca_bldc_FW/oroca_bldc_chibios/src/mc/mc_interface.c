@@ -26,6 +26,7 @@
 #include "stm32f4xx_conf.h"
 
 #include <math.h>
+#include <string.h>
 
 #include "hw.h"
 #include "mc_define.h"
@@ -39,26 +40,27 @@
 #include "ledpwm.h"
 #include "utils.h"
 
-#include "comm_usb_serial.h"
+//#include "comm_usb_serial.h"
 
 //#include "conf_general.h"
 #include "mc_interface.h"
 
-#include "mavlink_proc.h"
+//#include "mavlink_proc.h"
 
 #include "usart1_print.h"
 
 
 // Global variables
-
+volatile mcConfiguration_t m_conf;
 
 // Private variables
-static volatile mcConfiguration_t m_conf;
+
 static mc_fault_code m_fault_now;
 static volatile bool m_lock_enabled;
 
 // Private functions
 static void update_override_limits(volatile mcConfiguration_t *conf);
+void mc_interface_set_configuration(mcConfiguration_t *configuration);
 
 // Function pointers
 static void(*pwn_done_func)(void) = 0;
@@ -288,7 +290,7 @@ bool mcconf_general_store_mc_configuration(mcConfiguration_t *conf)
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, ENABLE);
 	utils_sys_unlock_cnt();
 
-	mavlink_dbgString(0,"finish");
+	//mavlink_dbgString(0,"finish");
 	return is_ok;
 }
 
@@ -410,7 +412,8 @@ void mc_interface_unlock(void) {
 
 
 mc_fault_code mc_interface_get_fault(void) {
-	return m_fault_now;
+	//return m_fault_now;
+  return FAULT_CODE_NONE;
 }
 
 
@@ -551,7 +554,7 @@ static volatile mc_state state;
 
 void mc_setConfiguration(mcConfiguration_t configuration)
 {
-	stop_pwm_hw();//stop_pwm_ll();
+	//stop_pwm_hw();//stop_pwm_ll();
 
 	utils_sys_lock_cnt();
 	m_conf = configuration;
